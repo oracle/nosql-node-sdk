@@ -1,0 +1,43 @@
+{
+    "source": {
+        "include": [
+            "lib/nosql_client.js",
+            "lib/stmt.js",
+            "lib/constants.js",
+            "lib/error.js",
+            "lib/ttl_util.js",
+            "lib/region.js",
+            "lib/types/config.js",
+            "lib/types/param.js",
+            "lib/types/result.js",
+            "lib/types/data.js",
+            "lib/types/db_number.js",
+            "lib/auth/config.js",
+            "lib/auth/iam/types.js",
+            "lib/auth/kvstore/types.js"
+        ]
+    },
+    "opts": {
+        "encoding": "utf8",
+        "destination": "./doc/api/",
+        "template": "node_modules/docdash",
+        "readme": "./doc/index.md",
+        "tutorials": "./doc/guides"
+    },
+    "docdash": {
+        "typedefs": true,
+        "search": true,
+        "wrap": true,
+        "collapse": true,
+        "sort": true,
+        "sectionOrder": [
+            "Tutorials",
+            "Classes",
+            "Mixins",
+            "Namespaces",
+            "Interfaces",
+            "Modules",
+            "Externals",
+            "Events"]
+    }
+}

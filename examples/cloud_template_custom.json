@@ -1,0 +1,16 @@
+{
+    "serviceType": "CLOUD",
+    "endpoint": "",
+    "auth": {
+        "iam": {
+            "configFile": "",
+            "profileName": "",
+            "tenantId": "",
+            "userId": "",
+            "fingerprint": "",
+            "privateKeyFile": "",
+            "passphrase": "",
+            "credentialsProvider": ""
+        }
+    }
+}

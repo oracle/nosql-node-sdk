@@ -1,0 +1,13 @@
+{
+    "serviceType": "KVSTORE",
+    "endpoint": "",
+    "auth":
+    {
+        "kvstore":
+        {
+            "credentials": "",
+            "user": "",
+            "password": ""
+        }
+    }
+}

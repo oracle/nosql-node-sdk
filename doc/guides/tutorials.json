@@ -1,0 +1,13 @@
+{
+    "connect-cloud": {
+        "title":
+            "Connecting an Application to Oracle NoSQL Database Cloud Service"
+    },
+    "connect-on-prem": {
+        "title":
+            "Connecting an Application to On-Premise Oracle NoSQL Database"
+    },
+    "tables": {
+        "title": "Working With Tables"
+    }
+}
