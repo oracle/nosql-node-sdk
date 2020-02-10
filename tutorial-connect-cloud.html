@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>Tutorial: Connecting an Application to Oracle NoSQL Database Cloud Service - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav class="wrap">
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-connect-cloud.html">Connecting an Application to Oracle NoSQL Database Cloud Service</a></li><li><a href="tutorial-connect-on-prem.html">Connecting an Application to On-Premise Oracle NoSQL Database</a></li><li><a href="tutorial-tables.html">Working With Tables</a></li></ul><h3>Classes</h3><ul><li><a href="AdminState.html">AdminState</a><ul class='methods'><li data-type='method' style='display: none;'><a href="AdminState.html#toString">toString</a></li></ul></li><li><a href="Consistency.html">Consistency</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Consistency.html#toString">toString</a></li></ul></li><li><a href="Enum.html">Enum</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Enum.html#toString">toString</a></li></ul></li><li><a href="ErrorCode.html">ErrorCode</a><ul class='methods'><li data-type='method' style='display: none;'><a href="ErrorCode.html#toString">toString</a></li></ul></li><li><a href="NoSQLArgumentError.html">NoSQLArgumentError</a></li><li><a href="NoSQLAuthorizationError.html">NoSQLAuthorizationError</a></li><li><a href="NoSQLClient.html">NoSQLClient</a><ul class='methods'><li data-type='method' style='display: none;'><a href="NoSQLClient.html#adminDDL">adminDDL</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#adminStatus">adminStatus</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#close">close</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#delete">delete</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#deleteIfVersion">deleteIfVersion</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#deleteMany">deleteMany</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#deleteRange">deleteRange</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#forCompletion">forCompletion</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#forTableState">forTableState</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#get">get</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#getIndex">getIndex</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#getIndexes">getIndexes</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#getTable">getTable</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#getTableUsage">getTableUsage</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#listNamespaces">listNamespaces</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#listRoles">listRoles</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#listTables">listTables</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#listUsers">listUsers</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#prepare">prepare</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#put">put</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#putIfAbsent">putIfAbsent</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#putIfPresent">putIfPresent</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#putIfVersion">putIfVersion</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#putMany">putMany</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#query">query</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#setTableLimits">setTableLimits</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#tableDDL">tableDDL</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#writeMany">writeMany</a></li></ul></li><li><a href="NoSQLError.html">NoSQLError</a></li><li><a href="NoSQLNetworkError.html">NoSQLNetworkError</a></li><li><a href="NoSQLProtocolError.html">NoSQLProtocolError</a></li><li><a href="NoSQLQueryError.html">NoSQLQueryError</a></li><li><a href="NoSQLServiceError.html">NoSQLServiceError</a></li><li><a href="NoSQLTimeoutError.html">NoSQLTimeoutError</a></li><li><a href="PreparedStatement.html">PreparedStatement</a><ul class='methods'><li data-type='method' style='display: none;'><a href="PreparedStatement.html#clearAll">clearAll</a></li><li data-type='method' style='display: none;'><a href="PreparedStatement.html#set">set</a></li></ul></li><li><a href="Region.html">Region</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Region.html#toString">toString</a></li></ul></li><li><a href="ServiceType.html">ServiceType</a><ul class='methods'><li data-type='method' style='display: none;'><a href="ServiceType.html#toString">toString</a></li></ul></li><li><a href="TableState.html">TableState</a><ul class='methods'><li data-type='method' style='display: none;'><a href="TableState.html#toString">toString</a></li></ul></li><li><a href="TTLUtil.html">TTLUtil</a><ul class='methods'><li data-type='method' style='display: none;'><a href="TTLUtil.html#.fromExpirationTime">fromExpirationTime</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.ofDays">ofDays</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.ofHours">ofHours</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.toDays">toDays</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.toExpirationTime">toExpirationTime</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.toExpirationTimeMillis">toExpirationTimeMillis</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.toHours">toHours</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.toMillis">toMillis</a></li></ul></li></ul><h3>Events</h3><ul><li><a href="NoSQLClient.html#event:consumedCapacity">consumedCapacity</a></li><li><a href="NoSQLClient.html#event:error">error</a></li><li><a href="NoSQLClient.html#event:retryable">retryable</a></li><li><a href="NoSQLClient.html#event:tableState">tableState</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AdminResult">AdminResult</a></li><li><a href="global.html#AuthConfig">AuthConfig</a></li><li><a href="global.html#AuthorizationProvider">AuthorizationProvider</a></li><li><a href="global.html#Config">Config</a></li><li><a href="global.html#ConsumedCapacity">ConsumedCapacity</a></li><li><a href="global.html#ContinuationKey">ContinuationKey</a></li><li><a href="global.html#DBNumberConfig">DBNumberConfig</a></li><li><a href="global.html#delay">delay</a></li><li><a href="global.html#DeleteResult">DeleteResult</a></li><li><a href="global.html#doRetry">doRetry</a></li><li><a href="global.html#FieldRange">FieldRange</a></li><li><a href="global.html#FieldValue">FieldValue</a></li><li><a href="global.html#getAuthorization">getAuthorization</a></li><li><a href="global.html#GetResult">GetResult</a></li><li><a href="global.html#IAMConfig">IAMConfig</a></li><li><a href="global.html#IAMCredentials">IAMCredentials</a></li><li><a href="global.html#IAMCredentialsProvider">IAMCredentialsProvider</a></li><li><a href="global.html#IndexInfo">IndexInfo</a></li><li><a href="global.html#Key">Key</a></li><li><a href="global.html#KVStoreAuthConfig">KVStoreAuthConfig</a></li><li><a href="global.html#KVStoreCredentials">KVStoreCredentials</a></li><li><a href="global.html#KVStoreCredentialsProvider">KVStoreCredentialsProvider</a></li><li><a href="global.html#ListTablesResult">ListTablesResult</a></li><li><a href="global.html#loadIAMCredentials">loadIAMCredentials</a></li><li><a href="global.html#loadKVStoreCredentials">loadKVStoreCredentials</a></li><li><a href="global.html#MultiDeleteResult">MultiDeleteResult</a></li><li><a href="global.html#NumberLibConfig">NumberLibConfig</a></li><li><a href="global.html#NumberLibMethods">NumberLibMethods</a></li><li><a href="global.html#NumberLibPrecision">NumberLibPrecision</a></li><li><a href="global.html#NumberLibRoundingMode">NumberLibRoundingMode</a></li><li><a href="global.html#Operation">Operation</a></li><li><a href="global.html#PrepareResult">PrepareResult</a></li><li><a href="global.html#PutResult">PutResult</a></li><li><a href="global.html#QueryResult">QueryResult</a></li><li><a href="global.html#RetryConfig">RetryConfig</a></li><li><a href="global.html#RetryHandler">RetryHandler</a></li><li><a href="global.html#RoundingModesMap">RoundingModesMap</a></li><li><a href="global.html#Row">Row</a></li><li><a href="global.html#TableLimits">TableLimits</a></li><li><a href="global.html#TableResult">TableResult</a></li><li><a href="global.html#TableUsage">TableUsage</a></li><li><a href="global.html#TableUsageResult">TableUsageResult</a></li><li><a href="global.html#TimeToLive">TimeToLive</a></li><li><a href="global.html#UserInfo">UserInfo</a></li><li><a href="global.html#Version">Version</a></li><li><a href="global.html#WriteMultipleResult">WriteMultipleResult</a></li><li><a href="global.html#WriteOperation">WriteOperation</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Tutorial: Connecting an Application to Oracle NoSQL Database Cloud Service</h1>
+    
+
+    <section>
+
+<header>
+    
+
+    <h2>Connecting an Application to Oracle NoSQL Database Cloud Service</h2>
+</header>
+
+<article>
+    <p>This guide describes how to install, configure, and use the Oracle NoSQL
+Database Node.js SDK with the Oracle NoSQL Database Cloud Service.</p>
+<h2>Prerequisites</h2>
+<p>The SDK requires:</p>
+<ul>
+<li>An Oracle Cloud Infrastructure account</li>
+<li>A user created in that account, in a group with a policy that grants the
+desired permissions.</li>
+<li><a href="https://nodejs.org">Node.js</a> 10.0.0 or higher, running on Linux, Windows or
+Mac.</li>
+<li><a href="https://www.npmjs.com/get-npm">Node Package Manager (npm)</a> that is
+installed with Node.js</li>
+</ul>
+<h2>Downloading and Installing the SDK</h2>
+<p>You can install the SDK from the npm registry, or alternatively from GitHub.</p>
+<h3>npm</h3>
+<p>You may install the Node.js SDK from
+<a href="https://www.npmjs.com/package/oracle-nosqldb">npm registry</a></p>
+<p>either as a dependency of your project:</p>
+<pre class="prettyprint source lang-bash"><code>npm install oracle-nosqldb --save
+</code></pre>
+<p>or globally:</p>
+<pre class="prettyprint source lang-bash"><code>sudo npm install -g oracle-nosqldb
+</code></pre>
+<h3>GitHub</h3>
+<p>To install from GitHub:</p>
+<ol>
+<li>Download the SDK release from
+<a href="https://github.com/oracle/nosql-node-sdk/releases">GitHub</a>. The download is
+a tarball containing the SDK.</li>
+<li>Install the SDK from the tarball either as a dependency of your project:</li>
+</ol>
+<pre class="prettyprint source lang-bash"><code>npm install oracle-nosqldb-5.x.x.tgz --save
+</code></pre>
+<p>or globally:</p>
+<pre class="prettyprint source lang-bash"><code>sudo npm install -g oracle-nosqldb-5.x.x.tgz
+</code></pre>
+<h2>Configuring the SDK</h2>
+<p>The SDK requires an Oracle Cloud account and a subscription to the Oracle
+NoSQL Database Cloud Service. If you do not already have an Oracle Cloud
+account you can start <a href="https://docs.cloud.oracle.com/en-us/iaas/Content/GSG/Concepts/baremetalintro.htm">here</a>.</p>
+<p>The SDK is using Oracle Cloud Infrastructure Identity and Access Management
+(IAM) to authorize database operations.  For more information on IAM see
+<a href="https://docs.cloud.oracle.com/iaas/Content/Identity/Concepts/overview.htm">Overview of Oracle Cloud Infrastructure Identity and Access Management</a></p>
+<h3>Acquire Credentials for the Oracle NoSQL Database Cloud Service</h3>
+<p>These steps only need to be performed one time for a user. If they have already
+been done they can be skipped. You need to obtain the following credentials:</p>
+<ul>
+<li>Tenancy ID</li>
+<li>User ID</li>
+<li>API signing key (private key file in PEM format</li>
+<li>Private key pass phrase, needed only if the private key is encrypted</li>
+<li>Fingerprint for the public key uploaded to the user's account</li>
+</ul>
+<p>See <a href="https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm">Required Keys and OCIDs</a> for detailed description of the above credentials and the
+steps you need to perform to obtain them. Specifically:</p>
+<ul>
+<li><a href="https://docs.cloud.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#How">How to Generate an API Signing Key</a></li>
+<li><a href="https://docs.cloud.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#How3">How to Get the Key's Fingerprint</a></li>
+<li><a href="https://docs.cloud.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#How2">How to Upload the Public Key</a></li>
+<li><a href="https://docs.cloud.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#Other">Where to Get the Tenancy's OCID and User's OCID</a></li>
+</ul>
+<h3>Supply Credentials to the Application</h3>
+<p>Credentials are used to authorize your application to use the service.
+There are 3 ways to supply credentials:</p>
+<ol>
+<li>Store credentials in an Oracle Cloud Infrastructure configration file.</li>
+<li>Store credentials directly in configuration object used to create
+<a href="NoSQLClient.html">NoSQLClient</a> instance.</li>
+<li>Create your own <a href="global.html#IAMCredentialsProvider">IAMCredentialsProvider</a> to load credentials on
+demand from the location of your choice (e.g. keystore,
+keychain, encrypted file, etc.).</li>
+</ol>
+<p>The configuration object used to create <a href="NoSQLClient.html">NoSQLClient</a> instance (see
+section <strong>Connecting an Application</strong>) will indicate how the driver obtains
+the credentials and will be different depending on which of the above options
+is chosen.</p>
+<p>Creating <a href="global.html#IAMCredentialsProvider">IAMCredentialsProvider</a> is the most secure option, because
+you are in control of how credentials are stored and loaded by the driver.
+Otherwise, the recommended option is to use an Oracle Cloud Infrastructure
+configuration file.  Supplying credentials directly in a configuration object is
+less secure because sensitive information such as private key will be kept in
+memory for the duration of the <a href="NoSQLClient.html">NoSQLClient</a> instance.</p>
+<h4>Using a Configuration File</h4>
+<p>You can store the credentials in an Oracle Cloud Infrastructure configuration
+file.</p>
+<p>The default path for the configuration file is <em>~/.oci/config</em>.  The
+file may contain multiple profiles.  By default, the SDK uses profile named
+<strong>DEFAULT</strong> to store the credentials.</p>
+<p>To use these default values, create file named <em>config</em> in <em>~/.oci</em> directory
+with the following contents:</p>
+<pre class="prettyprint source lang-ini"><code>[DEFAULT]
+tenancy=&lt;your-tenancy-ocid>
+user=&lt;your-user-ocid>
+fingerprint=&lt;fingerprint-of-your-public-key>
+key_file=&lt;path-to-your-private-key-file>
+pass_phrase=&lt;your-private-key-passphrase>
+</code></pre>
+<p>The driver will look at the location above by default, so the initial
+configuration only needs to specify the service type cloud and the region
+to which you want to connect. For example:</p>
+<pre class="prettyprint source lang-js"><code>const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+
+let client = new NoSQLClient({
+    serviceType: 'CLOUD',
+    region: Region.US_ASHBURN_1
+});
+</code></pre>
+<p>You may choose to use different path for OCI configuration file as well as
+different profile within the configuration file.  In this case, specify these
+within <strong>auth.iam</strong> property of the initial configuration
+(see <a href="global.html#IAMConfig">IAMConfig</a>).  For example, if your OCI configuration file path is
+<em>~/myapp/.oci/config</em> and you store your credentials under profile <strong>Jane</strong>:</p>
+<pre class="prettyprint source lang-ini"><code>...............
+...............
+[Jane]
+tenancy=.......
+user=..........
+...............
+[John]
+tenancy=.......
+user=..........
+...............
+</code></pre>
+<p>Then create <a href="NoSQLClient.html">NoSQLClient</a> instance as follows:</p>
+<pre class="prettyprint source lang-js"><code>const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+
+let client = new NoSQLClient({
+    region: Region.US_ASHBURN_1,
+    auth: {
+        iam: {
+            configFile: '~/myapp/.oci/config',
+            profileName: 'Jane'
+        }
+    }
+});
+</code></pre>
+<p>(Note that you don't have to specify service type if you specified
+<strong>auth.iam</strong> property, see section <strong>Specifying Service Type</strong>)</p>
+<h4>Specifying Credentials Directly</h4>
+<p>You may specify credentials directly as part of <strong>auth.iam</strong> property in the
+initial configuration (see <a href="global.html#IAMConfig">IAMConfig</a>).  Create <a href="NoSQLClient.html">NoSQLClient</a>
+instance as follows:</p>
+<pre class="prettyprint source lang-js"><code>const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+
+let client = new NoSQLClient({
+    region: '&lt;your-service-region>'
+    auth: {
+        iam: {
+            tenantId: myTenancyOCID,
+            userId: myUserOCID,
+            fingerprint: myPublicKeyFingerprint,
+            privateKeyFile: myPrivateKeyFile,
+            passphrase: myPrivateKeyPassphrase
+        }
+    }
+});
+</code></pre>
+<h4>Creating Your Own IAMCredentialsProvider</h4>
+<p>IMACredentialsProvider may be any object (class instance or otherwise)
+implementing <em>loadCredentials</em> function.  This function returns a <em>Promise</em> of
+<a href="global.html#IAMCredentials">IAMCredentials</a> (and thus can be implemented as an <em>async</em> function).
+See <a href="global.html#loadIAMCredentials">loadIAMCredentials</a>.</p>
+<pre class="prettyprint source lang-js"><code>const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+
+class MyIAMCredentialsProvider {
+    constructor() {
+        // Initialize required state information if needed
+    }
+
+    async loadCredentials() {
+        .......... //retrieve credentials in preferred manner
+        ..........
+        return {
+            tenantId: myTenancyOCID,
+            userId: myUserOCID,
+            fingerprint: myPublicKeyFingerprint,
+            privateKey: myPEMPrivateKeyData
+        };
+    }
+}
+
+let client = new NoSQLClient({
+    region: Region.US_ASHBURN_1,
+    auth: {
+        iam: {
+            credentialsProvider: new MyIAMCredentialsProvider(myArgs...)
+        }
+    }
+});
+</code></pre>
+<p>It is advised that properties such as <em>privateKey</em> and <em>passphrase</em> returned
+by <a href="global.html#IAMCredentialsProvider">IAMCredentialsProvider</a> be instances of <em>Buffer</em> rather than strings
+in which case that the driver will clear them right after they are used.</p>
+<p>If your <a href="global.html#IAMCredentialsProvider">IAMCredentialsProvider</a> does not need to store any state
+information you may provide <em>loadCredentials</em> function itself as
+value of <em>credentialsProvider</em> property:</p>
+<pre class="prettyprint source lang-js"><code>const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+
+async function loadMyCredentials() {
+    //.....
+}
+
+let client = new NoSQLClient({
+    region: Region.US_ASHBURN_1,
+    auth: {
+        iam: {
+            credentialsProvider: loadMyCredentials
+        }
+    }
+});
+</code></pre>
+<p>You may also specify <em>credentialsProvider</em> property as string, in which case
+it specifies a module name or path that exports
+<a href="global.html#IAMCredentialsProvider">IAMCredentialsProvider</a>.  This will allow you to store initial
+configuration in a JSON file (see <strong>Connecting an Application</strong> section).
+Note that the provider (whether as an object or a function) should be that
+module's sole export.</p>
+<h2>Connecting an Application</h2>
+<p>The first step in your Oracle NoSQL Database Cloud Service application is to
+create an instance of <a href="NoSQLClient.html">NoSQLClient</a> class which is the main point of
+access to the service.  To create <a href="NoSQLClient.html">NoSQLClient</a> instance, you need to
+supply a <a href="global.html#Config">Config</a> object containing information needed to access the
+service.  Alternatively, you may choose to supply a path to JSON file
+that contains the same configuration information as in <a href="global.html#Config">Config</a>.</p>
+<p>The required information consists of the communication region or endpoint and
+authorization information described in section
+<strong>Acquire Credentials for the Oracle NoSQL Database Cloud Service</strong> (also see
+<a href="global.html#AuthConfig">AuthConfig</a>).</p>
+<p>It is possible to specify a <a href="Region.html">Region</a> or a string endpoint, but not both. If you
+use a Region the endpoint of that Region is inferred. If an endpoint is used it
+needs to be either the endpoint of a Region or a reference to a host and port.
+For example when using the Cloud Simulator you would use an endpoint string
+like <strong>http://localhost:8080</strong>.  Other, optional parameters may
+be specified as well.  See API documentation for <a href="NoSQLClient.html">NoSQLClient</a>,
+<a href="global.html#Config">Config</a> and <a href="global.html#AuthConfig">AuthConfig</a> for more information.</p>
+<p>For example, to specify the configuration as an object:</p>
+<pre class="prettyprint source lang-js"><code>const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+
+const client = new NoSQLClient({
+    region: Region.US_ASHBURN_1,
+    auth: {
+        iam: {
+            configFile: '~/myapp/.oci/config',
+            profileName: 'Jane'
+        }
+    }
+});
+</code></pre>
+<p>You may choose to store the same configuration in a JSON file.  Create file
+<strong>config.json</strong> with following contents:</p>
+<pre class="prettyprint source lang-json"><code>{
+    &quot;region&quot;: &quot;US_ASHBURN_1&quot;,
+    &quot;auth&quot;:
+    {
+        &quot;iam&quot;:
+       {
+            &quot;configFile&quot;: &quot;~/myapp/.oci/config&quot;,
+            &quot;profileName&quot;: &quot;Jane&quot;
+        }
+    }
+}
+</code></pre>
+<p>Then you may create <a href="NoSQLClient.html">NoSQLClient</a> instance as follows:</p>
+<pre class="prettyprint source lang-js"><code>const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+
+const client = new NoSQLClient('/path/to/config.json');
+</code></pre>
+<p>In the <em>examples</em> directory, you will see JSON configuration files that are
+used to create <a href="NoSQLClient.html">NoSQLClient</a> instance as shown above:</p>
+<ul>
+<li>Use <em>cloudsim.json</em> for Cloud Simulator.</li>
+<li>Use <em>cloud_template.json</em> for the cloud service when using default OCI
+configuration file and default profile as described in section
+<strong>Using OCI Configuration File</strong>.  Fill in appropriate service endpoint.</li>
+<li>Use <em>cloud_template_custom.json</em> for cloud service to create configuration
+of your choice as described in section <strong>Supply Credentials to Application</strong>.
+Fill in appropriate values for properties needed and remove the rest.</li>
+</ul>
+<h3>Specifying Service Type</h3>
+<p>Since NoSQL Node.js driver is used both for Oracle NoSQL Cloud Service and
+On-Premise Oracle NoSQL Database, the <a href="global.html#Config">Config</a> object can specify
+that we are connecting to the cloud service by setting
+<a href="global.html#Config">Config</a>#serviceType property to <a href="ServiceType.html#.CLOUD">ServiceType.CLOUD</a>.  You can
+always explicitly specify <a href="global.html#Config">Config</a>#serviceType property, but in some
+cases such in code snippes above where the configuration has <em>auth</em> object
+that contains <em>iam</em> property, the service type will be deduced by the driver.
+See <a href="ServiceType.html">ServiceType</a> for details.</p>
+<p>If the <em>auth</em> object is not present in configuration (such as when using
+default OCI configuration file with default profile), you must specify
+service type as <a href="ServiceType.html#.CLOUD">ServiceType.CLOUD</a> in order to connect to the cloud
+service, otherwise the service type will default to
+<a href="ServiceType.html#.CLOUDSIM">ServiceType.CLOUDSIM</a> (see section <strong>Using Cloud Simulator</strong>).</p>
+<p>You may specify service type either as <a href="ServiceType.html">ServiceType</a> enumeration
+constant (in code) or as a string (in code and in JSON file).  For example,
+when using default OCI configuration file and default profile:</p>
+<p>In code:</p>
+<pre class="prettyprint source lang-js"><code>const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+const ServiceType = require('oracle-nosqldb').ServiceType;
+
+const client = new NoSQLClient({
+    serviceType: ServiceType.CLOUD,
+    region: Region.US_ASHBURN_1
+});
+</code></pre>
+<p>In JSON configuration file:</p>
+<pre class="prettyprint source lang-json"><code>{
+    &quot;serviceType&quot;: &quot;CLOUD&quot;,
+    &quot;region&quot;: &quot;US_ASHBURN_1&quot;
+}
+</code></pre>
+<h3>Specifying a Compartment</h3>
+<p>In the Oracle NoSQL Cloud Service environment tables are always created in an
+Oracle Cloud Infrastructure <em>compartment</em> (see
+<a href="https://docs.cloud.oracle.com/en-us/iaas/Content/Identity/Tasks/managingcompartments.htm">Managing Compartments</a>).
+It is recommended that compartments be created for tables to better organize
+them and control security, which is a feature of compartments.The default
+compartment for tables is the root compartment of
+the user's tenancy. A default compartment for all requests performed on a handle
+can be specified by setting the <a href="global.html#Config">Config</a>#compartment property. For example,
+to specify a default compartment:</p>
+<pre class="prettyprint source lang-js"><code>const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+
+const client = new NoSQLClient({
+    region: Region.US_ASHBURN_1,
+    compartment: 'mycompartment'
+});
+</code></pre>
+<p>The string value may be either a compartment id or a compartment name or path.
+If it is a simple name it must specify a top-level compartment. If it is a path to
+a nested compartment, the top-level compartment must be excluded as it is
+inferred from the tenancy.</p>
+<p>A compartment can also be specified in each request in the options object. This
+value overrides the default for the handle.</p>
+<h2>Using the Cloud Simulator</h2>
+<p>The configuration instructions above are for getting connected to the actual
+Oracle NoSQL Database Cloud Service.</p>
+<p>You may first get familiar with Oracle NoSQL Database Cloud Service Node.js
+SDK and the Cloud APIs by using <a href="https://docs.oracle.com/en/cloud/paas/nosql-cloud/csnsd/develop-oracle-nosql-cloud-simulator.html">Oracle NoSQL Cloud Simulator</a>.</p>
+<p>The Cloud Simulator simulates the cloud service and lets you write and test
+applications locally without accessing Oracle NoSQL Database Cloud Service.</p>
+<p>You can start developing your application with the Oracle NoSQL Cloud
+Simulator, using and understanding the basic examples, before you get
+started with Oracle NoSQL Database Cloud Service. After building, debugging,
+and testing your application with the Oracle NoSQL Cloud Simulator,
+move your application to Oracle NoSQL Database Cloud Service.</p>
+<ol>
+<li><a href="https://docs.oracle.com/pls/topic/lookup?ctx=en/cloud/paas/nosql-cloud&amp;id=CSNSD-GUID-3E11C056-B144-4EEA-8224-37F4C3CB83F6">Download</a>
+and start the Cloud Simulator.</li>
+<li>Follow instructions in the <em>README.md</em> in the <em>examples</em> directory
+to run examples with the Cloud Simulator.</li>
+</ol>
+<p>Note that the Cloud Simulator does not require authorization information and
+credentials described above that are required by Oracle NoSQL Database
+Cloud Service.  Only the endpoint is required and is by default <em>localhost:8080</em>.
+The service type for Cloud Simulator is <a href="ServiceType.html#.CLOUDSIM">ServiceType.CLOUDSIM</a>.  It is a
+default service type when authorization information is not present, so the
+configuration that contains only <em>endpoint</em> property will be interpreted as
+configuration for Cloud Simulator.  See <a href="ServiceType.html">ServiceType</a> and
+<em>cloudsim.json</em> in <em>examples</em> directory.</p>
+</article>
+
+</section>
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Feb 07 2020 15:12:38 GMT-0500 (Eastern Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

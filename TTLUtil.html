@@ -1,0 +1,1991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>TTLUtil - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav class="wrap">
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-connect-cloud.html">Connecting an Application to Oracle NoSQL Database Cloud Service</a></li><li><a href="tutorial-connect-on-prem.html">Connecting an Application to On-Premise Oracle NoSQL Database</a></li><li><a href="tutorial-tables.html">Working With Tables</a></li></ul><h3>Classes</h3><ul><li><a href="AdminState.html">AdminState</a><ul class='methods'><li data-type='method' style='display: none;'><a href="AdminState.html#toString">toString</a></li></ul></li><li><a href="Consistency.html">Consistency</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Consistency.html#toString">toString</a></li></ul></li><li><a href="Enum.html">Enum</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Enum.html#toString">toString</a></li></ul></li><li><a href="ErrorCode.html">ErrorCode</a><ul class='methods'><li data-type='method' style='display: none;'><a href="ErrorCode.html#toString">toString</a></li></ul></li><li><a href="NoSQLArgumentError.html">NoSQLArgumentError</a></li><li><a href="NoSQLAuthorizationError.html">NoSQLAuthorizationError</a></li><li><a href="NoSQLClient.html">NoSQLClient</a><ul class='methods'><li data-type='method' style='display: none;'><a href="NoSQLClient.html#adminDDL">adminDDL</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#adminStatus">adminStatus</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#close">close</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#delete">delete</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#deleteIfVersion">deleteIfVersion</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#deleteMany">deleteMany</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#deleteRange">deleteRange</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#forCompletion">forCompletion</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#forTableState">forTableState</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#get">get</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#getIndex">getIndex</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#getIndexes">getIndexes</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#getTable">getTable</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#getTableUsage">getTableUsage</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#listNamespaces">listNamespaces</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#listRoles">listRoles</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#listTables">listTables</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#listUsers">listUsers</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#prepare">prepare</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#put">put</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#putIfAbsent">putIfAbsent</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#putIfPresent">putIfPresent</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#putIfVersion">putIfVersion</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#putMany">putMany</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#query">query</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#setTableLimits">setTableLimits</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#tableDDL">tableDDL</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#writeMany">writeMany</a></li></ul></li><li><a href="NoSQLError.html">NoSQLError</a></li><li><a href="NoSQLNetworkError.html">NoSQLNetworkError</a></li><li><a href="NoSQLProtocolError.html">NoSQLProtocolError</a></li><li><a href="NoSQLQueryError.html">NoSQLQueryError</a></li><li><a href="NoSQLServiceError.html">NoSQLServiceError</a></li><li><a href="NoSQLTimeoutError.html">NoSQLTimeoutError</a></li><li><a href="PreparedStatement.html">PreparedStatement</a><ul class='methods'><li data-type='method' style='display: none;'><a href="PreparedStatement.html#clearAll">clearAll</a></li><li data-type='method' style='display: none;'><a href="PreparedStatement.html#set">set</a></li></ul></li><li><a href="Region.html">Region</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Region.html#toString">toString</a></li></ul></li><li><a href="ServiceType.html">ServiceType</a><ul class='methods'><li data-type='method' style='display: none;'><a href="ServiceType.html#toString">toString</a></li></ul></li><li><a href="TableState.html">TableState</a><ul class='methods'><li data-type='method' style='display: none;'><a href="TableState.html#toString">toString</a></li></ul></li><li><a href="TTLUtil.html">TTLUtil</a><ul class='methods'><li data-type='method' style='display: none;'><a href="TTLUtil.html#.fromExpirationTime">fromExpirationTime</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.ofDays">ofDays</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.ofHours">ofHours</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.toDays">toDays</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.toExpirationTime">toExpirationTime</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.toExpirationTimeMillis">toExpirationTimeMillis</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.toHours">toHours</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.toMillis">toMillis</a></li></ul></li></ul><h3>Events</h3><ul><li><a href="NoSQLClient.html#event:consumedCapacity">consumedCapacity</a></li><li><a href="NoSQLClient.html#event:error">error</a></li><li><a href="NoSQLClient.html#event:retryable">retryable</a></li><li><a href="NoSQLClient.html#event:tableState">tableState</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AdminResult">AdminResult</a></li><li><a href="global.html#AuthConfig">AuthConfig</a></li><li><a href="global.html#AuthorizationProvider">AuthorizationProvider</a></li><li><a href="global.html#Config">Config</a></li><li><a href="global.html#ConsumedCapacity">ConsumedCapacity</a></li><li><a href="global.html#ContinuationKey">ContinuationKey</a></li><li><a href="global.html#DBNumberConfig">DBNumberConfig</a></li><li><a href="global.html#delay">delay</a></li><li><a href="global.html#DeleteResult">DeleteResult</a></li><li><a href="global.html#doRetry">doRetry</a></li><li><a href="global.html#FieldRange">FieldRange</a></li><li><a href="global.html#FieldValue">FieldValue</a></li><li><a href="global.html#getAuthorization">getAuthorization</a></li><li><a href="global.html#GetResult">GetResult</a></li><li><a href="global.html#IAMConfig">IAMConfig</a></li><li><a href="global.html#IAMCredentials">IAMCredentials</a></li><li><a href="global.html#IAMCredentialsProvider">IAMCredentialsProvider</a></li><li><a href="global.html#IndexInfo">IndexInfo</a></li><li><a href="global.html#Key">Key</a></li><li><a href="global.html#KVStoreAuthConfig">KVStoreAuthConfig</a></li><li><a href="global.html#KVStoreCredentials">KVStoreCredentials</a></li><li><a href="global.html#KVStoreCredentialsProvider">KVStoreCredentialsProvider</a></li><li><a href="global.html#ListTablesResult">ListTablesResult</a></li><li><a href="global.html#loadIAMCredentials">loadIAMCredentials</a></li><li><a href="global.html#loadKVStoreCredentials">loadKVStoreCredentials</a></li><li><a href="global.html#MultiDeleteResult">MultiDeleteResult</a></li><li><a href="global.html#NumberLibConfig">NumberLibConfig</a></li><li><a href="global.html#NumberLibMethods">NumberLibMethods</a></li><li><a href="global.html#NumberLibPrecision">NumberLibPrecision</a></li><li><a href="global.html#NumberLibRoundingMode">NumberLibRoundingMode</a></li><li><a href="global.html#Operation">Operation</a></li><li><a href="global.html#PrepareResult">PrepareResult</a></li><li><a href="global.html#PutResult">PutResult</a></li><li><a href="global.html#QueryResult">QueryResult</a></li><li><a href="global.html#RetryConfig">RetryConfig</a></li><li><a href="global.html#RetryHandler">RetryHandler</a></li><li><a href="global.html#RoundingModesMap">RoundingModesMap</a></li><li><a href="global.html#Row">Row</a></li><li><a href="global.html#TableLimits">TableLimits</a></li><li><a href="global.html#TableResult">TableResult</a></li><li><a href="global.html#TableUsage">TableUsage</a></li><li><a href="global.html#TableUsageResult">TableUsageResult</a></li><li><a href="global.html#TimeToLive">TimeToLive</a></li><li><a href="global.html#UserInfo">UserInfo</a></li><li><a href="global.html#Version">Version</a></li><li><a href="global.html#WriteMultipleResult">WriteMultipleResult</a></li><li><a href="global.html#WriteOperation">WriteOperation</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">TTLUtil</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        TTLUtil
+        </h2>
+        
+            <div class="class-description usertext">TTLUtil is a utility class that may be used to create and
+manage <a href="global.html#TimeToLive">TimeToLive</a> objects and convert between TTL and record
+expiration time.  TTL behavior and relation to record expiration time
+is described in <a href="global.html#TimeToLive">TimeToLive</a>.  Note that on input durations, TTL
+objects and expiration times are validated for correctness and
+<a href="NoSQLArgumentError.html">NoSQLArgumentError</a> is thrown if the representation is invalid.</div>
+        
+    
+</header>
+
+<article>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id=".DO_NOT_EXPIRE"><span class="type-signature">(static) </span>DO_NOT_EXPIRE<span class="type-signature"></span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ttl_util.js.html">ttl_util.js</a>, <a href="ttl_util.js.html#line66">line 66</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Convenience constant to indicate that the row should not expire.  It
+can be passed as TTL to a put operation to remove expiration from
+existing row.
+</div>
+
+
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".MILLIS_IN_DAY"><span class="type-signature">(static) </span>MILLIS_IN_DAY<span class="type-signature"></span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ttl_util.js.html">ttl_util.js</a>, <a href="ttl_util.js.html#line132">line 132</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Convenience constant representing number of milliseconds in 1 day.
+</div>
+
+
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".MILLIS_IN_HOUR"><span class="type-signature">(static) </span>MILLIS_IN_HOUR<span class="type-signature"></span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ttl_util.js.html">ttl_util.js</a>, <a href="ttl_util.js.html#line125">line 125</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Convenience constant representing number of milliseconds in 1 hour.
+</div>
+
+
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id=".fromExpirationTime"><span class="type-signature">(static) </span>fromExpirationTime<span class="signature">(expirationTime, referenceTime, inHours<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="global.html#TimeToLive">TimeToLive</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ttl_util.js.html">ttl_util.js</a>, <a href="ttl_util.js.html#line230">line 230</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Constructs TTL from absolute expiration time given reference time from
+which to measure record expration.  TTL is computed as follows.  First,
+expirationTime is rounded up to the nearest hour boundary.  If
+<em>inHours</em> argument is specified, then the returned TTL will be
+in hours or days depending on whether <em>inHours</em> is true or
+false.  If <em>inHours</em> is not specified, we check if the adjusted
+expiration time indicates midnight in UTC time zone, in which case
+the retured TTL will be in days, otherwise it will be in hours.  Then,
+the duration is computed as the difference between the adjusted
+expiration time and the reference time rounded up to the nearest hour
+or day (depending on which is used in the returned TTL as described
+above) and TTL with that duration is returned.  Note that if
+expiration time is before or equal to the reference time, it is
+possible that the returned value will contain 0 or negative duration,
+which indicates that the record has already expired.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>expirationTime</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Expiration time
+represented as <em>Date</em> or number of milliseconds
+since Unix epoch</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>referenceTime</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Reference time represented
+as <em>Date</em> or number of milliseconds since Unix
+epoch</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>inHours</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Whether to return TTL in hours or days.  If
+not specified, the unit of hours or days is determined as described
+above</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc usertext">
+        if expirationTime or referenceTime is
+invalid
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl class="param-type">
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type"><a href="NoSQLArgumentError.html">NoSQLArgumentError</a></span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    TTL object
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#TimeToLive">TimeToLive</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".ofDays"><span class="type-signature">(static) </span>ofDays<span class="signature">(days)</span><span class="type-signature"> &rarr; {<a href="global.html#TimeToLive">TimeToLive</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ttl_util.js.html">ttl_util.js</a>, <a href="ttl_util.js.html#line90">line 90</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Creates TTL with duration of days
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>days</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Number of days as positive integer or Infinity</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc usertext">
+        if 'days' parameter is invalid
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl class="param-type">
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type"><a href="NoSQLArgumentError.html">NoSQLArgumentError</a></span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    TTL object
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#TimeToLive">TimeToLive</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".ofHours"><span class="type-signature">(static) </span>ofHours<span class="signature">(hours)</span><span class="type-signature"> &rarr; {<a href="global.html#TimeToLive">TimeToLive</a>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ttl_util.js.html">ttl_util.js</a>, <a href="ttl_util.js.html#line74">line 74</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Creates TTL with duration of hours
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>hours</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Number of hours as positive integer or Infinity</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc usertext">
+        if 'hours' parameter is invalid
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl class="param-type">
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type"><a href="NoSQLArgumentError.html">NoSQLArgumentError</a></span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    TTL object
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#TimeToLive">TimeToLive</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".toDays"><span class="type-signature">(static) </span>toDays<span class="signature">(ttl)</span><span class="type-signature"> &rarr; {number}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ttl_util.js.html">ttl_util.js</a>, <a href="ttl_util.js.html#line105">line 105</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Returns the number of days in the TTL.  If the TTL is specified in
+hours, the resulting days value is rounded down, which will result in 0
+if TTL.hours < 24.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ttl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#TimeToLive">TimeToLive</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">TTL object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc usertext">
+        if TTL object is invalid
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl class="param-type">
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type"><a href="NoSQLArgumentError.html">NoSQLArgumentError</a></span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Number of days in the TTL object or Infinity
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".toExpirationTime"><span class="type-signature">(static) </span>toExpirationTime<span class="signature">(ttl, referenceTime)</span><span class="type-signature"> &rarr; {Date}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ttl_util.js.html">ttl_util.js</a>, <a href="ttl_util.js.html#line197">line 197</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Converts TTL to absolute expration time given the reference time from
+which to measure the expiration.  The semantics follows the rounding
+behavior described in <a href="global.html#TimeToLive">TimeToLive</a> so that the returned value
+will be rounded up to the nearest hour or day boundary.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ttl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#TimeToLive">TimeToLive</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">TTL object</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>referenceTime</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Reference time represented
+as Date or number of milliseconds since Unix
+epoch</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc usertext">
+        if TTL object or referenceTime is invalid
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl class="param-type">
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type"><a href="NoSQLArgumentError.html">NoSQLArgumentError</a></span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Expiration time as <em>Date</em>
+instance, may be invalid if ttl represents no expiration (Infinity)
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Date</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".toExpirationTimeMillis"><span class="type-signature">(static) </span>toExpirationTimeMillis<span class="signature">(ttl, referenceTime)</span><span class="type-signature"> &rarr; {number}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ttl_util.js.html">ttl_util.js</a>, <a href="ttl_util.js.html#line162">line 162</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>TTLUtil#toExpirationTime</li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Converts TTL to absolute expiration time in milliseconds since Unix
+epoch (January 1, 1970, 00:00:00 UTC).  This method is the same as
+<a href="TTLUtil.html#.toExpirationTime">TTLUtil.toExpirationTime</a> returning time in milliseconds
+instead of as Date object.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ttl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#TimeToLive">TimeToLive</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">TTL object</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>referenceTime</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Date</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Reference time represented
+as Date or number of milliseconds since Unix
+epoch</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc usertext">
+        if TTL object or referenceTime is invalid
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl class="param-type">
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type"><a href="NoSQLArgumentError.html">NoSQLArgumentError</a></span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Expiration time in milliseconds since Unix epoch or
+Infinity
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".toHours"><span class="type-signature">(static) </span>toHours<span class="signature">(ttl)</span><span class="type-signature"> &rarr; {number}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ttl_util.js.html">ttl_util.js</a>, <a href="ttl_util.js.html#line117">line 117</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Returns the number of hours in the TTL.  If the TTL is specified in
+days, the return value is TTL.days * 24.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ttl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#TimeToLive">TimeToLive</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">TTL object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc usertext">
+        if TTL object is invalid
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl class="param-type">
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type"><a href="NoSQLArgumentError.html">NoSQLArgumentError</a></span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Number of hours in the TTL object or Infinity
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".toMillis"><span class="type-signature">(static) </span>toMillis<span class="signature">(ttl)</span><span class="type-signature"> &rarr; {number}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="ttl_util.js.html">ttl_util.js</a>, <a href="ttl_util.js.html#line144">line 144</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>TTLUtil#toHours</li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Returns number of milliseconds in the TTL.  This is equivalent to
+<a href="TTLUtil.html#.toHours">TTLUtil.toHours</a> multiplied by <a href="TTLUtil.html#.MILLIS_IN_HOUR">TTLUtil.MILLIS_IN_HOUR</a>.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ttl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#TimeToLive">TimeToLive</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">TTL object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc usertext">
+        if TTL object is invalid
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl class="param-type">
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type"><a href="NoSQLArgumentError.html">NoSQLArgumentError</a></span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    Number of milliseconds in the TTL object or Infinity
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">number</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Feb 07 2020 15:12:38 GMT-0500 (Eastern Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

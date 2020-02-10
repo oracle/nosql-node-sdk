@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>auth/iam/types.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav class="wrap">
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-connect-cloud.html">Connecting an Application to Oracle NoSQL Database Cloud Service</a></li><li><a href="tutorial-connect-on-prem.html">Connecting an Application to On-Premise Oracle NoSQL Database</a></li><li><a href="tutorial-tables.html">Working With Tables</a></li></ul><h3>Classes</h3><ul><li><a href="AdminState.html">AdminState</a><ul class='methods'><li data-type='method' style='display: none;'><a href="AdminState.html#toString">toString</a></li></ul></li><li><a href="Consistency.html">Consistency</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Consistency.html#toString">toString</a></li></ul></li><li><a href="Enum.html">Enum</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Enum.html#toString">toString</a></li></ul></li><li><a href="ErrorCode.html">ErrorCode</a><ul class='methods'><li data-type='method' style='display: none;'><a href="ErrorCode.html#toString">toString</a></li></ul></li><li><a href="NoSQLArgumentError.html">NoSQLArgumentError</a></li><li><a href="NoSQLAuthorizationError.html">NoSQLAuthorizationError</a></li><li><a href="NoSQLClient.html">NoSQLClient</a><ul class='methods'><li data-type='method' style='display: none;'><a href="NoSQLClient.html#adminDDL">adminDDL</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#adminStatus">adminStatus</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#close">close</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#delete">delete</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#deleteIfVersion">deleteIfVersion</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#deleteMany">deleteMany</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#deleteRange">deleteRange</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#forCompletion">forCompletion</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#forTableState">forTableState</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#get">get</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#getIndex">getIndex</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#getIndexes">getIndexes</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#getTable">getTable</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#getTableUsage">getTableUsage</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#listNamespaces">listNamespaces</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#listRoles">listRoles</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#listTables">listTables</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#listUsers">listUsers</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#prepare">prepare</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#put">put</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#putIfAbsent">putIfAbsent</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#putIfPresent">putIfPresent</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#putIfVersion">putIfVersion</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#putMany">putMany</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#query">query</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#setTableLimits">setTableLimits</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#tableDDL">tableDDL</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#writeMany">writeMany</a></li></ul></li><li><a href="NoSQLError.html">NoSQLError</a></li><li><a href="NoSQLNetworkError.html">NoSQLNetworkError</a></li><li><a href="NoSQLProtocolError.html">NoSQLProtocolError</a></li><li><a href="NoSQLQueryError.html">NoSQLQueryError</a></li><li><a href="NoSQLServiceError.html">NoSQLServiceError</a></li><li><a href="NoSQLTimeoutError.html">NoSQLTimeoutError</a></li><li><a href="PreparedStatement.html">PreparedStatement</a><ul class='methods'><li data-type='method' style='display: none;'><a href="PreparedStatement.html#clearAll">clearAll</a></li><li data-type='method' style='display: none;'><a href="PreparedStatement.html#set">set</a></li></ul></li><li><a href="Region.html">Region</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Region.html#toString">toString</a></li></ul></li><li><a href="ServiceType.html">ServiceType</a><ul class='methods'><li data-type='method' style='display: none;'><a href="ServiceType.html#toString">toString</a></li></ul></li><li><a href="TableState.html">TableState</a><ul class='methods'><li data-type='method' style='display: none;'><a href="TableState.html#toString">toString</a></li></ul></li><li><a href="TTLUtil.html">TTLUtil</a><ul class='methods'><li data-type='method' style='display: none;'><a href="TTLUtil.html#.fromExpirationTime">fromExpirationTime</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.ofDays">ofDays</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.ofHours">ofHours</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.toDays">toDays</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.toExpirationTime">toExpirationTime</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.toExpirationTimeMillis">toExpirationTimeMillis</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.toHours">toHours</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.toMillis">toMillis</a></li></ul></li></ul><h3>Events</h3><ul><li><a href="NoSQLClient.html#event:consumedCapacity">consumedCapacity</a></li><li><a href="NoSQLClient.html#event:error">error</a></li><li><a href="NoSQLClient.html#event:retryable">retryable</a></li><li><a href="NoSQLClient.html#event:tableState">tableState</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AdminResult">AdminResult</a></li><li><a href="global.html#AuthConfig">AuthConfig</a></li><li><a href="global.html#AuthorizationProvider">AuthorizationProvider</a></li><li><a href="global.html#Config">Config</a></li><li><a href="global.html#ConsumedCapacity">ConsumedCapacity</a></li><li><a href="global.html#ContinuationKey">ContinuationKey</a></li><li><a href="global.html#DBNumberConfig">DBNumberConfig</a></li><li><a href="global.html#delay">delay</a></li><li><a href="global.html#DeleteResult">DeleteResult</a></li><li><a href="global.html#doRetry">doRetry</a></li><li><a href="global.html#FieldRange">FieldRange</a></li><li><a href="global.html#FieldValue">FieldValue</a></li><li><a href="global.html#getAuthorization">getAuthorization</a></li><li><a href="global.html#GetResult">GetResult</a></li><li><a href="global.html#IAMConfig">IAMConfig</a></li><li><a href="global.html#IAMCredentials">IAMCredentials</a></li><li><a href="global.html#IAMCredentialsProvider">IAMCredentialsProvider</a></li><li><a href="global.html#IndexInfo">IndexInfo</a></li><li><a href="global.html#Key">Key</a></li><li><a href="global.html#KVStoreAuthConfig">KVStoreAuthConfig</a></li><li><a href="global.html#KVStoreCredentials">KVStoreCredentials</a></li><li><a href="global.html#KVStoreCredentialsProvider">KVStoreCredentialsProvider</a></li><li><a href="global.html#ListTablesResult">ListTablesResult</a></li><li><a href="global.html#loadIAMCredentials">loadIAMCredentials</a></li><li><a href="global.html#loadKVStoreCredentials">loadKVStoreCredentials</a></li><li><a href="global.html#MultiDeleteResult">MultiDeleteResult</a></li><li><a href="global.html#NumberLibConfig">NumberLibConfig</a></li><li><a href="global.html#NumberLibMethods">NumberLibMethods</a></li><li><a href="global.html#NumberLibPrecision">NumberLibPrecision</a></li><li><a href="global.html#NumberLibRoundingMode">NumberLibRoundingMode</a></li><li><a href="global.html#Operation">Operation</a></li><li><a href="global.html#PrepareResult">PrepareResult</a></li><li><a href="global.html#PutResult">PutResult</a></li><li><a href="global.html#QueryResult">QueryResult</a></li><li><a href="global.html#RetryConfig">RetryConfig</a></li><li><a href="global.html#RetryHandler">RetryHandler</a></li><li><a href="global.html#RoundingModesMap">RoundingModesMap</a></li><li><a href="global.html#Row">Row</a></li><li><a href="global.html#TableLimits">TableLimits</a></li><li><a href="global.html#TableResult">TableResult</a></li><li><a href="global.html#TableUsage">TableUsage</a></li><li><a href="global.html#TableUsageResult">TableUsageResult</a></li><li><a href="global.html#TimeToLive">TimeToLive</a></li><li><a href="global.html#UserInfo">UserInfo</a></li><li><a href="global.html#Version">Version</a></li><li><a href="global.html#WriteMultipleResult">WriteMultipleResult</a></li><li><a href="global.html#WriteOperation">WriteOperation</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">auth/iam/types.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+ * Copyright (C) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
+ *
+ * Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
+ *
+ * Please see LICENSE.txt file included in the top-level directory of the
+ * appropriate download for a copy of the license and additional information.
+ */
+
+'use strict';
+
+/**
+ * Defines types used for NoSQL driver configuration for Oracle Cloud
+ * Infrastructure Identity and Access Management (IAM).
+ */
+
+/**
+ * {@link IAMConfig} is required to authorize operations using Oracle Cloud
+ * Infrastructure Identity and Access Management (IAM).  It should be set as
+ * {@link AuthConfig}#iam.
+ * &lt;p>
+ * See [Overview of Oracle Cloud Infrastructure Identity and Access Management]{@link https://docs.cloud.oracle.com/iaas/Content/Identity/Concepts/overview.htm}
+ * for information on IAM components and how they work together to provide
+ * security for Oracle Cloud services.
+ * &lt;p>
+ * All operations require a request signature that is used by the system to
+ * authorize the operation.  {@link IAMConfig} object should provide required
+ * credentials used by the driver to generate the request signature in order
+ * to sign the API requests.  The following credentials are required:
+ * &lt;ul>
+ * &lt;li>Tenancy OCID.  This is Oracle Cloud ID (OCID) for your tenancy.  See
+ * [Resource Identifiers]{@link https://docs.cloud.oracle.com/iaas/Content/General/Concepts/identifiers.htm}
+ * for information on OCIDs.&lt;/li>
+ * &lt;li>User's OCID.  This is Oracle Cloud ID (OCID) for the user in your
+ * tenancy.  See [Resource Identifiers]{@link https://docs.cloud.oracle.com/iaas/Content/General/Concepts/identifiers.htm}
+ * for information on OCIDs.&lt;/li>
+ * &lt;li>API Signing Key.  This is public-private key pair used to sign the API
+ * requests, see [Required Keys and OCIDs]{@link https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm}.
+ * In particular, private key is needed to generate the request signature.&lt;/li>
+ * &lt;li>Public Key Fingerprint.  This is an identifier of the public key of the
+ * API Signing Key pair.&lt;/li>
+ * &lt;li>Passphrase for the private key of API Signing Key pair if the private
+ * key is encrypted.&lt;/li>
+ * &lt;/ul>
+ * See [Required Keys and OCIDs]{@link https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm}
+ * for detailed description of the above credentials and the steps you need to
+ * perform to enable signing of API requests, which are:
+ * &lt;ul>
+ * &lt;li>Generate the key pair described above.&lt;/li>
+ * &lt;li>Upload public key.&lt;/li>
+ * &lt;li>Obtain tenancy and user OCIDs and public key fingerprint.&lt;/li>
+ * &lt;/ul>
+ * &lt;p>
+ * You may provide required credentials in one of the following ways, in
+ * order of increased security:
+ * &lt;ul>
+ * &lt;li>Directly as properties of {@link IAMConfig}.
+ * In this case, set properties &lt;em>tenantId&lt;/em>, &lt;em>userId&lt;/em>,
+ * &lt;em>privateKey&lt;/em> or &lt;em>privateKeyFile&lt;/em>, &lt;em>fingerprint&lt;/em> and
+ * &lt;em>passphrase&lt;/em> (if private key is encrypted)&lt;/li>
+ * &lt;li>As part of OCI config file.  See
+ * [SDK and CLI Configuration File]{@link https://docs.cloud.oracle.com/iaas/Content/API/Concepts/sdkconfig.htm}
+ * for information on OCI configuration file and what entries are used for the
+ * required credentials.  In this case, you may set properties
+ * &lt;em>configFile&lt;/em> and/or &lt;em>profileName&lt;/em>.  If not set,
+ * appropriate default values will be used, see property descriptions.&lt;/li>
+ * &lt;li>Specify your own credentials provider in the form of
+ * {@link IAMCredentialsProvider} that implements {@link loadIAMCredentials}
+ * function.  This allows you to store and retrieve credentials in a secure
+ * manner.  In this case, specify &lt;em>credentialsProvider&lt;/em> property.&lt;/li>
+ * &lt;/ul>
+ * Note that the private key must be in PEM format.  You may provide a path
+ * to the PEM key file.  Alternatively, except when using OCI configuration
+ * file, you may provide PEM encoded private key directly as &lt;em>Buffer&lt;/em>
+ * or &lt;em>string&lt;/em>.  Note that the &lt;em>passphrase&lt;/em> must be provided if
+ * the private key is encrypted.
+ * &lt;p>
+ * The driver will determine the credentials as follows:
+ * &lt;ol>
+ * &lt;li>If {@link IAMConfig} has &lt;em>privateKeyFile&lt;/em> or &lt;em>privateKey&lt;/em>
+ * property, the driver assumes that the credentials are provided directly and
+ * all other required properties must be present as described above, otherwise
+ * {@link NoSQLArgumentError} will result.&lt;/li>
+ * &lt;li>Otherwise, if {@link IAMConfig} has &lt;em>credentialsProvider&lt;/em>
+ * property, then the credetials are obtained through the credentials provider
+ * which must be in the form of {@link IAMCredentialsProvider}.&lt;/li>
+ * &lt;li>Otherwise, the driver assumes that credentials are stored in OCI config
+ * file and will use &lt;em>configFile&lt;/em> and &lt;em>profileName&lt;/em> properties
+ * if present, otherwise it will assume their default values.  In particular,
+ * if you specify {@link Config}#serviceType as {@link ServiceType.CLOUD}
+ * and omit {@link Config}#auth alltogether, the driver will use IAM
+ * authorization with default OCI config file and default profile name.&lt;/li>
+ * &lt;/ol>
+ * &lt;p>
+ * Generated signature is valid for a period of time and is cached for
+ * effeciency.  The caching behavior may be customized with properties
+ * {@link IAMConfig}#durationSeconds and {@link IAMConfig}#refreshAheadMs. See
+ * their property descriptions for details.
+ * 
+ * @see {@link AuthConfig}
+ * @see {@link IAMCredentials}
+ * @see {@link IAMCredentialsProvider}
+ * @tutorial connect-cloud
+ * 
+ * @example //JSON config object supplying IAM credentials directly (sensitive
+ * //info not shown)
+ * {
+ *     "endpoint": "https://nosql.us-phoenix-1.oci.oraclecloud.com",
+ *     "auth": {
+ *         "iam": {
+ *             "tenantId": "ocid1.tenancy.oc...................",
+ *             "userId": "ocid1.user.oc.....................",
+ *             "fingerprint": "aa:aa:aa:aa:.....",
+ *             "privateKeyFile": "~/myapp/security/oci_api_key.pem",
+ *             "passphrase": "..............."
+ *         }
+ *     }
+ * }
+ * 
+ * @example //JSON AuthConfig object supplying IAM credentials through OCI
+ * //configuration file
+ * {
+ *     "endpoint": "https://nosql.us-phoenix-1.oci.oraclecloud.com",
+ *     "auth": {
+ *         "iam": {
+ *             "configFile": "~/myapp/.oci/config",
+ *             "profileName": "John"
+ *         }
+ *     }
+ * }
+ * 
+ * @example //Javascript AuthConfig object supplying IAM credentials via
+ * //custom credentials provider
+ * {
+ *     endpoint: "https://nosql.us-phoenix-1.oci.oraclecloud.com",
+ *     auth: {
+ *         iam: {
+ *             credentialsProvider: async () => {
+ *                 .......... //retrieve credentials somehow
+ *                 ..........
+ *                 return {
+ *                     tenantId: myTenantId,
+ *                     userId: myUserId,
+ *                     fingerprint: myFingerprint,
+ *                     privateKey: myPrivateKey,
+ *                     passphrase: myPassphrase
+ *                 };
+ *             }
+ *         }
+ *     }
+ * }
+ * 
+ * @global
+ * @typedef {object} IAMConfig
+ * @property {string} [tenantId] Tenancy OCID
+ * @property {string} [userId] User OCID
+ * @property {Buffer|string} [privateKey] PEM-encoded private key data.  If
+ * specified as &lt;em>Buffer&lt;/em>, you may clear the buffer contents afer
+ * {@link NoSQLClient} instance is created for added security.  Note that only
+ * one of &lt;em>privateKey&lt;/em> or &lt;em>privateKeyFile&lt;/em> properties may be
+ * specified
+ * @property {string|Buffer} [privateKeyFile] Path to PEM private key file.
+ * Path may be absolute or relative to current directory.  May be
+ * &lt;em>string&lt;/em> or UTF-8 encoded &lt;em>Buffer&lt;/em>.  Note that only one
+ * of &lt;em>privateKey&lt;/em> or &lt;em>privateKeyFile&lt;/em> properties may be
+ * specified
+ * @property {string} [fingerprint] Public key fingerprint
+ * @property {Buffer|string} [passphrase] Passphrase for the private key if it
+ * is encrypted.  If specified as &lt;em>Buffer&lt;/em>, you may clear the buffer
+ * contents after {@link NoSQLClient} instance is created for added security
+ * @property {string|Buffer} [configFile='~/.oci/config'] OCI configuration
+ * file path.  May be absolute or relative to current directory.  May be
+ * &lt;em>string&lt;/em> or UTF-8 encoded &lt;em>Buffer&lt;/em>.  If not
+ * set, the default is used which is "~/.oci/config", where "~" represents
+ * user's home directory on Unix systems and %USERPROFILE% directory on
+ * Windows (see USERPROFILE environment variable)
+ * @property {string} [profileName='DEFAULT'] Profile name within the OCI
+ * configuration file, used only if credentials are obtained from the
+ * configuration file as described.  If not set, the name "DEFAULT" is used
+ * @property {IAMCredentialsProvider|string} [credentialsProvider] Custom
+ * credentials provider to use to obtain credentials in the form of
+ * {@link IAMCredentials}.  You may also specify string for a module name or
+ * path that exports {@link IAMCredentialsProvider}
+ * @property {number} [durationSeconds=300] Cache duration of the signature
+ * in seconds.  Specifies how long cached signature may be used before new one
+ * has to be created.  Maximum allowed duration is 5 minutes (300 seconds),
+ * which is also the default
+ * @property {number} [refreshAheadMs=10000] Tells the driver when to
+ * automatically refresh the signature before its expiration in the cache,
+ * measured in number of milliseconds before expiration.  E.g. value 10000
+ * means that the driver will attempt to refresh the signature 10 seconds
+ * before its expiration.  Using refresh allows to avoid slowing down of
+ * database operations by creating the signature asynchronously.  You can set
+ * this property to null to disable automatic refresh
+ */
+
+/**
+ * This type encapsulates credentials required for generating OCI request
+ * signature.  It is used as a return type for {@link loadIAMCredentials} in
+ * {@link IAMCredentialsProvider}.  The properties of this type are the same
+ * as in {@link IAMConfig} when credentials are provided directly.  See
+ * {@link IAMConfig} for more information.
+ * &lt;p>
+ * When returning this object, you have choices to return &lt;em>privateKey&lt;/em>
+ * or &lt;em>privateKeyFile&lt;/em> and to return &lt;em>Buffer&lt;/em> or &lt;em>string&lt;/em>
+ * for fields indicated as such.
+ * 
+ * @see {@link IAMConfig}
+ * @see {@link loadIAMCredentials}
+ * @see {@link IAMCredentialsProvider}
+ * 
+ * @global
+ * @typedef {object} IAMCredentials
+ * @property {string} [tenantId] Tenancy OCID
+ * @property {string} [userId] User OCID
+ * @property {Buffer|string} [privateKey] PEM encoded private key data.  Note
+ * that only one of &lt;em>privateKey&lt;/em> or &lt;em>privateKeyFile&lt;/em> properties
+ * may be returned
+ * @property {string|Buffer} [privateKeyFile] Path to PEM private key file.
+ * Note that only one of &lt;em>privateKey&lt;/em> or &lt;em>privateKeyFile&lt;/em>
+ * properties may be returned
+ * @property {string} [fingerprint] Public key fingerprint
+ * @property {Buffer|string} [passphrase] Passphrase for the private key if it
+ * is encrypted
+ */
+
+/**
+ * Interface to load credentials required for generating OCI request
+ * signature.  Used in {@link IAMCredentialsProvider}.
+ * @see {@link IAMCredentialsProvider}
+ * @see {@link IAMCredentials}
+ * 
+ * @global
+ * @callback loadIAMCredentials
+ * @async
+ * @returns {Promise} Promise resolved with {@link IAMCredentials} or
+ * rejected with an error.  Properties of type &lt;em>Buffer&lt;/em> in
+ * {@link IAMCredentials} such as &lt;em>privateKey&lt;/em> and &lt;em>passphrase&lt;/em>
+ * will be erased once the signature is generated
+ */
+
+/**
+ * You may implement {@link IAMCredentialsProvider} interface to securely
+ * obtain credentials required for generation of OCI request signature, as
+ * described in {@link IAMConfig}.  {@link IAMCredentialsProvider} is
+ * set as {@link IAMConfig}#credentialsProvider property and may be specified
+ * either as {@link loadIAMCredentials} function or as an object
+ * implementing &lt;em>loadCredentials&lt;/em> function.
+ * 
+ * @see {@link loadIAMCredentials}
+ * @see {@link IAMCredentials}
+ * @see {@link IAMConfig}
+ * @tutorial connect-cloud
+ * 
+ * @global
+ * @typedef {object|loadIAMCredentials} IAMCredentialsProvider
+ * @property {loadIAMCredentials} loadCredentials loadCredentials function
+ */
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Feb 07 2020 15:12:37 GMT-0500 (Eastern Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>
