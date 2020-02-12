@@ -3,7 +3,10 @@
 <head>
     
     <meta charset="utf-8">
-    <title>NoSQLClient - Documentation</title>
+    <title>NoSQLClient - Oracle NoSQL Database Node.js SDK</title>
+    
+    
+    
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -458,7 +461,7 @@ missing required properties or contains invalid property values
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1209">line 1209</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1189">line 1189</a>
     </li></ul></dd>
     
 
@@ -843,7 +846,7 @@ Defaults to <a href="global.html#Config">Config</a>#adminPollDelay.  Has no effe
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1237">line 1237</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1217">line 1217</a>
     </li></ul></dd>
     
 
@@ -1244,7 +1247,7 @@ it if you need to perform an action upon its completion.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line781">line 781</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line761">line 761</a>
     </li></ul></dd>
     
 
@@ -1680,7 +1683,7 @@ there is an existing row that matches the primary key and its
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line808">line 808</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line788">line 788</a>
     </li></ul></dd>
     
 
@@ -2082,7 +2085,7 @@ specified.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1003">line 1003</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line983">line 983</a>
     </li></ul></dd>
     
 
@@ -2395,7 +2398,7 @@ failures due non-existence of the row or inability to match
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line863">line 863</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line843">line 843</a>
     </li></ul></dd>
     
 
@@ -2861,7 +2864,7 @@ continuation key still require the primary key</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1319">line 1319</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1297">line 1297</a>
     </li></ul></dd>
     
 
@@ -2899,8 +2902,6 @@ continuation key still require the primary key</td>
         
             <li><a href="NoSQLClient.html#getTable">NoSQLClient#getTable</a></li>
         
-            <li><a href="NoSQLClient.html#forTableState">NoSQLClient#forTableState</a></li>
-        
             <li><a href="global.html#TableResult">TableResult</a></li>
         
             <li><a href="NoSQLClient.html#adminDDL">NoSQLClient#adminDDL</a></li>
@@ -2935,8 +2936,7 @@ operation state at specified intervals using
 <a href="NoSQLClient.html#adminStatus">NoSQLClient#adminStatus</a> for admin DDL operations.
 <p>
 For table DDL operations initiated by <a href="NoSQLClient.html#tableDDL">NoSQLClient#tableDDL</a> this
-method is equivalent to calling <a href="NoSQLClient.html#forTableState">NoSQLClient#forTableState</a> and
-asynchronously waiting for state <a href="TableState.html#.ACTIVE">TableState.ACTIVE</a> for all
+method asynchronously waits for state <a href="TableState.html#.ACTIVE">TableState.ACTIVE</a> for all
 operations except "DROP TABLE", in the latter case asynchronously
 waiting for <a href="TableState.html#.DROPPED">TableState.DROPPED</a>.
 <p>
@@ -3260,7 +3260,7 @@ modified to reflect operation completion
 
     
 
-    <h4 class="name" id="forTableState"><span class="type-signature">(async) </span>forTableState<span class="signature">(table, tableState, opt<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id="forTableState"><span class="type-signature">(async) </span>forTableState<span class="signature">(tableName, tableState, opt<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
 
     
 
@@ -3272,7 +3272,7 @@ modified to reflect operation completion
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line378">line 378</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line358">line 358</a>
     </li></ul></dd>
     
 
@@ -3324,28 +3324,26 @@ modified to reflect operation completion
 
 <div class="description usertext">
     Waits asynchronously for the table to reach a desired state.  This is
-achieved by polling the table at specified intervals. The state of
-<a href="TableState.html#.DROPPED">TableState.DROPPED</a> is treated specially in that it will be
-returned as success, even if the table does not exist. Other states
-will result in error if the table is not found.
+achieved by polling the table at specified intervals.
 <p>
 This API is used to ensure that the table is ready for data
-operations after it has been created or altered. It waits until
+operations after it has been created or altered. It should only be used
+if the table DDL operation has been performed outside of the current
+flow of control (e.g. by another application) such that the
+<a href="global.html#TableResult">TableResult</a> of the DDL operation is not available.  To wait for
+completion of the table DDL operation that you issued, use
+<a href="NoSQLClient.html#forCompletion">NoSQLClient#forCompletion</a>.  This API waits until
 the table has transitioned from an intermediate state like
 <a href="TableState.html#.CREATING">TableState.CREATING</a> or <a href="TableState.html#.UPDATING">TableState.UPDATING</a> to a
 stable state like <a href="TableState.html#.ACTIVE">TableState.ACTIVE</a>, at which point it
 can be used.
 <p>
-The result of this operation, if successful, is a <a href="global.html#TableResult">TableResult</a> that shows the table state from the last poll. The
+The result of this operation, if successful, is a <a href="global.html#TableResult">TableResult</a>
+that shows the table state from the last poll. The
 state of <a href="TableState.html#.DROPPED">TableState.DROPPED</a> is treated specially in
 that it will be returned as success, even if the table does not
 exist. Other states will throw an exception if the table is not
 found.
-<p>
-Another way to asynchronously wait for completion of operation
-initiated by <a href="NoSQLClient.html#tableDDL">NoSQLClient#tableDDL</a> is to use
-<a href="NoSQLClient.html#forCompletion">NoSQLClient#forCompletion</a> or pass <em>opt.complete</em>
-to <a href="NoSQLClient.html#tableDDL">NoSQLClient#tableDDL</a>
 </div>
 
 
@@ -3354,19 +3352,6 @@ to <a href="NoSQLClient.html#tableDDL">NoSQLClient#tableDDL</a>
 
 
 
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>// Using forTableState
-try {
-    let tableRes = await client.tableDDL('CREATE TABLE.....');
-    await client.forTableState(tableRes, TableState.ACTIVE);
-    let putRes = client.put(//.......
-} catch(err) {
-    // May be caused by client.forTableState if long running DDL
-    // operation was unsuccessful, see "table" parameter.
-}</code></pre>
 
 
 
@@ -3398,16 +3383,13 @@ try {
 
         <tr>
             
-                <td class="name"><code>table</code></td>
+                <td class="name"><code>tableName</code></td>
             
 
             <td class="type">
             
                 
 <span class="param-type">string</span>
-|
-
-<span class="param-type"><a href="global.html#TableResult">TableResult</a></span>
 
 
             
@@ -3425,12 +3407,7 @@ try {
 
             
 
-            <td class="description last">Either the table name or a
-<a href="global.html#TableResult">TableResult</a> object that was returned from a call to
-<a href="NoSQLClient.html#tableDDL">NoSQLClient#tableDDL</a>. If the latter,
-error information for the DDL operation will be retrieved, so
-if the original call failed, this follow-on call will also fail with
-the same error.</td>
+            <td class="description last">Table name</td>
         </tr>
 
     
@@ -3693,7 +3670,7 @@ result of the last poll
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line533">line 533</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line513">line 513</a>
     </li></ul></dd>
     
 
@@ -4069,7 +4046,7 @@ the operation.  Defaults to <a href="global.html#Config">Config</a>#Consistency<
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line473">line 473</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line453">line 453</a>
     </li></ul></dd>
     
 
@@ -4407,7 +4384,7 @@ milliseconds.  Defaults to <a href="global.html#Config">Config</a>#timeout</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line449">line 449</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line429">line 429</a>
     </li></ul></dd>
     
 
@@ -4749,7 +4726,7 @@ information on all indexes is returned</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line311">line 311</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line308">line 308</a>
     </li></ul></dd>
     
 
@@ -5065,7 +5042,7 @@ milliseconds.  Defaults to <a href="global.html#Config">Config</a>#timeout</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line423">line 423</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line403">line 403</a>
     </li></ul></dd>
     
 
@@ -5506,7 +5483,7 @@ usage records may be returned due to size limitations</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1339">line 1339</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1317">line 1317</a>
     </li></ul></dd>
     
 
@@ -5680,7 +5657,7 @@ already implied</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1381">line 1381</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1359">line 1359</a>
     </li></ul></dd>
     
 
@@ -5854,7 +5831,7 @@ already implied</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line505">line 505</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line485">line 485</a>
     </li></ul></dd>
     
 
@@ -6239,7 +6216,7 @@ from given namespace only, otherwise list all tables for the user.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1361">line 1361</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1339">line 1339</a>
     </li></ul></dd>
     
 
@@ -6416,7 +6393,7 @@ information about each user
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1037">line 1037</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1017">line 1017</a>
     </li></ul></dd>
     
 
@@ -6759,7 +6736,7 @@ of query execution plan to be included in the returned
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line636">line 636</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line616">line 616</a>
     </li></ul></dd>
     
 
@@ -7436,7 +7413,7 @@ identity CACHE value is used</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line664">line 664</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line644">line 644</a>
     </li></ul></dd>
     
 
@@ -7880,7 +7857,7 @@ key.  This API is a shorthand for <a href="NoSQLClient.html#put">NoSQLClient#put
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line692">line 692</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line672">line 672</a>
     </li></ul></dd>
     
 
@@ -8324,7 +8301,7 @@ key.  This API is a shorthand for <a href="NoSQLClient.html#put">NoSQLClient#put
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line724">line 724</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line704">line 704</a>
     </li></ul></dd>
     
 
@@ -8826,7 +8803,7 @@ specified.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line965">line 965</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line945">line 945</a>
     </li></ul></dd>
     
 
@@ -9140,7 +9117,7 @@ in error</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1123">line 1123</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1103">line 1103</a>
     </li></ul></dd>
     
 
@@ -9702,7 +9679,7 @@ will not look ahead to check if any more results remain</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line273">line 273</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line270">line 270</a>
     </li></ul></dd>
     
 
@@ -9759,10 +9736,9 @@ method is a no-op.
 Sets new limits of throughput and storage for existing table.
 <p>
 Same considerations as described in <a href="NoSQLClient.html#tableDDL">NoSQLClient#tableDDL</a> about
-long-running operations, using <a href="NoSQLClient.html#forCompletion">NoSQLClient#forCompletion</a>,
-<a href="NoSQLClient.html#forTableState">NoSQLClient#forTableState</a> and options <em>opt.complete</em> and
-<em>opt.delay</em> apply to this API.  See
-<a href="NoSQLClient.html#tableDDL">NoSQLClient#tableDDL</a>.
+long-running operations, using <a href="NoSQLClient.html#forCompletion">NoSQLClient#forCompletion</a> and
+options <em>opt.complete</em> and <em>opt.delay</em> apply to this API.
+See <a href="NoSQLClient.html#tableDDL">NoSQLClient#tableDDL</a>.
 </div>
 
 
@@ -10125,7 +10101,7 @@ Defaults to <a href="global.html#Config">Config</a>#tablePollDelay.  Has no effe
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line226">line 226</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line224">line 224</a>
     </li></ul></dd>
     
 
@@ -10161,8 +10137,6 @@ Defaults to <a href="global.html#Config">Config</a>#tablePollDelay.  Has no effe
         <ul>
             <li><a href="global.html#TableResult">TableResult</a></li>
         
-            <li><a href="NoSQLClient.html#forTableState">NoSQLClient#forTableState</a></li>
-        
             <li><a href="NoSQLClient.html#forCompletion">NoSQLClient#forCompletion</a></li>
         </ul>
     </dd>
@@ -10193,8 +10167,7 @@ Note that these are potentially long-running operations, so the
 result returned by this API does not imply operation completion
 and the table may be in an intermediate state. (see <a href="TableState.html">TableState</a>).  The caller should use the <a href="NoSQLClient.html#getTable">NoSQLClient#getTable</a>
 method to check the status of the operation or
-<a href="NoSQLClient.html#forCompletion">NoSQLClient#forCompletion</a> (or alternatively
-<a href="NoSQLClient.html#forTableState">NoSQLClient#forTableState</a>) to asynchronously wait for the
+<a href="NoSQLClient.html#forCompletion">NoSQLClient#forCompletion</a> to asynchronously wait for the
 operation completion.
 <p>
 Alternatively, if <em>opt.complete</em> is set to true, this API will
@@ -10576,7 +10549,7 @@ Defaults to <a href="global.html#Config">Config</a>#tablePollDelay.  Has no effe
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line926">line 926</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line906">line 906</a>
     </li></ul></dd>
     
 
@@ -10951,7 +10924,7 @@ milliseconds.  Defaults to <a href="global.html#Config">Config</a>#timeout</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1420">line 1420</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1398">line 1398</a>
     </li></ul></dd>
     
 
@@ -11117,7 +11090,7 @@ capacity, see <a href="global.html#Operation">Operation</a></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1387">line 1387</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1365">line 1365</a>
     </li></ul></dd>
     
 
@@ -11284,7 +11257,7 @@ caused the error, see <a href="global.html#Operation">Operation</a></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1403">line 1403</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1381">line 1381</a>
     </li></ul></dd>
     
 
@@ -11480,7 +11453,7 @@ be performed</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1435">line 1435</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1413">line 1413</a>
     </li></ul></dd>
     
 
@@ -11525,8 +11498,8 @@ be performed</td>
 Emitted by <a href="NoSQLClient.html">NoSQLClient</a> method calls that return table state as part
 of their result, such as <a href="NoSQLClient.html#getTable">NoSQLClient#getTable</a>,
 <a href="NoSQLClient.html#tableDDL">NoSQLClient#tableDDL</a> and <a href="NoSQLClient.html#setTableLimits">NoSQLClient#setTableLimits</a> and
-also while table is polled waiting for its state change by
-<a href="NoSQLClient.html#forTableState">NoSQLClient#forTableState</a>.  Can be used to perform actions on a
+also while table is polled waiting for DDL operation completion using
+<a href="NoSQLClient.html#forCompletion">NoSQLClient#forCompletion</a>.  Can be used to perform actions on a
 table reaching certain state.  Note that this event may be emitted mutliple
 times even while the table state did not change.
 </div>
@@ -11639,14 +11612,14 @@ times even while the table state did not change.
 
 
 
-    
+
     
 </div>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Feb 07 2020 15:12:37 GMT-0500 (Eastern Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

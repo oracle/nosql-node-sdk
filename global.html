@@ -3,7 +3,10 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Global - Documentation</title>
+    <title>Global - Oracle NoSQL Database Node.js SDK</title>
+    
+    
+    
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -136,7 +139,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line352">line 352</a>
+        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line351">line 351</a>
     </li></ul></dd>
     
 
@@ -1209,10 +1212,9 @@ while automatically retrying operations that failed with error code
             
 
             <td class="description last">Timeout when polling for table
-state as used by <a href="NoSQLClient.html#forTableState">NoSQLClient#forTableState</a> or waiting for
-completion of <a href="NoSQLClient.html#tableDDL">NoSQLClient#tableDDL</a> operation, as used by
-<a href="NoSQLClient.html#forCompletion">NoSQLClient#forCompletion</a>, in milliseconds.  Can be overriden by
-<em>opt.timeout</em> for these methods</td>
+state using <a href="NoSQLClient.html#forCompletion">NoSQLClient#forCompletion</a> while waiting for completion
+of <a href="NoSQLClient.html#tableDDL">NoSQLClient#tableDDL</a> operation, in milliseconds.  Can be
+overriden by <em>opt.timeout</em> for these methods</td>
         </tr>
 
     
@@ -1250,11 +1252,10 @@ completion of <a href="NoSQLClient.html#tableDDL">NoSQLClient#tableDDL</a> opera
             
 
             <td class="description last">Delay between successive poll
-attempts when polling for table state as used by
-<a href="NoSQLClient.html#forTableState">NoSQLClient#forTableState</a> or waiting for completion of
-<a href="NoSQLClient.html#tableDDL">NoSQLClient#tableDDL</a> operation, as used by
-<a href="NoSQLClient.html#forCompletion">NoSQLClient#forCompletion</a>, in milliseconds.  Can be overriden by
-<em>opt.delay</em> for these methods</td>
+attempts when polling for table state using
+<a href="NoSQLClient.html#forCompletion">NoSQLClient#forCompletion</a> while waiting for completion
+of <a href="NoSQLClient.html#tableDDL">NoSQLClient#tableDDL</a> operation, in milliseconds.  Can be
+overriden by <em>opt.delay</em> for these methods</td>
         </tr>
 
     
@@ -1734,7 +1735,7 @@ client.getTableInfo('Table1', { timeout: 8000 }, (err, res) => {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line133">line 133</a>
+        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line132">line 132</a>
     </li></ul></dd>
     
 
@@ -2313,7 +2314,7 @@ async function test() {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_config.js.html">types/config.js</a>, <a href="types_config.js.html#line376">line 376</a>
+        <a href="types_config.js.html">types/config.js</a>, <a href="types_config.js.html#line374">line 374</a>
     </li></ul></dd>
     
 
@@ -2520,7 +2521,7 @@ operation
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line222">line 222</a>
+        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line221">line 221</a>
     </li></ul></dd>
     
 
@@ -2730,7 +2731,7 @@ in <a href="global.html#WriteMultipleResult">WriteMultipleResult</a>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_config.js.html">types/config.js</a>, <a href="types_config.js.html#line361">line 361</a>
+        <a href="types_config.js.html">types/config.js</a>, <a href="types_config.js.html#line359">line 359</a>
     </li></ul></dd>
     
 
@@ -3664,7 +3665,7 @@ authorization <em>object</em> or rejected with an error
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line177">line 177</a>
+        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line176">line 176</a>
     </li></ul></dd>
     
 
@@ -5032,7 +5033,7 @@ implementing <em>loadCredentials</em> function.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line103">line 103</a>
+        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line102">line 102</a>
     </li></ul></dd>
     
 
@@ -6024,7 +6025,7 @@ provider.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line117">line 117</a>
+        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line116">line 116</a>
     </li></ul></dd>
     
 
@@ -6427,7 +6428,7 @@ rejected with an error
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line245">line 245</a>
+        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line244">line 244</a>
     </li></ul></dd>
     
 
@@ -8038,7 +8039,7 @@ client.tableDDL(
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line306">line 306</a>
+        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line305">line 305</a>
     </li></ul></dd>
     
 
@@ -8167,7 +8168,7 @@ properties described below are available as properties of
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line193">line 193</a>
+        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line192">line 192</a>
     </li></ul></dd>
     
 
@@ -8423,7 +8424,7 @@ in <a href="global.html#WriteMultipleResult">WriteMultipleResult</a>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line318">line 318</a>
+        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line317">line 317</a>
     </li></ul></dd>
     
 
@@ -8623,7 +8624,7 @@ this case, the continuation key must be used to get results, if any exist.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_config.js.html">types/config.js</a>, <a href="types_config.js.html#line203">line 203</a>
+        <a href="types_config.js.html">types/config.js</a>, <a href="types_config.js.html#line201">line 201</a>
     </li></ul></dd>
     
 
@@ -9067,7 +9068,7 @@ let config = {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_config.js.html">types/config.js</a>, <a href="types_config.js.html#line322">line 322</a>
+        <a href="types_config.js.html">types/config.js</a>, <a href="types_config.js.html#line320">line 320</a>
     </li></ul></dd>
     
 
@@ -10218,9 +10219,9 @@ see <a href="TableState.html">TableState</a></td>
 this result, if this result is returned by <a href="NoSQLClient.html#tableDDL">NoSQLClient#tableDDL</a>
 or <a href="NoSQLClient.html#setTableLimits">NoSQLClient#setTableLimits</a> methods.  It is used when the
 <a href="global.html#TableResult">TableResult</a> is subsequently passed to
-<a href="NoSQLClient.html#forCompletion">NoSQLClient#forCompletion</a>, <a href="NoSQLClient.html#forTableState">NoSQLClient#forTableState</a> or
-<a href="NoSQLClient.html#getTable">NoSQLClient#getTable</a> as the first parameter to identify the
-operation and check for any errors from that operation</td>
+<a href="NoSQLClient.html#forCompletion">NoSQLClient#forCompletion</a> or <a href="NoSQLClient.html#getTable">NoSQLClient#getTable</a> as the
+first parameter to identify the operation and check for any errors from
+that operation</td>
         </tr>
 
     
@@ -10235,16 +10236,15 @@ operation and check for any errors from that operation</td>
 <div class="description usertext">
     TableResult object is the result of <a href="NoSQLClient.html#tableDDL">NoSQLClient#tableDDL</a>,
 <a href="NoSQLClient.html#setTableLimits">NoSQLClient#setTableLimits</a>, <a href="NoSQLClient.html#getTable">NoSQLClient#getTable</a> and
-<a href="NoSQLClient.html#forTableState">NoSQLClient#forTableState</a> methods and may also be the result of
-<a href="NoSQLClient.html#forCompletion">NoSQLClient#forCompletion</a> method.  It encapsulates the state of
-the table that is the target of the operation.
+and may also be the result of <a href="NoSQLClient.html#forCompletion">NoSQLClient#forCompletion</a> method.
+It encapsulates the state of the table that is the target of the operation.
 <p>
 Operations performed by <a href="NoSQLClient.html#tableDDL">NoSQLClient#tableDDL</a> such as table
 creation, modification, and drop are potentially long running and not
 necessarily completed when <a href="NoSQLClient.html#tableDDL">NoSQLClient#tableDDL</a> returns result
 and the table may still be in one of its intermediate states.  You may call
-<a href="NoSQLClient.html#forCompletion">NoSQLClient#forCompletion</a> or <a href="NoSQLClient.html#forTableState">NoSQLClient#forTableState</a> to
-be notified when the table reaches desired state (which, depending on the
+<a href="NoSQLClient.html#forCompletion">NoSQLClient#forCompletion</a> to be notified when the operation
+completes and the table reaches desired state (which, depending on the
 operation, would be either <a href="TableState.html#.ACTIVE">TableState.ACTIVE</a> or
 <a href="TableState.html#.DROPPED">TableState.DROPPED</a>.
 You may also call <a href="NoSQLClient.html#getTable">NoSQLClient#getTable</a> to receive static
@@ -10281,7 +10281,7 @@ information about the table as well as its current state.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line52">line 52</a>
+        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line51">line 51</a>
     </li></ul></dd>
     
 
@@ -10585,7 +10585,7 @@ exceptions for the period is reported.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line85">line 85</a>
+        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line84">line 84</a>
     </li></ul></dd>
     
 
@@ -10964,7 +10964,7 @@ instances and convert between TTL and record expiration time.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line401">line 401</a>
+        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line400">line 400</a>
     </li></ul></dd>
     
 
@@ -11204,7 +11204,7 @@ way adds cost to operations so it should be done only if necessary
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line265">line 265</a>
+        <a href="types_result.js.html">types/result.js</a>, <a href="types_result.js.html#line264">line 264</a>
     </li></ul></dd>
     
 
@@ -11864,14 +11864,14 @@ operations.push({
 
 
 
-    
+
     
 </div>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a> on Fri Feb 07 2020 15:12:37 GMT-0500 (Eastern Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
