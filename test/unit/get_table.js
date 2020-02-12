@@ -113,17 +113,6 @@ ${util.inspect(badTableState)}`, async function() {
         });
     }
 
-    //forTableState with bad table result argument
-    for(let badRes of badDriverTableRes) {
-        it(`forTableState with invalid table result: \
-${util.inspect(badRes)}`, async function() {
-            return expect(client.forTableState(badRes, TableState.ACTIVE))
-                .to.eventually.be.rejected.and.satisfy(err =>
-                    err instanceof NoSQLArgumentError &&
-                    err._rejectedByDriver);
-        });
-    }
-
     //Test with non-existent table
     it('forTableState on non-existent table', async function() {
         return expect(client.forTableState('nosuchtable',
@@ -131,15 +120,6 @@ ${util.inspect(badRes)}`, async function() {
             err instanceof NoSQLError &&
             err.errorCode == ErrorCode.TABLE_NOT_FOUND);
     });
-
-    //Test with table result of non-existent table
-    it('forTableState on table result of non-existent table',
-        async function() {
-            return expect(client.forTableState({ tableName: 'nosuchtable' },
-                TableState.ACTIVE)).to.eventually.be.rejected.and.satisfy(
-                err => err instanceof NoSQLError &&
-                err.errorCode == ErrorCode.TABLE_NOT_FOUND);
-        });
 
     //Timeout test
     it(`forTableState on ${tbl.name} timeout`, async function() {

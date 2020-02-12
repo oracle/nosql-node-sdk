@@ -653,7 +653,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
     static async createTable(client, tbl, createIndexes) {
         const sql = this.makeCreateTable(tbl, true);
         let res = await client.tableDDL(sql, { tableLimits: tbl.limits });
-        await client.forTableState(res, TableState.ACTIVE);
+        await client.forCompletion(res);
         if (createIndexes && tbl.indexes) { //create indexes attached to table
             for(let idx of tbl.indexes) {
                 await this.createIndex(client, tbl, idx);
@@ -664,13 +664,13 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
     static async dropTable(client, tbl) {
         const sql = this.makeDropTable(tbl, true);
         let res = await client.tableDDL(sql);
-        await client.forTableState(res, TableState.DROPPED);
+        await client.forCompletion(res);
     }
 
     static async createIndex(client, tbl, idx) {
         const sql = this.makeCreateIndex(tbl, idx);
         let res = await client.tableDDL(sql);
-        await client.forTableState(res, TableState.ACTIVE);
+        await client.forCompletion(res);
     }
 
     //Put row exactly as specified by row object including row[_ttl],

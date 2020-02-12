@@ -234,6 +234,12 @@ or use jsdoc directly:
 node_modules/.bin/jsdoc -c conf.json
 ```
 
+If jsdoc is installed but node_modules isn't populated it is possible specify the
+expected template file on the command line or by modifying config.json, e.g.
+```
+jsdoc -c conf.json -t /usr/local/lib/node_modules/docdash
+```
+
 JSDoc configuration options and list of source files to build the doc from are
 specified in __conf.json__ file in the repository root directory.
 
@@ -243,6 +249,44 @@ file.
 
 Note that the doc should be rebuilt if any public classes/interfaces are
 modified.
+
+### Publishing Documentation
+
+The generated documentation is published on
+[GitHub](https://oracle.github.io/nosql-node-sdk/). Publication is automatic
+based on changes pushed to the gh-pages branch of the
+[Oracle NoSQL Database Node.js SDK](https://github.com/oracle/nosql-node-sdk)
+repository.
+
+To publish:
+
+In these instructions <nosql-node-sdk> is the path to a current clone from
+which to publish the documentation and <nosql-node-doc> is the path to
+a fresh clone of the gh-pages branch (see instructions below).
+
+1. clone the gh-pages branch of the SDK repository into <nosql-node-doc>:
+
+        git clone --single-branch --branch gh-pages https://github.com/oracle/nosql-node-sdk.git nosql-node-doc
+
+2. generate documentation in the master (or other designated) branch of the
+repository:
+
+        $ cd <nosql-node-sdk>
+        $ rm -rf doc/api
+        $ npm run docs
+
+3. copy generated doc to the gh-pages repo
+
+        $ cp -r <nosql-node-sdk>/doc/api/* <nosql-node-doc>
+
+4. commit and push after double-checking the diff in the nosql-node-doc
+repository
+
+        $ cd <nosql-node-doc>
+        $ git commit
+        $ git push
+
+The new documentation will automatically be published.
 
 ## Packaging and Release
 

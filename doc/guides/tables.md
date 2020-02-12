@@ -170,10 +170,7 @@ You may asynchronously wait for table DDL operation completion in one of
 the following ways:
 
 * The recommended way is using {@link NoSQLClient#forCompletion}
-and passing the {@link TableResult} of {@link NoSQLClient#tableDDL} to it.  This
-is equivalent to using {@link NoSQLClient#forTableState} where the final table
-state is inferred from the operation (to be either {@link TableState.ACTIVE}
-or {@link TableState.DROPPED}).  In addition,
+and passing the {@link TableResult} of {@link NoSQLClient#tableDDL} to it.
 {@link NoSQLClient#forCompletion} will modify the {@link TableResult} passed
 to it to reflect operation completion.
 * Call {@link NoSQLClient#getTable} method periodically to get the
@@ -181,13 +178,7 @@ to it to reflect operation completion.
 table state changes to {@link TableState.ACTIVE} (or
 {@link TableState.DROPPED} for *DROP TABLE* operation).  There are more
 convenient ways of accomplishing this described below.
-* Using {@link NoSQLClient#forTableState} method.  You may pass either table
-name or the {@link TableResult} of {@link NoSQLClient#tableDDL}
-to this method (in the latter case this method will check for errors from
-the DDL operation).  This method will return a *Promise* of
-{@link TableResult} of the final result when the table reaches specified
-state.
-* If you are only intrested in operation completion and not any intermediate
+* If you are only interested in operation completion and not any intermediate
 states, you may pass *complete* option set to *true* when calling
 {@link NoSQLClient#tableDDL}.  In this case, {@link NoSQLCLient#tableDDL}
 returns {@link TableResult} only when the operation is completed in the
@@ -211,18 +202,12 @@ async function createUsersTable() {
                 storageGB: 5
             }
         });
-        result = await client.forTableState(result, TableState.ACTIVE);
+        result = await client.forCompletion(result);
         console.log('Table users created');
     } catch(error) {
         //handle errors
     }
 }
-```
-
-To use {@link NoSQLClient#forCompletion}, substitute line calling
-{@link NoSQLClient#forTableState} above with the following:
-```js
-    await client.forCompletion(result);
 ```
 After the above call returns, *result* will reflect final state of
 the operation.
@@ -670,8 +655,7 @@ the {@link TableState} upon return will most likely be intermediate state
 for the operation completion in one of the ways described in
 **Create Tables and Indexes** section.
 
-Note that {@link NoSQLClient#forCompletion} and
-{@link NoSQLClient#forTableState} methods works by polling for the information
+Note that {@link NoSQLClient#forCompletion} works by polling for the information
 about the operation at regular intervals.  You may customize the wait timeout
 (*timeout* property) and the polling interval (*delay* property) by
 setting them in the *opt* argument as shown above (otherwise applicable

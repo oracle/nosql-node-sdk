@@ -1,0 +1,6 @@
+node_modules/
+public/api
+doc/api
+package-lock.json
+.DS_Store
+*.diff

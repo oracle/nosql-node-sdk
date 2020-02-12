@@ -376,7 +376,7 @@ function eraseConfig(cfg) {
 
 function verifyRegion(region) {
     if (typeof region === 'string') {
-        region = Region[region];
+        region = Region._fromRegionId(region);
     }
     expect(region).to.be.an.instanceOf(Region);
     expect(region.regionId).to.be.a('string');
@@ -473,6 +473,9 @@ const goodConfigs = [
     })),
     ...Region.values.map(region => ({
         region
+    })),
+    ...Region.values.map(region => ({
+        region: region.regionId
     })),
     ...Region.names.map(region => ({
         region

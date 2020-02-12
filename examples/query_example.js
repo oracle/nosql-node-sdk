@@ -27,7 +27,6 @@
 const nosqldb = require('oracle-nosqldb');
 
 const NoSQLClient = nosqldb.NoSQLClient;
-const TableState = nosqldb.TableState;
 
 // target table used by this example
 const TABLE_NAME = 'users';
@@ -78,9 +77,10 @@ async function run(client) {
     console.log('  Creating table %s', res.tableName);
     console.log('  Table state: %s', res.tableState.name);
 
-    // Wait for the table to become active and available for use
-    res = await client.forTableState(res, TableState.ACTIVE);
-    console.log('  Table %s is active', res.tableName);
+    // Wait for the operation completion
+    await client.forCompletion(res);
+    console.log('  Table %s is created', res.tableName);
+    console.log('  Table state: %s', res.tableState.name);
 
     ddl = `CREATE INDEX IF NOT EXISTS city_idx ON ${TABLE_NAME} \
 (userInfo.city AS STRING)`;

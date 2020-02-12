@@ -59,6 +59,8 @@ The SDK is using Oracle Cloud Infrastructure Identity and Access Management
 
 ### Acquire Credentials for the Oracle NoSQL Database Cloud Service
 
+See [Acquring Credentials](https://www.oracle.com/pls/topic/lookup?ctx=en/cloud/paas/nosql-cloud/csnsd&id=acquire-creds)
+
 These steps only need to be performed one time for a user. If they have already
 been done they can be skipped. You need to obtain the following credentials:
 
@@ -67,14 +69,6 @@ been done they can be skipped. You need to obtain the following credentials:
 * API signing key (private key file in PEM format
 * Private key pass phrase, needed only if the private key is encrypted
 * Fingerprint for the public key uploaded to the user's account
-
-See [Required Keys and OCIDs](https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm) for detailed description of the above credentials and the
-steps you need to perform to obtain them. Specifically:
-
-* [How to Generate an API Signing Key](https://docs.cloud.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#How)
- * [How to Get the Key's Fingerprint](https://docs.cloud.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#How3)
- * [How to Upload the Public Key](https://docs.cloud.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#How2)
- * [Where to Get the Tenancy's OCID and User's OCID](https://docs.cloud.oracle.com/en-us/iaas/Content/API/Concepts/apisigningkey.htm#Other)
 
 ### Supply Credentials to the Application
 
@@ -181,7 +175,7 @@ instance as follows:
 const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
 
 let client = new NoSQLClient({
-    region: '<your-service-region>'
+    region: <your-service-region>
     auth: {
         iam: {
             tenantId: myTenancyOCID,
@@ -369,7 +363,7 @@ In JSON configuration file:
 ```json
 {
     "serviceType": "CLOUD",
-    "region": "US_ASHBURN_1"
+    "region": "us-ashburn-1"
 }
 ```
 

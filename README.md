@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is version 5.1 of Node.js SDK for
+This is version 5.2 of the Node.js SDK for
 [Oracle NoSQL Database](https://www.oracle.com/database/technologies/related/nosql.html).
 The SDK provides interfaces, documentation, and examples to develop Node.js
 applications that use
@@ -22,32 +22,35 @@ or globally:
 sudo npm install -g oracle-nosqldb
 ```
 
-## Set up
+## Connecting to the Oracle NoSQL Database
 
 Required steps depend on whether you want to use the SDK with Oracle NoSQL
 Database Cloud Service or On-Premise Oracle NoSQL Database.  This README
 provides brief pointers.  For more detailed instructions see the following
 guides:
 
-* [Connecting an Application to Oracle NoSQL Database Cloud Service](./doc/api/tutorial-connect-cloud.html) for cloud service and cloud simulator.
-* [Connecting an Application to On-Premise Oracle NoSQL Database](./doc/api/tutorial-connect-on-prem.html) for on-premise NoSQL Database.
+* [Connecting an Application to Oracle NoSQL Database Cloud Service](https://oracle.github.io/nosql-node-sdk/tutorial-connect-cloud.html) for cloud service and cloud simulator.
+* [Connecting an Application to On-Premise Oracle NoSQL Database](https://oracle.github.io/nosql-node-sdk/tutorial-connect-on-prem.html) for on-premise NoSQL Database.
 
-### Set up for Oracle NoSQL Database Cloud Service
+### Connect to the Oracle NoSQL Database Cloud Service
+
+See also  [Connecting an Application to Oracle NoSQL Database Cloud Service](https://oracle.github.io/nosql-node-sdk/tutorial-connect-cloud.html).
 
 You will need an Oracle Cloud account and credentials to use Node.js SDK
 for Oracle NoSQL Database Cloud Service. With this information, you'll set up a
 client configuration to tell your application how to find the cloud
 service, and how to properly authenticate.
-* Start with Oracle Cloud [here](https://www.oracle.com/index.html)
-* See [Required Keys and OCIDs](https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm) on how to obtain required credentials 
+* See [Acquring Credentials](https://www.oracle.com/pls/topic/lookup?ctx=en/cloud/paas/nosql-cloud/csnsd&id=acquire-creds)
 
 You should have the following information in hand:
 1. Tenancy OCID
 2. User OCID
 3. Public key fingerprint
 4. Private key file
+5. Optional private key pass phrase
 
-These credentials should be placed in OCI configuration file.  Create a file
+These credentials can be either placed in a configuration file or directly provided by
+your application. If using a configuration file, create a file named
 ~/.oci/config with the following contents:
 ```ini
 [DEFAULT]
@@ -58,16 +61,13 @@ key_file=<PEM private key file>
 pass_phrase=<Private key passphrase>
 ```
 
-For more information on OCI configuration files, see
-[SDK and CLI Configuration File](https://docs.cloud.oracle.com/iaas/Content/API/Concepts/sdkconfig.htm).
-
 Create a file named config.json.  It should specify service type cloud and
-the service endpoint (change example endpoint value below to your service
-endpoint):
+the service region (change example region value below to your service
+region):
 ```json
 {
   "serviceType": "CLOUD",
-  "endpoint": "nosql.us-phoenix-1.oci.oraclecloud.com"
+  "region": "us-ashburn-1"
 }
 ```
 
@@ -91,10 +91,12 @@ directory.
 
 ### Set up for On-Premise Oracle NoSQL Database
 
+See also [Connecting an Application to On-Premise Oracle NoSQL Database](https://oracle.github.io/nosql-node-sdk/tutorial-connect-on-prem.html) for on-premise NoSQL Database.
+
 The on-premise configuration requires a running instance of Oracle NoSQL
 Database. In addition a running proxy service is required. See
 [Oracle NoSQL Database Downloads](https://www.oracle.com/database/technologies/nosql-database-server-downloads.html) for downloads, and see
-[Information about the proxy](https://docs.oracle.com/en/database/other-databases/nosql-database/19.3/admin/proxy-and-driver.html)
+[Information about the proxy](https://docs.oracle.com/en/database/other-databases/nosql-database/19.5/admin/proxy-and-driver.html)
 for proxy configuration information.
 
 Create a file named config.json that will contain initial configuration needed
@@ -251,7 +253,7 @@ API documentation is located in the doc/api directory. See the
 
 ## License
 
-Please see LICENSE.txt file included in the top-level directory of the
+Please see the [LICENSE](LICENSE.txt) file included in the top-level directory of the
 package for a copy of the license and additional information.
 
 ## Requirements

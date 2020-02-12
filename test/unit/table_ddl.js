@@ -88,7 +88,7 @@ ${util.inspect(badOpt)}`, async function() {
             tableLimits: DEF_TABLE_LIMITS
         });
         Utils.verifyTableResult(res, tbl);
-        res = await client.forTableState(res, TableState.ACTIVE);
+        await client.forCompletion(res);
         Utils.verifyActiveTable(res, tbl);
         res = await client.getTable(tbl.name, { timeout: 10000 });
         Utils.verifyActiveTable(res, tbl);
@@ -110,8 +110,7 @@ function testCreateIndex(client, tbl, idx) {
         } else {
             tbl.indexes = [ idx ];
         }
-        res = await client.forTableState(res, TableState.ACTIVE,
-            { delay: 500 });
+        await client.forCompletion(res, { delay: 500 });
         Utils.verifyActiveTable(res, tbl);
     });
 }
@@ -127,8 +126,7 @@ function testDropIndex(client, tbl, idx) {
             { timeout: 8000, compartment });
         Utils.verifyTableResult(res, tbl);
         tbl.indexes.splice(idxIdx, 1);
-        res = await client.forTableState(res, TableState.ACTIVE,
-            { delay: 500 });
+        await client.forCompletion(res, { delay: 500 });
         Utils.verifyActiveTable(res, tbl);
     });
 }
@@ -141,8 +139,7 @@ function testAddField(client, tbl, fld) {
         res = await client.tableDDL(Utils.makeAddField(tbl, fld));
         Utils.verifyTableResult(res, tbl);
         tbl.fields.push(fld);
-        res = await client.forTableState(res, TableState.ACTIVE,
-            { delay: 1500 });
+        await client.forCompletion(res, { delay: 1500 });
         Utils.verifyActiveTable(res, tbl);
     });
 }
@@ -156,7 +153,7 @@ function testDropField(client, tbl, fld) {
         res = await client.tableDDL(Utils.makeDropField(tbl, fld));
         Utils.verifyTableResult(res, tbl);
         tbl.fields.splice(fldIdx, 1);
-        res = await client.forTableState(res, TableState.ACTIVE);
+        await client.forCompletion(res);
         Utils.verifyActiveTable(res, tbl);
     });
 }
@@ -169,7 +166,7 @@ function testAlterTTL(client, tbl, ttl) {
             { timeout: 10000 });
         Utils.verifyTableResult(res, tbl);
         tbl.ttl = ttl;
-        res = await client.forTableState(res, TableState.ACTIVE);
+        await client.forCompletion(res);
         Utils.verifyActiveTable(res, tbl);
     });
 }
@@ -210,7 +207,7 @@ ${util.inspect(badOpt)}`, async function() {
             { compartment, timeout: 10000 });
         Utils.verifyTableResult(res, tbl);
         tbl.limits = limits;
-        res = await client.forTableState(res, TableState.ACTIVE);
+        await client.forCompletion(res);
         Utils.verifyActiveTable(res, tbl);
     });
 }
@@ -221,7 +218,7 @@ function testDropTable(client, tbl) {
         Utils.verifyActiveTable(res, tbl);
         res = await client.tableDDL(Utils.makeDropTable(tbl));
         Utils.verifyTableResult(res, tbl, { _ignoreTableLimits: true });
-        res = await client.forTableState(res, TableState.DROPPED);
+        await client.forCompletion(res);
         expect(res.tableName).to.equal(tbl.name);
         expect(res.tableState).to.equal(TableState.DROPPED);
     });

@@ -22,7 +22,13 @@
         "destination": "./doc/api/",
         "template": "node_modules/docdash",
         "readme": "./doc/index.md",
-        "tutorials": "./doc/guides"
+        "tutorials": "./doc/guides",
+        "title": "mytitle"
+    },
+    "templates":{
+        "default":{
+            "layoutFile":"./doc/layout.tmpl"
+        }
     },
     "docdash": {
         "typedefs": true,
@@ -38,6 +44,9 @@
             "Interfaces",
             "Modules",
             "Externals",
-            "Events"]
+            "Events"],
+        "meta": {
+            "title": "Oracle NoSQL Database Node.js SDK"
+        }
     }
 }

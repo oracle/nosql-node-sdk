@@ -35,8 +35,8 @@ async function async_smoke() {
                 }});
             process.stdout.write('tableDDL: ');
             console.log('tableDDL: ' + util.inspect(res));
-            res = await client.forTableState(res, TableState.ACTIVE);
-            console.log('forTableState: ' + util.inspect(res));
+            await client.forCompletion(res);
+            console.log('forCompletion: ' + util.inspect(res));
         } catch(err) { //table exists
             if (err.errorCode == ErrorCode.TABLE_EXISTS) {
                 console.log('Table already exists');
@@ -65,8 +65,8 @@ async function async_smoke() {
         console.log(`row exists: ${res.row != null}`);
         res = await client.tableDDL('DROP TABLE items');
         console.log('tableDDL: ' + util.inspect(res));
-        res = await client.forTableState(res, TableState.DROPPED);
-        console.log('forTableState: ' + util.inspect(res));
+        res = await client.forCompletion(res);
+        console.log('forCompletion: ' + util.inspect(res));
     } catch(err) {
         console.log(err.stack);
         for(let cause = err.cause; cause; cause = cause.cause) {
