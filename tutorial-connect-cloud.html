@@ -86,37 +86,48 @@ a tarball containing the SDK.</li>
 <p>or globally:</p>
 <pre class="prettyprint source lang-bash"><code>sudo npm install -g oracle-nosqldb-5.x.x.tgz
 </code></pre>
-<h2>Configuring the SDK</h2>
+<h2><a name="configure_cloud"></a>Configuring the SDK</h2>
 <p>The SDK requires an Oracle Cloud account and a subscription to the Oracle
 NoSQL Database Cloud Service. If you do not already have an Oracle Cloud
 account you can start <a href="https://docs.cloud.oracle.com/en-us/iaas/Content/GSG/Concepts/baremetalintro.htm">here</a>.</p>
 <p>The SDK is using Oracle Cloud Infrastructure Identity and Access Management
 (IAM) to authorize database operations.  For more information on IAM see
 <a href="https://docs.cloud.oracle.com/iaas/Content/Identity/Concepts/overview.htm">Overview of Oracle Cloud Infrastructure Identity and Access Management</a></p>
-<h3>Acquire Credentials for the Oracle NoSQL Database Cloud Service</h3>
-<p>See <a href="https://www.oracle.com/pls/topic/lookup?ctx=en/cloud/paas/nosql-cloud/csnsd&amp;id=acquire-creds">Acquring Credentials</a></p>
+<p>Configuration for an application has 3 parts:</p>
+<ol>
+<li><a href="#creds">Acquiring credentials</a></li>
+<li><a href="#supply">Configuring the application</a> using the credentials</li>
+<li><a href="#connecting">Additional configuration</a> such as choosing your region and
+other configuration options</li>
+</ol>
+<p>See <a href="#quickstart">Example Quick Start</a> for the quickest way to get an example
+running.</p>
+<h3><a name="creds"></a>Acquire Credentials for the Oracle NoSQL Database Cloud Service</h3>
+<p>See <a href="https://www.oracle.com/pls/topic/lookup?ctx=en/cloud/paas/nosql-cloud/csnsd&amp;id=acquire-creds">Acquiring Credentials</a> for details of credentials you will need
+to configure an application.</p>
 <p>These steps only need to be performed one time for a user. If they have already
 been done they can be skipped. You need to obtain the following credentials:</p>
 <ul>
 <li>Tenancy ID</li>
 <li>User ID</li>
-<li>API signing key (private key file in PEM format</li>
-<li>Private key pass phrase, needed only if the private key is encrypted</li>
+<li>API signing key (private key file in PEM format)</li>
 <li>Fingerprint for the public key uploaded to the user's account</li>
+<li>Private key pass phrase, needed only if the private key is encrypted</li>
 </ul>
-<h3>Supply Credentials to the Application</h3>
+<h3><a name="supply"></a>Supply Credentials to the Application</h3>
 <p>Credentials are used to authorize your application to use the service.
 There are 3 ways to supply credentials:</p>
 <ol>
-<li>Store credentials in an Oracle Cloud Infrastructure configration file.</li>
-<li>Store credentials directly in configuration object used to create
+<li>Store credentials in a <a href="#config_file">configuration file</a>.</li>
+<li>Store credentials directly in a <a href="#config_api">configuration object</a> used to create
 <a href="NoSQLClient.html">NoSQLClient</a> instance.</li>
-<li>Create your own <a href="global.html#IAMCredentialsProvider">IAMCredentialsProvider</a> to load credentials on
+<li><a href="#config_obj">Create your own</a>
+<a href="global.html#IAMCredentialsProvider">IAMCredentialsProvider</a> to load credentials on
 demand from the location of your choice (e.g. keystore,
 keychain, encrypted file, etc.).</li>
 </ol>
 <p>The configuration object used to create <a href="NoSQLClient.html">NoSQLClient</a> instance (see
-section <strong>Connecting an Application</strong>) will indicate how the driver obtains
+<a href="#connecting">Connecting an Application</a>) will indicate how the driver obtains
 the credentials and will be different depending on which of the above options
 is chosen.</p>
 <p>Creating <a href="global.html#IAMCredentialsProvider">IAMCredentialsProvider</a> is the most secure option, because
@@ -125,7 +136,7 @@ Otherwise, the recommended option is to use an Oracle Cloud Infrastructure
 configuration file.  Supplying credentials directly in a configuration object is
 less secure because sensitive information such as private key will be kept in
 memory for the duration of the <a href="NoSQLClient.html">NoSQLClient</a> instance.</p>
-<h4>Using a Configuration File</h4>
+<h4><a name="config_file"></a>Using a Configuration File</h4>
 <p>You can store the credentials in an Oracle Cloud Infrastructure configuration
 file.</p>
 <p>The default path for the configuration file is <em>~/.oci/config</em>.  The
@@ -181,7 +192,7 @@ let client = new NoSQLClient({
 </code></pre>
 <p>(Note that you don't have to specify service type if you specified
 <strong>auth.iam</strong> property, see section <strong>Specifying Service Type</strong>)</p>
-<h4>Specifying Credentials Directly</h4>
+<h4><a name="config_api"></a>Specifying Credentials Directly</h4>
 <p>You may specify credentials directly as part of <strong>auth.iam</strong> property in the
 initial configuration (see <a href="global.html#IAMConfig">IAMConfig</a>).  Create <a href="NoSQLClient.html">NoSQLClient</a>
 instance as follows:</p>
@@ -200,7 +211,7 @@ let client = new NoSQLClient({
     }
 });
 </code></pre>
-<h4>Creating Your Own IAMCredentialsProvider</h4>
+<h4><a name="config_obj"></a>Creating Your Own IAMCredentialsProvider</h4>
 <p>IMACredentialsProvider may be any object (class instance or otherwise)
 implementing <em>loadCredentials</em> function.  This function returns a <em>Promise</em> of
 <a href="global.html#IAMCredentials">IAMCredentials</a> (and thus can be implemented as an <em>async</em> function).
@@ -257,10 +268,10 @@ let client = new NoSQLClient({
 <p>You may also specify <em>credentialsProvider</em> property as string, in which case
 it specifies a module name or path that exports
 <a href="global.html#IAMCredentialsProvider">IAMCredentialsProvider</a>.  This will allow you to store initial
-configuration in a JSON file (see <strong>Connecting an Application</strong> section).
+configuration in a JSON file (see <a href="#connecting">Connecting an Application</a>).
 Note that the provider (whether as an object or a function) should be that
 module's sole export.</p>
-<h2>Connecting an Application</h2>
+<h2><a name="connecting"></a>Connecting an Application</h2>
 <p>The first step in your Oracle NoSQL Database Cloud Service application is to
 create an instance of <a href="NoSQLClient.html">NoSQLClient</a> class which is the main point of
 access to the service.  To create <a href="NoSQLClient.html">NoSQLClient</a> instance, you need to
@@ -311,33 +322,34 @@ const client = new NoSQLClient({
 const client = new NoSQLClient('/path/to/config.json');
 </code></pre>
 <p>In the <em>examples</em> directory, you will see JSON configuration files that are
-used to create <a href="NoSQLClient.html">NoSQLClient</a> instance as shown above:</p>
+used to create a <a href="NoSQLClient.html">NoSQLClient</a> instance as shown above:</p>
 <ul>
-<li>Use <em>cloudsim.json</em> for Cloud Simulator.</li>
-<li>Use <em>cloud_template.json</em> for the cloud service when using default OCI
+<li>Use <em>cloud_template.json</em> for the cloud service when using a
 configuration file and default profile as described in section
-<strong>Using OCI Configuration File</strong>.  Fill in appropriate service endpoint.</li>
-<li>Use <em>cloud_template_custom.json</em> for cloud service to create configuration
-of your choice as described in section <strong>Supply Credentials to Application</strong>.
+<a href="#config_file">Using a Configuration File</a>.  Fill in the appropriate region.</li>
+<li>Use <em>cloudsim.json</em> for the Cloud Simulator.</li>
+<li>Use <em>cloud_template_custom.json</em> for the cloud service to create
+a configuration of your choice as described in
+<a href="#supply">Supply Credentials to the Application</a>.
 Fill in appropriate values for properties needed and remove the rest.</li>
 </ul>
 <h3>Specifying Service Type</h3>
-<p>Since NoSQL Node.js driver is used both for Oracle NoSQL Cloud Service and
+<p>Because this SDK is used both for the Oracle NoSQL Cloud Service and the
 On-Premise Oracle NoSQL Database, the <a href="global.html#Config">Config</a> object can specify
 that we are connecting to the cloud service by setting
 <a href="global.html#Config">Config</a>#serviceType property to <a href="ServiceType.html#.CLOUD">ServiceType.CLOUD</a>.  You can
-always explicitly specify <a href="global.html#Config">Config</a>#serviceType property, but in some
-cases such in code snippes above where the configuration has <em>auth</em> object
+always explicitly specify the <a href="global.html#Config">Config</a>#serviceType property, but in some
+cases such in code snippets above where the configuration has <em>auth</em> object
 that contains <em>iam</em> property, the service type will be deduced by the driver.
 See <a href="ServiceType.html">ServiceType</a> for details.</p>
 <p>If the <em>auth</em> object is not present in configuration (such as when using
-default OCI configuration file with default profile), you must specify
+a configuration file for credentials with a default profile), you must specify
 service type as <a href="ServiceType.html#.CLOUD">ServiceType.CLOUD</a> in order to connect to the cloud
 service, otherwise the service type will default to
-<a href="ServiceType.html#.CLOUDSIM">ServiceType.CLOUDSIM</a> (see section <strong>Using Cloud Simulator</strong>).</p>
+<a href="ServiceType.html#.CLOUDSIM">ServiceType.CLOUDSIM</a> (see <a href="#cloudsim">Using the Cloud Simulator</a>).</p>
 <p>You may specify service type either as <a href="ServiceType.html">ServiceType</a> enumeration
 constant (in code) or as a string (in code and in JSON file).  For example,
-when using default OCI configuration file and default profile:</p>
+when using the default configuration file and default profile:</p>
 <p>In code:</p>
 <pre class="prettyprint source lang-js"><code>const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
 const ServiceType = require('oracle-nosqldb').ServiceType;
@@ -376,24 +388,89 @@ a nested compartment, the top-level compartment must be excluded as it is
 inferred from the tenancy.</p>
 <p>A compartment can also be specified in each request in the options object. This
 value overrides the default for the handle.</p>
-<h2>Using the Cloud Simulator</h2>
+<h2><a name="quickstart"></a>Example Quick Start</h2>
+<p>The examples in the examples directory are configured to make it simple to
+connect and run against the Oracle NoSQL Database Cloud Services. Follow
+these steps. It is assumed that the SDK has been installed and will be found
+by the <em>node</em> command.</p>
+<ol>
+<li>Acquire credentials. See <a href="#creds">Acquire Credentials</a>. You will need these:</li>
+</ol>
+<ul>
+<li>Tenancy ID</li>
+<li>User ID</li>
+<li>API signing key (private key file in PEM format</li>
+<li>Fingerprint for the public key uploaded to the user's account</li>
+<li>Private key pass phrase, needed only if the private key is encrypted</li>
+</ul>
+<ol start="2">
+<li>Put the information in a configuration file, ~/.oci/config, based on
+the format described in <a href="#config_file">Using a Configuration File</a>. It should look
+like this:</li>
+</ol>
+<pre class="prettyprint source lang-ini"><code>[DEFAULT]
+tenancy=&lt;your-tenancy-ocid>
+user=&lt;your-user-ocid>
+fingerprint=&lt;fingerprint-of-your-public-key>
+key_file=&lt;path-to-your-private-key-file>
+pass_phrase=&lt;your-private-key-passphrase>
+</code></pre>
+<p>Instead of using a configuration file it is possible to modify the example code
+to directly provide your credentials as described in
+<a href="#config_api">Specifying Credentials Directly</a>.</p>
+<ol start="3">
+<li>Edit and use a JSON configuration file from the examples directory. Edit
+<em>cloud_template.json</em> and modify it to use the region you want to use. E.g.
+for using the US_ASHBURN_1 region, it should look like this:</li>
+</ol>
+<pre class="prettyprint source lang-ini"><code>{
+    &quot;serviceType&quot;: &quot;CLOUD&quot;,
+    &quot;region&quot;: &quot;your-region-here&quot;
+}
+</code></pre>
+<ol start="4">
+<li>Run an example using the syntax:</li>
+</ol>
+<pre class="prettyprint source lang-ini"><code>$ node &lt;example> &lt;config.json>
+e.g.
+$ node basic_example.js cloud_template.json
+</code></pre>
+<h2><a name="cloudsim"></a>Using the Cloud Simulator</h2>
 <p>The configuration instructions above are for getting connected to the actual
 Oracle NoSQL Database Cloud Service.</p>
-<p>You may first get familiar with Oracle NoSQL Database Cloud Service Node.js
-SDK and the Cloud APIs by using <a href="https://docs.oracle.com/en/cloud/paas/nosql-cloud/csnsd/develop-oracle-nosql-cloud-simulator.html">Oracle NoSQL Cloud Simulator</a>.</p>
+<p>You may first get familiar with Oracle NoSQL Database Node.js
+SDK and its interfaces by using the <a href="https://docs.oracle.com/en/cloud/paas/nosql-cloud/csnsd/develop-oracle-nosql-cloud-simulator.html">Oracle NoSQL Cloud Simulator</a>.</p>
 <p>The Cloud Simulator simulates the cloud service and lets you write and test
 applications locally without accessing Oracle NoSQL Database Cloud Service.</p>
 <p>You can start developing your application with the Oracle NoSQL Cloud
 Simulator, using and understanding the basic examples, before you get
-started with Oracle NoSQL Database Cloud Service. After building, debugging,
+started with the Oracle NoSQL Database Cloud Service. After building, debugging,
 and testing your application with the Oracle NoSQL Cloud Simulator,
-move your application to Oracle NoSQL Database Cloud Service.</p>
+move your application to the Oracle NoSQL Database Cloud Service.</p>
+<p>Follow these instructions to run an example program against the Cloud
+Simulator:</p>
 <ol>
-<li><a href="https://docs.oracle.com/pls/topic/lookup?ctx=en/cloud/paas/nosql-cloud&amp;id=CSNSD-GUID-3E11C056-B144-4EEA-8224-37F4C3CB83F6">Download</a>
-and start the Cloud Simulator.</li>
-<li>Follow instructions in the <em>README.md</em> in the <em>examples</em> directory
-to run examples with the Cloud Simulator.</li>
+<li>
+<p><a href="https://docs.oracle.com/pls/topic/lookup?ctx=en/cloud/paas/nosql-cloud&amp;id=CSNSD-GUID-3E11C056-B144-4EEA-8224-37F4C3CB83F6">Download</a>
+and start the Cloud Simulator.</p>
+</li>
+<li>
+<p>Edit the cloudsim.json configuration file in the examples directory and
+modify the endpoint if using a non-default port or if it is running on another
+machine. It should look like this:</p>
+</li>
 </ol>
+<pre class="prettyprint source lang-ini"><code>{
+    &quot;endpoint&quot;: &quot;http://localhost:8080&quot;
+}
+</code></pre>
+<ol start="3">
+<li>Run an example using the syntax:</li>
+</ol>
+<pre class="prettyprint source lang-ini"><code>$ node &lt;example> &lt;config.json>
+e.g.
+$ node basic_example.js cloudsim.json
+</code></pre>
 <p>Note that the Cloud Simulator does not require authorization information and
 credentials described above that are required by Oracle NoSQL Database
 Cloud Service.  Only the endpoint is required and is by default <em>localhost:8080</em>.

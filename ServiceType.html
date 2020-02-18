@@ -65,8 +65,10 @@ the driver will try to deduce service type from the
 information provided in authorization property <a href="global.html#Config">Config</a>#auth (see
 <a href="global.html#AuthConfig">AuthConfig</a>) in the following way:
 <ul>
-<li>If <a href="global.html#Config">Config</a>#auth is undefined or null, the service type defaults
-to <a href="ServiceType.html#.CLOUDSIM">ServiceType.CLOUDSIM</a>
+<li>If <a href="global.html#Config">Config</a>#auth is undefined or null, the service type is
+determined as follows: if <a href="global.html#Config">Config</a>#region is specified, the service
+type defaults to <a href="ServiceType.html#.CLOUD">ServiceType.CLOUD</a>, otherwise it defaults to
+<a href="ServiceType.html#.CLOUDSIM">ServiceType.CLOUDSIM</a>
 <li>If <a href="global.html#Config">Config</a>#auth contains <em>iam</em> property, the service
 type is assumed to be <a href="ServiceType.html#.CLOUD">ServiceType.CLOUD</a></li>
 <li>If <a href="global.html#Config">Config</a>#auth constains <em>kvstore</em> property, the service
@@ -82,8 +84,10 @@ the driver will check if it contains user-specified
 <a href="global.html#AuthorizationProvider">AuthorizationProvider</a> (<a href="global.html#AuthConfig">AuthConfig</a>#provider).  In this case
 the service type will remain undefined and user-specified provider will be
 used to control access to the service.  If there is no user-specified
-<a href="global.html#AuthorizationProvider">AuthorizationProvider</a> in <a href="global.html#Config">Config</a>#auth, the service type will
-default to <a href="ServiceType.html#.CLOUDSIM">ServiceType.CLOUDSIM</a></li>
+<a href="global.html#AuthorizationProvider">AuthorizationProvider</a> in <a href="global.html#Config">Config</a>#auth, this is equivalent to
+<a href="global.html#Config">Config</a>#auth not defined and the service type will default to
+<a href="ServiceType.html#.CLOUD">ServiceType.CLOUD</a> or <a href="ServiceType.html#.CLOUDSIM">ServiceType.CLOUDSIM</a> as described
+above</li>
 </ul></div>
         
     
@@ -131,7 +135,7 @@ default to <a href="ServiceType.html#.CLOUDSIM">ServiceType.CLOUDSIM</a></li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="constants.js.html">constants.js</a>, <a href="constants.js.html#line172">line 172</a>
+        <a href="constants.js.html">constants.js</a>, <a href="constants.js.html#line176">line 176</a>
     </li></ul></dd>
     
 
@@ -208,7 +212,7 @@ default to <a href="ServiceType.html#.CLOUDSIM">ServiceType.CLOUDSIM</a></li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="constants.js.html">constants.js</a>, <a href="constants.js.html#line165">line 165</a>
+        <a href="constants.js.html">constants.js</a>, <a href="constants.js.html#line169">line 169</a>
     </li></ul></dd>
     
 
@@ -278,7 +282,7 @@ default to <a href="ServiceType.html#.CLOUDSIM">ServiceType.CLOUDSIM</a></li>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="constants.js.html">constants.js</a>, <a href="constants.js.html#line184">line 184</a>
+        <a href="constants.js.html">constants.js</a>, <a href="constants.js.html#line188">line 188</a>
     </li></ul></dd>
     
 
