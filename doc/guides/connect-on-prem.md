@@ -1,7 +1,7 @@
 This guide describes how to install, configure, and use the Oracle NoSQL
 Database Node.js SDK with On-Premise Oracle NoSQL Database.
 
-## Prerequisites
+## <a name="prereq"></a>Prerequisites
 
 The SDK requires:
 
@@ -51,28 +51,28 @@ sudo npm install -g oracle-nosqldb-5.x.x.tgz
 
 ## Configuring the SDK
 
-To use the SDK with On-Premise Oracle NoSQL Database you need the following
+To use the SDK with the On-Premise Oracle NoSQL Database you need the following
 components:
 
-1. Running instance of Oracle NoSQL Database.  See *Prerequisites* section.
+1. Running instance of Oracle NoSQL Database.  See [Prerequisites](#prereq).
 2. Oracle NoSQL Database Proxy.  The proxy is the middle tier that lets Oracle
-NoSQL Database drivers to communicate with NoSQL database cluster.  See
+NoSQL Database drivers communicate with the database.  See
 [Oracle NoSQL Database Proxy](https://docs.oracle.com/en/database/other-databases/nosql-database/19.5/admin/proxy.html) for information on how to configure and run the proxy.
 
-Oracle NoSQL Database instance may be configured and run in secure or
+A Oracle NoSQL Database instance may be configured and run in secure or
 non-secure mode.  Secure mode is recommended.  See
 [Oracle NoSQL Database Security Guide](https://docs.oracle.com/en/database/other-databases/nosql-database/19.5/security/index.html)
 on security concepts and configuration.  Correspondingly, the proxy can be
 configured and used with [secure kvstore](https://docs.oracle.com/en/database/other-databases/nosql-database/19.5/admin/secure-proxy.html) or
 [non-secure kvstore](https://docs.oracle.com/en/database/other-databases/nosql-database/19.5/admin/non-secure-proxy.html).
 
-Oracle NoSQL Node.js driver will connect and use running NoSQL database via
-the proxy.  The following sections describe information required in non-secure
+Your application  will connect and use a running NoSQL database via
+the proxy service.  The following sections describe information required in non-secure
 and secure modes.
 
 ### Configuring the SDK for non-secure kvstore
 
-In non-secure mode, the driver communicates with the proxy via HTTP protocol.
+In non-secure mode, the driver communicates with the proxy via the HTTP protocol.
 The only information required is the communication *endpoint*.  For on-premise
 NoSQL Database, the endpoint specifies the url of the proxy, in the form
 *http://proxy_host:proxy_http_port*.  For example:
@@ -89,7 +89,7 @@ You may also omit the protocol portion:
 
 See {@link Config}#endpoint for details.
 
-### Configuring the SDK for secure kvstore
+### <a name="secure"></a>Configuring the SDK for a Secure Store
 
 In secure mode, the driver communicates with the proxy via HTTPS protocol.
 The following information is required:
@@ -135,7 +135,7 @@ should follow the password security policies.  See
 [Password Complexity Policies](https://docs.oracle.com/en/database/other-databases/nosql-database/19.5/security/password-complexity-policies.html))
 
 The driver requires user name and password created above to authenticate with
-secure store via the proxy.
+a secure store via the proxy.
 
 3. In secure mode the proxy requires SSL
 [Certificate and Private key](https://docs.oracle.com/en/database/other-databases/nosql-database/19.5/security/generating-certificate-and-private-key-proxy.html).  If the root
@@ -186,7 +186,7 @@ by the driver.  See {@link ServiceType} for details.
 Other required information has been described in previous sections and
 is different for connections to non-secure and secure stores.
 
-### Connecting to Non-Secure Store
+### Connecting to a Non-Secure Store
 
 To connect to the proxy in non-secure mode, you need to specify communication
 endpoint.
@@ -222,7 +222,7 @@ As shown above, you may specify value for *serviceType* property
 as a string (as well as {@link ServiceType} constant in JavaScript code). See
 {@link ServiceType} for details.
 
-### Connecting to Secure Store
+### Connecting to a Secure Store
 
 To connect to the proxy in secure mode, in addition to communication endpoint,
 you need to specify user name and password of the driver user.  This
@@ -368,11 +368,47 @@ let client = new NoSQLClient({
 
 ### Examples
 
-In the *examples* directory, you will see configuration file template
+In the *examples* directory, you will see a configuration file template
 *kvstore_template.json*.  It is used as configuration file to create
 {@link NoSQLClient} instance as shown above.  Make a copy of this file and
-fill in appropriate values.  For secure store, leave either *user* and
-*password* or *credentials* property inside *kvstore* object and remove the
-rest.  For non-secure store, remove all properties in *kvstore* object or
-remove *auth* property alltogether.  See main *README.md* in the SDK root
-directory and *README.md* in the *examples* directory for details.
+fill in appropriate values.  For a secure store, leave either *user* and
+*password* or the *credentials* property inside the *kvstore* object and remove
+the rest.  For a non-secure store, remove all properties in the *kvstore* object
+or remove the *auth* property entirely.
+
+To run an example:
+1. An Oracle NoSQL Database instance must be running
+2. A proxy server instance must be running, connected to the database
+3. Edit the *kvstore_template.json* file as described above, based on the
+proxy configuration.
+4.  Run an example using the syntax:
+```ini
+$ node <example> <config.json>
+e.g.
+$ node basic_example.js kvstore_template.json
+```
+Here's an example of a config file for a not-secure, local proxy:
+```ini
+{
+    "serviceType": "KVSTORE",
+    "endpoint": "http://localhost:80"
+}
+```
+
+An example of a config file for a secure proxy and store. Note that it may
+be necessary to configure your system so that *node* finds the required
+certificates. See [Configuring the SDK for a Secure Store](#secure).
+```ini
+{
+    "serviceType": "KVSTORE",
+    "endpoint": "https://somehost:443",
+    "auth":
+    {
+        "kvstore":
+        {
+            "user": "driverUser",
+            "password": "driverPassword05@"
+        }
+    }
+}
+```

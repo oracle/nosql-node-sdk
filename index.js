@@ -16,6 +16,7 @@ module.exports = {
     NoSQLClient: require('./lib/nosql_client'),
     PreparedStatement: require('./lib/stmt').PreparedStatement,
     ServiceType: con.ServiceType,
+    Region: require('./lib/region'),
     Consistency: con.Consistency,
     ScanDirection: con.ScanDirection,
     TableState: con.TableState,

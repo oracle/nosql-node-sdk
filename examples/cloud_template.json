@@ -1,4 +1,4 @@
 {
     "serviceType": "CLOUD",
-    "endpoint": ""
+    "region": "your-region-here"
 }

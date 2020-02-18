@@ -70,12 +70,8 @@ TestConfig.defaults = {
     cloudsim: {
         endpoint: 'localhost:8080'
     },
-    cloud: {
-        endpoint: 'nosql.us-phoenix-1.oci.oraclecloud.com'
-    },
-    kvstore: {
-        endpoint: ''
-    }
+    cloud: {},
+    kvstore: {}
 };
 
 module.exports = TestConfig;

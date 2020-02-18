@@ -1,0 +1,19 @@
+{
+    "reporter": "min",
+    "spec": [
+        "test/unit/config.js",
+        "test/unit/table_ddl.js",
+        "test/unit/admin_ddl.js",
+        "test/unit/get_table.js",
+        "test/unit/list_tables.js",
+        "test/unit/get_indexes.js",
+        "test/unit/table_usage.js",
+        "test/unit/get.js",
+        "test/unit/put.js",
+        "test/unit/delete.js",
+        "test/unit/delete_range.js",
+        "test/unit/write_many.js",
+        "test/unit/query.js",
+        "test/unit/iam/auth_provider.js"
+    ]
+}

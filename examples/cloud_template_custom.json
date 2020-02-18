@@ -1,6 +1,6 @@
 {
     "serviceType": "CLOUD",
-    "endpoint": "",
+    "region": "your-region-here",
     "auth": {
         "iam": {
             "configFile": "",

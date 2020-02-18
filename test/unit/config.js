@@ -287,7 +287,7 @@ function getServiceType(cfg) {
     }
     expect(cfg.serviceType).to.not.exist; //test self-check
     if (cfg.auth == null) {
-        return ServiceType.CLOUDSIM;
+        return cfg.region != null ? ServiceType.CLOUD : ServiceType.CLOUDSIM;
     }
     if (cfg.auth.iam != null) {
         expect(cfg.auth.kvstore).to.not.exist; //test self-check

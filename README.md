@@ -3,11 +3,11 @@
 ## Overview
 
 This is version 5.2 of the Node.js SDK for
-[Oracle NoSQL Database](https://www.oracle.com/database/technologies/related/nosql.html).
+the [Oracle NoSQL Database](https://www.oracle.com/database/technologies/related/nosql.html).
 The SDK provides interfaces, documentation, and examples to develop Node.js
-applications that use
+applications that use the
 [Oracle NoSQL Database Cloud Service](https://cloud.oracle.com/nosqldatabase)
-and [On-Premise Oracle NoSQL Database](https://docs.oracle.com/en/database/other-databases/nosql-database/index.html).
+and the [On-Premise Oracle NoSQL Database](https://docs.oracle.com/en/database/other-databases/nosql-database/index.html).
 
 ## Installation
 
@@ -22,234 +22,284 @@ or globally:
 sudo npm install -g oracle-nosqldb
 ```
 
-## Connecting to the Oracle NoSQL Database
-
-Required steps depend on whether you want to use the SDK with Oracle NoSQL
-Database Cloud Service or On-Premise Oracle NoSQL Database.  This README
-provides brief pointers.  For more detailed instructions see the following
-guides:
-
-* [Connecting an Application to Oracle NoSQL Database Cloud Service](https://oracle.github.io/nosql-node-sdk/tutorial-connect-cloud.html) for cloud service and cloud simulator.
-* [Connecting an Application to On-Premise Oracle NoSQL Database](https://oracle.github.io/nosql-node-sdk/tutorial-connect-on-prem.html) for on-premise NoSQL Database.
-
-### Connect to the Oracle NoSQL Database Cloud Service
-
-See also  [Connecting an Application to Oracle NoSQL Database Cloud Service](https://oracle.github.io/nosql-node-sdk/tutorial-connect-cloud.html).
-
-You will need an Oracle Cloud account and credentials to use Node.js SDK
-for Oracle NoSQL Database Cloud Service. With this information, you'll set up a
-client configuration to tell your application how to find the cloud
-service, and how to properly authenticate.
-* See [Acquring Credentials](https://www.oracle.com/pls/topic/lookup?ctx=en/cloud/paas/nosql-cloud/csnsd&id=acquire-creds)
-
-You should have the following information in hand:
-1. Tenancy OCID
-2. User OCID
-3. Public key fingerprint
-4. Private key file
-5. Optional private key pass phrase
-
-These credentials can be either placed in a configuration file or directly provided by
-your application. If using a configuration file, create a file named
-~/.oci/config with the following contents:
-```ini
-[DEFAULT]
-tenancy=<User OCID>
-user=<Tenancy OCID>
-fingerprint=<Public key fingerprint>
-key_file=<PEM private key file>
-pass_phrase=<Private key passphrase>
-```
-
-Create a file named config.json.  It should specify service type cloud and
-the service region (change example region value below to your service
-region):
-```json
-{
-  "serviceType": "CLOUD",
-  "region": "us-ashburn-1"
-}
-```
-
-Once you have config.json, you may create a NoSQLClient instance as follows:
-```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
-const client = new NoSQLClient('config.json');
-```
-Be sure to specify either the absolute path to config.json or a relative
-path from your current directory.
-
-#### Using Cloud Simulator
-
-When you develop an application, you may wish to start with
-[Oracle NoSQL Database Cloud Simulator](https://docs.oracle.com/en/cloud/paas/nosql-cloud/csnsd/develop-oracle-nosql-cloud-simulator.html).
-The Cloud Simulator simulates the cloud service and lets you write and test
-applications locally without accessing Oracle NoSQL Database Cloud Service.
-You may run the Cloud Simulator on localhost.  You need a simple configuration
-containing only http endpoint.  See *cloudsim.json* in the *examples*
-directory.
-
-### Set up for On-Premise Oracle NoSQL Database
-
-See also [Connecting an Application to On-Premise Oracle NoSQL Database](https://oracle.github.io/nosql-node-sdk/tutorial-connect-on-prem.html) for on-premise NoSQL Database.
-
-The on-premise configuration requires a running instance of Oracle NoSQL
-Database. In addition a running proxy service is required. See
-[Oracle NoSQL Database Downloads](https://www.oracle.com/database/technologies/nosql-database-server-downloads.html) for downloads, and see
-[Information about the proxy](https://docs.oracle.com/en/database/other-databases/nosql-database/19.5/admin/proxy-and-driver.html)
-for proxy configuration information.
-
-Create a file named config.json that will contain initial configuration needed
-to create a NoSQLClient instance.  It should contain the endpoint which
-specifies the URL of the proxy service.
-
-#### Set up for Secure Store
-
-If running a secure store, the endpoint is HTTPS URL containing host and
-port number of the proxy.  In addition, before using the SDK, a user identity
-must be created in the store that has appropriate roles or priviliges to
-perform the required operations of the application, such as manipulating
-tables and data.
-
-This identity (user name and password) may be directly included into
-config.json:
-
-```json
-{
-  "endpoint": "https://<proxy_host>:<proxy_port>",
-  "auth": {
-    "kvstore": {
-      "user": "<User Name>",
-      "password": "<User Password>"
-    }
-  }
-}
-```
-For more security you may choose to store user name and password in separate
-file, such as credentials.json:
-
-```json
-{
-  "user": "<User Name>",
-  "password": "<User Password>"
-}
-```
-And pass this file path in config.json:
-```json
-{
-  "endpoint": "https://<proxy_host>:<proxy_port>",
-  "auth": {
-    "kvstore": {
-      "credentials": "path/to/credentials.json"
-    }
-  }
-}
-```
-You may also choose to use a custom credentials provider.  See the
-[guide](./doc/api/tutorial-connect-on-prem.html) for details.
-
-In addition, if the proxy is using private certificate authority (CA) or
-a self-signed certificate, set environment variable *NODE\_EXTRA\_CA\_CERTS*
-to point to that certificate (.pem or .crt) before running your application:
-
-```bash
-export NODE_EXTRA_CA_CERTS="path/to/certificate.pem"
-```
-
-#### Set up for Non-Secure Store
-
-If running non-secure store, only endpoint is required, which is HTTP URL of
-the proxy.  In addition, specify the service type to let the driver know that
-you are using on-premise NoSQL Database.  In config.json, specify:
-
-```json
-{
-  "serviceType": "KVSTORE",
-  "endpoint": "http://<proxy_host>:<proxy_port>",
-}
-```
-
-In previous configurations shown above, the driver can deduce the service type
-from the information in *"auth"* section, but it can always be explicitly
-indicated.
-
-Once you have config.json, you may create a NoSQLClient instance as follows:
-
-```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
-const client = new NoSQLClient('config.json');
-```
-Be sure to specify either the absolute path to config.json or a relative
-path from your current directory.
-
-## Examples
-
-The examples are located in *examples* directory.  Copy the *examples*
-directory (or files within it) into a separate location.  If you installed
-the SDK locally (as dependency of your project), copy the examples into a
-location within your project so that they can locate the SDK package (which
-should be installed in *node_modules* directory).  See
-[Loading from node_modules Folders](https://nodejs.org/dist/latest-v12.x/docs/api/modules.html#modules_loading_from_node_modules_folders).
-If you installed the SDK globally, you may copy the examples to any location
-of your choice.
-
-You can run the examples
-
-* Against the cloud service using your Oracle Cloud account and
-credentials.
-* Locally by using the [Oracle NoSQL Database Cloud Simulator](https://docs.oracle.com/en/cloud/paas/nosql-cloud/csnsd/develop-oracle-nosql-cloud-simulator.html).
-* Against On-Premise Oracle NoSQL Database via the proxy.
-
-Three configuration files are provided in the examples directory:
-
-* **cloud_template.json** is used to access a cloud service instance. Use this
-template for default configuration as described in
-*Set up for Oracle NoSQL Database Cloud Service* section and fill in
-appropriate service endpoint.
-* **cloud_template_custom.json** is also used to access a cloud service
-instance and allows you to customize configuration.  Follow the
-*Connect an Application* guide mentioned in the *Set up* section and fill in
-appropriate values depending on your choice of configuration and remove unused
-properties.
-* **cloudsim.json** is used if you are running against the cloud simulator.
-You may use this file directly as config file if you are running the cloud
-simulator on localhost.
-* **kvstore_template.json** is used to access on-premise NoSQL Database via
-the proxy.  Copy that file and fill in appropriate values as described in
-*Set up for On-Premise Oracle NoSQL Database* section.  For non-secure store,
-remove the whole *auth* field from the config file.
-
-Running the example like this:
-
-`node basic_example.js my_config.json`
-
-results in this output:
-```
-Created NoSQLClient instance
-Create table BasicExample
-  Creating table BasicExample
-  Table state: TableState.CREATING
-  Table BasicExample is active
-
-Write a record
-  Write used: { readUnits: 0, readKB: 0, writeKB: 1, writeUnits: 1 }
-
-Read a record
-  Got record: { cookie_id: 456,
-  audience_data:
-   { ipaddr: '10.0.00.yyy',
-     audience_segment: { sports_lover: '2019-01-05', foodie: '2018-12-31' } } }
-  Read used: { readUnits: 1, readKB: 1, writeKB: 0, writeUnits: 0 }
-
-Drop table
-  Dropping table BasicExample
-  Table state is TableState.DROPPING
-Success!
-```
-
 ## Documentation
-API documentation is located in the doc/api directory. See the
-[index](doc/api/index.html).
+
+See the [API and user guide documentation](https://oracle.github.io/nosql-node-sdk/).
+
+## Quickstart
+
+For detailed information and API documentation about using the SDK in different
+environments see the [documentation](https://oracle.github.io/nosql-node-sdk/)
+
+The following is a quick start tutorial to run a simple program in the supported
+environments. The same template source code is used for all environments. The
+first step is to cut the program below and paste it into an editor for minor
+modifications. The instructions assume that is stored as quickstart.js, but you
+can use any name you like. The quickstart example supports 3 environments:
+1. Oracle NoSQL Database Cloud Service
+2. Oracle NoSQL  Cloud Simulator
+3. Oracle NoSQL  Database on-premise, using the proxy server
+
+See [running quickstart](#run_quickstart) for instructions on how to edit and
+run the quickstart program in different environments.
+
+```js
+/*
+ * A simple example that
+ *   - creates a table
+ *   - inserts a row using the put() operation
+ *   - reads a row using the get() operation
+ *   - drops the table
+ *
+ * To run:
+ *  1. Edit for your target environment and credentials
+ *  2. Run it:
+ *       node quickstart.js cloud|cloudsim|kvstore
+ *
+ *  Use 'cloud' for the Oracle NoSQL Database Cloud Service
+ *  Use 'cloudsim' for the Oracle NoSQL Cloud Simulator
+ *  Use 'kvstore' for the Oracle NoSQL Database on-premise
+ */
+'use strict';
+
+const nosqldb = require('oracle-nosqldb');
+const NoSQLClient = nosqldb.NoSQLClient;
+const Region = require('oracle-nosqldb').Region;
+const ServiceType = require('oracle-nosqldb').ServiceType;
+
+// Target table used by this example
+const TABLE_NAME = 'NodeQuickstart';
+const USAGE = 'Usage: node quickstart.js cloud|cloudsim|kvstore';
+
+async function quickstart() {
+    let client;
+    try {
+        const args = process.argv;
+        let nosqlEnv = args[2];
+        if (!nosqlEnv) {
+            return console.error(USAGE);
+        }
+        // Set up access to the cloud service
+        client = createClient(nosqlEnv);
+        console.log('Created NoSQLClient instance');
+        await run(client);
+        console.log('Success!');
+    } catch (err) {
+        console.error('  Error: ' + err.message);
+        console.error('  from: ');
+        console.error(err.operation);
+    } finally {
+        if (client) {
+            client.close();
+        }
+    }
+}
+
+/*
+ * This function encapsulates environmental differences and returns a
+ * client handle to use for data operations.
+ */
+function createClient(nosqlEnv) {
+
+    switch(nosqlEnv) {
+    case 'cloud':
+        return new NoSQLClient({
+            /*
+             * EDIT:
+             * 1. use desired region id
+             * 2. your tenancy's OCID, user's OCID
+             * 3. privateKeyFile path
+             * 4. fingerprint for uploaded public key
+             * 5. optional passphrase. If your key has none, delete this
+             * line (and the leading ',').
+             */
+            region: Region.<your-region-here>,
+            auth: {
+                iam: {
+                    tenantId: 'your tenancy OCID',
+                    userId: 'your user OCID',
+                    fingerprint: 'your public key fingerprint',
+                    privateKeyFile: 'path to private key file or private key',
+                    passphrase: 'pass phrase if set for your private key'
+                }
+            }
+        });
+    case 'cloudsim':
+        /*
+         * EDIT: if the endpoint does not reflect how the Cloud
+         * Simulator has been started, modify it accordingly.
+         */
+        return new NoSQLClient({
+            serviceType: ServiceType.CLOUDSIM,
+            endpoint: 'localhost:8080'
+        });
+    case 'kvstore':
+        /*
+         * EDIT: if the endpoint does not reflect how the Proxy
+         * Server has been started, modify it accordingly.
+         */
+        return new NoSQLClient({
+            serviceType: ServiceType.KVSTORE,
+            endpoint: 'localhost:80'
+        });
+    default:
+        throw new Error('Unknown environment: ' + nosqlEnv);
+    }
+}
+
+/*
+ * Create a table, read and write a record
+ */
+async function run(client) {
+    const createDDL = `CREATE TABLE IF NOT EXISTS ${TABLE_NAME} \
+(cookie_id LONG, audience_data JSON, PRIMARY KEY(cookie_id))`;
+    console.log('Create table ' + TABLE_NAME);
+    let res = await client.tableDDL(createDDL, {
+        tableLimits: {
+            readUnits: 1,
+            writeUnits: 5,
+            storageGB: 1
+        }
+    });
+    console.log('  Creating table %s', res.tableName);
+    console.log('  Table state: %s', res.tableState.name);
+
+    // Wait for the operation completion
+    await client.forCompletion(res);
+    console.log('  Table %s is created', res.tableName);
+    console.log('  Table state: %s', res.tableState.name);
+
+    // Write a record
+    console.log('\nWrite a record');
+    res = await client.put(TABLE_NAME, {
+        cookie_id: 456,
+        audience_data: {
+            ipaddr: '10.0.00.yyy',
+            audience_segment: {
+                sports_lover: '2019-01-05',
+                foodie: '2018-12-31'
+            }
+        }
+    });
+    if (res.consumedCapacity) {
+        console.log('  Write used: %O', res.consumedCapacity);
+    }
+
+    // Read a record
+    console.log('\nRead a record');
+    res = await client.get(TABLE_NAME, { cookie_id: 456 });
+    console.log('  Got record: %O', res.row);
+    if (res.consumedCapacity) {
+        console.log('  Read used: %O', res.consumedCapacity);
+    }
+
+    // Drop the table
+    console.log('\nDrop table');
+    const dropDDL = `DROP TABLE ${TABLE_NAME}`;
+    res = await client.tableDDL(dropDDL);
+    console.log('  Dropping table %s', res.tableName);
+
+    // Wait for the table to be removed
+    await client.forCompletion(res);
+    console.log('  Operation completed');
+    console.log('  Table state is %s', res.tableState.name);
+}
+
+quickstart();
+```
+
+### <a name="run_quickstart"></a> Running Quickstart
+
+#### Run Against the Oracle NoSQL Database Cloud Service
+
+Running against the Cloud Service requires an Oracle Cloud account. See
+[Configuring for the Cloud Service](https://oracle.github.io/nosql-node-sdk/tutorial-connect-cloud.html#configure_cloud) for information on getting an account and
+acquiring required credentials.
+
+1. Collect the following information:
+
+* Tenancy ID
+* User ID
+* API signing key (private key file in PEM format
+* Fingerprint for the public key uploaded to the user's account
+* Private key pass phrase, needed only if the private key is encrypted
+
+2. Edit *quickstart.js*  and add your information in the 'cloud' section of the
+*createClient()* function.
+
+3. Decide the region you want to use and add that in the same section in the
+value for the *region* key.
+
+4. Run the program:
+
+```js
+node quickstart.js cloud
+```
+If you would prefer to create a configuration file for credentials instead of
+modifying the program put credentials in a file (see
+[Using a Configuration File](https://oracle.github.io/nosql-node-sdk/tutorial-connect-cloud.html#config_file)). Then modify quickstart.js to use the file:
+
+Replace
+
+```ini
+iam: {
+    tenantId: 'your tenancy OCID',
+    userId: 'your user OCID',
+    fingerprint: 'your public key fingerprint',
+    privateKeyFile: 'path to private key file or private key',
+    passphrase: 'pass phrase if set for your private key'
+}
+```
+with
+
+```
+iam: {
+    configFile: 'path-to-config-file',
+    profileName: 'DEFAULT'
+}
+```
+
+#### Run Against the Oracle NoSQL Cloud Simulator
+
+Running against the Oracle NoSQL Cloud Simulator requires a running Cloud
+Simulator instance. See [Using the Cloud Simulator](https://oracle.github.io/nosql-node-sdk/tutorial-connect-cloud.html#cloudsim) for information on how to download
+and start the Cloud Simulator.
+
+1. Start the Cloud Simulator based on instructions above. Note the HTTP port
+used. By default it is *8080* on *localhost*.
+
+2. The *quickstart.js* program defaults to *localhost:8080* so if the Cloud
+Simulator was started using default values no editing is required.
+
+3. Run the program:
+
+```js
+node quickstart.js cloudsim
+```
+
+#### Run Against Oracle NoSQL on-premise
+
+Running against the Oracle NoSQL Database on-premise requires a running
+Oracle NoSQL Database instance as well as a running NoSQL Proxy server instance.
+The program will connect to the proxy server.
+
+See [Connecting to an On-Premise Oracle NoSQL Database](https://oracle.github.io/nosql-node-sdk/tutorial-connect-on-prem.html) for information on how to download
+and start the database instance and proxy server. The database and proxy should
+be started without security enabled for this quickstart program to operate
+correctly. A secure configuration requires a secure proxy and more complex
+configuration.
+
+1. Start the Oracle NoSQL Database and proxy server  based on instructions above.
+Note the HTTP port used. By default the endpoint is *localhost:80*.
+
+2. The *quickstart.js* program defaults to *localhost:80*. If the proxy was started
+using a different host or port edit the settings accordingly.
+
+3. Run the program:
+
+```js
+node quickstart.js kvstore
+```
 
 ## License
 
