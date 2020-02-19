@@ -62,8 +62,7 @@ run the quickstart program in different environments.
  */
 'use strict';
 
-const nosqldb = require('oracle-nosqldb');
-const NoSQLClient = nosqldb.NoSQLClient;
+const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
 const Region = require('oracle-nosqldb').Region;
 const ServiceType = require('oracle-nosqldb').ServiceType;
 
@@ -75,19 +74,19 @@ async function quickstart() {
     let client;
     try {
         const args = process.argv;
-        let nosqlEnv = args[2];
-        if (!nosqlEnv) {
+        let serviceType = args[2];
+        if (!serviceType) {
             return console.error(USAGE);
         }
         // Set up access to the cloud service
-        client = createClient(nosqlEnv);
+        client = createClient(serviceType);
         console.log('Created NoSQLClient instance');
         await run(client);
         console.log('Success!');
     } catch (err) {
         console.error('  Error: ' + err.message);
         console.error('  from: ');
-        console.error(err.operation);
+        console.error(err.operation.api.name);
     } finally {
         if (client) {
             client.close();
@@ -99,9 +98,9 @@ async function quickstart() {
  * This function encapsulates environmental differences and returns a
  * client handle to use for data operations.
  */
-function createClient(nosqlEnv) {
+function createClient(serviceType) {
 
-    switch(nosqlEnv) {
+    switch(serviceType) {
     case 'cloud':
         return new NoSQLClient({
             /*
@@ -143,7 +142,7 @@ function createClient(nosqlEnv) {
             endpoint: 'localhost:80'
         });
     default:
-        throw new Error('Unknown environment: ' + nosqlEnv);
+        throw new Error('Unknown service type: ' + serviceType);
     }
 }
 
