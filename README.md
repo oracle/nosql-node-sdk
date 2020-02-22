@@ -299,6 +299,56 @@ using a different host or port edit the settings accordingly.
 ```js
 node quickstart.js kvstore
 ```
+## Examples
+
+There are examples in the *examples* directory of the repository and in the
+installed module. You can copy the *examples* directory (or files within it)
+into a separate location. If you installed the SDK locally (as dependency of
+your project), copy the examples into a location within your project so that
+they can locate the SDK package (which should be installed in the
+*node_modules* directory).  See
+[Loading from node_modules Folders](https://nodejs.org/dist/latest-v12.x/docs/api/modules.html#modules_loading_from_node_modules_folders).
+If you installed the SDK globally, you may copy the examples to the location
+of your choice.
+
+You can run the examples
+
+* Against the Oracle NoSQL Database Cloud Service using your Oracle Cloud
+account and credentials.
+* Locally using the [Oracle NoSQL Database Cloud Simulator](https://docs.oracle.com/en/cloud/paas/nosql-cloud/csnsd/develop-oracle-nosql-cloud-simulator.html).
+* Against the On-Premise Oracle NoSQL Database via the proxy.
+
+These configuration files are provided in the examples directory:
+
+* **cloud_template.json** is used to access a cloud service instance. Use this
+template for default configuration as described in
+[Configuring the SDK](https://oracle.github.io/nosql-node-sdk/tutorial-connect-cloud.html#configure_cloud). You need to supply a region. This template assumes that
+your credentials are present in a file, *~/.oci/config*. E.g.:
+
+``` ini
+{
+    "region": "US_ASHBURN_1"
+}
+```
+
+* **cloud\_template\_custom.json** is also used to access a cloud service
+instance and allows you to customize configuration. See
+[Supply Credentials to the Application](https://oracle.github.io/nosql-node-sdk/tutorial-connect-cloud.html#supply) to see how this template can be used for more
+advanced configuration. Unused properties must be removed from the template.
+* **cloudsim.json** is used if you are running against the cloud simulator.
+You may use this file directly as config file if you are running the cloud
+simulator on localhost on port 8080. If the cloud simulator has been started on
+a different host or port, change the endpoint.
+* **kvstore_template.json** is used to access on-premise NoSQL Database via
+the proxy.  Copy that file and fill in appropriate values as described in
+[Configuring the SDK](https://oracle.github.io/nosql-node-sdk/tutorial-connect-on-prem.html#config).
+If configuring for a not secure store the *auth* section should be removed.
+
+Run an example by pointing to the config file. This command assumes
+*my_config.json* is a copy of a config file template, modified for your
+environment:
+
+`node basic_example.js my_config.json`
 
 ## License
 
@@ -307,4 +357,4 @@ package for a copy of the license and additional information.
 
 ## Requirements
 
-This package requires Node.js 10.0.0 or higher.
+This package requires Node.js 12.0.0 or higher.

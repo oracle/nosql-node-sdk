@@ -49,7 +49,7 @@ or globally:
 sudo npm install -g oracle-nosqldb-5.x.x.tgz
 ```
 
-## Configuring the SDK
+## <a name="config"></a>Configuring the SDK
 
 To use the SDK with the On-Premise Oracle NoSQL Database you need the following
 components:

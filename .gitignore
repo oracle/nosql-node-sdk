@@ -4,3 +4,4 @@ doc/api
 package-lock.json
 .DS_Store
 *.diff
+*.tgz
