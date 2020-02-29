@@ -659,6 +659,7 @@ describe('Positive config tests', function() {
             function() {
                 let client;
                 const goodConfig0 = Utils.deepCopy(goodConfig);
+                // eslint-disable-next-line no-useless-catch
                 try {
                     client = new NoSQLClient(goodConfig); 
                 } catch(err) {

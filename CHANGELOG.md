@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## 5.2.1 - 2020-02-27
+
+* Fixed violations of no-prototype-builtins ESLint rule.  Updated ESLint
+version in devDependencies.
+
 ## 5.2.0 - 2020-02-05
 
 **Added**
