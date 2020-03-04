@@ -26,6 +26,15 @@ sudo npm install -g oracle-nosqldb
 
 See the [API and user guide documentation](https://oracle.github.io/nosql-node-sdk/).
 
+##Help
+
+* Open an issue in the [Issues](https://github.com/oracle/nosql-node-sdk/issues) page.
+* [Email to nosql\_sdk\_help\_grp@oracle.com](mailto:nosql_sdk_help_grp@oracle.com)
+* [Oracle NoSQL Developer Forum](https://community.oracle.com/community/groundbreakers/database/nosql_database)
+
+When requesting help please be sure to include as much detail as possible,
+including version of the SDK and **simple**, standalone example code as needed.
+
 ## Quickstart
 
 For detailed information and API documentation about using the SDK in different
