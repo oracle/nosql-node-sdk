@@ -9,6 +9,25 @@ applications that use the
 [Oracle NoSQL Database Cloud Service](https://cloud.oracle.com/nosqldatabase)
 and the [On-Premise Oracle NoSQL Database](https://docs.oracle.com/en/database/other-databases/nosql-database/index.html).
 
+## Prerequisites
+
+* [Node.js](https://nodejs.org) 12.0.0 or higher, running on Linux, Windows or
+Mac.
+* [Node Package Manager (npm)](https://www.npmjs.com/get-npm) that is
+installed with Node.js
+* For use with the Oracle NoSQL Database Cloud Service:
+  * An Oracle Cloud Infrastructure account
+  * A user created in that account, in a group with a policy that grants the
+  desired permissions.
+* For use with the Oracle NoSQL Database On Premise:
+  * [Oracle NoSQL Database](https://www.oracle.com/database/technologies/related/nosql.html).
+See [Oracle NoSQL Database Downloads](https://www.oracle.com/database/technologies/nosql-database-server-downloads.html) to download Oracle NoSQL Database.  See
+[Oracle NoSQL Database Documentation](https://docs.oracle.com/en/database/other-databases/nosql-database/index.html) to get started with Oracle NoSQL Database.
+In particular, see the [Administrator Guide](https://docs.oracle.com/en/database/other-databases/nosql-database/19.5/admin/index.html) on how to install, configure and run Oracle
+NoSQL Database Service.
+
+
+
 ## Installation
 
 You may install this SDK either as a dependency of your project:
@@ -363,7 +382,3 @@ environment:
 
 Please see the [LICENSE](LICENSE.txt) file included in the top-level directory of the
 package for a copy of the license and additional information.
-
-## Requirements
-
-This package requires Node.js 12.0.0 or higher.

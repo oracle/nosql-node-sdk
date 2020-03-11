@@ -8,7 +8,7 @@ The SDK requires:
 * An Oracle Cloud Infrastructure account
 * A user created in that account, in a group with a policy that grants the
 desired permissions.
-* [Node.js](https://nodejs.org) 10.0.0 or higher, running on Linux, Windows or
+* [Node.js](https://nodejs.org) 12.0.0 or higher, running on Linux, Windows or
 Mac.
 * [Node Package Manager (npm)](https://www.npmjs.com/get-npm) that is
 installed with Node.js
