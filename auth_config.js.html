@@ -181,6 +181,7 @@
 const assert = require('assert');
 const ServiceType = require('../constants').ServiceType;
 const NoSQLArgumentError = require('../error').NoSQLArgumentError;
+const hasOwnProperty = require('../utils').hasOwnProperty;
 
 class AuthConfig {
 
@@ -225,9 +226,9 @@ class AuthConfig {
 
     static _initServiceType(cfg) {
         assert(cfg.auth != null &amp;&amp; typeof cfg.auth === 'object');
-        const ownsAuth = cfg.hasOwnProperty('auth');
-        const isIAM = ownsAuth &amp;&amp; cfg.auth.hasOwnProperty('iam');
-        const isKVStore = ownsAuth &amp;&amp; cfg.auth.hasOwnProperty('kvstore');
+        const ownsAuth = hasOwnProperty(cfg, 'auth');
+        const isIAM = ownsAuth &amp;&amp; hasOwnProperty(cfg.auth, 'iam');
+        const isKVStore = ownsAuth &amp;&amp; hasOwnProperty(cfg.auth, 'kvstore');
         if (isIAM &amp;&amp; isKVStore) {
             throw new NoSQLArgumentError('May not specify multiple \
 authorization configurations iam and kvstore without specifying service \
