@@ -1,3 +1,15 @@
 {
-    "region": "us-ashburn-1"
+    "region": "your-region-id-here",
+    "auth": {
+        "iam": {
+            "configFile": "",
+            "profileName": "",
+            "tenantId": "",
+            "userId": "",
+            "fingerprint": "",
+            "privateKeyFile": "",
+            "passphrase": "",
+            "credentialsProvider": ""
+        }
+    }
 }

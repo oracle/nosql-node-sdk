@@ -256,7 +256,6 @@ const goodFileConfigs = Utils.range(0, goodOCIConfigs.length).map(i => ({
         undefined
 }));
 
-
 //user-defined credentials provider configs
 
 const badCredsProviders = [
@@ -356,7 +355,7 @@ function makeTestFiles() {
         writeFileLines(path.join(TEST_DIR, 'bad_config' + i),
             badOCIConfigs[i].data);
     }
-    for(let i = 0; i < badOCIConfigs.length; i++) {
+    for(let i = 0; i < goodOCIConfigs.length; i++) {
         writeFileLines(path.join(TEST_DIR, 'good_config' + i),
             goodOCIConfigs[i].data);
     }
@@ -372,6 +371,8 @@ module.exports = {
     badDirectConfigsCons,
     badDirectConfigs,
     goodDirectConfigs,
+    credsLines,
+    credsLinesEncKey,
     badFileConfigs,
     goodFileConfigs,
     badUserConfigs,
@@ -381,5 +382,6 @@ module.exports = {
     removeTestFiles,
     privateKeyFile,
     privateKeyEncFile,
-    PASSPHRASE
+    PASSPHRASE,
+    writeFileLines
 };

@@ -348,21 +348,10 @@ account and credentials.
 
 These configuration files are provided in the examples directory:
 
-* **cloud_template.json** is used to access a cloud service instance. Use this
-template for default configuration as described in
-[Configuring the SDK](https://oracle.github.io/nosql-node-sdk/tutorial-connect-cloud.html#configure_cloud). You need to supply a region. This template assumes that
-your credentials are present in a file, *~/.oci/config*. E.g.:
-
-``` ini
-{
-    "region": "US_ASHBURN_1"
-}
-```
-
-* **cloud\_template\_custom.json** is also used to access a cloud service
-instance and allows you to customize configuration. See
-[Supply Credentials to the Application](https://oracle.github.io/nosql-node-sdk/tutorial-connect-cloud.html#supply) to see how this template can be used for more
-advanced configuration. Unused properties must be removed from the template.
+* **cloud\_template.json** is used to access a cloud service instance and
+allows you to customize configuration. See
+[Supply Credentials to the Application](https://oracle.github.io/nosql-node-sdk/tutorial-connect-cloud.html#supply). Unused properties must be removed from
+the template.
 * **cloudsim.json** is used if you are running against the cloud simulator.
 You may use this file directly as config file if you are running the cloud
 simulator on localhost on port 8080. If the cloud simulator has been started on
@@ -373,10 +362,18 @@ the proxy.  Copy that file and fill in appropriate values as described in
 If configuring for a not secure store the *auth* section should be removed.
 
 Run an example by pointing to the config file. This command assumes
-*my_config.json* is a copy of a config file template, modified for your
+*my_config.json* is a copy of a config file template modified for your
 environment:
 
 `node basic_example.js my_config.json`
+
+Alternatively, when using cloud service with default configuration as
+described in
+[Configuring the SDK](https://oracle.github.io/nosql-node-sdk/tutorial-connect-cloud.html#configure_cloud), you may run the example without providing JSON config
+file.  This assumes that your credentials and your region identifier are
+present in a file, *~/.oci/config*:
+
+`node basic_example.js`
 
 ## License
 

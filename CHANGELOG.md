@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## 5.2.2 - 2020-04-01
+
+**Added**
+
+* Support for using region from OCI config file if present.
+* Support for NoSQLClient no-argument constructor if region is present in
+default OCI config file.
+
 ## 5.2.1 - 2020-02-27
 
 * Fixed violations of no-prototype-builtins ESLint rule.  Updated ESLint

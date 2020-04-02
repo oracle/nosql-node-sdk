@@ -37,6 +37,9 @@ class TestConfig {
             if (cfg.includes('.')) {
                 cfg = require(path.resolve(cfg));
             } else {
+                if (cfg === 'no-config') {
+                    return;
+                }
                 //otherwise we use deployment type with value of cfg
                 //and default config
                 cfg = { serviceType: cfg };

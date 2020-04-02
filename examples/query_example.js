@@ -30,19 +30,19 @@ const NoSQLClient = nosqldb.NoSQLClient;
 
 // target table used by this example
 const TABLE_NAME = 'users';
-const USAGE = 'Usage: QueryExample <config file>';
+const USAGE = 'Usage: QueryExample [<config file>]';
 
 /*
-* Usage: query_example.js <config file>
+* Usage: query_example.js [<config file>]
 */
 async function queryExample() {
     let client;
     try {
         const args = process.argv;
-        let configFile = args[2];
-        if (!configFile) {
+        if (args.length > 3) {
             return console.error(USAGE);
         }
+        let configFile = args[2];
         // Set up access to the cloud service
         client = new NoSQLClient(configFile);
         console.log('Created NoSQLClient instance');

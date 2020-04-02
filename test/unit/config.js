@@ -14,6 +14,7 @@ const expect = require('chai').expect;
 const NoSQLClient = require('../../index').NoSQLClient;
 const NoSQLArgumentError = require('../../index').NoSQLArgumentError;
 const ServiceType = require('../../index').ServiceType;
+const Region = require('../../index').Region;
 const Utils = require('./utils');
 
 //Data for negative testing
@@ -27,6 +28,7 @@ const badMillis = require('./common').badMillis;
 const badMillisWithOverride = require('./common').badMillisWithOverride;
 const badConsistencies = require('./common').badConsistencies;
 const badPasswords = require('./common').badPasswords;
+const verifyEndpoint = require('./common').verifyEndpoint;
 
 const badRetryHandlers = [
     0, //must be object
@@ -162,13 +164,14 @@ const badRegions = [
     'NO_SUCH_REGION' //invalid region name
 ];
 
+//Since undefined and null are allowed if we specify region in OCI config
+//file, we test that separately (see iam/oci_region.js).
+
 const badConfigs = [
-    undefined,
-    null,
     '/path/to/non-existent/file.json',
     1, //must be object
     Buffer.alloc(16), //must be object, url must be present
-    {}, //endpoint must be present
+    {}, //endpoint or region must be present
     ...badServiceTypes.map(serviceType => ({
         endpoint: 'http://localhost:8080',
         serviceType
@@ -179,6 +182,10 @@ const badConfigs = [
     ...badRegions.map(region => ({
         region //invalid region
     })),
+    {   //cannot specify both endpoint and region
+        endpoint: 'https://nosql.us-phoenix-1.oci.oraclecloud.com',
+        region: Region.US_PHOENIX_1
+    },
     ...badMillis.map(timeout => ({
         endpoint: 'http://localhost:8080',
         timeout //invalid timeout
@@ -259,7 +266,6 @@ const badConfigs = [
 //Functions for positive tests
 
 const URL = require('url').URL;
-const Region = require('../../lib/region');
 const defCfg = require('../../lib/config').defaults;
 const Consistency = require('../../lib/constants').Consistency;
 const IAMAuthorizationProvider = require('../../lib/auth/iam/auth_provider');
@@ -374,68 +380,6 @@ function eraseConfig(cfg) {
     }
 }
 
-function verifyRegion(region) {
-    if (typeof region === 'string') {
-        region = Region._fromRegionId(region);
-    }
-    expect(region).to.be.an.instanceOf(Region);
-    expect(region.regionId).to.be.a('string');
-    expect(region.secondLevelDomain).to.be.a('string');
-    expect(region.secondLevelDomain).to.contain('.');
-    expect(region.name).to.equal(
-        region.regionId.replace(/-/g, '_').toUpperCase());
-    const endpoint = region.endpoint;
-    expect(endpoint).to.equal(
-        `https://nosql.${region.regionId}.oci.${region.secondLevelDomain}`);
-    return endpoint;
-}
-
-function verifyEndpoint(url, endpoint, region) {
-    if (region != null) {
-        endpoint = verifyRegion(region);
-    }
-    expect(url).to.be.instanceOf(URL);
-    if (endpoint instanceof URL) {
-        endpoint = endpoint.href;
-        if (endpoint.endsWith('/')) {
-            endpoint = endpoint.slice(0, - 1);
-        }
-    }
-    let proto;
-    let host;
-    let port;
-    let i = endpoint.indexOf('://');
-    if (i !== -1) {
-        proto = endpoint.substring(0, i).toLowerCase();
-        host = endpoint.substring(i + 3);
-    } else {
-        host = endpoint;
-    }
-    i = host.indexOf(':');
-    if (i !== -1) {
-        port = host.substring(i + 1);
-        host = host.substring(0, i);
-    }
-    //slightly different logig than in http_client.js to cross-check
-    if (!port) {
-        if (!proto) {
-            proto = 'https';
-        }
-        port = proto === 'https' ? '443' : '8080';
-    } else if (!proto) {
-        proto = port === '443' ? 'https' : 'http';
-    }
-    //URL specify default port becomes empty string
-    if ((proto === 'https' && port === '443') ||
-        (proto === 'http' && port === '80')) {
-        port = '';
-    }
-    proto += ':'; //to conform to URL specification
-    expect(url.protocol).to.equal(proto);
-    expect(url.hostname).to.equal(host.toLowerCase());
-    expect(url.port).to.equal(port);
-}
-
 //Data for positive tests
 
 const goodEndpoints = [
@@ -454,7 +398,7 @@ const goodEndpoints = [
     'HtTpS://hostname'
 ];
 
-const goodIAMConfigs = require('./iam/config').goodConfigs;
+const goodIAMConfigs = require('./iam/config').goodDirectConfigs;
 
 const goodKVStoreCreds = [
     'mycredentials.json',

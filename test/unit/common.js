@@ -10,7 +10,10 @@
 'use strict';
 
 const URL = require('url').URL;
+const path = require('path');
+const os = require('os');
 const expect = require('chai').expect;
+const Region = require('../../index').Region;
 const Utils = require('./utils');
 
 if (!Object.fromEntries) {
@@ -418,6 +421,72 @@ const _putTime = Utils._putTime;
 const _ttl = Utils._ttl;
 const _originalTTL = Utils._originalTTL;
 
+//default OCI config file
+const DEFAULT_OCI_FILE = path.join(os.homedir(), '.oci', 'config');
+const DEFAULT_OCI_FILE_BACKUP = DEFAULT_OCI_FILE + '.nosqlnodetest.sav';
+
+function verifyRegion(region) {
+    if (typeof region === 'string') {
+        region = Region.fromRegionId(region);
+    }
+    expect(region).to.be.an.instanceOf(Region);
+    expect(region.regionId).to.be.a('string');
+    expect(region.secondLevelDomain).to.be.a('string');
+    expect(region.secondLevelDomain).to.contain('.');
+    expect(region.name).to.equal(
+        region.regionId.replace(/-/g, '_').toUpperCase());
+    const endpoint = region.endpoint;
+    expect(endpoint).to.equal(
+        `https://nosql.${region.regionId}.oci.${region.secondLevelDomain}`);
+    return endpoint;
+}
+
+function verifyEndpoint(url, endpoint, region) {
+    if (region != null) {
+        endpoint = verifyRegion(region);
+    }
+    expect(url).to.be.instanceOf(URL);
+    if (endpoint instanceof URL) {
+        endpoint = endpoint.href;
+        if (endpoint.endsWith('/')) {
+            endpoint = endpoint.slice(0, - 1);
+        }
+    }
+    let proto;
+    let host;
+    let port;
+    let i = endpoint.indexOf('://');
+    if (i !== -1) {
+        proto = endpoint.substring(0, i).toLowerCase();
+        host = endpoint.substring(i + 3);
+    } else {
+        host = endpoint;
+    }
+    i = host.indexOf(':');
+    if (i !== -1) {
+        port = host.substring(i + 1);
+        host = host.substring(0, i);
+    }
+    //slightly different logig than in http_client.js to cross-check
+    if (!port) {
+        if (!proto) {
+            proto = 'https';
+        }
+        port = proto === 'https' ? '443' : '8080';
+    } else if (!proto) {
+        proto = port === '443' ? 'https' : 'http';
+    }
+    //URL specify default port becomes empty string
+    if ((proto === 'https' && port === '443') ||
+        (proto === 'http' && port === '80')) {
+        port = '';
+    }
+    proto += ':'; //to conform to URL specification
+    expect(url.protocol).to.equal(proto);
+    expect(url.hostname).to.equal(host.toLowerCase());
+    expect(url.port).to.equal(port);
+}
+
 module.exports = {
     TABLE_NAME_PFX,
     DEF_TABLE_LIMITS,
@@ -464,5 +533,8 @@ module.exports = {
     _version,
     _putTime,
     _ttl,
-    _originalTTL
+    _originalTTL,
+    DEFAULT_OCI_FILE,
+    DEFAULT_OCI_FILE_BACKUP,
+    verifyEndpoint
 };
