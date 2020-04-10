@@ -130,9 +130,9 @@ region=<your-region-identifier>
 
 Note that you may also specify your region identifier together with
 credentials in the OCI configuration file.  The driver will look at the
-location above by default, and if region is provided together with
+location above by default, and if a region is provided together with
 credentials, you do not need to provide initial configuration and can use
-no-argument constructor:
+the no-argument constructor:
 
 ```js
 const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
@@ -282,7 +282,7 @@ The first step in your Oracle NoSQL Database Cloud Service application is to
 create an instance of {@link NoSQLClient} class which is the main point of
 access to the service.  To create {@link NoSQLClient} instance, you need to
 supply a {@link Config} object containing information needed to access the
-service.  Alternatively, you may choose to supply a path to JSON file
+service.  Alternatively, you may choose to supply a path to a JSON file
 that contains the same configuration information as in {@link Config}.
 
 The required information consists of the communication region or endpoint and
@@ -345,7 +345,7 @@ Fill in appropriate values for properties needed and remove the rest.
 
 Alternatively, you may create {@link NoSQLClient} instance for the cloud
 service with no-argument constructor (without config parameter) if you are
-using default configuration file and default profile containing the
+using a default configuration file and default profile containing the
 credentials and the region as described in section
 [Using a Configuration File](#config_file).
 
@@ -358,7 +358,7 @@ that we are connecting to the cloud service by setting
 always explicitly specify the {@link Config}#serviceType property, but in
 cases such in code snippets above where the configuration contains the region,
 where configuration has *auth* object that contains *iam* property or where
-initial configuraiton is not provided (because the region is specified in OCI
+an initial configuration is not provided (because the region is specified in OCI
 configuration file) the service type will be deduced by the driver.
 See {@link ServiceType} for details.
 
