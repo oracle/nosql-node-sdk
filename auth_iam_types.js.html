@@ -107,7 +107,7 @@
  * In this case, set properties &lt;em>tenantId&lt;/em>, &lt;em>userId&lt;/em>,
  * &lt;em>privateKey&lt;/em> or &lt;em>privateKeyFile&lt;/em>, &lt;em>fingerprint&lt;/em> and
  * &lt;em>passphrase&lt;/em> (if private key is encrypted)&lt;/li>
- * &lt;li>As part of OCI config file.  See
+ * &lt;li>As part of an OCI configuration file.  See
  * [SDK and CLI Configuration File]{@link https://docs.cloud.oracle.com/iaas/Content/API/Concepts/sdkconfig.htm}
  * for information on OCI configuration file and what entries are used for the
  * required credentials.  In this case, you may set properties
@@ -141,16 +141,25 @@
  * authorization with default OCI config file and default profile name.&lt;/li>
  * &lt;/ol>
  * &lt;p>
+ * Note that if using an OCI configuration file, you may also specify region
+ * identifier in the same profile as your credentials.  In this case, you need
+ * not specify either region or endpoint in {@link Config}.  In particular,
+ * if you use the default OCI config file (&lt;em>~/.oci/config&lt;/em>) and default
+ * profile name (&lt;em>DEFAULT&lt;/em>) and do not need to customize any other
+ * configuration properties, you may create {@link NoSQLClient} instance
+ * without providing configuration to {@link NoSQLClient} constructor.
+ * See {@link NoSQLClient} for more information.
+ * &lt;p>
  * Generated signature is valid for a period of time and is cached for
  * effeciency.  The caching behavior may be customized with properties
  * {@link IAMConfig}#durationSeconds and {@link IAMConfig}#refreshAheadMs. See
  * their property descriptions for details.
- * 
+ *
  * @see {@link AuthConfig}
  * @see {@link IAMCredentials}
  * @see {@link IAMCredentialsProvider}
  * @tutorial connect-cloud
- * 
+ *
  * @example //JSON config object supplying IAM credentials directly (sensitive
  * //info not shown)
  * {
@@ -165,7 +174,7 @@
  *         }
  *     }
  * }
- * 
+ *
  * @example //JSON AuthConfig object supplying IAM credentials through OCI
  * //configuration file
  * {
@@ -177,7 +186,7 @@
  *         }
  *     }
  * }
- * 
+ *
  * @example //Javascript AuthConfig object supplying IAM credentials via
  * //custom credentials provider
  * {
@@ -198,7 +207,7 @@
  *         }
  *     }
  * }
- * 
+ *
  * @global
  * @typedef {object} IAMConfig
  * @property {string} [tenantId] Tenancy OCID
@@ -253,11 +262,11 @@
  * When returning this object, you have choices to return &lt;em>privateKey&lt;/em>
  * or &lt;em>privateKeyFile&lt;/em> and to return &lt;em>Buffer&lt;/em> or &lt;em>string&lt;/em>
  * for fields indicated as such.
- * 
+ *
  * @see {@link IAMConfig}
  * @see {@link loadIAMCredentials}
  * @see {@link IAMCredentialsProvider}
- * 
+ *
  * @global
  * @typedef {object} IAMCredentials
  * @property {string} [tenantId] Tenancy OCID
@@ -278,7 +287,7 @@
  * signature.  Used in {@link IAMCredentialsProvider}.
  * @see {@link IAMCredentialsProvider}
  * @see {@link IAMCredentials}
- * 
+ *
  * @global
  * @callback loadIAMCredentials
  * @async
@@ -290,17 +299,17 @@
 
 /**
  * You may implement {@link IAMCredentialsProvider} interface to securely
- * obtain credentials required for generation of OCI request signature, as
+ * obtain credentials required for generation of Oan CI request signature, as
  * described in {@link IAMConfig}.  {@link IAMCredentialsProvider} is
  * set as {@link IAMConfig}#credentialsProvider property and may be specified
  * either as {@link loadIAMCredentials} function or as an object
  * implementing &lt;em>loadCredentials&lt;/em> function.
- * 
+ *
  * @see {@link loadIAMCredentials}
  * @see {@link IAMCredentials}
  * @see {@link IAMConfig}
  * @tutorial connect-cloud
- * 
+ *
  * @global
  * @typedef {object|loadIAMCredentials} IAMCredentialsProvider
  * @property {loadIAMCredentials} loadCredentials loadCredentials function

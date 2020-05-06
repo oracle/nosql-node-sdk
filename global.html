@@ -976,6 +976,8 @@ the service type from other information in <a href="global.html#Config">Config</
             
                 <td class="attributes">
                 
+                    &lt;optional><br>
+                
 
                 
                 </td>
@@ -997,11 +999,12 @@ host and port information: if no port is specified, port 443 and
 protocol HTTPS are assumed, if port 443 is specified, HTTPS is assumed,
 if port is specified and it is not 443, HTTP is assumed.  If protocol is
 specified, it must be either HTTP or HTTPS.  For example,
-<em>https://ndcs.uscom-east-1.oraclecloud.com</em> or
+<em>https://nosql.us-phoenix-1.oci.oraclecloud.com</em> or
 <em>http://localhost:8080</em>.  In this case, in addition to string, the
 endpoint may also be specified as Node.js URL instance.  If protocol is
 specified but not port, 443 is assumed for HTTPS and 8080 for HTTP (which
-is the default port for CloudSim)</td>
+is the default port for CloudSim).  You may specify <em>endpoint</em> or
+<em>region</em> but not both.</td>
         </tr>
 
     
@@ -1045,10 +1048,19 @@ This property may be specified instead of <a href="global.html#Config">Config</a
 The service endpoint will be inferred from the region.  May be
 specified either as <a href="Region.html">Region</a> enumeration constant, e.g.
 <a href="Region.html#.AP_MUMBAI_1">Region.AP_MUMBAI_1</a> or as a string (so it can be specified in
-config file), which must be one of <a href="Region.html">Region</a> enumeration constant
-names, e.g. <em>AP_MUMBAI_1</em>, <em>US_ASHBURN_1</em>, etc.  Note that
-if both <a href="global.html#Config">Config</a>#region and <a href="global.html#Config">Config</a>#endpoint are present,
-<a href="global.html#Config">Config</a>#endpoint will be used</td>
+config file), which must be either one of <a href="Region.html">Region</a> enumeration
+constant names, e.g. <em>AP_MUMBAI_1</em>, <em>US_ASHBURN_1</em>, etc or
+one of region identifiers, e.g. <em>ap-mumbai-1</em>,
+<em>us-ashburn-1</em>, etc.  You must specify either <a href="global.html#Config">Config</a>#region
+or <a href="global.html#Config">Config</a>#endpoint but not both.  The only exception to this is if
+you set the region identifier in an OCI configuration file together with
+your credentials, in which case you need not specify either
+<a href="global.html#Config">Config</a>#region or <a href="global.html#Config">Config</a>#endpoint.  This implies that you
+store your credentials and region identifier in the OCI configuration file
+and provide configuration in <a href="global.html#IAMConfig">IAMConfig</a> to access this file or use
+the defaults.  See <a href="global.html#IAMConfig">IAMConfig</a> for more information.  Note that
+setting <a href="global.html#Config">Config</a>#region or <a href="global.html#Config">Config</a>#endpoint takes precedence
+over region identifier in an OCI configuration file</td>
         </tr>
 
     
@@ -2314,7 +2326,7 @@ async function test() {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_config.js.html">types/config.js</a>, <a href="types_config.js.html#line374">line 374</a>
+        <a href="types_config.js.html">types/config.js</a>, <a href="types_config.js.html#line384">line 384</a>
     </li></ul></dd>
     
 
@@ -2731,7 +2743,7 @@ in <a href="global.html#WriteMultipleResult">WriteMultipleResult</a>.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_config.js.html">types/config.js</a>, <a href="types_config.js.html#line359">line 359</a>
+        <a href="types_config.js.html">types/config.js</a>, <a href="types_config.js.html#line369">line 369</a>
     </li></ul></dd>
     
 
@@ -4438,7 +4450,7 @@ order of increased security:
 In this case, set properties <em>tenantId</em>, <em>userId</em>,
 <em>privateKey</em> or <em>privateKeyFile</em>, <em>fingerprint</em> and
 <em>passphrase</em> (if private key is encrypted)</li>
-<li>As part of OCI config file.  See
+<li>As part of an OCI configuration file.  See
 <a href="https://docs.cloud.oracle.com/iaas/Content/API/Concepts/sdkconfig.htm">SDK and CLI Configuration File</a>
 for information on OCI configuration file and what entries are used for the
 required credentials.  In this case, you may set properties
@@ -4471,6 +4483,15 @@ if you specify <a href="global.html#Config">Config</a>#serviceType as <a href="S
 and omit <a href="global.html#Config">Config</a>#auth alltogether, the driver will use IAM
 authorization with default OCI config file and default profile name.</li>
 </ol>
+<p>
+Note that if using an OCI configuration file, you may also specify region
+identifier in the same profile as your credentials.  In this case, you need
+not specify either region or endpoint in <a href="global.html#Config">Config</a>.  In particular,
+if you use the default OCI config file (<em>~/.oci/config</em>) and default
+profile name (<em>DEFAULT</em>) and do not need to customize any other
+configuration properties, you may create <a href="NoSQLClient.html">NoSQLClient</a> instance
+without providing configuration to <a href="NoSQLClient.html">NoSQLClient</a> constructor.
+See <a href="NoSQLClient.html">NoSQLClient</a> for more information.
 <p>
 Generated signature is valid for a period of time and is cached for
 effeciency.  The caching behavior may be customized with properties
@@ -4559,7 +4580,7 @@ their property descriptions for details.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="auth_iam_types.js.html">auth/iam/types.js</a>, <a href="auth_iam_types.js.html#line197">line 197</a>
+        <a href="auth_iam_types.js.html">auth/iam/types.js</a>, <a href="auth_iam_types.js.html#line206">line 206</a>
     </li></ul></dd>
     
 
@@ -4882,7 +4903,7 @@ for fields indicated as such.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="auth_iam_types.js.html">auth/iam/types.js</a>, <a href="auth_iam_types.js.html#line242">line 242</a>
+        <a href="auth_iam_types.js.html">auth/iam/types.js</a>, <a href="auth_iam_types.js.html#line251">line 251</a>
     </li></ul></dd>
     
 
@@ -4993,7 +5014,7 @@ for fields indicated as such.
 
 <div class="description usertext">
     You may implement <a href="global.html#IAMCredentialsProvider">IAMCredentialsProvider</a> interface to securely
-obtain credentials required for generation of OCI request signature, as
+obtain credentials required for generation of Oan CI request signature, as
 described in <a href="global.html#IAMConfig">IAMConfig</a>.  <a href="global.html#IAMCredentialsProvider">IAMCredentialsProvider</a> is
 set as <a href="global.html#IAMConfig">IAMConfig</a>#credentialsProvider property and may be specified
 either as <a href="global.html#loadIAMCredentials">loadIAMCredentials</a> function or as an object
@@ -6190,7 +6211,7 @@ alphabetically.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="auth_iam_types.js.html">auth/iam/types.js</a>, <a href="auth_iam_types.js.html#line227">line 227</a>
+        <a href="auth_iam_types.js.html">auth/iam/types.js</a>, <a href="auth_iam_types.js.html#line236">line 236</a>
     </li></ul></dd>
     
 
@@ -8624,7 +8645,7 @@ this case, the continuation key must be used to get results, if any exist.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_config.js.html">types/config.js</a>, <a href="types_config.js.html#line201">line 201</a>
+        <a href="types_config.js.html">types/config.js</a>, <a href="types_config.js.html#line211">line 211</a>
     </li></ul></dd>
     
 
@@ -9068,7 +9089,7 @@ let config = {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_config.js.html">types/config.js</a>, <a href="types_config.js.html#line320">line 320</a>
+        <a href="types_config.js.html">types/config.js</a>, <a href="types_config.js.html#line330">line 330</a>
     </li></ul></dd>
     
 

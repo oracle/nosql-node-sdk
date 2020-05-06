@@ -86,9 +86,19 @@ const BatchCursor = require('./stmt').BatchCursor;
  * You instantiate NoSQLClient by providing connection and credential
  * information, either in the form of a configuration object of type
  * {@link Config} or a path to a file that holds {@link Config} information.
- * Some parameters, such as the service endpoint, are required. Other
- * parameters are optional and need not be specified in the {@link
- * Config}. Default values are used for optional parameters.
+ * Some parameters, such as the service endpoint or region, are required.
+ * Other parameters are optional and need not be specified in the
+ * {@link Config}. Default values are used for optional parameters.
+ * &lt;p>
+ * Note that it is possible to create {@link NoSQLClient} instance without
+ * providing configuration if all of the following are true:
+ * &lt;ul>
+ * &lt;li>You are using {@link NoSQLClient} with the Cloud Service.&lt;/li>
+ * &lt;li>You store your credentials and region identifier in an OCI configuration
+ * file with the default file path and default profile name.  See
+ * {@link IAMConfig} for more information.&lt;/li>
+ * &lt;li>You use defaults for all other configuration properties.&lt;/li>
+ * &lt;/ul>
  * &lt;p>
  * Each method of NoSQLClient also takes an optional &lt;em>opt&lt;/em>
  * parameter which contains options specific to a particular
@@ -171,13 +181,17 @@ class NoSQLClient extends NoSQLClientImpl {
 
     /**
      * Constructs an instance of NoSQLClient. This function is synchronous.
-     * @param {string|Config} config Configuration for NoSQL client. May be
-     * either a string indicating the file path to a configuration
+     * @param {string|Config|null} [config] Configuration for NoSQL client.
+     * May be either a string indicating the file path to a configuration
      * file, or a {@link Config} object. If a file path is supplied,
      * the path can be absolute or relative to the current directory
      * of the application. The file should contain the {@link Config} object
      * and can be either JSON or JavaScript (in the latter case it's
      * &lt;em>module.exports&lt;/em> should be set to the {@link Config} object).
+     * Note that you may pass &lt;em>null&lt;/em> or omit this parameter (use
+     * no-argument constructor) if using the cloud service with the default OCI
+     * configuration file that contains credentials and region identifier, as
+     * described above
      * @throws {NoSQLArgumentError} if the configuration is
      * missing required properties or contains invalid property values
      * @see {@link Config}

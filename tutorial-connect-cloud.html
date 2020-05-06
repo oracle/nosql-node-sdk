@@ -150,16 +150,21 @@ user=&lt;your-user-ocid>
 fingerprint=&lt;fingerprint-of-your-public-key>
 key_file=&lt;path-to-your-private-key-file>
 pass_phrase=&lt;your-private-key-passphrase>
+region=&lt;your-region-identifier>
 </code></pre>
-<p>The driver will look at the location above by default, so the initial
-configuration only needs to specify the service type cloud and the region
-to which you want to connect. For example:</p>
+<p>Note that you may also specify your region identifier together with
+credentials in the OCI configuration file.  The driver will look at the
+location above by default, and if a region is provided together with
+credentials, you do not need to provide initial configuration and can use
+the no-argument constructor:</p>
 <pre class="prettyprint source lang-js"><code>const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
 
-let client = new NoSQLClient({
-    serviceType: 'CLOUD',
-    region: Region.US_ASHBURN_1
-});
+let client = new NoSQLClient();
+</code></pre>
+<p>Alternatively, you may choose to specify the region in the configuration:</p>
+<pre class="prettyprint source lang-js"><code>const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+
+let client = new NoSQLClient({ region: Region.US_ASHBURN_1 });
 </code></pre>
 <p>You may choose to use different path for OCI configuration file as well as
 different profile within the configuration file.  In this case, specify these
@@ -276,7 +281,7 @@ module's sole export.</p>
 create an instance of <a href="NoSQLClient.html">NoSQLClient</a> class which is the main point of
 access to the service.  To create <a href="NoSQLClient.html">NoSQLClient</a> instance, you need to
 supply a <a href="global.html#Config">Config</a> object containing information needed to access the
-service.  Alternatively, you may choose to supply a path to JSON file
+service.  Alternatively, you may choose to supply a path to a JSON file
 that contains the same configuration information as in <a href="global.html#Config">Config</a>.</p>
 <p>The required information consists of the communication region or endpoint and
 authorization information described in section
@@ -324,29 +329,36 @@ const client = new NoSQLClient('/path/to/config.json');
 <p>In the <em>examples</em> directory, you will see JSON configuration files that are
 used to create a <a href="NoSQLClient.html">NoSQLClient</a> instance as shown above:</p>
 <ul>
-<li>Use <em>cloud_template.json</em> for the cloud service when using a
-configuration file and default profile as described in section
-<a href="#config_file">Using a Configuration File</a>.  Fill in the appropriate region.</li>
-<li>Use <em>cloudsim.json</em> for the Cloud Simulator.</li>
-<li>Use <em>cloud_template_custom.json</em> for the cloud service to create
-a configuration of your choice as described in
-<a href="#supply">Supply Credentials to the Application</a>.
+<li>Use <em>cloud_template.json</em> for the cloud service to create a configuration of
+your choice as described in <a href="#supply">Supply Credentials to the Application</a>.
 Fill in appropriate values for properties needed and remove the rest.</li>
+<li>Use <em>cloudsim.json</em> for the Cloud Simulator.</li>
 </ul>
+<p>Alternatively, you may create <a href="NoSQLClient.html">NoSQLClient</a> instance for the cloud
+service with no-argument constructor (without config parameter) if you are
+using a default configuration file and default profile containing the
+credentials and the region as described in section
+<a href="#config_file">Using a Configuration File</a>.</p>
 <h3>Specifying Service Type</h3>
 <p>Because this SDK is used both for the Oracle NoSQL Cloud Service and the
 On-Premise Oracle NoSQL Database, the <a href="global.html#Config">Config</a> object can specify
 that we are connecting to the cloud service by setting
 <a href="global.html#Config">Config</a>#serviceType property to <a href="ServiceType.html#.CLOUD">ServiceType.CLOUD</a>.  You can
-always explicitly specify the <a href="global.html#Config">Config</a>#serviceType property, but in some
-cases such in code snippets above where the configuration has <em>auth</em> object
-that contains <em>iam</em> property, the service type will be deduced by the driver.
+always explicitly specify the <a href="global.html#Config">Config</a>#serviceType property, but in
+cases such in code snippets above where the configuration contains the region,
+where configuration has <em>auth</em> object that contains <em>iam</em> property or where
+an initial configuration is not provided (because the region is specified in OCI
+configuration file) the service type will be deduced by the driver.
 See <a href="ServiceType.html">ServiceType</a> for details.</p>
-<p>If the <em>auth</em> object is not present in configuration (such as when using
-a configuration file for credentials with a default profile), you must specify
-service type as <a href="ServiceType.html#.CLOUD">ServiceType.CLOUD</a> in order to connect to the cloud
-service, otherwise the service type will default to
-<a href="ServiceType.html#.CLOUDSIM">ServiceType.CLOUDSIM</a> (see <a href="#cloudsim">Using the Cloud Simulator</a>).</p>
+<p>You may need to specify the service type explicitly as
+<a href="ServiceType.html#.CLOUD">ServiceType.CLOUD</a> only if the <em>auth.iam</em> is not present in the
+configuration (such as when using OCI configuration file with default profile
+for credentials) and the configuration specifies <em>endpoint</em> instead of
+<em>region</em>.  It is recommended to use <em>region</em> instead of <em>endpoint</em> for Cloud
+Service.</p>
+<p>Note that the configuration containing endpoint and not containing either
+<em>serviceType</em> or <em>auth</em> will default to <a href="ServiceType.html#.CLOUDSIM">ServiceType.CLOUDSIM</a> (see
+<a href="#cloudsim">Using the Cloud Simulator</a>).</p>
 <p>You may specify service type either as <a href="ServiceType.html">ServiceType</a> enumeration
 constant (in code) or as a string (in code and in JSON file).  For example,
 when using the default configuration file and default profile:</p>
@@ -390,7 +402,7 @@ inferred from the tenancy.</p>
 value overrides the default for the handle.</p>
 <h2><a name="quickstart"></a>Example Quick Start</h2>
 <p>The examples in the examples directory are configured to make it simple to
-connect and run against the Oracle NoSQL Database Cloud Services. Follow
+connect and run against the Oracle NoSQL Database Cloud Service. Follow
 these steps. It is assumed that the SDK has been installed and will be found
 by the <em>node</em> command.</p>
 <ol>
@@ -414,26 +426,17 @@ user=&lt;your-user-ocid>
 fingerprint=&lt;fingerprint-of-your-public-key>
 key_file=&lt;path-to-your-private-key-file>
 pass_phrase=&lt;your-private-key-passphrase>
+region=&lt;your-region-identifier>
 </code></pre>
 <p>Instead of using a configuration file it is possible to modify the example code
 to directly provide your credentials as described in
 <a href="#config_api">Specifying Credentials Directly</a>.</p>
 <ol start="3">
-<li>Edit and use a JSON configuration file from the examples directory. Edit
-<em>cloud_template.json</em> and modify it to use the region you want to use. E.g.
-for using the US_ASHBURN_1 region, it should look like this:</li>
-</ol>
-<pre class="prettyprint source lang-ini"><code>{
-    &quot;serviceType&quot;: &quot;CLOUD&quot;,
-    &quot;region&quot;: &quot;your-region-here&quot;
-}
-</code></pre>
-<ol start="4">
 <li>Run an example using the syntax:</li>
 </ol>
-<pre class="prettyprint source lang-ini"><code>$ node &lt;example> &lt;config.json>
+<pre class="prettyprint source lang-ini"><code>$ node &lt;example>
 e.g.
-$ node basic_example.js cloud_template.json
+$ node basic_example.js
 </code></pre>
 <h2><a name="cloudsim"></a>Using the Cloud Simulator</h2>
 <p>The configuration instructions above are for getting connected to the actual

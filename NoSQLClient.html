@@ -70,8 +70,19 @@ one of its subclasses.
 You instantiate NoSQLClient by providing connection and credential
 information, either in the form of a configuration object of type
 <a href="global.html#Config">Config</a> or a path to a file that holds <a href="global.html#Config">Config</a> information.
-Some parameters, such as the service endpoint, are required. Other
-parameters are optional and need not be specified in the <a href="global.html#Config">Config</a>. Default values are used for optional parameters.
+Some parameters, such as the service endpoint or region, are required.
+Other parameters are optional and need not be specified in the
+<a href="global.html#Config">Config</a>. Default values are used for optional parameters.
+<p>
+Note that it is possible to create <a href="NoSQLClient.html">NoSQLClient</a> instance without
+providing configuration if all of the following are true:
+<ul>
+<li>You are using <a href="NoSQLClient.html">NoSQLClient</a> with the Cloud Service.</li>
+<li>You store your credentials and region identifier in an OCI configuration
+file with the default file path and default profile name.  See
+<a href="global.html#IAMConfig">IAMConfig</a> for more information.</li>
+<li>You use defaults for all other configuration properties.</li>
+</ul>
 <p>
 Each method of NoSQLClient also takes an optional <em>opt</em>
 parameter which contains options specific to a particular
@@ -120,7 +131,7 @@ compartment.</div>
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="NoSQLClient"><span class="type-signature"></span>new NoSQLClient<span class="signature">(config)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="NoSQLClient"><span class="type-signature"></span>new NoSQLClient<span class="signature">(config<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
 
     
 
@@ -132,7 +143,7 @@ compartment.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line136">line 136</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line150">line 150</a>
     </li></ul></dd>
     
 
@@ -253,6 +264,8 @@ async function test() {
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -275,22 +288,39 @@ async function test() {
 |
 
 <span class="param-type"><a href="global.html#Config">Config</a></span>
+|
+
+<span class="param-type">null</span>
 
 
             
             </td>
 
             
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last">Configuration for NoSQL client. May be
-either a string indicating the file path to a configuration
+            <td class="description last">Configuration for NoSQL client.
+May be either a string indicating the file path to a configuration
 file, or a <a href="global.html#Config">Config</a> object. If a file path is supplied,
 the path can be absolute or relative to the current directory
 of the application. The file should contain the <a href="global.html#Config">Config</a> object
 and can be either JSON or JavaScript (in the latter case it's
-<em>module.exports</em> should be set to the <a href="global.html#Config">Config</a> object).</td>
+<em>module.exports</em> should be set to the <a href="global.html#Config">Config</a> object).
+Note that you may pass <em>null</em> or omit this parameter (use
+no-argument constructor) if using the cloud service with the default OCI
+configuration file that contains credentials and region identifier, as
+described above</td>
         </tr>
 
     
@@ -388,7 +418,7 @@ missing required properties or contains invalid property values
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line144">line 144</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line158">line 158</a>
     </li></ul></dd>
     
 
@@ -461,7 +491,7 @@ missing required properties or contains invalid property values
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1189">line 1189</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1203">line 1203</a>
     </li></ul></dd>
     
 
@@ -846,7 +876,7 @@ Defaults to <a href="global.html#Config">Config</a>#adminPollDelay.  Has no effe
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1217">line 1217</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1231">line 1231</a>
     </li></ul></dd>
     
 
@@ -1124,7 +1154,7 @@ milliseconds, defaults to <a href="global.html#Config">Config</a>#timeout</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line160">line 160</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line174">line 174</a>
     </li></ul></dd>
     
 
@@ -1247,7 +1277,7 @@ it if you need to perform an action upon its completion.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line761">line 761</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line775">line 775</a>
     </li></ul></dd>
     
 
@@ -1683,7 +1713,7 @@ there is an existing row that matches the primary key and its
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line788">line 788</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line802">line 802</a>
     </li></ul></dd>
     
 
@@ -2085,7 +2115,7 @@ specified.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line983">line 983</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line997">line 997</a>
     </li></ul></dd>
     
 
@@ -2398,7 +2428,7 @@ failures due non-existence of the row or inability to match
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line843">line 843</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line857">line 857</a>
     </li></ul></dd>
     
 
@@ -2864,7 +2894,7 @@ continuation key still require the primary key</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1297">line 1297</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1311">line 1311</a>
     </li></ul></dd>
     
 
@@ -3272,7 +3302,7 @@ modified to reflect operation completion
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line358">line 358</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line372">line 372</a>
     </li></ul></dd>
     
 
@@ -3670,7 +3700,7 @@ result of the last poll
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line513">line 513</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line527">line 527</a>
     </li></ul></dd>
     
 
@@ -4046,7 +4076,7 @@ the operation.  Defaults to <a href="global.html#Config">Config</a>#Consistency<
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line453">line 453</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line467">line 467</a>
     </li></ul></dd>
     
 
@@ -4384,7 +4414,7 @@ milliseconds.  Defaults to <a href="global.html#Config">Config</a>#timeout</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line429">line 429</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line443">line 443</a>
     </li></ul></dd>
     
 
@@ -4726,7 +4756,7 @@ information on all indexes is returned</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line308">line 308</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line322">line 322</a>
     </li></ul></dd>
     
 
@@ -5042,7 +5072,7 @@ milliseconds.  Defaults to <a href="global.html#Config">Config</a>#timeout</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line403">line 403</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line417">line 417</a>
     </li></ul></dd>
     
 
@@ -5483,7 +5513,7 @@ usage records may be returned due to size limitations</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1317">line 1317</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1331">line 1331</a>
     </li></ul></dd>
     
 
@@ -5657,7 +5687,7 @@ already implied</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1359">line 1359</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1373">line 1373</a>
     </li></ul></dd>
     
 
@@ -5831,7 +5861,7 @@ already implied</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line485">line 485</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line499">line 499</a>
     </li></ul></dd>
     
 
@@ -6216,7 +6246,7 @@ from given namespace only, otherwise list all tables for the user.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1339">line 1339</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1353">line 1353</a>
     </li></ul></dd>
     
 
@@ -6393,7 +6423,7 @@ information about each user
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1017">line 1017</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1031">line 1031</a>
     </li></ul></dd>
     
 
@@ -6736,7 +6766,7 @@ of query execution plan to be included in the returned
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line616">line 616</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line630">line 630</a>
     </li></ul></dd>
     
 
@@ -7413,7 +7443,7 @@ identity CACHE value is used</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line644">line 644</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line658">line 658</a>
     </li></ul></dd>
     
 
@@ -7857,7 +7887,7 @@ key.  This API is a shorthand for <a href="NoSQLClient.html#put">NoSQLClient#put
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line672">line 672</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line686">line 686</a>
     </li></ul></dd>
     
 
@@ -8301,7 +8331,7 @@ key.  This API is a shorthand for <a href="NoSQLClient.html#put">NoSQLClient#put
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line704">line 704</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line718">line 718</a>
     </li></ul></dd>
     
 
@@ -8803,7 +8833,7 @@ specified.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line945">line 945</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line959">line 959</a>
     </li></ul></dd>
     
 
@@ -9117,7 +9147,7 @@ in error</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1103">line 1103</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1117">line 1117</a>
     </li></ul></dd>
     
 
@@ -9679,7 +9709,7 @@ will not look ahead to check if any more results remain</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line270">line 270</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line284">line 284</a>
     </li></ul></dd>
     
 
@@ -10101,7 +10131,7 @@ Defaults to <a href="global.html#Config">Config</a>#tablePollDelay.  Has no effe
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line224">line 224</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line238">line 238</a>
     </li></ul></dd>
     
 
@@ -10549,7 +10579,7 @@ Defaults to <a href="global.html#Config">Config</a>#tablePollDelay.  Has no effe
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line906">line 906</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line920">line 920</a>
     </li></ul></dd>
     
 
@@ -10924,7 +10954,7 @@ milliseconds.  Defaults to <a href="global.html#Config">Config</a>#timeout</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1398">line 1398</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1412">line 1412</a>
     </li></ul></dd>
     
 
@@ -11090,7 +11120,7 @@ capacity, see <a href="global.html#Operation">Operation</a></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1365">line 1365</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1379">line 1379</a>
     </li></ul></dd>
     
 
@@ -11257,7 +11287,7 @@ caused the error, see <a href="global.html#Operation">Operation</a></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1381">line 1381</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1395">line 1395</a>
     </li></ul></dd>
     
 
@@ -11453,7 +11483,7 @@ be performed</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1413">line 1413</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1427">line 1427</a>
     </li></ul></dd>
     
 
