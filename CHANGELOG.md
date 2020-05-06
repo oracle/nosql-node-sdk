@@ -11,11 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 * Support for using region from OCI config file if present.
 * Support for NoSQLClient no-argument constructor if region is present in
 default OCI config file.
-
-## 5.2.1 - 2020-02-27
-
-* Fixed violations of no-prototype-builtins ESLint rule.  Updated ESLint
-version in devDependencies.
+* Updated dependencies to require Node.js 12
 
 ## 5.2.0 - 2020-02-05
 
