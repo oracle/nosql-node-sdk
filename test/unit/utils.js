@@ -648,12 +648,13 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
         Utils.verifyGetResult(getRes, tbl, success ? null : existingRow);
     }
 
-    static async createTable(client, tbl, createIndexes) {
+    static async createTable(client, tbl, indexes) {
         const sql = this.makeCreateTable(tbl, true);
         let res = await client.tableDDL(sql, { tableLimits: tbl.limits });
         await client.forCompletion(res);
-        if (createIndexes && tbl.indexes) { //create indexes attached to table
-            for(let idx of tbl.indexes) {
+        
+        if (indexes) {
+            for(let idx of indexes) {
                 await this.createIndex(client, tbl, idx);
             }
         }

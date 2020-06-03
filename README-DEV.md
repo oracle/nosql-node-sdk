@@ -155,6 +155,23 @@ cd test/unit
 .....
 ```
 
+#### Running Query Test
+
+Note that running the full query test may take a long time because of many
+testcases for advanced query functionality.  You may choose to run only basic
+query testcases by using _--basic-query-only_ option with value _true_.  This
+option may be used when running only the query test or when running the whole
+test suite and can also be combined with other options:
+
+```bash
+npm test -- --basic-query-only true
+```
+
+```bash
+cd test/unit
+../../node_modules/.bin/mocha --no-config query.js --basic-query-only true
+```
+
 ## Linting and Debugging
 
 ### Linting

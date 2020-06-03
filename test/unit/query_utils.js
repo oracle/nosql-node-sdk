@@ -7,26 +7,62 @@
  
 'use strict';
 
-//Advanced query utility functions
+//Advanced query utility functions.
+
+//Current limitation: we cannot verify partial sorting order of query results
+//(where results are sorted on some fields but within any group of rows
+//with a given value of those fields the ordering is arbitrary).  This also
+//means that we usually cannot verify queries containing group by / distinct
+//and order by unless sorting columns are the same as grouping columns.
 
 const expect = require('chai').expect;
+const assert = require('assert');
 const getDistance = require('geolib').getPreciseDistance;
 const computeDestinationPoint = require('geolib').computeDestinationPoint;
 const Utils = require('./utils');
 const NumberUtils = require('./number_utils');
+const isPlainObject = require('../../lib/utils').isPlainObject;
 
-//For untyped Json comparisons, numeric=0, string=1, boolean=2
-function jsonTypeRank(val) {
+const CompTypeRank = {
+    NUMERIC: 0,
+    TIMESTAMP: 1,
+    STRING: 2,
+    BOOLEAN: 3,
+    //The following are only used for sorting used to verify undordered query
+    //cases.  The sorting order for these doesn't matter as long as it is
+    //deterministic with respect to the contained data.
+    BINARY: 10,
+    ARRAY: 11,
+    //Objects are compared without regard to the order of keys, so the keys
+    //are sorted before the comparsion.
+    OBJECT: 12
+};
+
+function compTypeRank(val) {
     if (NumberUtils.isNumber(val)) {
-        return 0;
+        return CompTypeRank.NUMERIC;
+    }
+    if (val instanceof Date) {
+        return CompTypeRank.TIMESTAMP;
     }
     if (typeof val === 'string') {
-        return 1;
+        return CompTypeRank.STRING;
     }
     if (typeof val === 'boolean') {
-        return 2;
+        return CompTypeRank.BOOLEAN;
     }
-    return -1;
+    if (Buffer.isBuffer(val)) {
+        return CompTypeRank.BINARY;
+    }
+    if (Array.isArray(val)) {
+        return CompTypeRank.ARRAY;
+    }
+    //Note that currently driver uses object for returned Map columns,
+    //so we only consider plain objects.
+    if (isPlainObject(val)) {
+        return CompTypeRank.OBJECT;
+    }
+    assert(false, 'Unexpected type of value for comparison');
 }
 
 class QueryUtils extends Utils {
@@ -132,21 +168,42 @@ class QueryUtils extends Utils {
         } else if (val2 == null) {
             return -nullRank;
         }
-        if (val1 instanceof Date) {
-            expect(val2).to.be.instanceOf(Date);
+
+        const compTR1 = compTypeRank(val1);
+        const compTR2 = compTypeRank(val2);
+        expect(compTR1).to.be.at.least(0);
+        expect(compTR2).to.be.at.least(0);
+        
+        if (compTR1 !== compTR2) {
+            return compTR1 > compTR2 ? 1 : -1;
+        }
+
+        switch(compTR1) {
+        case CompTypeRank.BINARY:
+            val1 = val1.toString('base64');
+            val2 = val2.toString('base64');
+            break;
+        case CompTypeRank.TIMESTAMP:
             val1 = val1.getTime();
             val2 = val2.getTime();
+            break;
+        case CompTypeRank.ARRAY:
+            if (val1.length != val2.length) {
+                return val1.length - val2.length;
+            }
+            return QueryUtils.compareRows(val1, val2, Object.keys(val1),
+                nullRank);
+        case CompTypeRank.OBJECT: {
+            const keys1 = Object.keys(val1).sort();
+            const keys2 = Object.keys(val2).sort();
+            const keyRes = QueryUtils.compareFieldValues(keys1, keys2,
+                nullRank);
+            if (keyRes) {
+                return keyRes;
+            }
+            return QueryUtils.compareRows(val1, val2, keys1, nullRank);
         }
-
-        const jsonTR1 = jsonTypeRank(val1);
-        const jsonTR2 = jsonTypeRank(val2);
-        expect(jsonTR1).to.be.at.least(0);
-        expect(jsonTR2).to.be.at.least(0);
-        if (jsonTR1 !== jsonTR2) {
-            return jsonTR1 > jsonTR2 ? 1 : -1;
-        }
-
-        if (jsonTR1 === 0) { //both numeric
+        case CompTypeRank.NUMERIC:
             //NaN is equal to itself and is greater than everything else
             if (NumberUtils.isNaN(val1)) {
                 return NumberUtils.isNaN(val2) ? 0 : 1;
@@ -155,7 +212,10 @@ class QueryUtils extends Utils {
                 return -1;
             }
             return NumberUtils.cmp(val1, val2);
+        default:
+            break;
         }
+
         return val1 > val2 ? 1 : (val1 === val2 ? 0 : -1);
     }
 
@@ -187,8 +247,8 @@ class QueryUtils extends Utils {
     }
 
     //We assume all input values are of comparable type or null/undefined.
-    static aggregate(rows, field, aggrFunc) {
-        let ret;
+    static aggregate(rows, field, aggrFunc, initVal) {
+        let ret = initVal;
         for(let row of rows) {
             const val = QueryUtils.getFieldValue(row, field);
             if (ret == null) {
@@ -201,8 +261,9 @@ class QueryUtils extends Utils {
     }
 
     //shortcut for use in group by
-    static count(rows) {
-        return rows.length;
+    static count(rows, field) {
+        return field == null ? rows.length :
+            QueryUtils.aggregate(rows, field, v1 => v1 + 1, 0);
     }
 
     static min(rows, field) {
@@ -260,23 +321,36 @@ class QueryUtils extends Utils {
     //Each returned row contains grouping fields followed by aggregates
     //Use projectRows() on top of this function to project out fields or
     //change their order.
+    //If aggrs == null, then this is DISTINCT instead of group by.
+    //For group by without agggregates, use aggrs = [] instead.
     static groupBy(rows, fields, aggrs) {
         const res = [];
         const groups = QueryUtils._groupBy(rows, fields);
         for(let group of groups) {
-            const row = QueryUtils.projectRow(group[0], fields);
-            //skip rows with empty grouping values per group by semantics
+            let row = QueryUtils.projectRow(group[0], fields);
             if (Object.values(row).includes(undefined)) {
-                continue;
+                //skip rows with empty grouping values per group by semantics
+                if (aggrs != null) {
+                    continue;
+                }
+                //for DISTINCT convert empty to null
+                row = Object.fromEntries(Object.entries(row).map(ent =>
+                    ent[1] === undefined ? [ ent[0], null ] : ent));
             }
-            for(let aggr of aggrs) {
-                row[aggr.as] = aggr.func(group, aggr.name);
+            if (aggrs != null) {
+                for(let aggr of aggrs) {
+                    row[aggr.as] = aggr.func(group, aggr.field);
+                }
             }
             res.push(row);
         }
         //res records already have target property names
         fields = fields.map(fld => QueryUtils.fieldAs(fld));
         return QueryUtils.sortRows(res, ...fields);
+    }
+
+    static distinct(rows, fields) {
+        return this.groupBy(rows, fields);
     }
 
     static geoDistance(p1, p2) {

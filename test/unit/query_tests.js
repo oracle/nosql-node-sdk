@@ -11,13 +11,15 @@
 
 const QueryUtils = require('./query_utils');
 const NumberUtils = require('./number_utils');
-const ALL_TYPES_TABLE = require('./test_schemas').ALL_TYPES_TABLE;
 const AllTypesTest = require('./data_tests').AllTypesTest;
-const QUERY_TESTS = require('./data_tests').QUERY_TESTS;
+const QUERY_TESTS = require('./data_tests').QUERY_TESTS.slice();
 const DEFAULT_LOCATION = require('./data_tests').DEFAULT_LOCATION;
+const pre20_1 = require('./common').pre20_1;
+const pre20_2 = require('./common').pre20_2;
 
-const untypedJsonIdx = QueryUtils.getArgVal('--test-untyped-json-index',
-    true);
+//Note that currently sorting on enumeration columns is only possible if
+//enumeration constants are defined in alphabetic order (because server sorts
+//on ordinals).  See enumColValues in common.js.
 
 const queryTest2 = {
     desc: 'query test 2, advanced queries',
@@ -25,7 +27,7 @@ const queryTest2 = {
 };
 
 //For secondary indexes, we use colIden to give unique sort order.
-ALL_TYPES_TABLE.indexes = [
+queryTest2.indexes = [
     {
         name: 'idenIdx',
         fields: [ 'colIden' ]
@@ -66,18 +68,27 @@ ALL_TYPES_TABLE.indexes = [
     {
         name: 'num2IdenIdx',
         fields: [ 'colNumber2', 'colIden' ]
-    }
-];
-
-if (untypedJsonIdx) {
-    ALL_TYPES_TABLE.indexes.push({
+    },
+    {
         name: 'jsonUIdenIdx',
         fields: [ 'colJSON.u as anyAtomic', 'colIden' ]
-    }, {
+    },
+    {
         name: 'jsonXuzIdenIdx',
         fields: [ 'colJSON.x as anyAtomic', 'colJSON.u as anyAtomic',
             'colJSON.z as STRING', 'colIden' ]
-    });
+    },
+    {
+        name: 'enumJson2zkxaIdx',
+        fields: [ 'colEnum', 'colJSON2.z.k as anyAtomic',
+            'colJSON2.x.a as anyAtomic']
+    }
+];
+
+if (pre20_1) {
+    queryTest2.indexes = queryTest2.indexes.slice(0, -3);
+} else if (!QueryUtils.isOnPrem || pre20_2) {
+    queryTest2.indexes = queryTest2.indexes.slice(0, -1);
 }
 
 //find interesting offset-limit cases based on total number of results
@@ -113,9 +124,11 @@ function makeTestCasesForOffLim(expRows) {
     return testCases;
 }
 
+queryTest2.makeTestCasesForOffLim = makeTestCasesForOffLim;
+
 queryTest2.queries = [
     {
-        desc: 'order by PK descending, select *, direct execution',
+        desc: '[0] order by PK descending, select *, direct execution',
         stmt: 'SELECT * FROM __TABLE__ ORDER BY shardId DESC, pkString DESC',
         expectedRows: QueryUtils.sortRows(queryTest2.rows, 'shardId',
             'pkString').reverse()
@@ -124,7 +137,8 @@ queryTest2.queries = [
         const cols = [ 'colInteger', 'colNumber', 'colBoolean', 'colJSON',
             'colBinary', 'colArray' ];
         const ret = {
-            desc: 'order by PK, projection, bindings for limit and offset',
+            desc:
+                '[1] order by PK, projection, bindings for limit and offset',
             stmt: `DECLARE $off INTEGER; $lim INTEGER; SELECT \
 ${cols.join(', ')} FROM __TABLE__ ORDER BY shardId, pkString LIMIT $lim \
 OFFSET $off`
@@ -136,7 +150,7 @@ OFFSET $off`
         return ret;
     })(),
     {
-        desc: 'order by PK with expressions',
+        desc: '[2] order by PK with expressions',
         stmt: 'SELECT shardId, pkString, colInteger + colLong as expr1, \
 colDouble - colFloat as expr2 FROM __TABLE__ ORDER BY shardId, pkString',
         expectedRows: QueryUtils.projectRows(QueryUtils.sortRows(
@@ -158,7 +172,7 @@ colDouble - colFloat as expr2 FROM __TABLE__ ORDER BY shardId, pkString',
             { name: 'expr2', type: 'FLOAT' })
     },
     {
-        desc: 'order by PK with expressions',
+        desc: '[3] order by PK with expressions',
         stmt: 'SELECT shardId, pkString, colInteger + colLong as expr1, \
 colDouble * 1.2345 as expr2 FROM __TABLE__ ORDER BY shardId, pkString',
         expectedRows: QueryUtils.projectRows(QueryUtils.sortRows(
@@ -178,13 +192,13 @@ colDouble * 1.2345 as expr2 FROM __TABLE__ ORDER BY shardId, pkString',
             { name: 'expr2', type: 'DOUBLE' })
     },
     {
-        desc: 'select *, order by colIden idx descending',
+        desc: '[4] select *, order by colIden idx descending',
         stmt: 'SELECT * FROM __TABLE__ ORDER BY colIden DESC',
         expectedRows: QueryUtils.sortRows(queryTest2.rows,
             queryTest2.colIdVal).reverse()
     },
     {
-        desc: 'select expr order by colTimestamp, colIden',
+        desc: '[5] select expr order by colTimestamp, colIden',
         stmt: 'SELECT t.colRecord.fldNumber + t.colFloat as expr1 FROM \
 __TABLE__ t ORDER BY colTimestamp, colIden',
         expectedRows: QueryUtils.projectRows(QueryUtils.sortRows(
@@ -208,7 +222,7 @@ __TABLE__ t ORDER BY colTimestamp, colIden',
         const cols = [ 'colArray2', 'colNumber', 'colEnum',
             'colBinary', 'colMap' ];
         const ret = {
-            desc: 'order by colRecord.fldString, colIden, \
+            desc: '[6] order by colRecord.fldString, colIden, \
 projection, bindings for limit and offset',
             stmt: `DECLARE $off INTEGER; $lim INTEGER; SELECT \
 ${cols.join(', ')} FROM __TABLE__ t ORDER BY t.colRecord.fldString, \
@@ -225,7 +239,7 @@ t.colIden LIMIT $lim OFFSET $off`
         const cols = [ 'colArray2', 'colNumber', 'colEnum',
             'colBinary', 'colMap' ];
         const ret = {
-            desc: 'order by colRecord.fldString, colIden descending, \
+            desc: '[7] order by colRecord.fldString, colIden descending, \
 projection, bindings for limit and offset',
             stmt: `DECLARE $off INTEGER; $lim INTEGER; SELECT \
 ${cols.join(', ')} FROM __TABLE__ t ORDER BY t.colRecord.fldString DESC, \
@@ -239,7 +253,7 @@ t.colIden DESC LIMIT $lim OFFSET $off`
         return ret;
     })(),
     {
-        desc: 'aggregates, no group by',
+        desc: '[8] aggregates, no group by',
         stmt: 'SELECT max(pkString) as aggr1, min(colDouble) as aggr2, \
 avg(colInteger) as aggr3 from __TABLE__',
         expectedRows: [ {
@@ -254,7 +268,7 @@ avg(colInteger) as aggr3 from __TABLE__',
         ]
     },
     {
-        desc: 'array index, duplicate elimination, select *, bindings',
+        desc: '[9] array index, duplicate elimination, select *, bindings',
         stmt: 'DECLARE $y INTEGER; SELECT * FROM __TABLE__ t WHERE \
 t.colArray2.y >=ANY $y',
         unordered: true,
@@ -266,7 +280,7 @@ t.colArray2.y >=ANY $y',
         }))
     },
     {
-        desc: 'simple group by partitions',
+        desc: '[10] simple group by partitions',
         stmt: 'SELECT shardId, max(pkString) as aggr1, sum(colInteger) as \
 aggr2 FROM __TABLE__ GROUP BY shardId',
         expectedFields: [
@@ -275,16 +289,17 @@ aggr2 FROM __TABLE__ GROUP BY shardId',
             { name: 'aggr2', type: 'INTEGER' }
         ],
         expectedRows: QueryUtils.groupBy(queryTest2.rows, [ 'shardId' ], [
-            { as: 'aggr1', name: 'pkString', func: QueryUtils.max },
-            { as: 'aggr2', name: 'colInteger', func: QueryUtils.sum }
+            { as: 'aggr1', field: 'pkString', func: QueryUtils.max },
+            { as: 'aggr2', field: 'colInteger', func: QueryUtils.sum }
         ])
     },
     {
-        desc: 'simple group by shards',
+        desc: '[11] simple group by shards',
         stmt: 'SELECT t.colRecord.fldString, count(*) as aggr1, \
 min(t.colInteger) as aggr2, avg(t.colDouble) as aggr3, \
 sum(t.colRecord.fldNumber) as aggr4 from __TABLE__ t GROUP BY \
 t.colRecord.fldString',
+        unordered: true,
         expectedFields: [
             { name: 'fldString', type: 'STRING' },
             { name: 'aggr1', type: 'INTEGER' },
@@ -301,21 +316,21 @@ t.colRecord.fldString',
         expectedRows: QueryUtils.groupBy(queryTest2.rows,
             [ { as: 'fldString', name: 'colRecord.fldString' } ], [
                 { as: 'aggr1', func: QueryUtils.count },
-                { as: 'aggr2', name: 'colInteger', func: QueryUtils.min },
-                { as: 'aggr3', name: 'colDouble', func: QueryUtils.avg },
-                { as: 'aggr4', name: 'colRecord.fldNumber',
+                { as: 'aggr2', field: 'colInteger', func: QueryUtils.min },
+                { as: 'aggr3', field: 'colDouble', func: QueryUtils.avg },
+                { as: 'aggr4', field: 'colRecord.fldNumber',
                     func: QueryUtils.sum }
             ])
     },
     {
-        desc: 'geo_near with select *',
+        desc: '[12] geo_near with select *',
         stmt: `SELECT * FROM __TABLE__ t WHERE geo_near(t.colJSON.location, \
 ${JSON.stringify(DEFAULT_LOCATION)}, 50000)`,
         expectedRows: QueryUtils.geoNear(queryTest2.rows, 'colJSON.location',
             DEFAULT_LOCATION, 50000)
     },
     {
-        desc: 'geo_within_distance order by PK',
+        desc: '[13] geo_within_distance order by PK',
         stmt: `SELECT t.colJSON.location.coordinates AS coordinates FROM \
 __TABLE__ t WHERE geo_within_distance(t.colJSON.location, \
 ${JSON.stringify(DEFAULT_LOCATION)}, 100000) ORDER BY shardId, pkString`,
@@ -334,7 +349,7 @@ ${JSON.stringify(DEFAULT_LOCATION)}, 100000) ORDER BY shardId, pkString`,
         { as: 'coordinates', name: 'colJSON.location.coordinates' })
     },
     {
-        desc: 'geo_near with bindings',
+        desc: '[14] geo_near with bindings',
         stmt: 'DECLARE $loc JSON; $dist DOUBLE; SELECT t.pkString, t.colMap2, \
 t.colArray2, t.colJSON.location as location FROM __TABLE__ t WHERE geo_near(\
 t.colJSON.location, $loc, $dist)',
@@ -364,9 +379,10 @@ t.colJSON.location, $loc, $dist)',
         }))
     },
     {
-        desc: 'group by JSON fields, test EMPTY',
+        desc: '[15] group by JSON fields, test EMPTY',
         stmt: 'SELECT sum(t.colJSON.y) as aggr1, t.colJSON.b as col2 FROM \
 __TABLE__ t GROUP BY t.colJSON.x, t.colJSON.z, t.colJSON.b',
+        unordered: true,
         expectedFields: [
             { name: 'aggr1', type: 'INTEGER' },
             { name: 'col2', type: 'BOOLEAN' }
@@ -374,11 +390,11 @@ __TABLE__ t GROUP BY t.colJSON.x, t.colJSON.z, t.colJSON.b',
         expectedRows: QueryUtils.projectRows(QueryUtils.groupBy(
             queryTest2.rows, [ 'colJSON.x', 'colJSON.z',
                 { name: 'colJSON.b', as: 'col2' }],
-            [ { as: 'aggr1', name: 'colJSON.y', func: QueryUtils.sum } ]),
+            [ { as: 'aggr1', field: 'colJSON.y', func: QueryUtils.sum } ]),
         'aggr1', 'col2')
     },
     {
-        desc: 'group by shards with offset and limit, bindings',
+        desc: '[16] group by shards with offset and limit, bindings',
         stmt: 'DECLARE $off INTEGER; $lim INTEGER; \
 SELECT t.colRecord.fldString, max(t.colArray[0]) as aggr1, sum(t.colJSON.y) \
 as aggr2 from __TABLE__ t GROUP BY t.colRecord.fldString \
@@ -392,13 +408,13 @@ LIMIT $lim OFFSET $off',
             queryTest2.rows,
             [ { as: 'fldString', name: 'colRecord.fldString' } ],
             [
-                { as: 'aggr1', name: 'colArray[0]', func: QueryUtils.max },
-                { as: 'aggr2', name: 'colJSON.y', func: QueryUtils.sum }
+                { as: 'aggr1', field: 'colArray[0]', func: QueryUtils.max },
+                { as: 'aggr2', field: 'colJSON.y', func: QueryUtils.sum }
             ]))
     },
     //number-related queries
     {
-        desc: 'number averages, total',
+        desc: '[17] number averages, total',
         stmt: 'SELECT avg(colNumber) AS aggr1, avg(colNumber2) AS aggr2 FROM \
 __TABLE__',
         expectedFields: [
@@ -425,7 +441,7 @@ __TABLE__',
         } ]
     },
     {
-        desc: 'number sum, min, max, group by partitions',
+        desc: '[18] number sum, min, max, group by partitions',
         stmt: 'SELECT shardId, sum(colNumber) AS aggr1, min(colNumber) \
 AS aggr2, sum(colNumber2) AS aggr3, max(colNumber2) AS aggr4 FROM __TABLE__ \
 GROUP BY shardId',
@@ -439,14 +455,14 @@ GROUP BY shardId',
                 }
             })) ],
         expectedRows: QueryUtils.groupBy(queryTest2.rows, [ 'shardId' ], [
-            { as: 'aggr1', name: 'colNumber', func: QueryUtils.sum },
-            { as: 'aggr2', name: 'colNumber', func: QueryUtils.min },
-            { as: 'aggr3', name: 'colNumber2', func: QueryUtils.sum },
-            { as: 'aggr4', name: 'colNumber2', func: QueryUtils.max }
+            { as: 'aggr1', field: 'colNumber', func: QueryUtils.sum },
+            { as: 'aggr2', field: 'colNumber', func: QueryUtils.min },
+            { as: 'aggr3', field: 'colNumber2', func: QueryUtils.sum },
+            { as: 'aggr4', field: 'colNumber2', func: QueryUtils.max }
         ])
     },
     {
-        desc: 'driver-side expressions, group by partitions',
+        desc: '[19] driver-side expressions, group by partitions',
         stmt: 'SELECT shardId, min(colNumber) + min(colNumber2) AS aggr1, \
 max(colNumber) - max(colNumber2) AS aggr2, min(colNumber) * max(colNumber) \
 AS aggr3, sum(colNumber2) / sum(colNumber) AS aggr4 FROM __TABLE__ GROUP BY \
@@ -464,28 +480,28 @@ shardId',
         expectedRows: QueryUtils.groupBy(queryTest2.rows, [ 'shardId' ], [
             {
                 as: 'aggr1',
-                name: [ 'colNumber', 'colNumber2' ],
+                field: [ 'colNumber', 'colNumber2' ],
                 func: (rows, fields) =>
                     NumberUtils.add(QueryUtils.min(rows, fields[0]),
                         QueryUtils.min(rows, fields[1]))
             },
             {
                 as: 'aggr2',
-                name: [ 'colNumber', 'colNumber2' ],
+                field: [ 'colNumber', 'colNumber2' ],
                 func: (rows, fields) =>
                     NumberUtils.sub(QueryUtils.max(rows, fields[0]),
                         QueryUtils.max(rows, fields[1]))
             },
             {
                 as: 'aggr3',
-                name: 'colNumber',
+                field: 'colNumber',
                 func: (rows, field) =>
                     NumberUtils.mul(QueryUtils.min(rows, field),
                         QueryUtils.max(rows, field))
             },
             {
                 as: 'aggr4',
-                name: [ 'colNumber2', 'colNumber' ],
+                field: [ 'colNumber2', 'colNumber' ],
                 func: (rows, fields) =>
                     NumberUtils.div(QueryUtils.sum(rows, fields[0]),
                         QueryUtils.sum(rows, fields[1]))
@@ -493,10 +509,11 @@ shardId',
         ])
     },
     {
-        desc: 'driver-side expressions, group by shards',
+        desc: '[20] driver-side expressions, group by shards',
         stmt: 'SELECT t.colRecord.fldString, \
 sum(colNumber) / (sum(colNumber) + sum(colNumber2)) AS aggr1 FROM \
 __TABLE__ t GROUP BY t.colRecord.fldString',
+        unordered: true,
         expectedFields: [
             {
                 name: 'fldString',
@@ -514,7 +531,7 @@ __TABLE__ t GROUP BY t.colRecord.fldString',
         expectedRows: QueryUtils.groupBy(queryTest2.rows,
             [ { as: 'fldString', name: 'colRecord.fldString' } ], [ {
                 as: 'aggr1',
-                name: [ 'colNumber', 'colNumber2' ],
+                field: [ 'colNumber', 'colNumber2' ],
                 func: (rows, fields) =>
                     NumberUtils.div(QueryUtils.sum(rows, fields[0]),
                         NumberUtils.add(QueryUtils.sum(rows, fields[0]),
@@ -522,15 +539,16 @@ __TABLE__ t GROUP BY t.colRecord.fldString',
             } ])
     },
     {
-        desc: 'select * order by number column',
+        desc: '[21] select * order by number column',
         stmt: 'SELECT * FROM __TABLE__ ORDER BY colNumber2, colIden',
         expectedRows: QueryUtils.sortRows(queryTest2.rows, 'colNumber2',
             'colIden')
     },
     {
-        desc: 'group by number column',
+        desc: '[22] group by number column',
         stmt: 'SELECT colNumber, avg(colNumber2) AS aggr1 FROM \
 __TABLE__ GROUP BY colNumber',
+        unordered: true,
         expectedFields: [
             {
                 name: 'colNumber',
@@ -546,32 +564,85 @@ __TABLE__ GROUP BY colNumber',
             }
         ],
         expectedRows: QueryUtils.groupBy(queryTest2.rows, [ 'colNumber' ], [
-            { as: 'aggr1', name: 'colNumber2', func: QueryUtils.avg }
+            { as: 'aggr1', field: 'colNumber2', func: QueryUtils.avg }
         ])
-    }
-];
-
-if (untypedJsonIdx) {
-    queryTest2.queries.push({
-        desc: 'select * order by colJSON.u untyped index',
+    },
+    {
+        desc: '[23] select * order by colJSON.u untyped index',
         stmt: 'SELECT * FROM __TABLE__ t ORDER BY t.colJSON.u, t.colIden',
         expectedRows: QueryUtils.sortRows(queryTest2.rows, 'colJSON.u',
             'colIden')
-    }, {
-        desc: 'select from order by colJSON x,u,z untyped index',
+    },
+    {
+        desc: '[24] select from order by colJSON x,u,z untyped index',
         stmt: 'SELECT t.colJSON.y FROM __TABLE__ t ORDER BY t.colJSON.x, \
 t.colJSON.u, t.colJSON.z, colIden',
         expectedRows: QueryUtils.projectRows(QueryUtils.sortRows(
             queryTest2.rows, 'colJSON.x', 'colJSON.u', 'colJSON.z',
             'colIden'), 'colJSON.y')
-    }, {
-        desc: 'select * order by colJSON x,u,z untyped index',
+    },
+    {
+        desc: '[25] select * order by colJSON x,u,z untyped index',
         stmt: 'SELECT * FROM __TABLE__ t ORDER BY t.colJSON.x, \
 t.colJSON.u, t.colJSON.z, colIden',
         expectedRows: QueryUtils.sortRows(
             queryTest2.rows, 'colJSON.x', 'colJSON.u', 'colJSON.z',
             'colIden')
-    });
+    },
+    {
+        desc: '[26] simple DISTINCT',
+        stmt: 'SELECT DISTINCT t.colRecord.fldString from __TABLE__ t',
+        unordered: true,
+        expectedFields: [
+            { name: 'fldString', type: 'STRING' }
+        ],
+        expectedRows: QueryUtils.distinct(queryTest2.rows,
+            [ { as: 'fldString', name: 'colRecord.fldString' } ])
+    },
+    {
+        desc: '[27] distinct with JSON fields, test EMPTY',
+        stmt: 'SELECT DISTINCT t.colJSON.x as col1, t.colJSON.z as col2, \
+t.colJSON.b as col3 FROM __TABLE__ t',
+        unordered: true,
+        expectedFields: [
+            { name: 'col1', type: 'JSON' },
+            { name: 'col2', type: 'JSON' },
+            { name: 'col3', type: 'JSON' }
+        ],
+        expectedRows: QueryUtils.distinct(queryTest2.rows, [
+            { as: 'col1', name: 'colJSON.x' },
+            { as: 'col2', name: 'colJSON.z' },
+            { as: 'col3', name: 'colJSON.b' }
+        ])
+    },
+    {
+        //the index for this test exceeds index key size limit in cloudsim,
+        //so it will only use the index for on-prem
+        desc: '[28] distinct with order by, test EMPTY',
+        stmt: 'SELECT DISTINCT t.colRecord.fldString as col1, \
+t.colJson2.z.k as col2, t.colJson2.x.a as col3 FROM __TABLE__ t \
+ORDER BY t.colRecord.fldString, t.colJson2.z.k, t.colJson2.x.a',
+        expectedFields: [
+            { name: 'col1', type: 'STRING' },
+            { name: 'col2', type: 'JSON' },
+            { name: 'col3', type: 'JSON' }
+        ],
+        //sorting not needed in queryTest2, but we will reuse this query in
+        //queryTest3 (group by, distinct, order by with no index)
+        expectedRows: QueryUtils.sortRows(QueryUtils.distinct(queryTest2.rows,
+            [
+                { as: 'col1', name: 'colRecord.fldString' },
+                { as: 'col2', name: 'colJSON2.z.k'},
+                { as: 'col3', name: 'colJSON2.x.a' }
+            ],
+            'colRecord.fldString', 'colJSON2.z.k', 'colJSON2.x.a'))
+    }
+];
+
+if (pre20_1) {
+    queryTest2.queries = queryTest2.queries.slice(0, 23);
+} else if (pre20_2) {
+    queryTest2.queries = queryTest2.queries.slice(0, 26);
 }
 
 QUERY_TESTS.push(queryTest2);

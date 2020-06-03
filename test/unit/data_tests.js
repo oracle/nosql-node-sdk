@@ -43,11 +43,12 @@ function makeObjectForJSON(i) {
     const ret = {
         x: 'a',
         y: 10 + i,
-        u: !(i % 3) ? //use for untyped json index
+        u: !(i % 4) ? //use for comparsion between different types
             100.01 + i :
-            ((i % 3) === 1 ?
+            ((i % 4) === 1 ?
                 'abcde' + i :
-                (i % 10) < 5),
+                ((i % 4) === 2 ?
+                    (i % 10) < 5 : new Date(currentTimeMillis))),
         z: new Date(currentTimeMillis + (i % 6) * 123456),
         location: (i % 5) ? Utils.geoDestination(DEFAULT_LOCATION,
             ((i + 1) % 8) * 12000 + i * 10.987, i * 2) : undefined
@@ -55,6 +56,38 @@ function makeObjectForJSON(i) {
     if (i % 3) {
         ret.b = (i % 3 === 2);
     }
+    return ret;
+}
+
+//this JSON col will have its full values repeated, unlike the previous one
+function makeObjectForJSON2(i) {
+    if (!(i % 17)) {
+        return undefined;
+    }
+    const j = i % 8;
+    const ret = {
+        x: {
+            a: j ? j + 1000 : j < 5, //number or boolean
+            b: Array.from({ length: j }, (v, k) => 'a'.repeat(10-k)),
+            c: j < 3 ? 'c'.repeat(j * 5) : undefined
+        },
+        y: {
+            a: 'abc'.repeat(j % 4),
+            b: (j % 4) ? [ j % 4, j % 4 ] : 'abc',
+            c: j % 2
+        }
+    };
+    if (j % 2) {
+        ret.z = {
+            k: j < 5 ? NumberUtils.makeNumber1(j) : 'abc'.repeat(j),
+            a: {
+                b: {
+                    c: j % 4 ? new Array(20 - j).fill(j) : undefined
+                }
+            }
+        };
+    }
+    
     return ret;
 }
 
@@ -89,19 +122,20 @@ function makeRowAllTypes(i, rowsPerShard = ROWS_PER_SHARD) {
         colRecord: (i & 7) ? {
             fldString: (i & 3) ? 'a'.repeat(i % 5) : null,
             fldNumber: ((i + 1) & 3) ?
-                NumberUtils.asNumber(`${i}.${i}e${i}`) : null,
+                NumberUtils.asNumber(`${i % 123}.${i}e${i % 299}`) : null,
             fldArray: ((i + 2) & 3) ? new Array(i % 10).fill(i) : null
         } : null,
         colArray: ((i + 2) & 7) ? new Array(i % 20).fill(
             new Date(currentTimeMillis + i).toISOString()) : null,
         colArray2 : ((i + 3) % 16) ? Array.from({ length: (i % 5) * 3 },
             (v, j) => makeObjectForJSON(i + j)) : null,
-        colMap : ((i + 4) & 7) ? new Map(Array.from({ length: i % 7},
+        colMap : ((i + 4) & 7) ? new Map(Array.from({ length: i % 7 },
             (v, j) => [ `key${j}`, Number.MAX_SAFE_INTEGER - i])) : null,
         colMap2: ((i + 5) & 7) ? Object.assign({},
             ...Array.from({ length: i % 10}, (v, j) => ({ ['abc'.repeat(j)]:
             Buffer.allocUnsafe(j).fill(j)}))) : null,
-        colJSON: makeObjectForJSON(i)
+        colJSON: makeObjectForJSON(i),
+        colJSON2: makeObjectForJSON2(i)
     };
 }
 

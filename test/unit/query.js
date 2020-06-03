@@ -8,10 +8,12 @@
 'use strict';
 
 const expect = require('chai').expect;
+const assert = require('chai').assert;
 const util = require('util');
 
 const PreparedStatement = require('../../index').PreparedStatement;
 const NoSQLArgumentError = require('../../index').NoSQLArgumentError;
+const NoSQLQueryError = require('../../index').NoSQLQueryError;
 const Consistency = require('../../index').Consistency;
 const ErrorCode = require('../../index').ErrorCode;
 const NoSQLError = require('../../index').NoSQLError;
@@ -26,9 +28,14 @@ const _id = require('./common')._id;
 const _version = require('./common')._version;
 const _putTime = require('./common')._putTime;
 const badOptions = require('./common').badOptions;
+const pre20_2 = require('./common').pre20_2;
 const Utils = require('./utils');
 const QueryUtils = require('./query_utils');
-const QUERY_TESTS = require('./query_tests');
+
+const basicQueryOnly = Utils.getArgVal('--basic-query-only');
+
+const QUERY_TESTS = basicQueryOnly ? require('./data_tests').QUERY_TESTS :
+    require(pre20_2 ? './query_tests' : './query_tests2');
 
 const negativeTestTable = require('./test_schemas').SIMPLE_TABLE;
 
@@ -229,12 +236,10 @@ function verifyResultRows(rows, table, expectedRows, expectedFields,
     unordered) {
     expect(rows.length).to.equal(expectedRows.length);
 
-    //Current limitation: if query returns unordered results and more than
-    //one row, assume that result columns contain primary key so that we can
-    //correctly sort both expected and result rows
     if (unordered) {
-        rows = QueryUtils.sortRows(rows, ...table.primaryKey);
-        expectedRows = QueryUtils.sortRows(expectedRows, ...table.primaryKey);
+        const sortFields = expectedFields ? expectedFields : table.fields;
+        rows = QueryUtils.sortRows(rows, ...sortFields);
+        expectedRows = QueryUtils.sortRows(expectedRows, ...sortFields);
     }
 
     for(let i = 0; i < rows.length; i++) {
@@ -393,6 +398,32 @@ async function doQuery(client, test, q, tc, stmt, opt) {
     }
 }
 
+//This optionally expands queryFunc to do memory testing.
+function withMemTest(testCase, queryFunc) {
+    if (!testCase.maxMemFail && !testCase.maxMem) {
+        return queryFunc;
+    }
+    return async function(client, test, q, tc, stmt, opt) {
+        if (testCase.maxMemFail) {
+            try {
+                await queryFunc(client, test, q, tc, stmt, Object.assign({},
+                    opt, { _maxMemory: testCase.maxMemFail }));
+                assert.fail(`${queryFunc.name} should throw with memory \
+limit of ${testCase.maxMemFail}`);
+            } catch(err) {
+                expect(err).to.be.instanceOf(NoSQLQueryError);
+                expect(err.errorCode).to.equal(
+                    ErrorCode.MEMORY_LIMIT_EXCEEDED);
+                expect(err.message).to.be.a('string');
+                expect(err.message.toLowerCase()).to.have.string('memory');
+            }
+        }
+        const opt1 = testCase.maxMem ? Object.assign({}, opt,
+            { _maxMemory : testCase.maxMem }) : opt;
+        return queryFunc(client, test, q, tc, stmt, opt1);
+    };
+}
+
 //BatchCursor is not used currently
 /*
 async function doCursor(client, test, stmt, opt, expectedRows, updatedRows) {
@@ -494,6 +525,15 @@ function doBind(ps, bindings) {
 //For simplicity, we allow q.testCases to be undefined, in which case there is
 //only one test case and the test parameters are part of q itsef (basically
 //q.testCases = [ q ])
+//In addition, q may contain:
+//q.unordered: true, means that the query results are unordered, so that
+//the testcase passes even if the actual results are in different order than
+//expected results (this is accomplished by sorting of both)
+//q.expectedFields: array of field descriptors for query result records, where
+//each descriptor contains field name and type.  This is needed if new fields
+//are created for the result, using aliases, as result of expressions,
+//aggregates, etc.  See query_tests.js for examples and
+//QueryUtils.getFieldValue() in query_utils.js.
 
 function testQuery(client, test, q) {
     const tcs = q.testCases ? q.testCases : [ q ];
@@ -516,6 +556,7 @@ function testQuery(client, test, q) {
             });
             for(let opt of getQueryOpts(test, q, tc)) {
                 for(let queryFunc of [ doQuery ]) {
+                    queryFunc = withMemTest(tc, queryFunc);
                     it(`Direct execution of query: ${stmt} via \
     ${queryFunc.name} with options: ${util.inspect(opt)}`, async function() {
                         //Make a copy of opt to avoid async concurrency
@@ -555,6 +596,7 @@ ${util.inspect(tc.bindings)}`, function() {
                 });
                 for(let opt of getQueryOpts(test, q, tc)) {
                     for(let queryFunc of [ doQuery ]) {
+                        queryFunc = withMemTest(tc, queryFunc);
                         it(`Execution of prepared query: ${stmt} via \
 ${queryFunc.name} with options: ${util.inspect(opt)}`, async function() {
                             opt = Object.assign({ _updateTTL: q.updateTTL },
@@ -573,7 +615,7 @@ function doTest(client, test) {
         before(async function() {
             await Utils.createTable(client, negativeTestTable);
             await Utils.dropTable(client, test.table);
-            await Utils.createTable(client, test.table, true);
+            await Utils.createTable(client, test.table, test.indexes);
             for(let row of test.rows) {
                 await Utils.putRow(client, test.table, row);
             }
@@ -597,7 +639,7 @@ function doTestcase(idx, client, test) {
     describe(`Running ${test.desc}, query ${query.desc}`, function() {
         before(async function() {
             await Utils.dropTable(client, test.table);
-            await Utils.createTable(client, test.table, true);
+            await Utils.createTable(client, test.table, test.indexes);
             for(let row of test.rows) {
                 await Utils.putRow(client, test.table, row);
             }

@@ -28,7 +28,7 @@ const DEF_TABLE_LIMITS = {
     storageGB: 100
 };
 
-const enumColValues = [ 'enumVal1', 'enumValue2', 'enumVal3', 'enumValue4',
+const enumColValues = [ 'enumVal1', 'enumVal2', 'enumVal3', 'enumVal4',
     'enumVal5'];
 
 //Data for negative testing
@@ -485,6 +485,9 @@ function verifyEndpoint(url, endpoint, region) {
     expect(url.port).to.equal(port);
 }
 
+const pre20_1 = Utils.getArgVal('--pre-20-1');
+const pre20_2 = pre20_1 || Utils.getArgVal('--pre-20-2');
+
 module.exports = {
     TABLE_NAME_PFX,
     DEF_TABLE_LIMITS,
@@ -534,5 +537,7 @@ module.exports = {
     _originalTTL,
     DEFAULT_OCI_FILE,
     DEFAULT_OCI_FILE_BACKUP,
-    verifyEndpoint
+    verifyEndpoint,
+    pre20_1,
+    pre20_2
 };

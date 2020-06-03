@@ -268,6 +268,10 @@ ARRAY(INTEGER))'
             type: 'JSON'
         },
         {
+            name: 'colJSON2',
+            type: 'JSON'
+        },
+        {
             name: 'colIden',
             type: 'LONG',
             typeSpec: 'LONG GENERATED ALWAYS AS IDENTITY',

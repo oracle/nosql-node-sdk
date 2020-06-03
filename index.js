@@ -27,5 +27,6 @@ module.exports = {
     NoSQLServiceError: err.NoSQLServiceError,
     NoSQLTimeoutError: err.NoSQLTimeoutError,
     NoSQLAuthorizationError: err.NoSQLAuthorizationError,
+    NoSQLQueryError: err.NoSQLQueryError,
     TTLUtil: require('./lib/ttl_util')
 };
