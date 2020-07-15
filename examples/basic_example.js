@@ -26,21 +26,20 @@ const NoSQLClient = nosqldb.NoSQLClient;
 
 // Target table used by this example
 const TABLE_NAME = 'BasicExample';
-const USAGE = 'Usage: node basic_example [<config file>]';
 
 // Usage: basic_example.js [<config file>]
 
 async function basicExample() {
     let client;
     try {
-        const args = process.argv;
-        if (args.length > 3) {
-            return console.error(USAGE);
-        }
-        let configFile = args[2];
-        // Set up access to the cloud service
+        // JSON config file path is an optional parameter.  If not specified,
+        // it is assumed we are using Oracle Cloud Service where credentials
+        // are supplied in default OCI configuration file (~/.oci/config)
+        // using default profile (DEFAULT).
+        let configFile = process.argv[2];
         client = new NoSQLClient(configFile);
         console.log('Created NoSQLClient instance');
+
         await run(client);
         console.log('Success!');
     } catch (err) {

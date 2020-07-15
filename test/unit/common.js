@@ -8,8 +8,6 @@
 'use strict';
 
 const URL = require('url').URL;
-const path = require('path');
-const os = require('os');
 const expect = require('chai').expect;
 const Region = require('../../index').Region;
 const Utils = require('./utils');
@@ -419,10 +417,6 @@ const _putTime = Utils._putTime;
 const _ttl = Utils._ttl;
 const _originalTTL = Utils._originalTTL;
 
-//default OCI config file
-const DEFAULT_OCI_FILE = path.join(os.homedir(), '.oci', 'config');
-const DEFAULT_OCI_FILE_BACKUP = DEFAULT_OCI_FILE + '.nosqlnodetest.sav';
-
 function verifyRegion(region) {
     if (typeof region === 'string') {
         region = Region.fromRegionId(region);
@@ -535,8 +529,6 @@ module.exports = {
     _putTime,
     _ttl,
     _originalTTL,
-    DEFAULT_OCI_FILE,
-    DEFAULT_OCI_FILE_BACKUP,
     verifyEndpoint,
     pre20_1,
     pre20_2

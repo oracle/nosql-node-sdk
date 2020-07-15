@@ -19,7 +19,7 @@ module.exports = {
     ScanDirection: con.ScanDirection,
     TableState: con.TableState,
     AdminState: con.AdminState,
-    ErrorCode: err.ErrorCode,
+    ErrorCode: require('./lib/error_code'),
     NoSQLError: err.NoSQLError,
     NoSQLArgumentError: err.NoSQLArgumentError,
     NoSQLProtocolError: err.NoSQLProtocolError,

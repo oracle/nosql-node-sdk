@@ -13,10 +13,13 @@ const fs = require('fs');
 const NoSQLClient = require('../../../index').NoSQLClient;
 const NoSQLArgumentError = require('../../../index').NoSQLArgumentError;
 const credsLines = require('./config').credsLines;
-const writeFileLines = require('./config').writeFileLines;
-const DEFAULT_OCI_FILE = require('../common').DEFAULT_OCI_FILE;
-const DEFAULT_OCI_FILE_BACKUP = require('../common').DEFAULT_OCI_FILE_BACKUP;
+const Utils = require('../utils');
 const verifyEndpoint = require('../common').verifyEndpoint;
+const writeFileLines = require('./utils').writeFileLines;
+
+const DEFAULT_OCI_DIR = require('./constants').DEFAULT_OCI_DIR;
+const DEFAULT_OCI_FILE = require('./constants').DEFAULT_OCI_FILE;
+const DEFAULT_OCI_FILE_BACKUP = require('./constants').DEFAULT_OCI_FILE_BACKUP;
 
 const fileLines = [ '# comment', '[DEFAULT]', ...credsLines ];
 
@@ -102,13 +105,32 @@ region`, function() {
     });
 }
 
-describe('Test region in OCI config file', function() {
-    before(function() {
-        fs.copyFileSync(DEFAULT_OCI_FILE, DEFAULT_OCI_FILE_BACKUP);
+if (!Utils.isOnPrem) {
+    describe('Test region in OCI config file', function() {
+        let exists;
+        before(function() {
+            try {
+                if (!fs.existsSync(DEFAULT_OCI_DIR)) {
+                    fs.mkdirSync(DEFAULT_OCI_DIR);
+                }
+                if (fs.existsSync(DEFAULT_OCI_FILE)) {
+                    exists = true;
+                    fs.copyFileSync(DEFAULT_OCI_FILE, DEFAULT_OCI_FILE_BACKUP);
+                }
+            } catch(err) {
+                throw new Error(`This test uses directory ${DEFAULT_OCI_DIR} and \
+    file ${DEFAULT_OCI_FILE}.  Please make sure they either exist or can be \
+    created.  Error: ${err.message}`);
+            }
+        });
+        after(function() {
+            if (exists) {
+                fs.renameSync(DEFAULT_OCI_FILE_BACKUP, DEFAULT_OCI_FILE);
+            } else {
+                fs.unlinkSync(DEFAULT_OCI_FILE);
+            }
+        });
+        testNegative();
+        testPositive();
     });
-    after(function() {
-        fs.renameSync(DEFAULT_OCI_FILE_BACKUP, DEFAULT_OCI_FILE);
-    });
-    testNegative();
-    testPositive();
-});
+}

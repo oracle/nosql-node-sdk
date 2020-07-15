@@ -4,12 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
-## 5.2.3 - 2020-06-02
+## Unreleased
 
 **Added**
 
+* Resource Principal Support.
+* Instance Principal Support.
 * Generalized sorting in queries.  Support for order by, group by and distinct
 without indexes.
+
+**Changed**
+
+* Minor reorganization and fixes, split error.js into two files.
+
+**Fixed**
+
+* Fixed an issue where forCompletion() or forTableState() would fail before
+its timeout because of retryable error.
+* Fixed some doc typos.
 
 ## 5.2.2 - 2020-05-06
 

@@ -4,6 +4,7 @@
             "lib/nosql_client.js",
             "lib/stmt.js",
             "lib/constants.js",
+            "lib/error_code.js",
             "lib/error.js",
             "lib/ttl_util.js",
             "lib/region.js",

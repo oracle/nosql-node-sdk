@@ -7,47 +7,37 @@
 
 'use strict';
 
-const crypto = require('crypto');
-const os = require('os');
 const path = require('path');
-const fs = require('fs');
 const badStrings = require('../common').badStrings;
 const badStringsOrFunctions = require('../common').badStringsOrFunctions;
 const badStringsOrBinaries = require('../common').badStringsOrBinaries;
 const badPosInt32NotNull = require('../common').badPosInt32NotNull;
 const badMillisWithOverride = require('../common').badMillisWithOverride;
 const Utils = require('../utils');
+const TENANT_ID = require('./constants').TENANT_ID;
+const USER_ID = require('./constants').USER_ID;
+const FINGERPRINT = require('./constants').FINGERPRINT;
+const PASSPHRASE = require('./constants').PASSPHRASE;
+const TEST_DIR = require('./constants').TEST_DIR;
+const PRIVATE_KEY_FILE = require('./constants').PRIVATE_KEY_FILE;
+const OCI_CONFIG_FILE = require('./constants').OCI_CONFIG_FILE;
+const createKeys = require('./utils').createKeys;
 
-const TENANT_ID = 'ocid1.tenancy.oc1..tenancy';
-const USER_ID = 'ocid1.user.oc1..user';
-const FINGERPRINT = 'fingerprint';
-
-const keyPair = crypto.generateKeyPairSync('rsa', { modulusLength : 2048});
-const privateKeyData = keyPair.privateKey.export({
-    type: 'pkcs8',
-    format: 'pem'
-});
-
-const PASSPHRASE = 'oracle';
-
-const privateKeyEncData = keyPair.privateKey.export({
-    type: 'pkcs8',
-    format: 'pem',
-    cipher: 'aes-256-cbc',
-    passphrase: PASSPHRASE
-});
+const keys = createKeys();
 
 const badOCIDs = badStrings.concat(undefined, null, 'abcde');
 const badFingerprints = badStrings.concat(undefined, null);
-const badPKData = badStringsOrBinaries.concat('.....', Buffer.from('"""'),
-    keyPair.privateKey.export({ type: 'pkcs8', format: 'der'}));
 const badFilePaths = badStringsOrBinaries.concat('nosuchfile');
 
-const TEST_DIR = path.join(os.tmpdir(), 'oracle-nosqldb-test-iam');
-const privateKeyFile = path.join(TEST_DIR, 'key_private.pem');
-const privateKeyEncFile = path.join(TEST_DIR, 'key_private_enc.pem');
-const badPrivateKeyFile = path.join(TEST_DIR, 'key_private.der');
-const badPrivateKeyEncFile = path.join(TEST_DIR, 'key_private_enc.der');
+const badPrivateKeyPEMs = [
+    '', '.....',
+    path.join(TEST_DIR, 'nosuchfile'), //used for resource principal
+    keys.privatePEM.slice(1, -1), //corrupted PEM key
+    keys.privateKey.export({ type: 'pkcs8', format: 'der'}) //wrong format
+];
+
+const badPKData = badStringsOrBinaries.concat(badPrivateKeyPEMs,
+    Buffer.from('"""'));
 
 const keyIdObj = {
     tenantId: TENANT_ID,
@@ -56,8 +46,7 @@ const keyIdObj = {
 };
 
 const creds = Object.assign({}, keyIdObj, {
-    publicKey: keyPair.publicKey,
-    serviceHost: 'test'
+    publicKey: keys.publicKey
 });
 
 const badRefreshConfigs = [
@@ -89,19 +78,19 @@ const badDirectConfigsCons = [
         tenantId,
         userId: USER_ID,
         fingerprint: FINGERPRINT,
-        privateKey: privateKeyData
+        privateKey: keys.privatePEM
     })),
     ...badOCIDs.map(userId => ({
         tenantId: TENANT_ID,
         userId,
         fingerprint: FINGERPRINT,
-        privateKey: privateKeyData
+        privateKey: keys.privatePEM
     })),
     ...badFingerprints.map(fingerprint => ({
         tenantId: TENANT_ID,
         userId: USER_ID,
         fingerprint,
-        privateKey: privateKeyData
+        privateKey: keys.privatePEM
     }))
 ];
 
@@ -117,7 +106,7 @@ const badDirectConfigs = [
         tenantId: TENANT_ID,
         userId: USER_ID,
         fingerprint: FINGERPRINT,
-        privateKey: privateKeyEncData,
+        privateKey: keys.privateEncPEM,
         passphrase
     })),
     ...badFilePaths.map(privateKeyFile => ({
@@ -126,58 +115,50 @@ const badDirectConfigs = [
         fingerprint: FINGERPRINT,
         privateKeyFile
     })),
+    ...badPrivateKeyPEMs.map(_privateKeyData => ({
+        tenantId: TENANT_ID,
+        userId: USER_ID,
+        fingerprint: FINGERPRINT,
+        privateKeyFile: PRIVATE_KEY_FILE,
+        _privateKeyData
+    })),
     {
         tenantId: TENANT_ID,
         userId: USER_ID,
         fingerprint: FINGERPRINT,
-        privateKeyFile: badPrivateKeyFile,
-    },
-    {
-        tenantId: TENANT_ID,
-        userId: USER_ID,
-        fingerprint: FINGERPRINT,
-        privateKeyFile: badPrivateKeyEncFile,
-        passphrase: PASSPHRASE
+        privateKeyFile: PRIVATE_KEY_FILE,
+        _privateKeyData: keys.privateEncPEM,
+        passphrase: 'oracle1' //wrong passphrase
     }
 ];
 
 const goodDirectConfigs = [
     Object.assign({}, keyIdObj, {
-        privateKey : privateKeyData
+        privateKey : keys.privatePEM
     }),
     Object.assign({}, keyIdObj, {
-        privateKey : Buffer.from(privateKeyData)
+        privateKey : Buffer.from(keys.privatePEM)
     }),
     Object.assign({}, keyIdObj, {
-        privateKey: privateKeyEncData,
+        privateKey: keys.privateEncPEM,
         passphrase: PASSPHRASE
     }),
     Object.assign({}, keyIdObj, {
-        privateKey: Buffer.from(privateKeyEncData),
+        privateKey: Buffer.from(keys.privateEncPEM),
         passphrase: Buffer.from(PASSPHRASE)
     }),
     Object.assign({}, keyIdObj, {
-        privateKeyFile
+        privateKeyFile: PRIVATE_KEY_FILE,
+        _privateKeyData: keys.privatePEM
     }),
     Object.assign({}, keyIdObj, {
-        privateKeyFile: Buffer.from(privateKeyFile)
+        privateKeyFile: Buffer.from(PRIVATE_KEY_FILE)
     }),
     Object.assign({}, keyIdObj, {
-        privateKeyFile: privateKeyEncFile,
+        privateKeyFile: PRIVATE_KEY_FILE,
+        _privateKeyData: keys.privateEncPEM,
         passphrase: PASSPHRASE
-    }),
-    Object.assign({
-        configFile: 'nosuchfile', //should be ignored
-        privateKey: privateKeyData
-    }, keyIdObj),
-    Object.assign({
-        profileName: 'nosuchprofile', //should be ignored
-        privateKey: privateKeyData
-    }, keyIdObj),
-    Object.assign({
-        credentialsProvider: 'nosuchprovider', //should be ignored
-        privateKey: privateKeyData
-    }, keyIdObj),
+    })
 ];
 
 //OCI config file configs
@@ -186,14 +167,14 @@ const credsLines = [
     'tenancy=' + creds.tenantId,
     'user=' + creds.userId,
     'fingerprint=' + creds.fingerprint,
-    'key_file=' + privateKeyFile
+    'key_file=' + PRIVATE_KEY_FILE
 ];
 
 const credsLinesEncKey = [
     'tenancy=' + creds.tenantId,
     'user=' + creds.userId,
     'fingerprint=' + creds.fingerprint,
-    'key_file=' + privateKeyEncFile,
+    'key_file=' + PRIVATE_KEY_FILE,
     'pass_phrase=' + PASSPHRASE
 ];
 
@@ -208,11 +189,13 @@ const badOCIConfigs = [
     {   //missing profile John
         data: [ '[DEFAULT]', '#comment', ...credsLinesEncKey, '', '',
             '#comment2' ],
-        profile: 'John'
+        profile: 'John',
+        pkData: keys.privateEncPEM
     },
     {
         //missing passphrase for encrypted key
-        data: [ '[DEFAULT]', ...credsLinesEncKey.slice(0, -1), '' ]
+        data: [ '[DEFAULT]', ...credsLinesEncKey.slice(0, -1), '' ],
+        pkData: keys.privateEncPEM
     }
 ];
 
@@ -238,23 +221,29 @@ const goodOCIConfigs = [
 const badFileConfigs = [
     ...badFilePaths.map(configFile => ({ configFile })),
     ...badStrings.map(profileName => ({
-        configFile: path.join(TEST_DIR, 'good_config0'),
+        configFile: OCI_CONFIG_FILE,
         profileName
     })),
-    ...Utils.range(0, badOCIConfigs.length).map(i => ({
-        configFile: path.join(TEST_DIR, 'bad_config' + i),
-        profileName: badOCIConfigs[i].profile ? badOCIConfigs[i].profile :
-            undefined
+    ...badOCIConfigs.map(cfg => ({
+        configFile: OCI_CONFIG_FILE,
+        profileName: cfg.profile != null ? cfg.profile : undefined,
+        _ociConfigData: cfg.data.join('\n'),
+
+        _privateKeyData: cfg.pkData != null ? cfg.pkData : keys.privatePEM
     }))
 ];
 
-const goodFileConfigs = Utils.range(0, goodOCIConfigs.length).map(i => ({
-    configFile: path.join(TEST_DIR, 'good_config' + i),
-    profileName: goodOCIConfigs[i].profile ? goodOCIConfigs[i].profile :
-        undefined
+const goodFileConfigs = goodOCIConfigs.map(cfg => ({
+    configFile: OCI_CONFIG_FILE,
+    profileName: cfg.profile != null ? cfg.profile : undefined,
+    _ociConfigData: cfg.data.join('\n'),
+    _privateKeyData: cfg.pkData != null ? cfg.pkData : keys.privatePEM
 }));
 
 //user-defined credentials provider configs
+
+//Note that we have to pass _privateKeyData if any to the configuration in
+//order to prepare testcase.
 
 const badCredsProviders = [
     ...badStringsOrFunctions,
@@ -272,7 +261,8 @@ const badCredsProviders = [
         loadCredentials: 'abcde', //loadCredentials must be function
     },
     ...badDirectConfigs.map(cfg => ({
-        loadCredentials: async () => cfg
+        loadCredentials: async () => cfg,
+        _privateKeyData: cfg ? cfg._privateKeyData : null
     })),
     () => { throw new Error('creds provider error'); },
     async () => {
@@ -282,42 +272,37 @@ const badCredsProviders = [
 ];
 
 const badUserConfigs = badCredsProviders.map(credentialsProvider => ({
-    credentialsProvider
+    credentialsProvider,
+    _privateKeyData: credentialsProvider._privateKeyData
 }));
 
 const goodCredsProviders = [
-    ...goodDirectConfigs.map(cfg => function() { return cfg; }),
+    ...goodDirectConfigs.map(cfg => Object.assign(
+        function() { return cfg; },
+        { _privateKeyData : cfg._privateKeyData })),
     ...goodDirectConfigs.map(cfg => ({
-        loadCredentials: () => cfg
+        loadCredentials: () => cfg,
+        _privateKeyData: cfg._privateKeyData
     })),
-    ...goodDirectConfigs.map(cfg => async function() {
-        await Utils.sleep(50);
-        return cfg;
-    }),
+    ...goodDirectConfigs.map(cfg => Object.assign(
+        async function() {
+            await Utils.sleep(50);
+            return cfg;
+        },
+        { _privateKeyData : cfg._privateKeyData })),
     ...goodDirectConfigs.map(cfg => ({
         loadCredentials: async () => {
             await Utils.sleep(50);
             return cfg;
-        }
+        },
+        _privateKeyData: cfg._privateKeyData
     }))
 ];
 
-const goodUserConfigs = [
-    ...goodCredsProviders.map(credentialsProvider => ({
-        credentialsProvider
-    })),
-    {
-        //should be ignored in presence of credentialsProvider
-        profileName: 'nosuchprofile',
-        credentialsProvider: goodCredsProviders[0]
-    },
-    {
-        //should be ignored in presence of credentialsProvider
-        configFile: 'nosuchfile',
-        tenantId: 'blahblah',
-        credentialsProvider: goodCredsProviders[0]
-    }
-];
+const goodUserConfigs = goodCredsProviders.map(credentialsProvider => ({
+    credentialsProvider,
+    _privateKeyData: credentialsProvider._privateKeyData
+}));
 
 const goodConfigs = goodDirectConfigs.concat(goodFileConfigs)
     .concat(goodUserConfigs);
@@ -329,42 +314,9 @@ badFileConfigs.push(...badRefreshConfigs.map(cfg =>
 badUserConfigs.push(...badRefreshConfigs.map(cfg =>
     Object.assign({}, goodUserConfigs[0], cfg)));
 
-function writeFileLines(path, lines) {
-    fs.writeFileSync(path, lines.join('\n'));
-}
-
-function makeTestFiles() {
-    removeTestFiles();
-    fs.mkdirSync(TEST_DIR);
-    fs.writeFileSync(privateKeyFile, privateKeyData);
-    fs.writeFileSync(privateKeyEncFile, privateKeyEncData);
-    fs.writeFileSync(badPrivateKeyFile, keyPair.privateKey.export({
-        type: 'pkcs8',
-        format: 'der'
-    }));
-    fs.writeFileSync(badPrivateKeyEncFile, keyPair.privateKey.export({
-        type: 'pkcs8',
-        format: 'der',
-        cipher: 'aes-256-cbc',
-        passphrase: PASSPHRASE
-    }));
-
-    for(let i = 0; i < badOCIConfigs.length; i++) {
-        writeFileLines(path.join(TEST_DIR, 'bad_config' + i),
-            badOCIConfigs[i].data);
-    }
-    for(let i = 0; i < goodOCIConfigs.length; i++) {
-        writeFileLines(path.join(TEST_DIR, 'good_config' + i),
-            goodOCIConfigs[i].data);
-    }
-}
-
-function removeTestFiles() {
-    Utils.rimrafSync(TEST_DIR);
-}
-
 module.exports = {
     TEST_DIR,
+    PRIVATE_KEY_FILE,
     creds,
     badDirectConfigsCons,
     badDirectConfigs,
@@ -376,10 +328,6 @@ module.exports = {
     badUserConfigs,
     goodUserConfigs,
     goodConfigs,
-    makeTestFiles,
-    removeTestFiles,
-    privateKeyFile,
-    privateKeyEncFile,
-    PASSPHRASE,
-    writeFileLines
+    keys,
+    badPrivateKeyPEMs
 };

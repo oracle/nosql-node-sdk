@@ -2,7 +2,6 @@
     "reporter": "min",
     "spec": [
         "test/unit/config.js",
-        "test/unit/iam/oci_region.js",
         "test/unit/table_ddl.js",
         "test/unit/admin_ddl.js",
         "test/unit/get_table.js",
@@ -15,6 +14,9 @@
         "test/unit/delete_range.js",
         "test/unit/write_many.js",
         "test/unit/query.js",
-        "test/unit/iam/auth_provider.js"
+        "test/unit/iam/auth_provider.js",
+        "test/unit/iam/oci_region.js",
+        "test/unit/iam/instance_principal.js",
+        "test/unit/iam/resource_principal.js"
     ]
 }
