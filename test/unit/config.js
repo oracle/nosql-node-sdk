@@ -413,12 +413,15 @@ const goodConfigs = [
     ...goodEndpoints.filter(v => v.includes('://')).map(ep => ({
         endpoint: new URL(ep)
     })),
+    //(using default OCI config file)
     ...Region.values.map(region => ({
         region
     })),
+    //(using default OCI config file)
     ...Region.values.map(region => ({
         region: region.regionId
     })),
+    //(using default OCI config file)
     ...Region.names.map(region => ({
         region
     })),
@@ -581,7 +584,7 @@ const goodConfigs = [
 //When there are too many testcases, having seqNo helps to keep track of 
 //them and debug failed testcases.
 
-describe('Negative config tests', function() {
+function testBadConfigs() {
     let testId = 0;
     for(let badConfig of badConfigs) {
         it(`Testing invalid config (id=${testId}): \
@@ -591,11 +594,11 @@ ${util.inspect(badConfig)}`, function() {
                 NoSQLArgumentError);
         })._testId = testId++;
     }
-});
+}
 
 //Positive tests
 
-describe('Positive config tests', function() {
+function testGoodConfigs() {
     for(let goodConfig of goodConfigs) {
         it('Testing valid config: ' + util.inspect(goodConfig),
             function() {
@@ -621,4 +624,25 @@ describe('Positive config tests', function() {
                 expect(client._config).to.deep.equal(config0);
             });
     }
+}
+
+//Some testcases require default OCI config file to exist in ~/.oci directory.
+//We create this default file while backing up and restoring original if
+//exists.
+
+const DEFAULT_OCI_FILE = require('./iam/constants').DEFAULT_OCI_FILE;
+const defaultOCIFileLines = require('./iam/config').defaultOCIFileLines;
+const writeFileLines = require('./iam/utils').writeFileLines;
+const backupDefaultOCIFile = require('./iam/utils').backupDefaultOCIFile;
+const restoreDefaultOCIFile = require('./iam/utils').restoreDefaultOCIFile;
+
+describe('Config tests', function() {
+    before(() => {
+        backupDefaultOCIFile();
+        writeFileLines(DEFAULT_OCI_FILE, defaultOCIFileLines);
+    });
+    after(restoreDefaultOCIFile);
+    testBadConfigs();
+    testGoodConfigs();
+    it('', () => {});
 });

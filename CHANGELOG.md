@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 **Added**
 
+* Added support for two new regions.
 * Resource Principal Support.
 * Instance Principal Support.
 * Generalized sorting in queries.  Support for order by, group by and distinct
@@ -19,6 +20,7 @@ without indexes.
 
 **Fixed**
 
+* Fixed some unit tests failures due to absense of default OCI config file.
 * Fixed an issue where forCompletion() or forTableState() would fail before
 its timeout because of retryable error.
 * Fixed some doc typos.

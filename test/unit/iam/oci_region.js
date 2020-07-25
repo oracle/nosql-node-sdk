@@ -9,19 +9,15 @@
 
 const expect = require('chai').expect;
 const util = require('util');
-const fs = require('fs');
 const NoSQLClient = require('../../../index').NoSQLClient;
 const NoSQLArgumentError = require('../../../index').NoSQLArgumentError;
-const credsLines = require('./config').credsLines;
+const defaultOCIFileLines = require('./config').defaultOCIFileLines;
 const Utils = require('../utils');
 const verifyEndpoint = require('../common').verifyEndpoint;
 const writeFileLines = require('./utils').writeFileLines;
-
-const DEFAULT_OCI_DIR = require('./constants').DEFAULT_OCI_DIR;
+const backupDefaultOCIFile = require('./utils').backupDefaultOCIFile;
+const restoreDefaultOCIFile = require('./utils').restoreDefaultOCIFile;
 const DEFAULT_OCI_FILE = require('./constants').DEFAULT_OCI_FILE;
-const DEFAULT_OCI_FILE_BACKUP = require('./constants').DEFAULT_OCI_FILE_BACKUP;
-
-const fileLines = [ '# comment', '[DEFAULT]', ...credsLines ];
 
 const configNoRegion = {
     serviceType: 'CLOUD',
@@ -42,7 +38,7 @@ function verifyOCIRegion(client, region) {
 function testNegative() {
     describe('Missing region in OCI config negative test', function() {
         before(function() {
-            writeFileLines(DEFAULT_OCI_FILE, fileLines);
+            writeFileLines(DEFAULT_OCI_FILE, defaultOCIFileLines);
         });
         it('NoSQLClient(), OCI config without region', function() {
             expect(() => new NoSQLClient()).to.throw(
@@ -58,7 +54,7 @@ function testNegative() {
     });
     describe('Invalid region in OCI config negative test', function() {
         before(function() {
-            writeFileLines(DEFAULT_OCI_FILE, [ ...fileLines,
+            writeFileLines(DEFAULT_OCI_FILE, [ ...defaultOCIFileLines,
                 'region=nosuchregion']);
         });
         it('NoSQLClient(), OCI config with invalid region', function() {
@@ -81,7 +77,7 @@ const ociRegion2 = 'us-ashburn-1';
 function testPositive() {
     describe('Region in OCI config positive test', function() {
         before(function() {
-            writeFileLines(DEFAULT_OCI_FILE, [ ...fileLines,
+            writeFileLines(DEFAULT_OCI_FILE, [ ...defaultOCIFileLines,
                 `region=${ociRegion1}`]);
         });
         it('NoSQLClient(), OCI config with valid region', function() {
@@ -107,29 +103,8 @@ region`, function() {
 
 if (!Utils.isOnPrem) {
     describe('Test region in OCI config file', function() {
-        let exists;
-        before(function() {
-            try {
-                if (!fs.existsSync(DEFAULT_OCI_DIR)) {
-                    fs.mkdirSync(DEFAULT_OCI_DIR);
-                }
-                if (fs.existsSync(DEFAULT_OCI_FILE)) {
-                    exists = true;
-                    fs.copyFileSync(DEFAULT_OCI_FILE, DEFAULT_OCI_FILE_BACKUP);
-                }
-            } catch(err) {
-                throw new Error(`This test uses directory ${DEFAULT_OCI_DIR} and \
-    file ${DEFAULT_OCI_FILE}.  Please make sure they either exist or can be \
-    created.  Error: ${err.message}`);
-            }
-        });
-        after(function() {
-            if (exists) {
-                fs.renameSync(DEFAULT_OCI_FILE_BACKUP, DEFAULT_OCI_FILE);
-            } else {
-                fs.unlinkSync(DEFAULT_OCI_FILE);
-            }
-        });
+        before(backupDefaultOCIFile);
+        after(restoreDefaultOCIFile);
         testNegative();
         testPositive();
     });

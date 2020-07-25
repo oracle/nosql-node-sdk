@@ -178,6 +178,8 @@ const credsLinesEncKey = [
     'pass_phrase=' + PASSPHRASE
 ];
 
+const defaultOCIFileLines = [ '# comment', '[DEFAULT]', ...credsLines ];
+
 const badOCIConfigs = [
     {
         data: [] //empty file
@@ -323,6 +325,7 @@ module.exports = {
     goodDirectConfigs,
     credsLines,
     credsLinesEncKey,
+    defaultOCIFileLines,
     badFileConfigs,
     goodFileConfigs,
     badUserConfigs,
