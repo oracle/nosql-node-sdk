@@ -10,6 +10,7 @@
 const chai = require('chai');
 chai.use(require('chai-as-promised'));
 const expect = chai.expect;
+const mockfs = require('mock-fs');
 
 const IAMAuthorizationProvider =
     require('../../../lib/auth/iam/auth_provider');
@@ -32,8 +33,6 @@ const verifyAuth = require('./utils').verifyAuth;
 const verifyAuthEqual = require('./utils').verifyAuthEqual;
 const verifyAuthLaterDate = require('./utils').verifyAuthLaterDate;
 const inspect = require('./utils').inspect;
-const makeTestDir = require('./utils').makeTestDir;
-const removeTestDir = require('./utils').removeTestDir;
 
 function prepConfig(cfg) {
     if (cfg != null) {
@@ -164,8 +163,8 @@ testCaseId=${testCaseId}`, async function() {
 if (!Utils.isOnPrem) {
     describe('IAMAuthorizationProvider test', function() {
         this.timeout(60000);
-        before(makeTestDir);
-        after(removeTestDir);
+        before(() => mockfs());
+        after(() => mockfs.restore());
         doTest();
         it('', () => {});
     });

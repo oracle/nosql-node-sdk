@@ -13,6 +13,8 @@ const expect = chai.expect;
 
 const process = require('process');
 const path = require('path');
+const mockfs = require('mock-fs');
+
 const IAMAuthorizationProvider =
     require('../../../lib/auth/iam/auth_provider');
 const ErrorCode = require('../../../lib/error_code');
@@ -20,7 +22,6 @@ const NoSQLError = require('../../../lib/error').NoSQLError;
 const Utils = require('../utils');
 const COMPARTMENT_ID = require('./constants').COMPARTMENT_ID;
 const PASSPHRASE = require('./constants').PASSPHRASE;
-const TEST_DIR = require('./constants').TEST_DIR;
 const ST_HEADER = require('./constants').ST_HEADER;
 const ST_SIG = require('./constants').ST_SIG;
 const keys = require('./config').keys;
@@ -37,15 +38,13 @@ const makeST = require('./utils').makeST;
 const verifyAuthEqual = require('./utils').verifyAuthEqual;
 const verifyAuthLaterDate = require('./utils').verifyAuthLaterDate;
 const inspect = require('./utils').inspect;
-const makeTestDir = require('./utils').makeTestDir;
-const removeTestDir = require('./utils').removeTestDir;
 
 const RP_VERSION_2_2 = '2.2';
 
 const rpst = makeST(100000000);
 
-const passFile = path.join(TEST_DIR, 'key_private_pass');
-const rpstFile = path.join(TEST_DIR, 'rpst');
+const passFile = path.resolve('key_private_pass');
+const rpstFile = path.resolve('rpst');
 
 function setOrUnsetEnv(key, val) {
     if (val != null) {
@@ -149,8 +148,8 @@ const goodEnvs = [
 
 const badVers = [ null, '', '2.1' ];
 
-const badRPSTs = [ null, '', 'blah', path.join(TEST_DIR, 'nosuchfile'),
-    'aaa.bbb.ccc', 
+const badRPSTs = [ null, '', 'blah', path.resolve('nosuchfile'),
+    'aaa.bbb.ccc',
     ST_HEADER + '.' + base64UrlEncode(makeSTPayload(1000)) + ST_SIG];
 
 const badEnvs = [
@@ -292,10 +291,10 @@ function doTest() {
 }
 
 if (!Utils.isOnPrem) {
-    describe('IAMAuthorizationProvider test', function() {
+    describe('Resource Principal test', function() {
         this.timeout(60000);
-        before(makeTestDir);
-        after(removeTestDir);
+        before(() => mockfs());
+        after(() => mockfs.restore());
         doTest();
         it('', () => {});
     });

@@ -16,6 +16,8 @@ without indexes.
 
 **Changed**
 
+* Allow unit tests to use --kv option to test against older kvstore releases.
+* Use mock-fs for IAM unit tests to avoid creating temporary test files.
 * Minor reorganization and fixes, split error.js into two files.
 
 **Fixed**

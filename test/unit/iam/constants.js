@@ -18,9 +18,8 @@ const FINGERPRINT = 'fingerprint';
 const PASSPHRASE = 'oracle';
 const ST_HEADER = 'pseudo-header';
 const ST_SIG = 'pseudo-signature';
-const TEST_DIR = path.join(os.tmpdir(), 'oracle-nosqldb-test-iam');
-const PRIVATE_KEY_FILE = path.join(TEST_DIR, 'key_private.pem');
-const OCI_CONFIG_FILE = path.join(TEST_DIR, 'config');
+const PRIVATE_KEY_FILE = path.resolve('key_private.pem');
+const OCI_CONFIG_FILE = path.resolve('config');
 
 //default OCI config file
 const DEFAULT_OCI_DIR = path.join(os.homedir(), '.oci');
@@ -99,7 +98,6 @@ module.exports = {
     PASSPHRASE,
     ST_HEADER,
     ST_SIG,
-    TEST_DIR,
     PRIVATE_KEY_FILE,
     OCI_CONFIG_FILE,
     DEFAULT_OCI_DIR,

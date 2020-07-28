@@ -172,6 +172,24 @@ cd test/unit
 ../../node_modules/.bin/mocha --no-config query.js --basic-query-only true
 ```
 
+#### Running Against Specific KVStore Version
+
+You can specify kvstore version of the NoSQL service against which you run
+unit tests by using _--kv_ option.  This can be done when running the whole
+test suite or individual tests:
+
+```bash
+npm test -- --kv 20.1
+```
+
+```bash
+cd test/unit
+../../node_modules/.bin/mocha --no-config query.js --kv 20.1
+```
+
+This option allows you to run unit tests against older releases and thus skip
+testing latest features not supported in these releases.
+
 ## Linting and Debugging
 
 ### Linting

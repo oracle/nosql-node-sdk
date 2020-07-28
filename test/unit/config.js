@@ -631,17 +631,24 @@ function testGoodConfigs() {
 //exists.
 
 const DEFAULT_OCI_FILE = require('./iam/constants').DEFAULT_OCI_FILE;
+const DEFAULT_OCI_DIR = require('./iam/constants').DEFAULT_OCI_DIR;
 const defaultOCIFileLines = require('./iam/config').defaultOCIFileLines;
 const writeFileLines = require('./iam/utils').writeFileLines;
-const backupDefaultOCIFile = require('./iam/utils').backupDefaultOCIFile;
-const restoreDefaultOCIFile = require('./iam/utils').restoreDefaultOCIFile;
+const mockfs = require('mock-fs');
+
+//The driver loads this module after the test has already started, which would
+//not work with mocked file system.  Instead, we pre-cache this module before
+//mockfs is invoked.
+require('../../lib/auth/iam/auth_provider');
 
 describe('Config tests', function() {
     before(() => {
-        backupDefaultOCIFile();
+        mockfs({
+            [DEFAULT_OCI_DIR]: {}
+        });
         writeFileLines(DEFAULT_OCI_FILE, defaultOCIFileLines);
     });
-    after(restoreDefaultOCIFile);
+    after(() => mockfs.restore());
     testBadConfigs();
     testGoodConfigs();
     it('', () => {});

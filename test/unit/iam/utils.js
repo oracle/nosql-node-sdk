@@ -21,10 +21,6 @@ const SERVICE_HOST = require('./constants').SERVICE_HOST;
 const PASSPHRASE = require('./constants').PASSPHRASE;
 const ST_HEADER = require('./constants').ST_HEADER;
 const ST_SIG = require('./constants').ST_SIG;
-const TEST_DIR = require('./constants').TEST_DIR;
-const DEFAULT_OCI_DIR = require('./constants').DEFAULT_OCI_DIR;
-const DEFAULT_OCI_FILE = require('./constants').DEFAULT_OCI_FILE;
-const DEFAULT_OCI_FILE_BACKUP = require('./constants').DEFAULT_OCI_FILE_BACKUP;
 
 const AUTH_HEADER_PATTERN = new RegExp('^Signature headers=".+?",\
 keyId="(.+?)",algorithm="(.+?)",signature="(.+?)",version="(.+?)"$');
@@ -33,15 +29,6 @@ const KEY_ID_PATTERN_IDEN = '^(.+?)\\/(.+?)\\/(.+?)$';
 const KEY_ID_PATTERN_ST = '^ST\\$(.+?)$';
 
 const MAX_INSPECT_LENGTH = 80;
-
-function makeTestDir() {
-    Utils.rimrafSync(TEST_DIR);
-    fs.mkdirSync(TEST_DIR);
-}
-
-function removeTestDir() {
-    Utils.rimrafSync(TEST_DIR);
-}
 
 function isSimpleProperty(obj, prop) {
     do {
@@ -249,32 +236,6 @@ function writeFileLines(file, lines) {
     fs.writeFileSync(file, lines.join('\n'));
 }
 
-function backupDefaultOCIFile() {
-    try {
-        if (!fs.existsSync(DEFAULT_OCI_DIR)) {
-            fs.mkdirSync(DEFAULT_OCI_DIR);
-        }
-        if (fs.existsSync(DEFAULT_OCI_FILE)) {
-            fs.copyFileSync(DEFAULT_OCI_FILE, DEFAULT_OCI_FILE_BACKUP);
-        }
-    } catch(err) {
-        throw new Error(`This test uses directory ${DEFAULT_OCI_DIR} and \
-file ${DEFAULT_OCI_FILE}.  Please make sure they either exist or can be \
-created.  Error: ${err.message}`);
-    }
-}
-
-//only call after backupDefaultOCIFile() successfully completed
-function restoreDefaultOCIFile() {
-    if (fs.existsSync(DEFAULT_OCI_FILE_BACKUP)) {
-        fs.renameSync(DEFAULT_OCI_FILE_BACKUP, DEFAULT_OCI_FILE);
-    } else if (fs.existsSync(DEFAULT_OCI_FILE)) {
-        //In case the config did not exist before the test, we remove the one
-        //created by the test.
-        fs.unlinkSync(DEFAULT_OCI_FILE);
-    }
-}
-
 module.exports = {
     inspect,
     iam2cfg,
@@ -287,9 +248,5 @@ module.exports = {
     verifyAuth,
     verifyAuthEqual,
     verifyAuthLaterDate,
-    makeTestDir,
-    removeTestDir,
-    writeFileLines,
-    backupDefaultOCIFile,
-    restoreDefaultOCIFile
+    writeFileLines
 };

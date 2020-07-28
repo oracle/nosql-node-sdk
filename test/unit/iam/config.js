@@ -8,6 +8,7 @@
 'use strict';
 
 const path = require('path');
+
 const badStrings = require('../common').badStrings;
 const badStringsOrFunctions = require('../common').badStringsOrFunctions;
 const badStringsOrBinaries = require('../common').badStringsOrBinaries;
@@ -18,7 +19,6 @@ const TENANT_ID = require('./constants').TENANT_ID;
 const USER_ID = require('./constants').USER_ID;
 const FINGERPRINT = require('./constants').FINGERPRINT;
 const PASSPHRASE = require('./constants').PASSPHRASE;
-const TEST_DIR = require('./constants').TEST_DIR;
 const PRIVATE_KEY_FILE = require('./constants').PRIVATE_KEY_FILE;
 const OCI_CONFIG_FILE = require('./constants').OCI_CONFIG_FILE;
 const createKeys = require('./utils').createKeys;
@@ -31,7 +31,7 @@ const badFilePaths = badStringsOrBinaries.concat('nosuchfile');
 
 const badPrivateKeyPEMs = [
     '', '.....',
-    path.join(TEST_DIR, 'nosuchfile'), //used for resource principal
+    path.resolve('nosuchfile'), //used for resource principal
     keys.privatePEM.slice(1, -1), //corrupted PEM key
     keys.privateKey.export({ type: 'pkcs8', format: 'der'}) //wrong format
 ];
@@ -317,7 +317,6 @@ badUserConfigs.push(...badRefreshConfigs.map(cfg =>
     Object.assign({}, goodUserConfigs[0], cfg)));
 
 module.exports = {
-    TEST_DIR,
     PRIVATE_KEY_FILE,
     creds,
     badDirectConfigsCons,

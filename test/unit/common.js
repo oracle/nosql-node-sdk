@@ -479,8 +479,15 @@ function verifyEndpoint(url, endpoint, region) {
     expect(url.port).to.equal(port);
 }
 
-const pre20_1 = Utils.getArgVal('--pre-20-1');
-const pre20_2 = pre20_1 || Utils.getArgVal('--pre-20-2');
+let pre20_1;
+let pre20_2;
+
+const compareVersions = require('compare-versions');
+const kvVer = Utils.getArgVal('--kv');
+if (kvVer) {
+    pre20_1 = compareVersions(kvVer, '20.1') < 0;
+    pre20_2 = compareVersions(kvVer, '20.2') < 0;
+}
 
 module.exports = {
     TABLE_NAME_PFX,
