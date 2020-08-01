@@ -22,6 +22,8 @@ without indexes.
 
 **Fixed**
 
+* Fixed a problem in on-prem authorization provider when using "credentials"
+property in the kvstore auth config.
 * Fixed some unit tests failures due to absense of default OCI config file.
 * Fixed an issue where forCompletion() or forTableState() would fail before
 its timeout because of retryable error.

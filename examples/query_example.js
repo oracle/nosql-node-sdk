@@ -47,8 +47,10 @@ async function queryExample() {
         console.log('Success!');
     } catch (err) {
         console.error('  Error: ' + err.message);
-        console.error('  from: ');
-        console.error(err.operation);
+        if (err.operation) {
+            console.error('  from: ');
+            console.error(err.operation);
+        }
     } finally {
         if (client) {
             client.close();
