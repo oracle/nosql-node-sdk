@@ -47,13 +47,11 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/*
- * Copyright (C) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
+            <pre class="prettyprint source linenums"><code>/*-
+ * Copyright (c) 2018, 2020 Oracle and/or its affiliates.  All rights reserved.
  *
- * Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
- *
- * Please see LICENSE.txt file included in the top-level directory of the
- * appropriate download for a copy of the license and additional information.
+ * Licensed under the Universal Permissive License v 1.0 as shown at
+ *  https://oss.oracle.com/licenses/upl/
  */
 
 'use strict';
@@ -137,6 +135,15 @@ class Enum {
 
     static get names() {
         return this.values.map(val => val.name);
+    }
+
+    static find(predicate) {
+        const enumClass = this;
+        for(let val of Object.values(enumClass)) {
+            if (val instanceof enumClass &amp;&amp; predicate(val)) {
+                return val;
+            }
+        }
     }
 
     static fromOrdinal(n) {
@@ -404,6 +411,42 @@ const Limits = {
 //Only used internally by advanced query, should not show up in the results.
 const EMPTY_VALUE = Symbol('EMPTY');
 
+//HTTP-related constants, only used internally
+const HttpConstants = {
+    POST: 'POST',
+    GET: 'GET',
+    DELETE: 'DELETE',
+    PUT: 'PUT',
+    CONTENT_TYPE: 'Content-Type',
+    APPLICATION_JSON: 'application/json',
+    CONNECTION: 'Connection',
+    ACCEPT: 'Accept',
+    AUTHORIZATION: 'Authorization',
+    CONTENT_LENGTH: 'Content-Length',
+    CACHE_CONTROL: 'cache-control',
+    HOST: 'host',
+    DATE: 'date',
+    REQUEST_ID: 'x-nosql-request-id',
+    DATA_PATH_NAME: 'data',
+    NOSQL_VERSION: 'V2',
+    NOSQL_PATH_NAME: 'nosql',
+    COMPARTMENT_ID: 'x-nosql-compartment-id',
+    REQUEST_TARGET: '(request-target)',
+    CONTENT_SHA256: 'x-content-sha256',
+    HTTP_OK: 200,
+    HTTP_BAD_REQUEST: 400,
+    HTTP_UNAUTHORIZED: 401,
+    HTTP_NOT_FOUND: 404,
+    HTTP_CONFLICT: 409,
+    HTTP_SERVER_ERROR: 500,
+    HTTP_UNAVAILABLE: 503
+};
+
+HttpConstants.NOSQL_PREFIX = HttpConstants.NOSQL_VERSION + '/' +
+    HttpConstants.NOSQL_PATH_NAME;
+HttpConstants.NOSQL_DATA_PATH = HttpConstants.NOSQL_PREFIX + '/' +
+    HttpConstants.DATA_PATH_NAME;
+
 const packageFile = '../package.json';
 const PACKAGE_VERSION = require(packageFile).version;
 delete require.cache[require.resolve(packageFile)];
@@ -418,6 +461,7 @@ module.exports = {
     DBType,
     Limits,
     EMPTY_VALUE,
+    HttpConstants,
     PACKAGE_VERSION
 };
 </code></pre>

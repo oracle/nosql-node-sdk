@@ -47,13 +47,11 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/*
- * Copyright (C) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
+            <pre class="prettyprint source linenums"><code>/*-
+ * Copyright (c) 2018, 2020 Oracle and/or its affiliates.  All rights reserved.
  *
- * Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
- *
- * Please see LICENSE.txt file included in the top-level directory of the
- * appropriate download for a copy of the license and additional information.
+ * Licensed under the Universal Permissive License v 1.0 as shown at
+ *  https://oss.oracle.com/licenses/upl/
  */
 
 'use strict';
@@ -686,7 +684,7 @@ class NoSQLClient extends NoSQLClientImpl {
     }
 
     /**
-     * Performs a put if there is no exsiting row that matches the primary
+     * Performs a put if there is no existing row that matches the primary
      * key.  This API is a shorthand for {@link NoSQLClient#put} with
      * &lt;em>opt.ifAbsent&lt;/em> set to true.
      * @async
@@ -714,7 +712,7 @@ class NoSQLClient extends NoSQLClientImpl {
     }
 
     /**
-     * Performs a put if there is exsiting row that matches the primary
+     * Performs a put if there is existing row that matches the primary
      * key.  This API is a shorthand for {@link NoSQLClient#put} with
      * &lt;em>opt.ifPresent&lt;/em> set to true.
      * @async

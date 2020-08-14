@@ -93,16 +93,36 @@ account you can start <a href="https://docs.cloud.oracle.com/en-us/iaas/Content/
 <p>The SDK is using Oracle Cloud Infrastructure Identity and Access Management
 (IAM) to authorize database operations.  For more information on IAM see
 <a href="https://docs.cloud.oracle.com/iaas/Content/Identity/Concepts/overview.htm">Overview of Oracle Cloud Infrastructure Identity and Access Management</a></p>
-<p>Configuration for an application has 3 parts:</p>
-<ol>
-<li><a href="#creds">Acquiring credentials</a></li>
-<li><a href="#supply">Configuring the application</a> using the credentials</li>
-<li><a href="#connecting">Additional configuration</a> such as choosing your region and
-other configuration options</li>
-</ol>
-<p>See <a href="#quickstart">Example Quick Start</a> for the quickest way to get an example
-running.</p>
-<h3><a name="creds"></a>Acquire Credentials for the Oracle NoSQL Database Cloud Service</h3>
+<p>To use the SDK, you need to configure it for use with IAM.  The best way to
+get started with the service is to use your Oracle Cloud user's identity to
+obtain required credentials and provide them to the application.  This is
+applicable in most use cases and described below in section
+<a href="#user">Authorize with Oracle Cloud User's Identity</a>.</p>
+<p>A different configuration that does not require user's credentials may be used
+in a couple of special use cases:</p>
+<ul>
+<li>
+<p>To access Oracle NoSQL Database Cloud Service from a compute instance in the
+Oracle Cloud Infrastructure (OCI), use Instance Principal.  See
+<a href="#instance_principal">Authorizing with Instance Principal</a>.</p>
+</li>
+<li>
+<p>To access Oracle NoSQL Database Cloud Service from other Oracle Cloud
+service resource such as
+<a href="https://docs.cloud.oracle.com/en-us/iaas/Content/Functions/Concepts/functionsoverview.htm">Functions</a>,
+use Resource Principal.
+See <a href="#resource_principal">Authorizing with Resource Principal</a>.</p>
+</li>
+</ul>
+<h3><a name="user"></a>Authorize with Oracle Cloud User's Identity</h3>
+<p>See sections below on how to <a href="#creds">aquire credentials</a> and
+<a href="#supply">configure the application</a> to connect to Oracle NoSQL Database Cloud
+Service.  You may also need to perform <a href="#connecting">additional configuration</a>
+such as choosing your region, specifying compartment and other configuration
+options.</p>
+<p>See <a href="#quickstart">Example Quick Start</a> for the quickest way to get an
+example running.</p>
+<h4><a name="creds"></a>Acquire Credentials for the Oracle NoSQL Database Cloud Service</h4>
 <p>See <a href="https://www.oracle.com/pls/topic/lookup?ctx=en/cloud/paas/nosql-cloud/csnsd&amp;id=acquire-creds">Acquiring Credentials</a> for details of credentials you will need
 to configure an application.</p>
 <p>These steps only need to be performed one time for a user. If they have already
@@ -114,7 +134,7 @@ been done they can be skipped. You need to obtain the following credentials:</p>
 <li>Fingerprint for the public key uploaded to the user's account</li>
 <li>Private key pass phrase, needed only if the private key is encrypted</li>
 </ul>
-<h3><a name="supply"></a>Supply Credentials to the Application</h3>
+<h4><a name="supply"></a>Supply Credentials to the Application</h4>
 <p>Credentials are used to authorize your application to use the service.
 There are 3 ways to supply credentials:</p>
 <ol>
@@ -136,7 +156,7 @@ Otherwise, the recommended option is to use an Oracle Cloud Infrastructure
 configuration file.  Supplying credentials directly in a configuration object is
 less secure because sensitive information such as private key will be kept in
 memory for the duration of the <a href="NoSQLClient.html">NoSQLClient</a> instance.</p>
-<h4><a name="config_file"></a>Using a Configuration File</h4>
+<h5><a name="config_file"></a>Using a Configuration File</h5>
 <p>You can store the credentials in an Oracle Cloud Infrastructure configuration
 file.</p>
 <p>The default path for the configuration file is <em>~/.oci/config</em>.  The
@@ -197,7 +217,7 @@ let client = new NoSQLClient({
 </code></pre>
 <p>(Note that you don't have to specify service type if you specified
 <strong>auth.iam</strong> property, see section <strong>Specifying Service Type</strong>)</p>
-<h4><a name="config_api"></a>Specifying Credentials Directly</h4>
+<h5><a name="config_api"></a>Specifying Credentials Directly</h5>
 <p>You may specify credentials directly as part of <strong>auth.iam</strong> property in the
 initial configuration (see <a href="global.html#IAMConfig">IAMConfig</a>).  Create <a href="NoSQLClient.html">NoSQLClient</a>
 instance as follows:</p>
@@ -216,7 +236,7 @@ let client = new NoSQLClient({
     }
 });
 </code></pre>
-<h4><a name="config_obj"></a>Creating Your Own IAMCredentialsProvider</h4>
+<h5><a name="config_obj"></a>Creating Your Own IAMCredentialsProvider</h5>
 <p>IMACredentialsProvider may be any object (class instance or otherwise)
 implementing <em>loadCredentials</em> function.  This function returns a <em>Promise</em> of
 <a href="global.html#IAMCredentials">IAMCredentials</a> (and thus can be implemented as an <em>async</em> function).
@@ -276,6 +296,65 @@ it specifies a module name or path that exports
 configuration in a JSON file (see <a href="#connecting">Connecting an Application</a>).
 Note that the provider (whether as an object or a function) should be that
 module's sole export.</p>
+<h3><a name="instance_principal"></a>Authorizing with Instance Principal</h3>
+<p><em>Instance Principal</em> is an IAM service feature that enables instances to be
+authorized actors (or principals) to perform actions on service resources.
+Each compute instance has its own identity, and it authenticates using the
+certificates that are added to it.  See
+<a href="https://docs.cloud.oracle.com/en-us/iaas/Content/Identity/Tasks/callingservicesfrominstances.htm">Calling Services from an Instance</a> for prerequisite steps to set up Instance
+Principal.</p>
+<p>Once set up, create <a href="NoSQLClient.html">NoSQLClient</a> instance as follows:</p>
+<pre class="prettyprint source lang-js"><code>const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+
+const client = new NoSQLClient({
+    region: Region.US_ASHBURN_1,
+    compartment: 'ocid1.compartment.oc1.............................'
+    auth: {
+        iam: {
+            useInstancePrincipal: true
+        }
+    }
+});
+</code></pre>
+<p>You may also use JSON config file with the same configuration as described in
+<a href="#connecting">Connecting an Application</a>.</p>
+<p>Note that when using Instance Principal you must specify compartment id
+(OCID) as <em>compartment</em> property (see
+<a href="#compartment">Specifying a Compartment</a>).  This is required even if you wish
+to use default compartment.  Note that you must use compartment id and not
+compartment name or path.  In addition, when using Instance Principal, you may
+not prefix table name with compartment name or path when calling
+<a href="NoSQLClient.html">NoSQLClient</a> APIs.</p>
+<h3><a name="resource_principal"></a>Authorizing with Resource Principal</h3>
+<p><em>Resource Principal</em> is an IAM service feature that enables the resources to
+be authorized actors (or principals) to perform actions on service resources.
+You may use Resource Principal when calling Oracle NoSQL Database Cloud
+Service from other Oracle Cloud service resource such as
+<a href="https://docs.cloud.oracle.com/en-us/iaas/Content/Functions/Concepts/functionsoverview.htm">Functions</a>.
+See <a href="https://docs.cloud.oracle.com/en-us/iaas/Content/Functions/Tasks/functionsaccessingociresources.htm">Accessing Other Oracle Cloud Infrastructure Resources from Running Functions</a>
+for how to set up Resource Principal.</p>
+<p>Once set up, create <a href="NoSQLClient.html">NoSQLClient</a> instance as follows:</p>
+<pre class="prettyprint source lang-js"><code>const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+
+const client = new NoSQLClient({
+    region: Region.US_ASHBURN_1,
+    compartment: 'ocid1.compartment.oc1.............................'
+    auth: {
+        iam: {
+            useResourcePrincipal: true
+        }
+    }
+});
+</code></pre>
+<p>You may also use JSON config file with the same configuration as described in
+<a href="#connecting">Connecting an Application</a>.</p>
+<p>Note that when using Resource Principal you must specify compartment id
+(OCID) as <em>compartment</em> property (see
+<a href="#compartment">Specifying a Compartment</a>).  This is required even if you wish
+to use default compartment.  Note that you must use compartment id and not
+compartment name or path.  In addition, when using Resource Principal, you may
+not prefix table name with compartment name or path when calling
+<a href="NoSQLClient.html">NoSQLClient</a> APIs.</p>
 <h2><a name="connecting"></a>Connecting an Application</h2>
 <p>The first step in your Oracle NoSQL Database Cloud Service application is to
 create an instance of <a href="NoSQLClient.html">NoSQLClient</a> class which is the main point of
@@ -377,7 +456,7 @@ const client = new NoSQLClient({
     &quot;region&quot;: &quot;us-ashburn-1&quot;
 }
 </code></pre>
-<h3>Specifying a Compartment</h3>
+<h3><a name="compartment"></a>Specifying a Compartment</h3>
 <p>In the Oracle NoSQL Cloud Service environment tables are always created in an
 Oracle Cloud Infrastructure <em>compartment</em> (see
 <a href="https://docs.cloud.oracle.com/en-us/iaas/Content/Identity/Tasks/managingcompartments.htm">Managing Compartments</a>).
@@ -395,11 +474,11 @@ const client = new NoSQLClient({
 });
 </code></pre>
 <p>The string value may be either a compartment id or a compartment name or path.
-If it is a simple name it must specify a top-level compartment. If it is a path to
-a nested compartment, the top-level compartment must be excluded as it is
-inferred from the tenancy.</p>
+If it is a simple name it must specify a top-level compartment. If it is a
+path to a nested compartment, the top-level compartment must be excluded as it
+is inferred from the tenancy.</p>
 <p>A compartment can also be specified in each request in the options object. This
-value overrides the default for the handle.</p>
+value overrides the initial configuration value.</p>
 <h2><a name="quickstart"></a>Example Quick Start</h2>
 <p>The examples in the examples directory are configured to make it simple to
 connect and run against the Oracle NoSQL Database Cloud Service. Follow
@@ -417,8 +496,8 @@ by the <em>node</em> command.</p>
 </ul>
 <ol start="2">
 <li>Put the information in a configuration file, ~/.oci/config, based on
-the format described in <a href="#config_file">Using a Configuration File</a>. It should look
-like this:</li>
+the format described in <a href="#config_file">Using a Configuration File</a>. It should
+look like this:</li>
 </ol>
 <pre class="prettyprint source lang-ini"><code>[DEFAULT]
 tenancy=&lt;your-tenancy-ocid>
