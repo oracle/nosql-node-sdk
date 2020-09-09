@@ -17,6 +17,7 @@ const fs = require('fs');
 const Path = require('path');
 const ServiceType = require('../../index').ServiceType;
 const TableState = require('../../index').TableState;
+const EMPTY_VALUE = require('../../lib/constants').EMPTY_VALUE;
 const isPosInt32OrZero = require('../../lib/utils').isPosInt32OrZero;
 const isPosInt = require('../../lib/utils').isPosInt;
 const Consistency = require('../../index').Consistency;
@@ -173,7 +174,7 @@ class Utils {
 
     static makeNullRow(tbl) {
         const ret =  Object.fromEntries(tbl.fields.map(f =>
-            [ f.name, null ]));
+            [ f.name, undefined ]));
         //this row will be used to construct expected row, so we do not
         //include identity columns
         if (tbl.idFld) { 
@@ -238,16 +239,17 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
     }
 
     static verifyJSON(val, val0) {
-        if (val0 === undefined) {
-            //currently nulls in JSON field are returned as regular JS nulls
-            val0 = null;
-        } else if (val0 instanceof Date) {
+        //test self-check since SQL NULLs should already be handled
+        expect(val0).to.not.equal(undefined);
+        if (val0 === null) { //JSON NULL
+            return expect(val).to.be.null;
+        }
+        if (val0 instanceof Date) {
             val0 = Utils.date2string(val0);
         }
         expect(typeof val).to.equal(typeof val0);
-        if (val === null || [ 'string', 'boolean', 'number' ].includes(
-            typeof val)) {
-            return expect(val).equal(val0);
+        if ([ 'string', 'boolean', 'number' ].includes(typeof val)) {
+            return expect(val).to.equal(val0);
         }
         expect(typeof val).to.equal('object');
         if (Array.isArray(val0)) {
@@ -321,11 +323,11 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
     //val0 - the value initially sent to the server
     static verifyFieldValue(val, val0, type) {
         expect(type).to.exist; //test self-check
-        if (val0 == null) {
-            //It is possible for advanced query results contain undefined,
-            //which results from evaluation of EMPTY, but which should become
-            //regular SQL NULL in query results.
-            return expect(val).to.be.null;
+        if (val0 === undefined || val0 === EMPTY_VALUE) {
+            //It is possible for expected advanced query results contain
+            //EMPTY_VALUE, which sould become SQL NULL in actual query
+            //results.
+            return expect(val).to.be.undefined; //SQL NULL
         }
         if (typeof type === 'string') {
             type = { name: type };

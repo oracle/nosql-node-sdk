@@ -227,9 +227,9 @@ class NumberUtils {
         return this._mod ? new this._mod.cons(val) : Number(val);
     }
 
-    static makeNumber1(id) {
+    static makeNumber1(id, def) {
         if (!(id % 7)) {
-            return null;
+            return def;
         }
         id = id % 27;
         const maxExp = this._mod ? 16384 : this.DOUBLE_MAX_EXPONENT;
@@ -245,9 +245,9 @@ class NumberUtils {
         return this.asNumber(val);
     }
 
-    static makeNumber2(id) {
+    static makeNumber2(id, def) {
         if (!(id % 8)) {
-            return null;
+            return def;
         }
         const maxExp = this._mod ? 8192 : this.DOUBLE_MAX_EXPONENT;
         let val = new Decimal(id * 1000000).naturalExponential();

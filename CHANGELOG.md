@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## Unreleased
+
+**Added**
+
+* Differentiate between SQL NULL and JSON NULL by using undefined for SQL NULL
+and null for JSON NULL.
+
+**Fixed**
+
+* Minor error handling issue in query code.
+
 ## 5.2.3 - 2020-08-14
 
 **Added**

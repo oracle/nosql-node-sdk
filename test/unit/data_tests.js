@@ -12,7 +12,6 @@ const expect = require('chai').expect;
 const _id = require('./common')._id;
 const _ttl = require('./common')._ttl;
 const _version = require('./common')._version;
-
 const Utils = require('./query_utils');
 const NumberUtils = require('./number_utils');
 
@@ -20,7 +19,7 @@ const compartment = Utils.config.compartment;
 
 const ALL_TYPES_TABLE = require('./test_schemas').ALL_TYPES_TABLE;
 
-const NUM_SPECIAL = [ Infinity, -Infinity, NaN, 0, null ];
+const NUM_SPECIAL = [ Infinity, -Infinity, NaN, 0, undefined ];
 
 //This has to be constant for the duration of the test so that we can
 //verify row values later.
@@ -31,14 +30,10 @@ const DEFAULT_LOCATION = { //Oracle HQ
     coordinates: [ -122.264640, 37.529637 ]
 };
 
-//For test rows, we will use undefined to represent JSON null.  It will be
-//treated as null by put, but will allow us to correctly construct advanced
-//query results that depend on difference between SQL NULL and JSON null.
-
 //To be extended.
 function makeObjectForJSON(i) {
     if (!(i % 7)) {
-        return undefined;
+        return null;
     }
     const ret = {
         x: 'a',
@@ -51,7 +46,7 @@ function makeObjectForJSON(i) {
                     (i % 10) < 5 : new Date(currentTimeMillis))),
         z: new Date(currentTimeMillis + (i % 6) * 123456),
         location: (i % 5) ? Utils.geoDestination(DEFAULT_LOCATION,
-            ((i + 1) % 8) * 12000 + i * 10.987, i * 2) : undefined
+            ((i + 1) % 8) * 12000 + i * 10.987, i * 2) : null
     };
     if (i % 3) {
         ret.b = (i % 3 === 2);
@@ -62,14 +57,14 @@ function makeObjectForJSON(i) {
 //this JSON col will have its full values repeated, unlike the previous one
 function makeObjectForJSON2(i) {
     if (!(i % 17)) {
-        return undefined;
+        return null;
     }
     const j = i % 8;
     const ret = {
         x: {
             a: j ? j + 1000 : j < 5, //number or boolean
             b: Array.from({ length: j }, (v, k) => 'a'.repeat(10-k)),
-            c: j < 3 ? 'c'.repeat(j * 5) : undefined
+            c: j < 3 ? 'c'.repeat(j * 5) : null
         },
         y: {
             a: 'abc'.repeat(j % 4),
@@ -79,10 +74,10 @@ function makeObjectForJSON2(i) {
     };
     if (j % 2) {
         ret.z = {
-            k: j < 5 ? NumberUtils.makeNumber1(j) : 'abc'.repeat(j),
+            k: j < 5 ? NumberUtils.makeNumber1(j, null) : 'abc'.repeat(j),
             a: {
                 b: {
-                    c: j % 4 ? new Array(20 - j).fill(j) : undefined
+                    c: j % 4 ? new Array(20 - j).fill(j) : null
                 }
             }
         };
@@ -97,13 +92,13 @@ function makeRowAllTypes(i, rowsPerShard = ROWS_PER_SHARD) {
     return {
         [_id]: i,
         [_ttl]: !(i & 1) ? ((i & 2) ? { hours: i + 1 } :
-            { days: (i + 1) % 6 }) : null,
+            { days: (i + 1) % 6 }) : undefined,
         shardId: Math.floor(i / rowsPerShard),
         pkString: 'id'.repeat(i % 20).concat(i),
-        colBoolean: (i & 1) ? null: !(i & 3),
-        colInteger: (i & 7) ? 0x70000000 + i : null,
-        colLong: ((i + 1) & 7) ? Number.MIN_SAFE_INTEGER + i * 99 : null,
-        colFloat: (i & 1) ? (1 + 0.0001 * i) * 1e38 : null,
+        colBoolean: (i & 1) ? undefined: !(i & 3),
+        colInteger: (i & 7) ? 0x70000000 + i : undefined,
+        colLong: ((i + 1) & 7) ? Number.MIN_SAFE_INTEGER + i * 99 : undefined,
+        colFloat: (i & 1) ? (1 + 0.0001 * i) * 1e38 : undefined,
         //It looks like Float doesn't handle these now on the server side:
         //NUM_SPECIAL[i % NUM_SPECIAL.length]
         colDouble: (i % rowsPerShard > (rowsPerShard / 2)) ?
@@ -112,28 +107,29 @@ function makeRowAllTypes(i, rowsPerShard = ROWS_PER_SHARD) {
         colNumber: NumberUtils.makeNumber1(i),
         colNumber2: NumberUtils.makeNumber2(i),
         colBinary: (i & 7) ? Buffer.allocUnsafe(((i - 1) * 7) % 256).fill(i) :
-            null,
+            undefined,
         colFixedBinary: Buffer.allocUnsafe(64).fill(`${i}`),
         colEnum: ((i + 2) & 3) ? ALL_TYPES_TABLE.enumColValues[i %
-            ALL_TYPES_TABLE.enumColValues.length] : null,
+            ALL_TYPES_TABLE.enumColValues.length] : undefined,
         //Do we need to support nanoseconds?
         colTimestamp: ((i+2) & 7) ? new Date(currentTimeMillis +
-            (( i & 1) ? -1: 1) * i * 1000000000 + i) : null,
+            (( i & 1) ? -1: 1) * i * 1000000000 + i) : undefined,
         colRecord: (i & 7) ? {
-            fldString: (i & 3) ? 'a'.repeat(i % 5) : null,
+            fldString: (i & 3) ? 'a'.repeat(i % 5) : undefined,
             fldNumber: ((i + 1) & 3) ?
-                NumberUtils.asNumber(`${i % 123}.${i}e${i % 299}`) : null,
-            fldArray: ((i + 2) & 3) ? new Array(i % 10).fill(i) : null
-        } : null,
+                NumberUtils.asNumber(`${i % 123}.${i}e${i % 299}`) :
+                undefined,
+            fldArray: ((i + 2) & 3) ? new Array(i % 10).fill(i) : undefined
+        } : undefined,
         colArray: ((i + 2) & 7) ? new Array(i % 20).fill(
-            new Date(currentTimeMillis + i).toISOString()) : null,
+            new Date(currentTimeMillis + i).toISOString()) : undefined,
         colArray2 : ((i + 3) % 16) ? Array.from({ length: (i % 5) * 3 },
-            (v, j) => makeObjectForJSON(i + j)) : null,
+            (v, j) => makeObjectForJSON(i + j)) : undefined,
         colMap : ((i + 4) & 7) ? new Map(Array.from({ length: i % 7 },
-            (v, j) => [ `key${j}`, Number.MAX_SAFE_INTEGER - i])) : null,
+            (v, j) => [ `key${j}`, Number.MAX_SAFE_INTEGER - i])) : undefined,
         colMap2: ((i + 5) & 7) ? Object.assign({},
             ...Array.from({ length: i % 10}, (v, j) => ({ ['abc'.repeat(j)]:
-            Buffer.allocUnsafe(j).fill(j)}))) : null,
+            Buffer.allocUnsafe(j).fill(j)}))) : undefined,
         colJSON: makeObjectForJSON(i),
         colJSON2: makeObjectForJSON2(i)
     };
@@ -147,8 +143,12 @@ function modifyRowAllTypes(row) {
     const modifiedRow = Utils.deepCopy(row);
     const row2 = makeRowAllTypes(row[_id] + seq + 20);
     modifiedRow.colBoolean = !row.colBoolean;
-    modifiedRow.colInteger++;
-    modifiedRow.colLong++;
+    if (modifiedRow.colInteger != null) {
+        modifiedRow.colInteger++;
+    }
+    if (modifiedRow.colLong != null) {
+        modifiedRow.colLong++;
+    }
     for(let col of [ 'colFloat', 'colDouble', 'colNumber', 'colBinary',
         'colFixedBinary', 'colEnum', 'colTimestamp', 'colRecord', 'colArray',
         'colArray2', 'colMap', 'colMap2', 'colJSON']) {

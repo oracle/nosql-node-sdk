@@ -21,6 +21,7 @@ const getDistance = require('geolib').getPreciseDistance;
 const computeDestinationPoint = require('geolib').computeDestinationPoint;
 const Utils = require('./utils');
 const NumberUtils = require('./number_utils');
+const EMPTY_VALUE = require('../../lib/constants').EMPTY_VALUE;
 const isPlainObject = require('../../lib/utils').isPlainObject;
 
 const CompTypeRank = {
@@ -67,9 +68,6 @@ function compTypeRank(val) {
 
 class QueryUtils extends Utils {
 
-    //getFieldValue() will return undefined for EMPTY value
-    //Test rows also use undefined to represent JSON nulls, we handle
-    //this case here.
     static getFieldValue(row, field) {
         if (typeof field === 'function') {
             return field(row);
@@ -83,8 +81,9 @@ class QueryUtils extends Utils {
                 expect(field.expr).to.be.a('function');
                 const args = field.args.map(arg =>
                     QueryUtils.getFieldValue(row, arg));
-                return args.includes(null) || args.includes(undefined) ?
-                    null : field.expr(args);
+                return args.includes(undefined) || args.includes(null) ||
+                    args.includes(EMPTY_VALUE) ?
+                    undefined : field.expr(args);
             }
         }
         const fs = field.split('.');
@@ -105,15 +104,15 @@ class QueryUtils extends Utils {
         for(let i = 0; i < fs.length; i++) {
             const f = fs[i];
             if (!(f in v)) { //EMPTY value
-                return undefined;
+                return EMPTY_VALUE;
             }
             v = v[f];
-            if (v === null) {
-                return null;
-            }
             if (v === undefined) {
+                return undefined;
+            }
+            if (v === null) {
                 //subfield of JSON null is EMPTY
-                return i < fs.length - 1 ? undefined : null;
+                return i < fs.length - 1 ? EMPTY_VALUE : null;
             }
         }
         return key != null ? v[key] : v;
@@ -158,14 +157,15 @@ class QueryUtils extends Utils {
     //This always compares in ascending order.
     //nullRank: nulls last = 1 (default), nulls first = -1
     static compareFieldValues(val1, val2, nullRank = 1) {
-        if (val1 === null) {
-            return val2 === null ? 0 : nullRank;
-        } else if (val1 === undefined) {
-            if (val2 === undefined) {
-                return 0;
-            }
-            return val2 === null ? -1 : 1;
-        } else if (val2 == null) {
+        if (val1 === undefined) {
+            return val2 === undefined ? 0 :
+                ((val2 === null || val2 === EMPTY_VALUE) ? 1 : nullRank);
+        } else if (val1 === null) {
+            return val2 === undefined ? -1 : (val2 === null ?
+                0 : (val2 === EMPTY_VALUE ? 1 : nullRank));
+        } else if (val1 === EMPTY_VALUE) {
+            return val2 == null ? -1 : (val2 === EMPTY_VALUE ? 0 : nullRank);
+        } else if (val2 == null || val2 === EMPTY_VALUE) {
             return -nullRank;
         }
 
@@ -246,14 +246,15 @@ class QueryUtils extends Utils {
         return QueryUtils._sortRows(rows, fields, -1);
     }
 
-    //We assume all input values are of comparable type or null/undefined.
+    //We assume all input values are of comparable type or
+    //null/undefined/EMPTY_VALUE
     static aggregate(rows, field, aggrFunc, initVal) {
         let ret = initVal;
         for(let row of rows) {
             const val = QueryUtils.getFieldValue(row, field);
             if (ret == null) {
-                ret = (val == null ? null : val);
-            } else if (val != null) {
+                ret = (val == null || val === EMPTY_VALUE ? undefined : val);
+            } else if (val != null && val !== EMPTY_VALUE) {
                 ret = aggrFunc(ret, val);
             }
         }
@@ -328,14 +329,14 @@ class QueryUtils extends Utils {
         const groups = QueryUtils._groupBy(rows, fields);
         for(let group of groups) {
             let row = QueryUtils.projectRow(group[0], fields);
-            if (Object.values(row).includes(undefined)) {
+            if (Object.values(row).includes(EMPTY_VALUE)) {
                 //skip rows with empty grouping values per group by semantics
                 if (aggrs != null) {
                     continue;
                 }
                 //for DISTINCT convert empty to null
                 row = Object.fromEntries(Object.entries(row).map(ent =>
-                    ent[1] === undefined ? [ ent[0], null ] : ent));
+                    ent[1] === EMPTY_VALUE ? [ ent[0], undefined ] : ent));
             }
             if (aggrs != null) {
                 for(let aggr of aggrs) {
@@ -366,7 +367,8 @@ class QueryUtils extends Utils {
     static geoWithinDistance(rows, field, target, dist) {
         return rows.filter(row => {
             const val = QueryUtils.getFieldValue(row, field);
-            return val != null && QueryUtils.geoDistance(val, target) <= dist;
+            return val != null && val !== EMPTY_VALUE &&
+                QueryUtils.geoDistance(val, target) <= dist;
         });
     }
 
