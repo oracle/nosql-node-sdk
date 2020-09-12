@@ -13,6 +13,8 @@ and null for JSON NULL.
 
 **Fixed**
 
+* Make sure equal but differently represented numeric values yield the same
+result record for group by and distinct queries.
 * Minor error handling issue in query code.
 
 ## 5.2.3 - 2020-08-14
