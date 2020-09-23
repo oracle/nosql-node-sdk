@@ -17,6 +17,10 @@ and null for JSON NULL.
 result record for group by and distinct queries.
 * Minor error handling issue in query code.
 
+**Changed**
+
+* Enable hostname verification for secure connections by default.
+
 ## 5.2.3 - 2020-08-14
 
 **Added**
