@@ -379,3 +379,13 @@ present in a file, *~/.oci/config*:
 
 Please see the [LICENSE](LICENSE.txt) file included in the top-level directory of the
 package for a copy of the license and additional information.
+
+The [THIRD\_PARTY\_LICENSES](THIRD_PARTY_LICENSES.txt) file contains third
+party notices and licenses.
+
+
+## Contributing
+See [CONTRIBUTING](./CONTRIBUTING.md) for details.
+
+## Security
+See [SECURITY](./SECURITY.md) for details.
