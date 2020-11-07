@@ -8,11 +8,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 **Added**
 
+* Added new regions and new realm OC8 for the cloud service.
 * Differentiate between SQL NULL and JSON NULL by using undefined for SQL NULL
 and null for JSON NULL.
 
 **Fixed**
 
+* Fixed an issue with auto-renew functionality in on-prem authorization
+provider.  Set auto-renew to true by default to match the Java driver.
 * Make sure equal but differently represented numeric values yield the same
 result record for group by and distinct queries.
 * Minor error handling issue in query code.
