@@ -14,6 +14,8 @@ and null for JSON NULL.
 
 **Fixed**
 
+* Fixed an issue in on-prem authorization provider where incorrect
+authorization header was passed to renew and logout requests.
 * Fixed an issue with auto-renew functionality in on-prem authorization
 provider.  Set auto-renew to true by default to match the Java driver.
 * Make sure equal but differently represented numeric values yield the same
