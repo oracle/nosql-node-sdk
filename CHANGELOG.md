@@ -14,6 +14,8 @@ and null for JSON NULL.
 
 **Fixed**
 
+* Fixed an issue where lib/query/receive.js was requiring NoSQLClient creating
+circular dependency.
 * Fixed an issue in on-prem authorization provider where incorrect
 authorization header was passed to renew and logout requests.
 * Fixed an issue with auto-renew functionality in on-prem authorization
