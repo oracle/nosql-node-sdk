@@ -164,6 +164,18 @@ const badRegions = [
 
 const badMillisNoInfinity = badMillis.filter(val => val !== Infinity);
 
+const badRateLimiterConfigs = [
+    1, //cannot be a number
+    'nosuchmodule.js', //invalid module for rate limiter class
+    [ 'a', {}, -0.1, -1 ].map(maxBurstSeconds => ({
+        maxBurstSeconds //invalid value for maxBurstSeconds
+    }))
+];
+
+const badRateLimiterPercent = [
+    'a', {}, NaN, Infinity, 0, -1, 101
+];
+
 //Since undefined and null are allowed if we specify region in OCI config
 //file, we test that separately (see iam/oci_region.js).
 
@@ -278,7 +290,16 @@ const badConfigs = [
         auth: {
             iam: null
         }
-    }
+    },
+    badRateLimiterConfigs.map(rateLimiter => ({
+        endpoint: 'localhost:8080',
+        rateLimiter
+    })),
+    badRateLimiterPercent.map(rateLimiterPercent => ({
+        endpoint: 'localhost:8080',
+        rateLimiter: true,
+        rateLimiterPercent
+    }))
 ];
 
 //Functions for positive tests
@@ -424,6 +445,16 @@ const goodKVStoreCreds = [
     {
         async loadCredentials() {}
     }
+];
+
+const goodRateLimiterConfigs = [
+    null,
+    undefined,
+    false,
+    true,
+    { maxBurstSeconds: 5 },
+    require('./null_rate_limiter'),
+    require.resolve('./null_rate_limiter.js')
 ];
 
 const goodConfigs = [
@@ -596,7 +627,16 @@ const goodConfigs = [
         auth: {
             kvstore: { credentials }
         }
-    }))
+    })),
+    ...goodRateLimiterConfigs.map(rateLimiter =>({
+        region: Region.US_ASHBURN_1,
+        rateLimiter
+    })),
+    {
+        endpoint: 'http://localhost:8080',
+        rateLimiter: true,
+        rateLimiterPercent: 50
+    }
 ];
 
 //Negative tests

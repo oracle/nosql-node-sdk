@@ -15,7 +15,9 @@
             "lib/types/db_number.js",
             "lib/auth/config.js",
             "lib/auth/iam/types.js",
-            "lib/auth/kvstore/types.js"
+            "lib/auth/kvstore/types.js",
+            "lib/rate_limiter/types.js",
+            "lib/rate_limiter/simple_rate_limiter.js"
         ]
     },
     "opts": {

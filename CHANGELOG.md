@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 **Added**
 
+* Driver-side rate limiting support.
 * Added new regions and new realm OC8 for the cloud service.
 * Differentiate between SQL NULL and JSON NULL by using undefined for SQL NULL
 and null for JSON NULL.
@@ -35,6 +36,9 @@ depending on the properties provided in auth.iam.  Treat erroneously provided
 null or undefined values as invalid instead on falling back on default OCI
 config file authentication.  Made error messages more clear as to what
 property is missing or invalid.
+* Use promise-based implementation of lib/http_client.js and all calling code
+instead of callback-based implementation.
+* Split lib/ops.js into several files in a separate subdirectory.
 * Enable hostname verification for secure connections by default.
 
 ## 5.2.3 - 2020-08-14

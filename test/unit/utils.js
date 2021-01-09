@@ -13,6 +13,7 @@ chai.use(require('chai-as-promised'));
 const expect = require('chai').expect;
 const _ = require('lodash');
 
+const util = require('util');
 const fs = require('fs');
 const Path = require('path');
 const ServiceType = require('../../index').ServiceType;
@@ -80,6 +81,15 @@ class Utils {
 
     static get isCloud() {
         return Utils.config.serviceType === ServiceType.CLOUD;
+    }
+
+    static log() {
+        if (this._printDebug == null) {
+            this._printDebug = this.getArgVal('--print-debug');
+        }
+        if (this._printDebug) {
+            console.log(...arguments);
+        }
     }
 
     //When testing with cloud service or on-prem with rep-factor > 1
@@ -457,6 +467,15 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
             expect(cc.readUnits).to.satisfy(isPosInt32OrZero);
             expect(cc.writeKB).to.satisfy(isPosInt32OrZero);
             expect(cc.writeUnits).to.satisfy(isPosInt32OrZero);
+
+            if (Utils.config.rateLimiter != null) {
+                if (cc.readUnits > 0 || cc.readRateLimitDelay != null) {
+                    expect(cc.readRateLimitDelay).to.be.at.least(0);
+                }
+                if (cc.writeUnits > 0 || cc.writeRateLimitDelay != null) {
+                    expect(cc.writeRateLimitDelay).to.be.at.least(0);
+                }
+            }
         } else {
             expect(cc).to.not.exist;
         }
@@ -699,27 +718,28 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
     }
 
     static runSequential(desc, testFunc, tests) {
-        describe(`Running ${desc} using configuration ${Utils.config}`,
-            function() {
-                this.timeout(DEFAULT_TIMEOUT);
-                before(async function() {
-                    if (client._doAsyncInit) {
-                        await client._doAsyncInit();
-                    }
-                });
-                after(function() {
-                    client.close();
-                });
-                //This line has to be executed before the tests are created so
-                //we can't put it into the "before" block
-                const client = TestConfig.createNoSQLClientNoInit(
-                    Utils.config);
-                tests.forEach(test => testFunc(client, test));
-                //Mocha will not run before/after hooks unless at least one
-                //"it" block is present within the "describe".  Seems like a
-                //bug to me. Workaround is to add a fake test here.
-                it('', () => {});
+        describe(`Running ${desc} using configuration \
+${util.inspect(Utils.config)}`,
+        function() {
+            this.timeout(DEFAULT_TIMEOUT);
+            before(async function() {
+                if (client._doAsyncInit) {
+                    await client._doAsyncInit();
+                }
             });
+            after(function() {
+                client.close();
+            });
+            //This line has to be executed before the tests are created so
+            //we can't put it into the "before" block
+            const client = TestConfig.createNoSQLClientNoInit(
+                Utils.config);
+            tests.forEach(test => testFunc(client, test));
+            //Mocha will not run before/after hooks unless at least one
+            //"it" block is present within the "describe".  Seems like a
+            //bug to me. Workaround is to add a fake test here.
+            it('', () => {});
+        });
     }
 
 }
