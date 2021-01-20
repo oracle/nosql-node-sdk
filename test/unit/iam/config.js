@@ -27,7 +27,8 @@ const keys = createKeys();
 
 const badOCIDs = badStrings.concat(undefined, null, 'abcde');
 const badFingerprints = badStrings.concat(undefined, null);
-const badFilePaths = badStringsOrBinaries.concat('nosuchfile');
+const badFilePaths = badStringsOrBinaries.concat(undefined, null,
+    'nosuchfile');
 
 const badPrivateKeyPEMs = [
     '', '.....',
@@ -36,8 +37,8 @@ const badPrivateKeyPEMs = [
     keys.privateKey.export({ type: 'pkcs8', format: 'der'}) //wrong format
 ];
 
-const badPKData = badStringsOrBinaries.concat(badPrivateKeyPEMs,
-    Buffer.from('"""'));
+const badPKData = badStringsOrBinaries.concat(undefined, null,
+    badPrivateKeyPEMs, Buffer.from('"""'));
 
 const keyIdObj = {
     tenantId: TENANT_ID,
@@ -91,7 +92,31 @@ const badDirectConfigsCons = [
         userId: USER_ID,
         fingerprint,
         privateKey: keys.privatePEM
-    }))
+    })),
+    {
+        //missing tenantId
+        userId: USER_ID,
+        fingerprint: FINGERPRINT,
+        privateKey: keys.privatePEM
+    },
+    {
+        //missing userId
+        tenantId: TENANT_ID,
+        fingerprint: FINGERPRINT,
+        privateKey: keys.privatePEM
+    },
+    {
+        //missing fingerprint
+        tenantId: TENANT_ID,
+        userId: USER_ID,
+        privateKey: keys.privatePEM
+    },
+    {
+        //missing privateKey and privateKeyFile
+        tenantId: TENANT_ID,
+        userId: USER_ID,
+        fingerprint: FINGERPRINT
+    }
 ];
 
 const badDirectConfigs = [
@@ -222,7 +247,7 @@ const goodOCIConfigs = [
 
 const badFileConfigs = [
     ...badFilePaths.map(configFile => ({ configFile })),
-    ...badStrings.map(profileName => ({
+    ...badStrings.concat(undefined, null).map(profileName => ({
         configFile: OCI_CONFIG_FILE,
         profileName
     })),
@@ -235,12 +260,11 @@ const badFileConfigs = [
     }))
 ];
 
-const goodFileConfigs = goodOCIConfigs.map(cfg => ({
+const goodFileConfigs = goodOCIConfigs.map(cfg => Object.assign({
     configFile: OCI_CONFIG_FILE,
-    profileName: cfg.profile != null ? cfg.profile : undefined,
     _ociConfigData: cfg.data.join('\n'),
     _privateKeyData: cfg.pkData != null ? cfg.pkData : keys.privatePEM
-}));
+}, cfg.profile != null ? { profileName: cfg.profile } : {}));
 
 //user-defined credentials provider configs
 
@@ -249,6 +273,8 @@ const goodFileConfigs = goodOCIConfigs.map(cfg => ({
 
 const badCredsProviders = [
     ...badStringsOrFunctions,
+    undefined,
+    null,
     0,
     1,  //must be string, function or object
     {}, //missing loadCredentials
@@ -275,7 +301,8 @@ const badCredsProviders = [
 
 const badUserConfigs = badCredsProviders.map(credentialsProvider => ({
     credentialsProvider,
-    _privateKeyData: credentialsProvider._privateKeyData
+    _privateKeyData: credentialsProvider != null ?
+        credentialsProvider._privateKeyData : null
 }));
 
 const goodCredsProviders = [

@@ -26,6 +26,11 @@ result record for group by and distinct queries.
 
 **Changed**
 
+* In IAM code, make clear distinctions on what profiles are instantiated
+depending on the properties provided in auth.iam.  Treat erroneously provided
+null or undefined values as invalid instead on falling back on default OCI
+config file authentication.  Made error messages more clear as to what
+property is missing or invalid.
 * Enable hostname verification for secure connections by default.
 
 ## 5.2.3 - 2020-08-14
