@@ -26,6 +26,10 @@ result record for group by and distinct queries.
 
 **Changed**
 
+* Change default timeout to infinity (no timeout) for forCompletion API as
+well as table and admin DDL APIs when called with complete:true option.  This
+is to handle potentially long running DDL operations.  Set default timeout to
+30 seconds for admin list APIs (listNamespaces, listUsers, listRoles).
 * In IAM code, make clear distinctions on what profiles are instantiated
 depending on the properties provided in auth.iam.  Treat erroneously provided
 null or undefined values as invalid instead on falling back on default OCI

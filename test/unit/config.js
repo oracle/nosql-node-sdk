@@ -162,6 +162,8 @@ const badRegions = [
     'NO_SUCH_REGION' //invalid region name
 ];
 
+const badMillisNoInfinity = badMillis.filter(val => val !== Infinity);
+
 //Since undefined and null are allowed if we specify region in OCI config
 //file, we test that separately (see iam/oci_region.js).
 
@@ -198,17 +200,35 @@ const badConfigs = [
         ddlTimeout: 8000,
         securityInfoTimeout //invalid securityInfoTimeout
     })),
-    ...badMillis.map(tablePollTimeout => ({
+    ...badMillisNoInfinity.map(tablePollTimeout => ({
         endpoint: 'http://localhost:8080',
         ddlTimeout: 8000,
         securityInfoTimeout: 10000,
         tablePollTimeout //invalid tablePollTimeout
+    })),
+    ...badMillisNoInfinity.map(adminPollTimeout => ({
+        endpoint: 'http://localhost:8080',
+        ddlTimeout: 8000,
+        securityInfoTimeout: 10000,
+        adminPollTimeout //invalid adminPollTimeout
     })),
     ...badMillis.map(tablePollDelay => ({
         endpoint: 'http://localhost:8080',
         ddlTimeout: 8000,
         securityInfoTimeout: 10000,
         tablePollDelay //invalid tablePollDelay
+    })),
+    ...badMillis.map(adminPollDelay => ({
+        endpoint: 'http://localhost:8080',
+        ddlTimeout: 8000,
+        securityInfoTimeout: 10000,
+        adminPollDelay //invalid adminPollDelay
+    })),
+    ...badMillis.map(maxMemoryMB => ({
+        endpoint: 'http://localhost:8080',
+        ddlTimeout: 8000,
+        securityInfoTimeout: 10000,
+        maxMemoryMB //invalid maxMemoryMB
     })),
     {
         endpoint: 'http://localhost:8080',

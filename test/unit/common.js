@@ -187,7 +187,7 @@ const badDDLCompleteOpts = badDDLPollOpts.map(opt =>
     Object.assign( { complete: true }, opt));
 
 const badDDLForCompletionOpts = [
-    ...badDDLStatusOpts,
+    ...badDDLStatusOpts.filter(opt => opt.timeout !== Infinity),
     ...badDDLPollOpts
 ];
 
