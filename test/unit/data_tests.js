@@ -725,7 +725,7 @@ VALUES($shardId, $pkString, $colBoolean, $colNumber, $colBinary, $colJSON)',
         const ret = {
             desc: 'delete with bindings',
             stmt: 'DECLARE $fldDouble DOUBLE; $fldDate TIMESTAMP; DELETE \
-FROM __TABLE__ WHERE colDouble = $fldDouble AND colArray[] >ANY $fldDate \
+FROM __TABLE__ AS t WHERE t.colDouble = $fldDouble AND t.colArray[] >ANY $fldDate \
 RETURNING colFixedBinary',
             expectedFields: [ { name: 'colFixedBinary', type: 'BINARY' } ]
         };
