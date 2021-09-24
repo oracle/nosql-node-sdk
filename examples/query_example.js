@@ -161,23 +161,17 @@ u.userInfo.city = $city`;
  */
 async function runQuery(client, stmt, limit) {
     const opt = { limit };
-    let res;
     console.log('Query results:');
-    do {
-        // Issue the query
-        res = await client.query(stmt, opt);
 
-        // Each call to NoSQLClient.query returns a portion of the
-        // result set. Iterate over the result set, using the
-        // QueryResult.continuationKey in the query's option parameter,
-        // until the result set is exhausted and continuation key is
-        // null.
+    // Issue the query by looping over NoSQLClient.queryIterable.
+    for await(const res of client.queryIterable(stmt, opt)) {
+        // Each iteration over NoSQLClient.queryIterable returns a portion of
+        // the result set. We iterate over the whole result set by using
+        // for-await-of loop.
         for(let row of res.rows) {
             console.log('  %O', row);
         }
-
-        opt.continuationKey = res.continuationKey;
-    } while(res.continuationKey != null);
+    }
 }
 
 queryExample();

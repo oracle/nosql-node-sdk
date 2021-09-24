@@ -396,35 +396,20 @@ The Oracle NoSQL Database provides a rich query language to read and
 update data. See [SQL For NoSQL Specification](http://www.oracle.com/pls/topic/lookup?ctx=en/cloud/paas/nosql-cloud&id=sql_nosql)
 for a full description of the query language.
 
-To execute a query use {@link NoSQLClient#query} method. For example, to
-execute a *SELECT* query to read data from your table:
-
-```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
-.....
-const client = new NoSQLClient('config.json');
-
-async function queryUsersTable() {
-    try {
-        let result = await client.query(
-            'SELECT * FROM users WHERE NAME = "Taylor"');
-        for(let row of result.rows) {
-            console.log(row);
-        }
-    } catch(error) {
-        //handle errors
-    }
-}
-```
-
-{@link NoSQLClient#query} method returns *Promise* of {@link QueryResult}
-which is plain JavaScript object that contains an *Array* of resulting
-rows as well as continuation key.
+To execute a query use {@link NoSQLClient#query} method.  This method returns
+returns *Promise* of {@link QueryResult} which is plain JavaScript object that
+contains an *Array* of resulting rows as well as continuation key.
 
 The amount of data returned by the query is limited by the system default
 and could be further limited by setting *maxReadKB* property in the *opt*
 argument of {@link NoSQLClient#query}, which means that one invocation of
 {@link NoSQLClient#query} method may not return all available results.
+Likewise, the amount of data written by an update query is limited by the
+system default and can be further limited by setting *maxWriteKB* property in
+the *opt* argument of {@link NoSQLClient#query}, which mean that one
+invocation of {@link NoSQLClient#query} may not finish all the updates or
+deletes specified by the query.
+
 This situation is dealt with by using {@link QueryResult}#continuationKey
 property.  Not-null continuation key means that more query results may be
 available.  This means that queries should generally run in a loop,
@@ -433,9 +418,10 @@ for {@link QueryResult}#rows to be empty yet have not-null
 {@link QueryResult}#continuationKey, which means the query loop should
 continue.  See {@link NoSQLClient#query} and {@link QueryResult} for details.
 
-To continue receiving additional results after getting not-null continuation
-key, set *continuationKey* property in the *opt* argument of the next
-{@link NoSQLClient#query} call:
+In order to receive all the results, call {@link NoSQLClient#query} in a loop.
+At each iteration, if non-null continuation key is received in
+{@link QueryResult}, set *continuationKey* property in the *opt* argument for
+the next iteration:
 
 ```js
 const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
@@ -451,12 +437,49 @@ async function queryUsersTable() {
                 console.log(row);
             }
             opt.continuationKey = result.continuationKey;
-        } while(result.continuationKey);
+        } while(opt.continuationKey);
     } catch(error) {
         //handle errors
     }
 }
 ```
+
+Another, more convenient way to iterate over query results is to use
+{@link NoSQLClient.queryIterable} API.  This API returns an iterable object
+that you can iterate over with *for-await-of* loop.  You do not need to manage
+continuation key if using this API.  The following example is equivalent to
+the previous example:
+
+```js
+const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+.....
+const client = new NoSQLClient('config.json');
+
+async function queryUsersTable() {
+    const opt = {};
+    try {
+        for await(let result of client.queryIterable(
+            'SELECT * FROM users')) {
+            for(let row of result.rows) {
+                console.log(row);
+            }
+        }
+    } catch(error) {
+        //handle errors
+    }
+}
+```
+
+Note that you may also pass the same options in the *opt* argument to
+{@link NoSQLClient#queryIterable} as to {@link NoSQLClient#query}, except
+*continuationKey*.
+
+There are only few cases where you can make a single call to
+{@link NoSQLClient#query} without having to loop.  These are the cases where
+the query can access at most one row and they include *select*, *update* and
+*delete* based on full primary key (that is where the *where* clause specifies
+equality based on complete primary key) as well as *insert* statement.  In
+all other cases, the looping is required.
 
 When using queries it is important to be aware of the following considerations:
 
@@ -467,16 +490,16 @@ queries, the execution is much more efficient than starting with a query
 string every time. The query language and API support query variables to
 assist with query reuse. See {@link NoSQLClient#prepare} and
 {@link PreparedStatement} for more information.
-* Using *opt* argument of {@link NoSQLClient#query} allows you to set the
-read consistency for query as well as modifying the maximum amount of data
-it reads in a single call. This can be important to prevent a query from
-getting throttled.
+* Using *opt* argument of {@link NoSQLClient#query} and
+{@link NoSQLClient#queryIterable} allows you to set the read consistency for
+query as well as modifying the maximum amount of data it reads or writes in a
+single call. This can be important to prevent a query from getting throttled.
 
 Use {@link NoSQLClient#prepare} method to prepare the query.  This method
 returns *Promise* of {@link PreparedStatement} object.  Use
 {@link PreparedStatement#set} method to bind query variables.  To run prepared
-query, pass {@link PreparedStatement} to the {@link NoSQLClient#query} method
-instead of the statement string.
+query, pass {@link PreparedStatement} to the {@link NoSQLClient#query} or
+{@link NoSQLClient#queryIterable} instead of the statement string.
 
 ```js
 const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
@@ -484,22 +507,25 @@ const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
 const client = new NoSQLClient('config.json');
 
 async function queryUsersTable() {
-    const statement = 'DECLARE $name STRING; SELECT * FROM users WHERE ' +
-        'name = $name';
+    const statement = 'DECLARE $dept STRING; SELECT * FROM emp WHERE ' +
+        'dept = $dept';
     try {
         let prepStatement = await client.prepare(statement);
 
-        // Set value for $name variable
-        prepStatement.set('$name', 'Taylor');
-        let result = await client.query(prepStatement);
-        for(let row of result.rows) {
-            console.log(row);
+        // Set value for $dept variable
+        prepStatement.set('$dept', 'Development');
+        for await(let result of client.queryIterable(prepStatement)) {
+            for(let row of result.rows) {
+                console.log(row);
+            }
         }
-        // Set different value for $name and re-execute the query
-        prepStatement.set('$name', 'Jane');
-        result = await client.query(prepStatement);
-        for(let row of result.rows) {
-            console.log(row);
+
+        // Set different value for $dept and re-execute the query
+        prepStatement.set('$dept', 'Marketing');
+        for await(let result of client.queryIterable(prepStatement)) {
+            for(let row of result.rows) {
+                console.log(row);
+            }
         }
     } catch(error) {
         //handle errors

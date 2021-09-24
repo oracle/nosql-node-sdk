@@ -7,7 +7,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ## Unpublished
 
 **Added**
-* added new regions for cloud service: LIN, MTZ, VCP, BRS, UKB
+
+* Added new regions for cloud service: LIN, MTZ, VCP, BRS, UKB
+* Added NoSQLClient.queryIterable() API to iterate over query results using
+for-await-of loop.
 
 ## 5.2.4 - 2021-06-29
 
