@@ -20,6 +20,9 @@ const ST_HEADER = 'pseudo-header';
 const ST_SIG = 'pseudo-signature';
 const PRIVATE_KEY_FILE = path.resolve('key_private.pem');
 const OCI_CONFIG_FILE = path.resolve('config');
+const DELEGATION_TOKEN_FILE = path.resolve('delegation_token');
+const DELEGATION_TOKEN = 'token-header.token-payload.token-sig';
+const DELEGATION_TOKEN2 = 'token-header2.token-payload2.token-sig2';
 
 //default OCI config file
 const DEFAULT_OCI_DIR = path.join(os.homedir(), '.oci');
@@ -100,6 +103,9 @@ module.exports = {
     ST_SIG,
     PRIVATE_KEY_FILE,
     OCI_CONFIG_FILE,
+    DELEGATION_TOKEN_FILE,
+    DELEGATION_TOKEN,
+    DELEGATION_TOKEN2,
     DEFAULT_OCI_DIR,
     DEFAULT_OCI_FILE,
     DEFAULT_OCI_FILE_BACKUP,

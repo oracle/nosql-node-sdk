@@ -7,7 +7,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ## Unpublished
 
 **Added**
-* added new regions for cloud service: LIN, MTZ, VCP, BRS, UKB
+
+* Added new regions for cloud service: LIN, MTZ, VCP, BRS, UKB.
+* Added Instance Principal with Delegation Token feature.
 
 ## 5.2.4 - 2021-06-29
 

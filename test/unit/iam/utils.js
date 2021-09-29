@@ -22,6 +22,8 @@ const PASSPHRASE = require('./constants').PASSPHRASE;
 const ST_HEADER = require('./constants').ST_HEADER;
 const ST_SIG = require('./constants').ST_SIG;
 
+const OBO_TOKEN_HEADER = 'opc-obo-token';
+
 const AUTH_HEADER_PATTERN = new RegExp('^Signature headers=".+?",\
 keyId="(.+?)",algorithm="(.+?)",signature="(.+?)",version="(.+?)"$');
 
@@ -146,14 +148,18 @@ function makeST(ttlMs) {
         base64UrlEncode(ST_SIG);
 }
 
-function signingContent(dateStr) {
-    return `${HttpConstants.REQUEST_TARGET}: post /\
+function signingContent(dateStr, delegationToken) {
+    let content = `${HttpConstants.REQUEST_TARGET}: post /\
 ${HttpConstants.NOSQL_DATA_PATH}\n\
 ${HttpConstants.HOST}: ${SERVICE_HOST}\n\
 ${HttpConstants.DATE}: ${dateStr}`;
+    if (delegationToken != null) {
+        content += `\n${OBO_TOKEN_HEADER}: ${delegationToken}`;
+    }
+    return content;
 }
 
-function verifyAuthHeader(header, profile, dateStr) {
+function verifyAuthHeader(header, profile, dateStr, delegationToken) {
     const match = header.match(AUTH_HEADER_PATTERN);
     expect(match).to.be.an('array');
     expect(match.length).to.equal(5);
@@ -171,21 +177,16 @@ function verifyAuthHeader(header, profile, dateStr) {
         expect(match1[3]).to.equal(profile.fingerprint);    
     }
     const signature = match[3];
-    //we don't verify signature for instance principal since we don't have
-    //access to its public key
-    if (!profile.skipVerifySign) {
-        expect(profile.publicKey).to.exist; //test self-check
-        //verify signature
-        const verify = crypto.createVerify('sha256WithRSAEncryption');
-        verify.update(signingContent(dateStr));
-        expect(verify.verify(profile.publicKey, signature, 'base64'))
-            .to.equal(true);
-    } else {
-        expect(profile.publicKey).to.not.exist; //test self-check
-    }
+    expect(profile.publicKey).to.exist; //test self-check
+    //verify signature
+    const verify = crypto.createVerify('sha256WithRSAEncryption');
+    verify.update(signingContent(dateStr, delegationToken));
+    expect(verify.verify(profile.publicKey, signature, 'base64'))
+        .to.equal(true);
 }
 
-function verifyAuth(auth, profile, expectedCompartmentId) {
+function verifyAuth(auth, profile, expectedCompartmentId,
+    expectedDelegationToken) {
     expect(auth).to.be.an('object');
     expect(auth).to.haveOwnProperty(HttpConstants.AUTHORIZATION);
     expect(auth).to.haveOwnProperty(HttpConstants.DATE);
@@ -202,12 +203,15 @@ function verifyAuth(auth, profile, expectedCompartmentId) {
     } else if (profile.tenantId != null) {
         expect(compartment).to.equal(profile.tenantId);
     }
-    verifyAuthHeader(header, profile, dateStr);
+    if (expectedDelegationToken != null) {
+        expect(auth[OBO_TOKEN_HEADER]).to.equal(expectedDelegationToken);
+    }
+    verifyAuthHeader(header, profile, dateStr, expectedDelegationToken);
 }
 
-function verifyAuthEqual(auth, auth0, profile, compartment) {
-    verifyAuth(auth0, profile, compartment);
-    verifyAuth(auth, profile, compartment);
+function verifyAuthEqual(auth, auth0, profile, compartment, delegationToken) {
+    verifyAuth(auth0, profile, compartment, delegationToken);
+    verifyAuth(auth, profile, compartment, delegationToken);
     const header = auth[HttpConstants.AUTHORIZATION];
     const header0 = auth0[HttpConstants.AUTHORIZATION];
     const dateStr = auth[HttpConstants.DATE];
@@ -216,12 +220,16 @@ function verifyAuthEqual(auth, auth0, profile, compartment) {
     expect(dateStr).to.equal(dateStr0);
 }
 
-function verifyAuthLaterDate(auth, auth0, profile, profile0, compartment) {
+function verifyAuthLaterDate(auth, auth0, profile, profile0, compartment,
+    delegationToken, delegationToken0) {
     if (profile0 == null) {
         profile0 = profile;
     }
-    verifyAuth(auth0, profile0, compartment);
-    verifyAuth(auth, profile, compartment);
+    if (delegationToken0 == null) {
+        delegationToken0 = delegationToken;
+    }
+    verifyAuth(auth0, profile0, compartment, delegationToken0);
+    verifyAuth(auth, profile, compartment, delegationToken);
     const header = auth[HttpConstants.AUTHORIZATION];
     const header0 = auth0[HttpConstants.AUTHORIZATION];
     const dateStr = auth[HttpConstants.DATE];
