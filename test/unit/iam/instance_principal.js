@@ -12,6 +12,7 @@ chai.use(require('chai-as-promised'));
 const expect =  chai.expect;
 
 const crypto = require('crypto');
+const mockfs = require('mock-fs');
 
 const Region = require('../../../index').Region;
 const ErrorCode = require('../../../index').ErrorCode;
@@ -22,6 +23,8 @@ const IAMAuthorizationProvider =
 const HttpConstants = require('../../../lib/constants').HttpConstants;
 const Utils = require('../utils');
 const badMillis = require('../common').badMillis;
+const badStrings = require('../common').badStrings;
+const badStringsOrFunctions = require('../common').badStringsOrFunctions;
 const MockHttp = require('./mock_http').MockHttp;
 const MockHttps = require('./mock_http').MockHttps;
 const makeST = require('./utils').makeST;
@@ -29,9 +32,13 @@ const iam2cfg = require('./utils').iam2cfg;
 const makeReq = require('./utils').makeReq;
 const inspect = require('./utils').inspect;
 const verifyAuth = require('./utils').verifyAuth;
+const writeOrRemove = require('./utils').writeOrRemove;
 const verifyAuthLaterDate = require('./utils').verifyAuthLaterDate;
 const COMPARTMENT_ID = require('./constants').COMPARTMENT_ID;
 const CERT_INFO = require('./constants').CERT_INFO;
+const DELEGATION_TOKEN_FILE = require('./constants').DELEGATION_TOKEN_FILE;
+const DELEGATION_TOKEN = require('./constants').DELEGATION_TOKEN;
+const DELEGATION_TOKEN2 = require('./constants').DELEGATION_TOKEN2;
 const keys = require('./config').keys;
 
 const SIGNING_HEADERS =
@@ -68,12 +75,14 @@ function verifyPayload(payload, cfg) {
     }).to.not.throw();
     expect(payload.publicKey).to.be.a('string').that.is.not.empty;
     expect(() => {
-        crypto.createPublicKey({
+        //Save public key created by instance principal client to verify auth
+        //signature.
+        clientPublicKey = crypto.createPublicKey({
             key: Buffer.from(payload.publicKey, 'base64'),
             format: 'der',
-            type: 'pkcs1'
-        });    
-    }).to.not.throw;
+            type: 'spki'
+        });
+    }).to.not.throw();
     expect(payload.certificate).to.be.a('string');
     expect(payload.certificate).to.equal(pemCert2derB64(cfg.cert));
     expect(payload.purpose).to.equal(DEFAULT_PURPOSE);
@@ -129,8 +138,10 @@ function verifyRequest(payload, opt, cfg) {
 const mockHttp = new MockHttp();
 const mockHttps = new MockHttps();
 
-//we keep current token issued by MockHttps to verify auth
+//We keep current token issued by MockHttps as well as public key created by
+//instance principal client to verify auth.
 let token;
+let clientPublicKey;
 
 function prepConfig(cfg) {
     mockHttp.clear();
@@ -185,17 +196,31 @@ function prepConfig(cfg) {
         });
     }
 
+    //delegation token file
+    if ('_delegationTokenData' in cfg &&
+        typeof cfg.delegationTokenProvider === 'string') {
+        writeOrRemove(cfg.delegationTokenProvider, cfg._delegationTokenData);
+    }
 }
 
 function ipCfg(cfg) {
     const iamCfg = {
         useInstancePrincipal: true
     };
+    if ('durationSeconds' in cfg) {
+        iamCfg.durationSeconds = cfg.durationSeconds;
+    }
     if ('timeout' in cfg) {
         iamCfg.timeout = cfg.timeout;
     }
     if ('fedEP' in cfg) {
         iamCfg.federationEndpoint = cfg.fedEP;
+    }
+    if ('delegationToken' in cfg) {
+        iamCfg.delegationToken = cfg.delegationToken;
+    }
+    if ('delegationTokenProvider' in cfg) {
+        iamCfg.delegationTokenProvider = cfg.delegationTokenProvider;
     }
     return iam2cfg(iamCfg, COMPARTMENT_ID);
 }
@@ -208,6 +233,13 @@ async function testConfig(cfg) {
         return await provider.getAuthorization(makeReq(noSqlCfg));
     } finally {
         provider.close();
+    }
+}
+
+class GoodDTP {
+    async loadDelegationToken() {
+        await Utils.sleep(10);
+        return DELEGATION_TOKEN;
     }
 }
 
@@ -235,6 +267,40 @@ const goodConfigs = [
         __proto__: CERT_INFO[0],
         region: Region.US_ASHBURN_1,
         missingMDV1: true
+    },
+    {
+        __proto__: CERT_INFO[0],
+        region: Region.EU_AMSTERDAM_1,
+        delegationToken: DELEGATION_TOKEN,
+        _delegationTokenData: DELEGATION_TOKEN
+    },
+    {
+        __proto__: CERT_INFO[0],
+        region: Region.EU_FRANKFURT_1,
+        delegationTokenProvider: new GoodDTP(),
+        _delegationTokenData: DELEGATION_TOKEN
+    },
+    {
+        __proto__: CERT_INFO[0],
+        region: Region.ME_DUBAI_1,
+        delegationTokenProvider: {
+            loadDelegationToken: async () => DELEGATION_TOKEN
+        },
+        _delegationTokenData: DELEGATION_TOKEN
+    },
+    {
+        __proto__: CERT_INFO[0],
+        region: Region.ME_DUBAI_1,
+        delegationTokenProvider: async () => {
+            return DELEGATION_TOKEN;
+        },
+        _delegationTokenData: DELEGATION_TOKEN
+    },
+    {
+        __proto__: CERT_INFO[0],
+        region: Region.ME_JEDDAH_1,
+        delegationTokenProvider: DELEGATION_TOKEN_FILE,
+        _delegationTokenData: DELEGATION_TOKEN
     }
 ];
 
@@ -253,6 +319,32 @@ const badFedEPs = [
     'https://blah.us-phoenix-1.oraclecloud.com',
     //wrong protocol
     'http://auth.us-ashburn-1.oraclecloud.com'
+];
+
+const badDelegationTokenProviders = [
+    //this may include objects but they will not be valid delegation token
+    //providers
+    ...badStringsOrFunctions,
+    'no_such_file', //non-existent file
+    {
+        //loadDelegationToken wrong spelling
+        loadDelegatoinToken: async () => DELEGATION_TOKEN
+    },
+    {
+        loadDelegationToken: null //loadDelegationToken must be function
+    },
+    {
+        //loadDelegationToken must be function
+        loadDelegationToken: DELEGATION_TOKEN,
+    },
+    ...badStrings.map(val => ({
+        loadDelegationToken: async () => val
+    })),
+    ...badStrings.map(val => (async () => val)),
+    async () => {
+        await Utils.sleep(10);
+        throw new Error('dt provider error');
+    }
 ];
 
 //For network errors we specify short timeout in order to avoid long retries.
@@ -333,6 +425,37 @@ const badConfigs = [
         tenantId: 'TestTenant2',
         errCode: ErrorCode.SERVICE_ERROR,
         httpStatus: HttpConstants.HTTP_UNAUTHORIZED
+    },
+    ...badStrings.map(delegationToken => ({
+        __proto__: CERT_INFO[0],
+        region: Region.AP_MUMBAI_1,
+        //invalid delegation token
+        delegationToken,
+        errCode: ErrorCode.ILLEGAL_ARGUMENT
+    })),
+    ...badDelegationTokenProviders.map(delegationTokenProvider => ({
+        __proto__: CERT_INFO[0],
+        region: Region.AP_OSAKA_1,
+        //invalid delegation token provider
+        delegationTokenProvider,
+        errCode: ErrorCode.ILLEGAL_ARGUMENT
+    })),
+    {
+        __proto__: CERT_INFO[0],
+        region: Region.AP_MELBOURNE_1,
+        delegationTokenProvider: DELEGATION_TOKEN_FILE,
+        // empty delegation token in file
+        _delegationTokenData: '',
+        errCode: ErrorCode.ILLEGAL_ARGUMENT
+    },
+    {
+        __proto__: CERT_INFO[0],
+        region: Region.US_PHOENIX_1,
+        //cannot specify delegationTokenProvider together with
+        //delegationToken
+        delegationToken: DELEGATION_TOKEN,
+        delegationTokenProvider: async () => DELEGATION_TOKEN,
+        errCode: ErrorCode.ILLEGAL_ARGUMENT
     }
 ];
 
@@ -342,7 +465,7 @@ let testCaseId = 0;
 function authProfile() {
     return {
         token,
-        skipVerifySign: true
+        publicKey: clientPublicKey
     };
 }
 
@@ -406,13 +529,123 @@ function testTokenCache() {
     });
 }
 
+function testDelegationTokenRefresh() {
+    const cfg0 = {
+        __proto__: CERT_INFO[0],
+        region: Region.US_PHOENIX_1,
+        tokenTTL: 3600000
+    };
+    const dtContainer = {};
+    const dtProvider = async () => dtContainer.token;
+    it('Delegation token file refresh on signature refresh',
+        async function() {
+            const cfg = Object.assign({
+                delegationTokenProvider: DELEGATION_TOKEN_FILE,
+                durationSeconds: 1
+            }, cfg0);
+            const noSqlCfg = ipCfg(cfg);
+            const provider = new IAMAuthorizationProvider(noSqlCfg);
+            try {
+                writeOrRemove(DELEGATION_TOKEN_FILE, DELEGATION_TOKEN);
+                const ipReq = makeReq(noSqlCfg);
+                const auth0 = await provider.getAuthorization(ipReq);
+                const profile0 = authProfile();
+                verifyAuth(auth0, profile0, COMPARTMENT_ID,
+                    DELEGATION_TOKEN);
+                await Utils.sleep(1200);
+                writeOrRemove(DELEGATION_TOKEN_FILE, DELEGATION_TOKEN2);
+                const auth = await provider.getAuthorization(ipReq);
+                const profile = authProfile();
+                verifyAuthLaterDate(auth, auth0, profile, profile0,
+                    COMPARTMENT_ID, DELEGATION_TOKEN2, DELEGATION_TOKEN);
+            } finally {
+                provider.close();
+            }
+        });
+    it('Delegation token provider refresh on signature refresh',
+        async function() {
+            const cfg = Object.assign({
+                delegationTokenProvider: dtProvider,
+                durationSeconds: 1
+            }, cfg0);
+            const noSqlCfg = ipCfg(cfg);
+            const provider = new IAMAuthorizationProvider(noSqlCfg);
+            try {
+                dtContainer.token = DELEGATION_TOKEN;
+                const ipReq = makeReq(noSqlCfg);
+                const auth0 = await provider.getAuthorization(ipReq);
+                const profile0 = authProfile();
+                verifyAuth(auth0, profile0, COMPARTMENT_ID, DELEGATION_TOKEN);
+                await Utils.sleep(1200);
+                dtContainer.token = DELEGATION_TOKEN2;
+                const auth = await provider.getAuthorization(ipReq);
+                const profile = authProfile();
+                verifyAuthLaterDate(auth, auth0, profile, profile0,
+                    COMPARTMENT_ID, DELEGATION_TOKEN2, DELEGATION_TOKEN);
+            } finally {
+                provider.close();
+            }
+        });
+    it('Delegation token file refresh on invalid auth', async function() {
+        const cfg = Object.assign({
+            delegationTokenProvider: DELEGATION_TOKEN_FILE
+        }, cfg0);
+        const noSqlCfg = ipCfg(cfg);
+        const provider = new IAMAuthorizationProvider(noSqlCfg);
+        try {
+            writeOrRemove(DELEGATION_TOKEN_FILE, DELEGATION_TOKEN);
+            const ipReq = makeReq(noSqlCfg);
+            const auth0 = await provider.getAuthorization(ipReq);
+            const profile0 = authProfile();
+            verifyAuth(auth0, profile0, COMPARTMENT_ID, DELEGATION_TOKEN);
+            await Utils.sleep(1200);
+            const req1 = Object.assign({
+                lastError: new NoSQLError(ErrorCode.INVALID_AUTHORIZATION)
+            }, ipReq);
+            writeOrRemove(DELEGATION_TOKEN_FILE, DELEGATION_TOKEN2);
+            const auth = await provider.getAuthorization(req1);
+            const profile = authProfile();
+            verifyAuthLaterDate(auth, auth0, profile, profile0,
+                COMPARTMENT_ID, DELEGATION_TOKEN2, DELEGATION_TOKEN);
+        } finally {
+            provider.close();
+        }
+    });
+    it('Delegation token provider refresh on invalid auth', async function() {
+        const cfg = Object.assign({
+            delegationTokenProvider: dtProvider
+        }, cfg0);
+        const noSqlCfg = ipCfg(cfg);
+        const provider = new IAMAuthorizationProvider(noSqlCfg);
+        try {
+            dtContainer.token = DELEGATION_TOKEN;
+            const ipReq = makeReq(noSqlCfg);
+            const auth0 = await provider.getAuthorization(ipReq);
+            const profile0 = authProfile();
+            verifyAuth(auth0, profile0, COMPARTMENT_ID, DELEGATION_TOKEN);
+            await Utils.sleep(1200);
+            const req1 = Object.assign({
+                lastError: new NoSQLError(ErrorCode.INVALID_AUTHORIZATION)
+            }, ipReq);
+            dtContainer.token = DELEGATION_TOKEN2;
+            const auth = await provider.getAuthorization(req1);
+            const profile = authProfile();
+            verifyAuthLaterDate(auth, auth0, profile, profile0,
+                COMPARTMENT_ID, DELEGATION_TOKEN2, DELEGATION_TOKEN);
+        } finally {
+            provider.close();
+        }
+    });
+}
+
 function doTest() {
     for(let cfg of goodConfigs) {
         it(`Valid config: ${inspect(cfg)}, testCaseId=${testCaseId}}`,
             async function() {
                 const auth = await testConfig(cfg);
                 expect(token).to.be.a('string').that.is.not.empty;
-                verifyAuth(auth, authProfile(), COMPARTMENT_ID);
+                verifyAuth(auth, authProfile(), COMPARTMENT_ID,
+                    cfg._delegationTokenData);
             })._testCaseId = testCaseId++;
     }
     for(let cfg of badConfigs) {
@@ -427,16 +660,23 @@ function doTest() {
             })._testCaseId = testCaseId++;
     }
     testTokenCache();
+    testDelegationTokenRefresh();
 }
+
+before(() => mockfs());
+after(() => mockfs.restore());
+
 
 if (!Utils.isOnPrem) {
     describe('IAMAuthorizationProvider test', function() {
         this.timeout(60000);
         before(() => {
+            mockfs();
             mockHttp.stub();
             mockHttps.stub();
         });
         after(() => {
+            mockfs.restore();
             mockHttp.restore();
             mockHttps.restore();
         });
