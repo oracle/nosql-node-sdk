@@ -55,7 +55,7 @@ const badMaxReadKB = badPosInt32NotNull.concat(Limits.READ_KB + 1);
 const badMaxWriteKB = badPosInt32NotNull.concat(Limits.WRITE_KB + 1);
 const badTraceLevel = badNonNegInt32NotNull.concat(33);
 
-const badCursorOpts = [
+const badIterableOpts = [
     ...badOptions,
     ...badMillis.map(timeout => ({ timeout })),
     ...badConsistencies.map(consistency => ({ consistency })),
@@ -67,7 +67,7 @@ const badCursorOpts = [
 ];
 
 const badQueryOpts = [
-    ...badCursorOpts,
+    ...badIterableOpts,
     ...badBinaries.map(continuationKey => ({ continuationKey }))
     //UNKNOWN_ERROR is returned currently by the proxy on the following:
     //{ continuationKey: Buffer.alloc(16) } //bogus continuation key
@@ -178,16 +178,19 @@ ${util.inspect(badStmt)}`, async function() {
     }
 }
 
-function testQueryCursorNegative(client) {
+function testQueryNegative(client) {
     const queryFunc = client.query.bind(client);
     queryFunc._name = 'query';
     testQueryFuncNegative(queryFunc, badQueryOpts);
 
-    const cursorFunc = async (stmt, opt) => {
-        await client.cursor(stmt, opt).next();
+    const iterableFunc = async (stmt, opt) => {
+        //eslint-disable-next-line no-unused-vars
+        for await(const res of client.queryIterable(stmt, opt)) {
+            break;
+        }
     };
-    cursorFunc._name = 'cursor';
-    testQueryFuncNegative(cursorFunc, badCursorOpts);
+    iterableFunc._name = 'queryIterable';
+    testQueryFuncNegative(iterableFunc, badIterableOpts);
 }
 
 function verifyPrepareResult(res) {
@@ -398,6 +401,20 @@ async function doQuery(client, test, q, tc, stmt, opt) {
     }
 }
 
+async function doQueryIterable(client, test, q, tc, stmt, opt) {
+    let state = {}; //maintain test-related information accross query calls
+    let iterCnt = 0;
+    const iterable = client.queryIterable(stmt, opt);
+    for await(const res of iterable) {
+        await verifyQueryResult(res, client, test, q, tc, opt, state);
+        //make sure we don't loop infinitely
+        expect(++iterCnt).to.be.lessThan(test.rows.length * 16);
+        //If we are using small limit/maxReadKB and duplicate elimination,
+        //there can be quite a lot of calls to query() since a lot of results
+        //will be skipped by ReceiveIterator.
+    }
+}
+
 //This optionally expands queryFunc to do memory testing.
 function withMemTest(testCase, queryFunc) {
     if (!testCase.maxMemFail && !testCase.maxMem) {
@@ -423,31 +440,6 @@ limit of ${testCase.maxMemFail}`);
         return queryFunc(client, test, q, tc, stmt, opt1);
     };
 }
-
-//BatchCursor is not used currently
-/*
-async function doCursor(client, test, stmt, opt, expectedRows, updatedRows) {
-    let startIdx = 0;
-    let iterCnt = 0;
-    const c = client.cursor(stmt, opt);
-    let hasNext = c.hasNext();
-    expect(hasNext).to.equal(true);
-    for(;;) {
-        const res = await c.next();
-        await verifyQueryResult(res, client, test, opt, expectedRows,
-            startIdx, updatedRows);
-        startIdx += res.rows.length;
-        hasNext = c.hasNext();
-        expect(hasNext).to.be.a('boolean');
-        if (!hasNext) {
-            expect(startIdx).to.equal(expectedRows.length);
-            return;
-        }
-        //make sure we don't loop infinitely
-        expect(++iterCnt).to.be.lessThan(test.rows.length + 2);
-    }
-}
-*/
 
 function getQueryOpts(test, q, tc) {
     return [
@@ -543,6 +535,10 @@ function testQuery(client, test, q) {
     //string, we use __TABLE__ which we replace with real table name here.
     const stmt = q.stmt.replace('__TABLE__', test.table.name);
 
+    //We alternate between using doQuery() and doQueryIterable() to avoid
+    //excessively long running time.
+    let useIterable = false;
+
     //For queries without bind variables, we will execute them directly,
     //in addition to using PreparedStatement
     if (tcs.length === 1 && !tcs[0].bindings) {
@@ -554,17 +550,17 @@ function testQuery(client, test, q) {
                     await restore(client, test, tc.updatedRows);
                 }
             });
+            let queryFunc = useIterable ? doQueryIterable : doQuery;
+            useIterable = !useIterable;
             for(let opt of getQueryOpts(test, q, tc)) {
-                for(let queryFunc of [ doQuery ]) {
-                    queryFunc = withMemTest(tc, queryFunc);
-                    it(`Direct execution of query: ${stmt} via \
-    ${queryFunc.name} with options: ${util.inspect(opt)}`, async function() {
-                        //Make a copy of opt to avoid async concurrency
-                        //problems
-                        opt = Object.assign({ _updateTTL: q.updateTTL }, opt);
-                        await queryFunc(client, test, q, tc, stmt, opt);
-                    });
-                }
+                queryFunc = withMemTest(tc, queryFunc);
+                it(`Direct execution of query: ${stmt} via \
+${queryFunc.name} with options: ${util.inspect(opt)}`, async function() {
+                    //Make a copy of opt to avoid async concurrency
+                    //problems
+                    opt = Object.assign({ _updateTTL: q.updateTTL }, opt);
+                    await queryFunc(client, test, q, tc, stmt, opt);
+                });
             }
         });
     }
@@ -594,16 +590,16 @@ ${util.inspect(tc.bindings)}`, function() {
                         await restore(client, test, tc.updatedRows);
                     }
                 });
+                let queryFunc = useIterable ? doQueryIterable : doQuery;
+                useIterable = !useIterable;
                 for(let opt of getQueryOpts(test, q, tc)) {
-                    for(let queryFunc of [ doQuery ]) {
-                        queryFunc = withMemTest(tc, queryFunc);
-                        it(`Execution of prepared query: ${stmt} via \
+                    queryFunc = withMemTest(tc, queryFunc);
+                    it(`Execution of prepared query: ${stmt} via \
 ${queryFunc.name} with options: ${util.inspect(opt)}`, async function() {
-                            opt = Object.assign({ _updateTTL: q.updateTTL },
-                                opt);
-                            await queryFunc(client, test, q, tc, ps, opt);
-                        });
-                    }
+                        opt = Object.assign({ _updateTTL: q.updateTTL },
+                            opt);
+                        await queryFunc(client, test, q, tc, ps, opt);
+                    });
                 }
             });
         }
@@ -625,7 +621,7 @@ function doTest(client, test) {
             await Utils.dropTable(client, test.table);
         });
         testPrepareNegative(client);
-        testQueryCursorNegative(client);
+        testQueryNegative(client);
         test.queries.forEach(q => testQuery(client, test, q));
     });
 }
