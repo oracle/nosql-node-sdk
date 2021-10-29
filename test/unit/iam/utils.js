@@ -72,13 +72,9 @@ function inspect(obj) {
     return util.inspect(obj);
 }
 
-function iam2cfg(cfg, compartment) {
-    return {
-        //We have to ensure that the provider will use the same service host.
-        //We use url property instead of endpoint to ensure the code in
-        //IAMAuthorizationProvider constructor will not perform extra url
-        //initialization (Config.initURL(), line 107).
-        url: new URL('https://' + SERVICE_HOST),
+function iam2cfg(cfg, compartment, excludeURL) {
+    const res = {
+        endpoint: new URL('https://' + SERVICE_HOST),
         compartment,
         auth: {
             //simulate inheritance from config defaults in source code
@@ -87,6 +83,19 @@ function iam2cfg(cfg, compartment) {
             }, cfg) : cfg
         }
     };
+    //We have to ensure that the provider will use the same service host
+    //SERVICE_HOST for auth verification to work in the tests.
+    //We use url property to ensure the code in IAMAuthorizationProvider
+    //constructor will not perform extra url initialization (calling
+    //Config.initURL(), auth_provider.js, line 121).  This is needed if
+    //instantiating the provider directly.  When instantiating NoSQLClient,
+    //endpoint property can be used instead with the host SERVICE_HOST,
+    //because the url will be initialized from the endpoint in
+    //Config.InitURL().
+    if (!excludeURL) {
+        res.url = res.endpoint;
+    }
+    return res;
 }
 
 function makeReq(cfg) {
@@ -134,7 +143,7 @@ let stSeqNo = 0;
 
 function makeSTPayload(ttlMs) {
     return JSON.stringify({
-        exp: Math.ceil((Date.now() + ttlMs)/1000),
+        exp: Math.round((Date.now() + ttlMs)/1000),
         //these might be useful for resource principal, ignored otherwise
         res_tenant: 'tenantId',
         res_compartment: 'compartmentId',
@@ -167,7 +176,7 @@ function verifyAuthHeader(header, profile, dateStr, delegationToken) {
         const match1 = match[1].match(KEY_ID_PATTERN_ST);
         expect(match1).to.be.an('array');
         expect(match1.length).to.equal(2);
-        expect(match1[1]).to.equal(profile.token);    
+        expect(match1[1]).to.equal(profile.token);
     } else {
         const match1 = match[1].match(KEY_ID_PATTERN_IDEN);
         expect(match1).to.be.an('array');

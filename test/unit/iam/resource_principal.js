@@ -67,7 +67,8 @@ function prepEnv(env) {
 
 const rpCfg = iam2cfg({
     useResourcePrincipal: true,
-    refreshAheadMs: null //disable signature auto-refresh
+    refreshAheadMs: null, //disable signature auto-refresh
+    securityTokenExpireBeforeMs: 10
 }, COMPARTMENT_ID);
 
 const rpReq = makeReq(rpCfg);
@@ -206,14 +207,18 @@ function testTokenCache() {
     let st;
     const updateEnv = () => {
         kp = createKeys();
-        st = makeST(3000);
+        st = makeST(5000);
         rpEnv.pkData = kp.privatePEM;
         rpEnv.rpstData = st;
         prepEnv(rpEnv);
     };
+    const rpCfg1 = iam2cfg(Object.assign({}, rpCfg.auth.iam, {
+        durationSeconds: 10,
+        securityTokenExpireBeforeMs: 2000
+    }));
     it('Token cache test', async function() {
         updateEnv();
-        const provider = new IAMAuthorizationProvider(rpCfg);
+        const provider = new IAMAuthorizationProvider(rpCfg1);
         try {
             let profile0 = { token: st, publicKey: kp.publicKey };
             const auth0 = await provider.getAuthorization(rpReq);
@@ -223,17 +228,13 @@ function testTokenCache() {
             let profile = { token: st, publicKey: kp.publicKey };
             await Utils.sleep(1000);
             let auth = await provider.getAuthorization(rpReq);
-            //still same signature
+            //still same signature and token
             verifyAuthEqual(auth, auth0, profile0, COMPARTMENT_ID);
-            provider.clearCache();
-            auth = await provider.getAuthorization(rpReq);
-            //different signature but same profile
-            verifyAuthLaterDate(auth, auth0, profile0, profile0,
-                COMPARTMENT_ID);
             await Utils.sleep(3000);
-            provider.clearCache();
             auth = await provider.getAuthorization(rpReq);
-            //since 4 seconds elapsed, different signature and new profile
+            //4 seconds elapsed, so we are within expireBeforeMs window,
+            //the token should be refreshed and signature regenerated
+            //(even though the signature itself did not expire).
             verifyAuthLaterDate(auth, auth0, profile, profile0,
                 COMPARTMENT_ID);
         } finally {
@@ -249,13 +250,12 @@ function testTokenCache() {
             //obtain new key pair and token
             updateEnv();
             let profile = { token: st, publicKey: kp.publicKey };
-            provider.clearCache();
             await Utils.sleep(1000);
             const req1 = Object.assign({
                 lastError: new NoSQLError(ErrorCode.INVALID_AUTHORIZATION)
             }, rpReq);
             //Even though the token has not expired, because request failed,
-            //we should receive new token.
+            //we should receive new token and new signature.
             let auth = await provider.getAuthorization(req1);
             verifyAuthLaterDate(auth, auth0, profile, profile0,
                 COMPARTMENT_ID);
