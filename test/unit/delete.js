@@ -14,6 +14,8 @@ const NoSQLClient = require('../../index').NoSQLClient;
 const NoSQLArgumentError = require('../../index').NoSQLArgumentError;
 const ErrorCode = require('../../index').ErrorCode;
 const NoSQLError = require('../../index').NoSQLError;
+const SyncPolicy = require('../../index').SyncPolicy;
+const ReplicaAckPolicy = require('../../index').ReplicaAckPolicy;
 
 const badTblNames = require('./common').badTblNames;
 const badOptsBaseDelete = require('./common').badOptsBaseDelete;
@@ -100,6 +102,8 @@ function testDeleteNegative(client, tbl, key) {
         badOptsDelete);
     testDeleteFuncNegative(client.deleteIfVersion.bind(client), tbl,
         key, badOptsBaseDelete);
+    const badOptsDur = badOptsDelete.concat({ durability: { masterSync: 'foo'} });
+    testDeleteFuncNegative(client.delete.bind(client), tbl, key, badOptsDur);
 }
 
 function testDelete(client, tbl, existingKey, absentKey) {
@@ -116,6 +120,21 @@ ${util.inspect(existingKey)} with timeout and returnExisting: true`,
             compartment,
             timeout: 12000,
             returnExisting: true //should have no effect here
+        };
+        const res = await client.delete(tbl.name, existingKey, opt);
+        await Utils.verifyDelete(res, client, tbl, existingKey, opt);
+    });
+
+    it(`delete on table ${tbl.name} with existing key: \
+${util.inspect(existingKey)} with durability`,
+    async function() {
+        const opt = {
+            compartment,
+            durability: {
+                masterSync: SyncPolicy.SYNC,
+                replicaSync: SyncPolicy.SYNC,
+                replicaAck: ReplicaAckPolicy.ALL
+            }
         };
         const res = await client.delete(tbl.name, existingKey, opt);
         await Utils.verifyDelete(res, client, tbl, existingKey, opt);

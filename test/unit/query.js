@@ -353,8 +353,8 @@ async function verifyQueryResult(res, client, test, q, tc, opt, state) {
             //version, since the query result doesn't tell us updated row
             //versions.  For delete query this will verify that the row
             //no longer exists.
-            Utils.verifyGetResult(res, test.table, row, { _skipVerifyVersion:
-                true });
+            Utils.verifyGetResult(client, res, test.table, row,
+                { _skipVerifyVersion: true });
         }
         //Verify that the rest of test rows are not modified
         for(let row of getUnmodifiedRows(test, tc.updatedRows)) {

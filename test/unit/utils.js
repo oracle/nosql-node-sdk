@@ -22,6 +22,7 @@ const EMPTY_VALUE = require('../../lib/constants').EMPTY_VALUE;
 const isPosInt32OrZero = require('../../lib/utils').isPosInt32OrZero;
 const isPosInt = require('../../lib/utils').isPosInt;
 const Consistency = require('../../index').Consistency;
+const CapacityMode = require('../../index').CapacityMode;
 const TTLUtil = require('../../index').TTLUtil;
 const TestConfig = require('../utils').TestConfig;
 
@@ -415,9 +416,15 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
             expect(res.tableLimits).to.not.exist;
         } else {
             if (!opt || !opt._ignoreTableLimits) {
+                const rlimits = res.tableLimits;
                 const limits = opt && opt.tableLimits ?
                     opt.tableLimits : tbl.limits;
-                expect(res.tableLimits).to.deep.equal(limits);
+                if (limits.mode != null) {
+                    expect(rlimits.mode).to.equal(limits.mode);
+                }
+                expect(rlimits.readUnits).to.equal(limits.readUnits);
+                expect(rlimits.writeUnits).to.equal(limits.writeUnits);
+                expect(rlimits.storageGB).to.equal(limits.storageGB);
             }
         }
         if (!opt || !opt._verifySchema) {
@@ -513,7 +520,21 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
         }
     }
 
-    static verifyGetResult(res, tbl, row, opt) {
+    // Check for modificationTime being within a short time before now.
+    static verifyModificationTime(res) {
+        expect(res.modificationTime).to.satisfy(isPosInt);
+        var diff = Date.now() - res.modificationTime;
+        expect(Math.abs(diff)).to.be.at.most(10000);
+    }
+
+    // Check for existingModificationTime being within a short time before now.
+    static verifyExistingModificationTime(res) {
+        expect(res.existingModificationTime).to.satisfy(isPosInt);
+        var diff = Date.now() - res.existingModificationTime;
+        expect(Math.abs(diff)).to.be.at.most(10000);
+    }
+
+    static verifyGetResult(client, res, tbl, row, opt) {
         if (!opt) {
             opt = {};
         }
@@ -530,9 +551,13 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
             expect(res.row).to.equal(null);
             expect(res.expirationTime).to.not.exist;
             expect(res.version).to.not.exist;
+            expect(res.modificationTime).to.not.exist;
             return;
         }
         this.verifyExpirationTime(tbl, row, res.expirationTime);
+        if (client.getSerialVersion() > 2) {
+            this.verifyModificationTime(res);
+        }
         expect(res.version).to.be.instanceOf(Buffer);
         //For update queries (unlike puts) we don't know the row's
         //current version.
@@ -579,6 +604,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
             expect(res.version).to.not.deep.equal(row[_version]);
             expect(res.existingRow).to.not.exist;
             expect(res.existingVersion).to.not.exist;
+            expect(res.existingModificationTime).to.not.exist;
             /*
             if (tbl.idFld) {
                 //We expect id value only for new rows (_version is null).
@@ -608,9 +634,13 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
                     expect(res.existingVersion).to.deep.equal(
                         existingRow[_version]);
                 }
+                if (client.getSerialVersion() > 2) {
+                    this.verifyExistingModificationTime(res);
+                }
             } else {
                 expect(res.existingRow).to.not.exist;
                 expect(res.existingVersion).to.not.exist;    
+                expect(res.existingModificationTime).to.not.exist;
             }
         }
 
@@ -618,7 +648,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
         //version and expiration time
         const getRes = await client.get(tbl.name, this.makePrimaryKey(
             tbl, row));
-        this.verifyGetResult(getRes, tbl, success ? row : existingRow);
+        this.verifyGetResult(client, getRes, tbl, success ? row : existingRow);
         if (success && res.generatedValue != null) {
             expect(tbl.idFld).to.exist; //test self-check
             expect(getRes.row).to.exist;
@@ -666,7 +696,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
         //or delete on non-existent row, or that the row is the same as
         //existingRow if deleteIfVersion fails on existing row
         const getRes = await client.get(tbl.name, key);
-        Utils.verifyGetResult(getRes, tbl, success ? null : existingRow);
+        Utils.verifyGetResult(client, getRes, tbl, success ? null : existingRow);
     }
 
     static async createTable(client, tbl, indexes) {

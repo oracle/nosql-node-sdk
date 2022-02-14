@@ -12,10 +12,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 * Added Instance Principal with Delegation Token feature.
 * Added NoSQLClient.queryIterable() API to iterate over query results using
 for-await-of loop.
+* Cloud only: support for on-demand tables
+  * Changes to TableLimits and addition of CapacityMode to specify on-demand tables
+* Existing row modification is made available in results when the operation fails
+  and the previous row is requested
+* On-premise only: support for setting Durability in write operations
+  * Added Durability class and methods to set Durability
 
 **Changed**
 
 * Changes to allow the driver to work in the browser environment.
+* The SDK now detects the version of the server it's connected to  and adjusts its capabilities to match. This allows the SDK to communicate with servers that may only support an earlier protocol version, with the corresponding feature restrictions
+
 
 ## 5.2.4 - 2021-06-29
 

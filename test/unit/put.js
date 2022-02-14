@@ -13,8 +13,11 @@ const util = require('util');
 const NoSQLClient = require('../../index').NoSQLClient;
 const NoSQLArgumentError = require('../../index').NoSQLArgumentError;
 const ErrorCode = require('../../index').ErrorCode;
+const CapacityMode = require('../../index').CapacityMode;
 const NoSQLError = require('../../index').NoSQLError;
 const TTLUtil = require('../../index').TTLUtil;
+const SyncPolicy = require('../../index').SyncPolicy;
+const ReplicaAckPolicy = require('../../index').ReplicaAckPolicy;
 const badTblNames = require('./common').badTblNames;
 const sampleVer = require('./common').sampleVer;
 const badOptsBasePut = require('./common').badOptsBasePut;
@@ -115,7 +118,7 @@ function testPutNegative(client, tbl, row) {
     const badOptsPutIfAbs = badOptsBasePut.concat({ ifPresent: true },
         { matchVersion: sampleVer });
     const badOptsPutIfPres = badOptsPut.concat({ ifAbsent: true });
-    const badOptsPutIfVer = badOptsBasePut.concat({ ifAbsent: true});
+    const badOptsPutIfVer = badOptsBasePut.concat({ ifAbsent: true });
     testPutFuncNegative(client.put.bind(client), tbl, row, badOptsPut);
     testPutFuncNegative(client.putIfAbsent.bind(client), tbl, row,
         badOptsPutIfAbs);
@@ -123,6 +126,8 @@ function testPutNegative(client, tbl, row) {
         badOptsPutIfPres);
     testPutFuncNegative(client.putIfVersion.bind(client), tbl, row,
         badOptsPutIfVer);
+    const badOptsDur = badOptsPut.concat({ durability: { masterSync: 'foo'} });
+    testPutFuncNegative(client.put.bind(client), tbl, row, badOptsDur);
 }
 
 //Note that when we put new row to test successful operation, we must specify
@@ -150,6 +155,11 @@ function testPut(test, client, newRow, existingRow) {
             //Update the row
             const opt = {
                 ttl: modifiedRow[_ttl],
+                durability: {
+                    masterSync: SyncPolicy.SYNC,
+                    replicaSync: SyncPolicy.SYNC,
+                    replicaAck: ReplicaAckPolicy.ALL
+                },
                 compartment
             };
             const res = await client.put(tbl.name, modifiedRow, opt);

@@ -17,7 +17,8 @@ const badStrings = require('./common').badStrings;
 const badPosInt32 = require('./common').badPosInt32;
 const badOptions = require('./common').badOptions;
 const Utils = require('./utils');
-const DEF_TABLE_LIMITS = require('./test_schemas').DEF_TABLE_LIMITS;
+const CapacityMode = require('../../index').CapacityMode;
+const DEF_TABLE_LIMITS = require('./common').DEF_TABLE_LIMITS;
 const TABLE_DDL_TESTS = require('./test_schemas').TABLE_DDL_TESTS;
 
 //For cloud service only, test supplying options with compartment
@@ -90,6 +91,59 @@ ${util.inspect(badOpt)}`, async function() {
         Utils.verifyActiveTable(res, tbl);
         res = await client.getTable(tbl.name, { timeout: 10000 });
         Utils.verifyActiveTable(res, tbl);
+    });
+}
+
+function testOnDemandTable(client, tbl) {
+
+    // test on demand tables: in V2 this should throw an illegal argument
+    const stmt = Utils.makeCreateTable(tbl);
+    it(`Create table ${tbl.name} with on demand`, async function() {
+        var serialVersion = client.getSerialVersion();
+        if (serialVersion < 3) {
+            return expect(client.tableDDL(stmt, {
+                compartment,
+                timeout: 10000,
+                tableLimits: {
+                    mode: CapacityMode.ON_DEMAND,
+                    storageGB: 100,
+                    readUnits: 0,
+                    writeUnits: 0
+                }})).to.be.rejectedWith(NoSQLArgumentError);
+        } else {
+            let res = await client.tableDDL(stmt, {
+                compartment,
+                timeout: 10000,
+                tableLimits: {
+                    mode: CapacityMode.ON_DEMAND,
+                    storageGB: 100,
+                    readUnits: 0,
+                    writeUnits: 0
+                }
+            });
+            Utils.verifyTableResult(res, tbl, { _ignoreTableLimits: true });
+            await client.forCompletion(res);
+            Utils.verifyActiveTable(res, tbl, {
+                tableLimits: {
+                    mode: CapacityMode.ON_DEMAND,
+                    storageGB: 100,
+                    readUnits: 2147483646,
+                    writeUnits: 2147483646
+                }});
+            res = await client.getTable(tbl.name, { timeout: 10000 });
+            Utils.verifyActiveTable(res, tbl, {
+                tableLimits: {
+                    mode: CapacityMode.ON_DEMAND,
+                    storageGB: 100,
+                    readUnits: 2147483646,
+                    writeUnits: 2147483646
+                }});
+            res = await client.tableDDL(Utils.makeDropTable(tbl));
+            Utils.verifyTableResult(res, tbl, { _ignoreTableLimits: true });
+            await client.forCompletion(res);
+            expect(res.tableName).to.equal(tbl.name);
+            expect(res.tableState).to.equal(TableState.DROPPED);
+        }
     });
 }
 
@@ -257,6 +311,9 @@ function doTest(client, test) {
                 client, test.table, limits));
         }
         testDropTable(client, test.table);
+        if (!Utils.isOnPrem) {
+            testOnDemandTable(client, test.table);
+        }
         it('', () => {});
     });
 }

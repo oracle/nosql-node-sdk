@@ -85,7 +85,7 @@ function testGetRow(client, tbl, row) {
 
     it(`get on ${tbl.name} for key ${util.inspect(key)}`, async function() {
         const res = await client.get(tbl.name, key);
-        Utils.verifyGetResult(res, tbl, row);
+        Utils.verifyGetResult(client, res, tbl, row);
     });
 
     it(`get on ${tbl.name} for key ${util.inspect(key)} with timeout and \
@@ -97,14 +97,14 @@ consistency`, async function() {
                 Consistency.EVENTUAL : Consistency.ABSOLUTE,
             compartment
         });
-        Utils.verifyGetResult(res, tbl, row);
+        Utils.verifyGetResult(client, res, tbl, row);
     });
 
     it(`get on ${tbl.name} for key ${util.inspect(key)} with absolute \
         consistency`, async function() {
         const consistency = Consistency.ABSOLUTE;
         const res = await client.get(tbl.name, key, { consistency });
-        Utils.verifyGetResult(res, tbl, row, { consistency });
+        Utils.verifyGetResult(client, res, tbl, row, { consistency });
     });
 }
 
@@ -114,14 +114,14 @@ function testGetNonExistent(client, tbl, key) {
             const res = await client.get(tbl.name, key, {
                 timeout: 12000
             });
-            Utils.verifyGetResult(res, tbl);
+            Utils.verifyGetResult(client, res, tbl);
         });
 
     it(`get on ${tbl.name} for missing key ${util.inspect(key)} with \
 absolute consistency`, async function() {
         const consistency = Consistency.ABSOLUTE;
         const res = await client.get(tbl.name, key, { consistency });
-        Utils.verifyGetResult(res, tbl, null, { consistency });
+        Utils.verifyGetResult(client, res, tbl, null, { consistency });
     });
 }
 

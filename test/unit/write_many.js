@@ -324,7 +324,7 @@ async function verifyWriteMany(res, client, test, ops, opt, success = true) {
             const existingRow = test.byId.get(op.put ? op.put[_id] :
                 op.delete[_id]);
             const getRes = await client.get(test.table.name, key);
-            Utils.verifyGetResult(getRes, test.table, existingRow);
+            Utils.verifyGetResult(client, getRes, test.table, existingRow);
         }
     }
 }
