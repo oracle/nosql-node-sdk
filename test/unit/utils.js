@@ -571,7 +571,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
     //putIfAbsent or putIfVersion fails
     //isSub - whether this is a sub-operation of writeMany
     static async verifyPut(res, client, tbl, row, opt, success = true,
-        existingRow, isSub) {
+        existingRow, isSub, checkModTime = true) {
         if (!opt) {
             opt = {};
         }
@@ -634,7 +634,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
                     expect(res.existingVersion).to.deep.equal(
                         existingRow[_version]);
                 }
-                if (client.getSerialVersion() > 2) {
+                if (checkModTime && client.getSerialVersion() > 2) {
                     this.verifyExistingModificationTime(res);
                 }
             } else {

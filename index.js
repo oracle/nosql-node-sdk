@@ -17,6 +17,7 @@ module.exports = {
     Region: require('./lib/region'),
     Consistency: con.Consistency,
     LimitsMode: con.LimitsMode,
+    CapacityMode: con.CapacityMode,
     ReplicaAckPolicy: con.ReplicaAckPolicy,
     SyncPolicy: con.SyncPolicy,
     ScanDirection: con.ScanDirection,

@@ -309,7 +309,7 @@ async function verifyWriteMany(res, client, test, ops, opt, success = true) {
         if (op.put) {
             const existingRow = test.byId.get(op.put[_id]);
             await Utils.verifyPut(res.failedOpResult, client, test.table,
-                op.put, opOpt, false, existingRow, true);
+                op.put, opOpt, false, existingRow, true, false);
         } else {
             expect(op.delete).to.exist;
             const existingRow = test.byId.get(op.delete[_id]);
