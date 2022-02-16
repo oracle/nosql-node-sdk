@@ -204,6 +204,7 @@ root directory:
 
 ```bash
 node_modules/.bin/eslint lib
+node_modules/.bin/eslint test
 ```
 
 (If you installed eslint globally you can use eslint command without

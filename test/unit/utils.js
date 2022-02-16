@@ -22,7 +22,6 @@ const EMPTY_VALUE = require('../../lib/constants').EMPTY_VALUE;
 const isPosInt32OrZero = require('../../lib/utils').isPosInt32OrZero;
 const isPosInt = require('../../lib/utils').isPosInt;
 const Consistency = require('../../index').Consistency;
-const CapacityMode = require('../../index').CapacityMode;
 const TTLUtil = require('../../index').TTLUtil;
 const TestConfig = require('../utils').TestConfig;
 

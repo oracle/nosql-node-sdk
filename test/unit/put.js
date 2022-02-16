@@ -13,7 +13,6 @@ const util = require('util');
 const NoSQLClient = require('../../index').NoSQLClient;
 const NoSQLArgumentError = require('../../index').NoSQLArgumentError;
 const ErrorCode = require('../../index').ErrorCode;
-const CapacityMode = require('../../index').CapacityMode;
 const NoSQLError = require('../../index').NoSQLError;
 const TTLUtil = require('../../index').TTLUtil;
 const SyncPolicy = require('../../index').SyncPolicy;

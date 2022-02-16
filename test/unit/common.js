@@ -9,7 +9,6 @@
 
 const URL = require('url').URL;
 const expect = require('chai').expect;
-const CapacityMode = require('../../index').CapacityMode;
 const Region = require('../../index').Region;
 const Utils = require('./utils');
 
