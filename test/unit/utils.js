@@ -187,7 +187,7 @@ class Utils {
             [ f.name, undefined ]));
         //this row will be used to construct expected row, so we do not
         //include identity columns
-        if (tbl.idFld) { 
+        if (tbl.idFld) {
             delete ret[tbl.idFld.name];
         }
         return ret;
@@ -196,10 +196,10 @@ class Utils {
     static makeCreateTable(tbl, ifNotExists) {
         const flds = tbl.fields.map(f =>
             `${f.name} ${f.typeSpec ? f.typeSpec : f.type}`).join(', ');
-        
+
         let pk;
         if (!tbl.shardKeyLength) {
-            pk = tbl.primaryKey.join(', ');    
+            pk = tbl.primaryKey.join(', ');
         } else {
             const sk = tbl.primaryKey.slice(0, tbl.shardKeyLength).join(', ');
             const pk2 = tbl.primaryKey.slice(tbl.shardKeyLength,
@@ -521,16 +521,16 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
 
     // Check for modificationTime being within a short time before now.
     static verifyModificationTime(res) {
-        expect(res.modificationTime).to.satisfy(isPosInt);
-        var diff = Date.now() - res.modificationTime;
-        expect(Math.abs(diff)).to.be.at.most(10000);
+        expect(res.modificationTime).to.be.instanceOf(Date);
+        var diff = Date.now() - res.modificationTime.getTime();
+        expect(Math.abs(diff)).to.be.at.most(12000);
     }
 
     // Check for existingModificationTime being within a short time before now.
     static verifyExistingModificationTime(res) {
-        expect(res.existingModificationTime).to.satisfy(isPosInt);
-        var diff = Date.now() - res.existingModificationTime;
-        expect(Math.abs(diff)).to.be.at.most(10000);
+        expect(res.existingModificationTime).to.be.instanceOf(Date);
+        var diff = Date.now() - res.existingModificationTime.getTime();
+        expect(Math.abs(diff)).to.be.at.most(12000);
     }
 
     static verifyGetResult(client, res, tbl, row, opt) {
@@ -576,7 +576,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
         }
 
         expect(res).to.be.an('object');
-        
+
         if (!isSub) {
             this.verifyConsumedCapacity(res.consumedCapacity);
             if (!Utils.isOnPrem) {
@@ -638,7 +638,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
                 }
             } else {
                 expect(res.existingRow).to.not.exist;
-                expect(res.existingVersion).to.not.exist;    
+                expect(res.existingVersion).to.not.exist;
                 expect(res.existingModificationTime).to.not.exist;
             }
         }
@@ -665,7 +665,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
         }
 
         expect(res).to.be.an('object');
-        
+
         if (!isSub) {
             Utils.verifyConsumedCapacity(res.consumedCapacity);
             if (!Utils.isOnPrem) {
@@ -680,7 +680,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
                 }
             }
         }
-        
+
         expect(res.success).to.equal(success);
         if (!res.success && opt.matchVersion && opt.returnExisting &&
             existingRow) {
@@ -702,7 +702,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
         const sql = this.makeCreateTable(tbl, true);
         let res = await client.tableDDL(sql, { tableLimits: tbl.limits });
         await client.forCompletion(res);
-        
+
         if (indexes) {
             for(let idx of indexes) {
                 await this.createIndex(client, tbl, idx);
