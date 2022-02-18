@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>PreparedStatement - Oracle NoSQL Database Node.js SDK</title>
+    <title>NoSQLUnsupportedProtocolError - Oracle NoSQL Database Node.js SDK</title>
     
     
     
@@ -37,7 +37,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">PreparedStatement</h1>
+    <h1 class="page-title">NoSQLUnsupportedProtocolError</h1>
     
 
     
@@ -50,16 +50,15 @@
 <header>
     
         <h2>
-        PreparedStatement
+        NoSQLUnsupportedProtocolError
         </h2>
         
-            <div class="class-description usertext">A class encapsulating a prepared query statement. It includes
-state that can be sent to a server and executed without re-parsing the
-query. It includes bind variables which may be set for each successive use
-of the query.  PreparedStatement object is returned as a result of
-<a href="NoSQLClient.html#prepare">NoSQLClient#prepare</a> method.  It can be passed to
-<a href="NoSQLClient.html#query">NoSQLClient#query</a> method for execution and be reused for multiple
-queries, potentially with different values of bind variables.</div>
+            <div class="class-description usertext">This error indicates that the server is running at a lower protocol
+version than the client (i.e. the client is using a newer protocol
+version than the server supports). The client should attempt to
+decrement its internal protocol version and try again.
+Errors of this class have error code
+<a href="ErrorCode.html#.UNSUPPORTED_PROTOCOL">ErrorCode.UNSUPPORTED_PROTOCOL</a>.</div>
         
     
 </header>
@@ -74,7 +73,7 @@ queries, potentially with different values of bind variables.</div>
 
 
     <ul>
-        <li>PrepareResult</li>
+        <li><a href="NoSQLError.html">NoSQLError</a></li>
     </ul>
 
 
@@ -95,7 +94,7 @@ queries, potentially with different values of bind variables.</div>
 
         
             
-<h4 class="name" id="bindings"><span class="type-signature"></span>bindings<span class="type-signature"> :object</span></h4>
+<h4 class="name" id="cause"><span class="type-signature">(readonly) </span>cause<span class="type-signature"> :Error|undefined</span></h4>
 
 
 
@@ -106,7 +105,7 @@ queries, potentially with different values of bind variables.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stmt.js.html">stmt.js</a>, <a href="stmt.js.html#line58">line 58</a>
+        <a href="error.js.html">error.js</a>, <a href="error.js.html#line87">line 87</a>
     </li></ul></dd>
     
 
@@ -116,6 +115,11 @@ queries, potentially with different values of bind variables.</div>
 
     
 
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="NoSQLError.html#cause">NoSQLError#cause</a>
+    </li></ul></dd>
     
 
     
@@ -146,11 +150,14 @@ queries, potentially with different values of bind variables.</div>
 
 
 <div class="description usertext">
-    Sets and gets the bindings object explicitly.  Bindings object is an
-object which properties contain the bind variables for this prepared
-statement.  For each variable, binding object has property which name
-is the variable name and the value is the variable value.  Note that
-"$" in the variable name is included in its property name.
+    An error that caused this error.  In many cases it is also instance of
+<a href="NoSQLError.html">NoSQLError</a> and may itself have a cause.  You could iterate
+through the chain of causes like this:
+<p>
+<em>for(let cause = err.cause; cause; cause = cause.cause) {...</em>
+<p>
+If this error does not have a cause, the value of this property is
+<em>undefined</em>.
 </div>
 
 
@@ -159,94 +166,10 @@ is the variable name and the value is the variable value.  Note that
     <ul>
         <li>
             
-<span class="param-type">object</span>
+<span class="param-type">Error</span>
+|
 
-
-        </li>
-    </ul>
-
-
-
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>//Setting bindings
-prepStmt.bindings = {
-    $id: 100,
-    $name: 'John'
-};
-//This is equivalent to:
-prepStmt.set('$id', 100);
-prepStmt.set('$name', 'John');</code></pre>
-
-
-
-        
-            
-<h4 class="name" id="queryPlan"><span class="type-signature">(readonly) </span>queryPlan<span class="type-signature"> :string</span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stmt.js.html">stmt.js</a>, <a href="stmt.js.html#line104">line 104</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Query execution plan printout if was requested by
-<a href="NoSQLClient.html#prepare">NoSQLClient#prepare</a> (see <em>opt.getQueryPlan</em>), undefined
-otherwise.
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
+<span class="param-type">undefined</span>
 
 
         </li>
@@ -259,7 +182,7 @@ otherwise.
 
         
             
-<h4 class="name" id="sql"><span class="type-signature">(readonly) </span>sql<span class="type-signature"> :string</span></h4>
+<h4 class="name" id="errorCode"><span class="type-signature">(readonly) </span>errorCode<span class="type-signature"> :<a href="ErrorCode.html">ErrorCode</a></span></h4>
 
 
 
@@ -270,7 +193,7 @@ otherwise.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stmt.js.html">stmt.js</a>, <a href="stmt.js.html#line93">line 93</a>
+        <a href="error.js.html">error.js</a>, <a href="error.js.html#line71">line 71</a>
     </li></ul></dd>
     
 
@@ -280,6 +203,11 @@ otherwise.
 
     
 
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="NoSQLError.html#errorCode">NoSQLError#errorCode</a>
+    </li></ul></dd>
     
 
     
@@ -310,7 +238,7 @@ otherwise.
 
 
 <div class="description usertext">
-    SQL text of this prepared statement.
+    <a href="ErrorCode.html">ErrorCode</a> of this error.
 </div>
 
 
@@ -319,7 +247,201 @@ otherwise.
     <ul>
         <li>
             
-<span class="param-type">string</span>
+<span class="param-type"><a href="ErrorCode.html">ErrorCode</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="operation"><span class="type-signature">(readonly) </span>operation<span class="type-signature"> :Operation|Config|undefined</span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="error.js.html">error.js</a>, <a href="error.js.html#line124">line 124</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="NoSQLError.html#operation">NoSQLError#operation</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>Operation</li>
+        
+            <li>Config</li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Operation that resulted in this error.
+Operation object contains the API and its arguments including
+the options used.  Operation object may not always be available, in
+which case the value of this property is <em>undefined</em>.
+<p>
+If this error happened during creation of new <a href="NoSQLClient.html">NoSQLClient</a> then
+instead of Operation this property contains Config
+used to create <a href="NoSQLClient.html">NoSQLClient</a> instance.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Operation</span>
+|
+
+<span class="param-type">Config</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="retryable"><span class="type-signature">(readonly) </span>retryable<span class="type-signature"> :boolean</span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="error.js.html">error.js</a>, <a href="error.js.html#line106">line 106</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="NoSQLError.html#retryable">NoSQLError#retryable</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>RetryConfig</li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    Indicates whether this error is retryable.
+<p>
+APIs that result in retryable errors are automatically retried by the
+driver's default RetryHandler.  Default retry handler can be
+customized by properties in RetryConfig.  Alternatively, a
+custom RetryHandler can be set as
+RetryConfig#handler.
+<p>
+If necessary, APIs that result in retryable errors may also be
+explicitly retried by the application.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">boolean</span>
 
 
         </li>
@@ -333,259 +455,6 @@ otherwise.
         
     
 
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id="clearAll"><span class="type-signature"></span>clearAll<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stmt.js.html">stmt.js</a>, <a href="stmt.js.html#line84">line 84</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Clears all variables in bindings for this prepared statement.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="set"><span class="type-signature"></span>set<span class="signature">(name, val)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stmt.js.html">stmt.js</a>, <a href="stmt.js.html#line74">line 74</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Sets the named variable in the bindings to use for the query.  Existing
-variables with the same name are silently overwritten. The names and
-types are validated when the query is executed.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Name of the variable</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>val</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">FieldValue</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Value of the variable of the appropriate type
-for this variable</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
     
 
     

@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>PreparedStatement - Oracle NoSQL Database Node.js SDK</title>
+    <title>ReplicaAckPolicy - Oracle NoSQL Database Node.js SDK</title>
     
     
     
@@ -37,7 +37,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">PreparedStatement</h1>
+    <h1 class="page-title">ReplicaAckPolicy</h1>
     
 
     
@@ -50,33 +50,20 @@
 <header>
     
         <h2>
-        PreparedStatement
+        ReplicaAckPolicy
         </h2>
         
-            <div class="class-description usertext">A class encapsulating a prepared query statement. It includes
-state that can be sent to a server and executed without re-parsing the
-query. It includes bind variables which may be set for each successive use
-of the query.  PreparedStatement object is returned as a result of
-<a href="NoSQLClient.html#prepare">NoSQLClient#prepare</a> method.  It can be passed to
-<a href="NoSQLClient.html#query">NoSQLClient#query</a> method for execution and be reused for multiple
-queries, potentially with different values of bind variables.</div>
+            <div class="class-description usertext">On premise only: see Durability
+A replicated environment makes it possible to increase an application's
+transaction commit guarantees by committing changes to its replicas on
+the network. ReplicaAckPolicy defines the policy for how such network
+commits are handled.</div>
         
     
 </header>
 
 <article>
     
-
-    
-        <h3 class="subsection-title">Extends</h3>
-
-        
-
-
-    <ul>
-        <li>PrepareResult</li>
-    </ul>
-
 
     
 
@@ -95,7 +82,7 @@ queries, potentially with different values of bind variables.</div>
 
         
             
-<h4 class="name" id="bindings"><span class="type-signature"></span>bindings<span class="type-signature"> :object</span></h4>
+<h4 class="name" id=".ALL"><span class="type-signature">(static) </span>ALL<span class="type-signature"> :<a href="ReplicaAckPolicy.html">ReplicaAckPolicy</a></span></h4>
 
 
 
@@ -106,12 +93,15 @@ queries, potentially with different values of bind variables.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stmt.js.html">stmt.js</a>, <a href="stmt.js.html#line58">line 58</a>
+        <a href="constants.js.html">constants.js</a>, <a href="constants.js.html#line357">line 357</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>5.3.0</li></ul></dd>
     
 
     
@@ -146,11 +136,10 @@ queries, potentially with different values of bind variables.</div>
 
 
 <div class="description usertext">
-    Sets and gets the bindings object explicitly.  Bindings object is an
-object which properties contain the bind variables for this prepared
-statement.  For each variable, binding object has property which name
-is the variable name and the value is the variable value.  Note that
-"$" in the variable name is included in its property name.
+    All replicas must acknowledge that they have committed the
+transaction. This policy should be selected only if your replication
+group has a small number of replicas, and those replicas are on
+extremely reliable networks and servers.
 </div>
 
 
@@ -159,94 +148,7 @@ is the variable name and the value is the variable value.  Note that
     <ul>
         <li>
             
-<span class="param-type">object</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>//Setting bindings
-prepStmt.bindings = {
-    $id: 100,
-    $name: 'John'
-};
-//This is equivalent to:
-prepStmt.set('$id', 100);
-prepStmt.set('$name', 'John');</code></pre>
-
-
-
-        
-            
-<h4 class="name" id="queryPlan"><span class="type-signature">(readonly) </span>queryPlan<span class="type-signature"> :string</span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stmt.js.html">stmt.js</a>, <a href="stmt.js.html#line104">line 104</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Query execution plan printout if was requested by
-<a href="NoSQLClient.html#prepare">NoSQLClient#prepare</a> (see <em>opt.getQueryPlan</em>), undefined
-otherwise.
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
+<span class="param-type"><a href="ReplicaAckPolicy.html">ReplicaAckPolicy</a></span>
 
 
         </li>
@@ -259,7 +161,7 @@ otherwise.
 
         
             
-<h4 class="name" id="sql"><span class="type-signature">(readonly) </span>sql<span class="type-signature"> :string</span></h4>
+<h4 class="name" id=".NONE"><span class="type-signature">(static) </span>NONE<span class="type-signature"> :<a href="ReplicaAckPolicy.html">ReplicaAckPolicy</a></span></h4>
 
 
 
@@ -270,12 +172,15 @@ otherwise.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stmt.js.html">stmt.js</a>, <a href="stmt.js.html#line93">line 93</a>
+        <a href="constants.js.html">constants.js</a>, <a href="constants.js.html#line367">line 367</a>
     </li></ul></dd>
     
 
     
 
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>5.3.0</li></ul></dd>
     
 
     
@@ -310,7 +215,10 @@ otherwise.
 
 
 <div class="description usertext">
-    SQL text of this prepared statement.
+    No transaction commit acknowledgments are required and the master
+will never wait for replica acknowledgments. In this case,
+transaction durability is determined entirely by the type of commit
+that is being performed on the master.
 </div>
 
 
@@ -319,7 +227,87 @@ otherwise.
     <ul>
         <li>
             
-<span class="param-type">string</span>
+<span class="param-type"><a href="ReplicaAckPolicy.html">ReplicaAckPolicy</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".SIMPLE_MAJORITY"><span class="type-signature">(static) </span>SIMPLE_MAJORITY<span class="type-signature"> :<a href="ReplicaAckPolicy.html">ReplicaAckPolicy</a></span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="constants.js.html">constants.js</a>, <a href="constants.js.html#line378">line 378</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>5.3.0</li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    A simple majority of replicas must acknowledge that they have
+committed the transaction. This acknowledgment policy, in
+conjunction with an election policy which requires at least a simple
+majority, ensures that the changes made by the transaction remains
+durable if a new election is held.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="ReplicaAckPolicy.html">ReplicaAckPolicy</a></span>
 
 
         </li>
@@ -333,259 +321,6 @@ otherwise.
         
     
 
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id="clearAll"><span class="type-signature"></span>clearAll<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stmt.js.html">stmt.js</a>, <a href="stmt.js.html#line84">line 84</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Clears all variables in bindings for this prepared statement.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="set"><span class="type-signature"></span>set<span class="signature">(name, val)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="stmt.js.html">stmt.js</a>, <a href="stmt.js.html#line74">line 74</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Sets the named variable in the bindings to use for the query.  Existing
-variables with the same name are silently overwritten. The names and
-types are validated when the query is executed.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Name of the variable</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>val</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">FieldValue</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Value of the variable of the appropriate type
-for this variable</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
     
 
     
