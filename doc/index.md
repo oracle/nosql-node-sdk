@@ -1,6 +1,6 @@
 # Oracle NoSQL Database Node.js SDK
 
-This is version 5.2 of Oracle NoSQL Database Node.js SDK for The Oracle NoSQL
+This is version 5.3 of Oracle NoSQL Database Node.js SDK for The Oracle NoSQL
 Database. It supports both the
 [Oracle NoSQL Database Cloud Service](https://cloud.oracle.com/nosqldatabase)
 and the on-premise product, [Oracle NoSQL Database](https://www.oracle.com/database/technologies/related/nosql.html).
