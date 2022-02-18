@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
-## Unpublished
+## 5.3.0 = 2022-02-18
 
 **Added**
 
@@ -16,6 +16,7 @@ for-await-of loop.
   * Changes to TableLimits and addition of CapacityMode to specify on-demand tables
 * Existing row modification is made available in results when the operation fails
   and the previous row is requested
+* Modification time is made available in get operations
 * On-premise only: support for setting Durability in write operations
   * Added Durability class and methods to set Durability
 
