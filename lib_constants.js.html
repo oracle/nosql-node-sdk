@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>lib/constants.js - Oracle NoSQL Database Node.js SDK</title>
+    
+    
+    
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav class="wrap">
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-connect-cloud.html">Connecting an Application to Oracle NoSQL Database Cloud Service</a></li><li><a href="tutorial-connect-on-prem.html">Connecting an Application to On-Premise Oracle NoSQL Database</a></li><li><a href="tutorial-tables.html">Working With Tables</a></li></ul><h3>Classes</h3><ul><li><a href="AdminState.html">AdminState</a><ul class='methods'><li data-type='method' style='display: none;'><a href="AdminState.html#toString">toString</a></li></ul></li><li><a href="CapacityMode.html">CapacityMode</a><ul class='methods'><li data-type='method' style='display: none;'><a href="CapacityMode.html#toString">toString</a></li></ul></li><li><a href="Consistency.html">Consistency</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Consistency.html#toString">toString</a></li></ul></li><li><a href="Enum.html">Enum</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Enum.html#toString">toString</a></li></ul></li><li><a href="ErrorCode.html">ErrorCode</a><ul class='methods'><li data-type='method' style='display: none;'><a href="ErrorCode.html#toString">toString</a></li></ul></li><li><a href="NoSQLArgumentError.html">NoSQLArgumentError</a></li><li><a href="NoSQLAuthorizationError.html">NoSQLAuthorizationError</a></li><li><a href="NoSQLClient.html">NoSQLClient</a><ul class='methods'><li data-type='method' style='display: none;'><a href="NoSQLClient.html#adminDDL">adminDDL</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#adminStatus">adminStatus</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#close">close</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#delete">delete</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#deleteIfVersion">deleteIfVersion</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#deleteMany">deleteMany</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#deleteRange">deleteRange</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#forCompletion">forCompletion</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#forTableState">forTableState</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#get">get</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#getIndex">getIndex</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#getIndexes">getIndexes</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#getSerialVersion">getSerialVersion</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#getTable">getTable</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#getTableUsage">getTableUsage</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#listNamespaces">listNamespaces</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#listRoles">listRoles</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#listTables">listTables</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#listUsers">listUsers</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#prepare">prepare</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#put">put</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#putIfAbsent">putIfAbsent</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#putIfPresent">putIfPresent</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#putIfVersion">putIfVersion</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#putMany">putMany</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#query">query</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#queryIterable">queryIterable</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#setTableLimits">setTableLimits</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#tableDDL">tableDDL</a></li><li data-type='method' style='display: none;'><a href="NoSQLClient.html#writeMany">writeMany</a></li></ul></li><li><a href="NoSQLError.html">NoSQLError</a></li><li><a href="NoSQLNetworkError.html">NoSQLNetworkError</a></li><li><a href="NoSQLProtocolError.html">NoSQLProtocolError</a></li><li><a href="NoSQLQueryError.html">NoSQLQueryError</a></li><li><a href="NoSQLServiceError.html">NoSQLServiceError</a></li><li><a href="NoSQLTimeoutError.html">NoSQLTimeoutError</a></li><li><a href="NoSQLUnsupportedProtocolError.html">NoSQLUnsupportedProtocolError</a></li><li><a href="PreparedStatement.html">PreparedStatement</a><ul class='methods'><li data-type='method' style='display: none;'><a href="PreparedStatement.html#clearAll">clearAll</a></li><li data-type='method' style='display: none;'><a href="PreparedStatement.html#set">set</a></li></ul></li><li><a href="Region.html">Region</a><ul class='methods'><li data-type='method' style='display: none;'><a href="Region.html#toString">toString</a></li></ul></li><li><a href="ReplicaAckPolicy.html">ReplicaAckPolicy</a></li><li><a href="ServiceType.html">ServiceType</a><ul class='methods'><li data-type='method' style='display: none;'><a href="ServiceType.html#toString">toString</a></li></ul></li><li><a href="SimpleRateLimiter.html">SimpleRateLimiter</a><ul class='methods'><li data-type='method' style='display: none;'><a href="SimpleRateLimiter.html#consumeUnits">consumeUnits</a></li><li data-type='method' style='display: none;'><a href="SimpleRateLimiter.html#onThrottle">onThrottle</a></li><li data-type='method' style='display: none;'><a href="SimpleRateLimiter.html#setLimit">setLimit</a></li></ul></li><li><a href="SyncPolicy.html">SyncPolicy</a><ul class='methods'><li data-type='method' style='display: none;'><a href="SyncPolicy.html#toString">toString</a></li></ul></li><li><a href="TableState.html">TableState</a><ul class='methods'><li data-type='method' style='display: none;'><a href="TableState.html#toString">toString</a></li></ul></li><li><a href="TTLUtil.html">TTLUtil</a><ul class='methods'><li data-type='method' style='display: none;'><a href="TTLUtil.html#.fromExpirationTime">fromExpirationTime</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.ofDays">ofDays</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.ofHours">ofHours</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.toDays">toDays</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.toExpirationTime">toExpirationTime</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.toExpirationTimeMillis">toExpirationTimeMillis</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.toHours">toHours</a></li><li data-type='method' style='display: none;'><a href="TTLUtil.html#.toMillis">toMillis</a></li></ul></li></ul><h3>Interfaces</h3><ul><li><a href="RateLimiter.html">RateLimiter</a><ul class='methods'><li data-type='method' style='display: none;'><a href="RateLimiter.html#consumeUnits">consumeUnits</a></li><li data-type='method' style='display: none;'><a href="RateLimiter.html#onThrottle">onThrottle</a></li><li data-type='method' style='display: none;'><a href="RateLimiter.html#setLimit">setLimit</a></li></ul></li></ul><h3>Events</h3><ul><li><a href="NoSQLClient.html#event:consumedCapacity">consumedCapacity</a></li><li><a href="NoSQLClient.html#event:error">error</a></li><li><a href="NoSQLClient.html#event:retryable">retryable</a></li><li><a href="NoSQLClient.html#event:tableState">tableState</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AdminResult">AdminResult</a></li><li><a href="global.html#AuthConfig">AuthConfig</a></li><li><a href="global.html#AuthorizationProvider">AuthorizationProvider</a></li><li><a href="global.html#buildNav">buildNav</a></li><li><a href="global.html#Config">Config</a></li><li><a href="global.html#ConsumedCapacity">ConsumedCapacity</a></li><li><a href="global.html#ContinuationKey">ContinuationKey</a></li><li><a href="global.html#DBNumberConfig">DBNumberConfig</a></li><li><a href="global.html#delay">delay</a></li><li><a href="global.html#DelegationTokenProvider">DelegationTokenProvider</a></li><li><a href="global.html#DeleteResult">DeleteResult</a></li><li><a href="global.html#doRetry">doRetry</a></li><li><a href="global.html#Durability">Durability</a></li><li><a href="global.html#FieldRange">FieldRange</a></li><li><a href="global.html#FieldValue">FieldValue</a></li><li><a href="global.html#getAuthorization">getAuthorization</a></li><li><a href="global.html#GetResult">GetResult</a></li><li><a href="global.html#IAMConfig">IAMConfig</a></li><li><a href="global.html#IAMCredentials">IAMCredentials</a></li><li><a href="global.html#IAMCredentialsProvider">IAMCredentialsProvider</a></li><li><a href="global.html#IndexInfo">IndexInfo</a></li><li><a href="global.html#Key">Key</a></li><li><a href="global.html#KVStoreAuthConfig">KVStoreAuthConfig</a></li><li><a href="global.html#KVStoreCredentials">KVStoreCredentials</a></li><li><a href="global.html#KVStoreCredentialsProvider">KVStoreCredentialsProvider</a></li><li><a href="global.html#ListTablesResult">ListTablesResult</a></li><li><a href="global.html#loadDelegationToken">loadDelegationToken</a></li><li><a href="global.html#loadIAMCredentials">loadIAMCredentials</a></li><li><a href="global.html#loadKVStoreCredentials">loadKVStoreCredentials</a></li><li><a href="global.html#MultiDeleteResult">MultiDeleteResult</a></li><li><a href="global.html#NumberLibConfig">NumberLibConfig</a></li><li><a href="global.html#NumberLibMethods">NumberLibMethods</a></li><li><a href="global.html#NumberLibPrecision">NumberLibPrecision</a></li><li><a href="global.html#NumberLibRoundingMode">NumberLibRoundingMode</a></li><li><a href="global.html#Operation">Operation</a></li><li><a href="global.html#PrepareResult">PrepareResult</a></li><li><a href="global.html#publish">publish</a></li><li><a href="global.html#PutResult">PutResult</a></li><li><a href="global.html#QueryResult">QueryResult</a></li><li><a href="global.html#RetryConfig">RetryConfig</a></li><li><a href="global.html#RetryHandler">RetryHandler</a></li><li><a href="global.html#RoundingModesMap">RoundingModesMap</a></li><li><a href="global.html#Row">Row</a></li><li><a href="global.html#TableLimits">TableLimits</a></li><li><a href="global.html#TableResult">TableResult</a></li><li><a href="global.html#TableUsage">TableUsage</a></li><li><a href="global.html#TableUsageResult">TableUsageResult</a></li><li><a href="global.html#TimeToLive">TimeToLive</a></li><li><a href="global.html#UserInfo">UserInfo</a></li><li><a href="global.html#Version">Version</a></li><li><a href="global.html#WriteMultipleResult">WriteMultipleResult</a></li><li><a href="global.html#WriteOperation">WriteOperation</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">lib/constants.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*-
+ * Copyright (c) 2018, 2022 Oracle and/or its affiliates. All rights reserved.
+ *
+ * Licensed under the Universal Permissive License v 1.0 as shown at
+ *  https://oss.oracle.com/licenses/upl/
+ */
+
+'use strict';
+
+const assert = require('assert');
+
+/**
+ * Defines enumeration types and constants used by the driver.
+ */
+
+/**
+ * @classdesc Base class for all enumerations used in the driver. All
+ * enumeration constants are instances of the subclasses of this class.
+ * Driver defines fixed number of members of each enumeration and seals the
+ * enumeration class so that new members cannot be created.
+ * @hideconstructor
+ *
+ */
+class Enum {
+    constructor(ordinal, desc, name) {
+        //Prevent construction of new objects by the user
+        assert(!this.constructor._sealed);
+        if (ordinal != null) {
+            this._ordinal = ordinal;
+        } else {
+            if (this.constructor._ordinalSeq == null) {
+                this.constructor._ordinalSeq = 0;
+            }
+            this._ordinal = this.constructor._ordinalSeq++;
+        }
+        this._desc = desc;
+        this._name = name;
+    }
+
+    /**
+     * Name of the enumeration constant, usually the same as its symbol name.
+     * @type {string}
+     * @readonly
+     */
+    get name() {
+        return this._name;
+    }
+
+    /**
+     * Numeric integer value of the enumeration constant.
+     * @type {number}
+     * @readonly
+     */
+    get ordinal() {
+        return this._ordinal;
+    }
+
+    /**
+     * Optional description of the enumeration constant.
+     * @type {string}
+     * @readonly
+     */
+    get description() {
+        return this._desc;
+    }
+
+    /**
+     * Returns string representation of enumeration constant as
+     * EnumClass.ConstantName, e.g. 'Consistenty.Absolute'
+     * @returns {string}
+     */
+    toString() {
+        return this.constructor.name + '.' + this._name;
+    }
+
+    static get values() {
+        const enumClass = this;
+        const vals = [];
+        for(let val of Object.values(enumClass)) {
+            if (val instanceof enumClass) {
+                vals.push(val);
+            }
+        }
+        return vals;
+    }
+
+    static get names() {
+        return this.values.map(val => val.name);
+    }
+
+    static find(predicate) {
+        const enumClass = this;
+        for(let val of Object.values(enumClass)) {
+            if (val instanceof enumClass &amp;&amp; predicate(val)) {
+                return val;
+            }
+        }
+    }
+
+    static fromOrdinal(n) {
+        const enumClass = this;
+        for(let val of Object.values(enumClass)) {
+            if (val instanceof enumClass &amp;&amp; val.ordinal == n) {
+                return val;
+            }
+        }
+        throw new RangeError(
+            `Ordinal ${n} is not valid for ${enumClass.name} enumeration`);
+    }
+
+    static seal() {
+        const enumClass = this;
+        for(let [key, val] of Object.entries(enumClass)) {
+            if (val instanceof enumClass) {
+                if (!val._name) { //Assign name if was not specified
+                    val._name = key;
+                }
+                Object.freeze(val);
+            }
+        }
+        enumClass._sealed = true;
+        Object.freeze(enumClass);
+    }
+}
+
+/**
+ * Service type is specified in the initial configuration used to create
+ * {@link NoSQLClient} instance and indicates what kind of service the
+ * driver will be using.  Currently supported values are
+ * {@link ServiceType.CLOUDSIM}, {@link ServiceType.CLOUD} and
+ * {@link ServiceType.KVSTORE}.  In addition to {@link ServiceType}
+ * enumeration, these values may be specified as strings "CLOUDSIM", "CLOUD"
+ * or "KVSTORE", case-insensitive.  This is useful if using JSON configuration
+ * file.  If {@link ServiceType} is not present in the initial configuration,
+ * the driver will try to deduce service type from the
+ * information provided in authorization property {@link Config}#auth (see
+ * {@link AuthConfig}) in the following way:
+ * &lt;ul>
+ * &lt;li>If {@link Config}#auth is undefined or null, the service type is
+ * determined as follows: if {@link Config}#region is specified, the service
+ * type defaults to {@link ServiceType.CLOUD}, otherwise it defaults to
+ * {@link ServiceType.CLOUDSIM}
+ * &lt;li>If {@link Config}#auth contains &lt;em>iam&lt;/em> property, the service
+ * type is assumed to be {@link ServiceType.CLOUD}&lt;/li>
+ * &lt;li>If {@link Config}#auth constains &lt;em>kvstore&lt;/em> property, the service
+ * type is assumed to be {@link ServiceType.KVSTORE}.  Note that unless
+ * {@link Config}#serviceType is explicitly specified, you may not specify
+ * both &lt;em>iam&lt;/em> and &lt;em>kvstore&lt;/em> properties in {@link AuthConfig}
+ * at the same time.  You may specify value &lt;em>{}&lt;/em> (empty object) for
+ * &lt;em>kvstore&lt;/em> property to connect to non-secure kvstore, although it is
+ * advisable to specify the service type explicitly in this case.  See
+ * {@link ServiceType.KVSTORE}&lt;/li>
+ * &lt;li>If {@link Config}#auth does not contain either of the above properties,
+ * the driver will check if it contains user-specified
+ * {@link AuthorizationProvider} ({@link AuthConfig}#provider).  In this case
+ * the service type will remain undefined and user-specified provider will be
+ * used to control access to the service.  If there is no user-specified
+ * {@link AuthorizationProvider} in {@link Config}#auth, this is equivalent to
+ * {@link Config}#auth not defined and the service type will default to
+ * {@link ServiceType.CLOUD} or {@link ServiceType.CLOUDSIM} as described
+ * above&lt;/li>
+ * &lt;/ul>
+ *
+ * @extends Enum
+ * @hideconstructor
+ *
+ * @see {@link AuthConfig}
+ * @see {@link AuthorizationProvider}
+ */
+class ServiceType extends Enum {}
+
+/**
+ * Cloud Simulator, no authorization used.
+ * @tutorial connect-cloud
+ */
+ServiceType.CLOUDSIM = new ServiceType(0);
+
+/**
+ * Oracle NoSQL Cloud Service.  Authorization is managed by IAM.
+ * @see {@link IAMConfig}
+ * @tutorial connect-cloud
+ */
+ServiceType.CLOUD = new ServiceType(1);
+
+/**
+ * On Premise Oracle NoSQL Database.  This includes both secure and non-secure
+ * stores.  For secure store, authentication information must be provided in
+ * {@link AuthConfig}#kvstore as {@link KVStoreAuthConfig}.  For non-secure
+ * store, it is enough to specify {@link Config}#serviceType to be
+ * {@link ServiceType.KVSTORE} without having {@link AuthConfig}#kvstore
+ * property.
+ * @see {@link KVStoreAuthConfig}
+ * @tutorial connect-on-prem
+ */
+ServiceType.KVSTORE = new ServiceType(2);
+
+/**
+ * @ignore
+ */
+ServiceType.MINICLOUD = new ServiceType(3); //internal use only
+ServiceType.MINICLOUD._isInternal = true;
+
+/**
+ * @ignore
+ */
+ServiceType.DEVPOD = new ServiceType(3); //internal use only
+ServiceType.DEVPOD._isInternal = true;
+
+ServiceType.seal();
+
+/**
+ * Consistency is used to provide consistency guarantees for read operations.
+ * &lt;p>
+ * {@link Consistency.ABSOLUTE} consistency may be specified to guarantee that
+ * current values are read. {@link Consistency.EVENTUAL} consistency means
+ * that the values read may be very slightly out of date.
+ * {@link Consistency.ABSOLUTE} consistency results in higher cost, consuming
+ * twice the number of read units for the same data relative to
+ * {@link Consistency.EVENTUAL} consistency, and should only be used when
+ * required.
+ * &lt;/p>
+ * &lt;p>
+ * It is possible to set a default Consistency for a {@link NoSQLClient}
+ * instance by providing it in the initial configuration as
+ * {@link Config}#consistency.  In JSON configuration file, you may use string
+ * values such as "EVENTUAL" or "ABSOLUTE".  If no consistency is specified
+ * for an operation and there is no default value,
+ * {@link Consistency.EVENTUAL} is used.
+ * &lt;/p>
+ * &lt;p>
+ * Consistency can be specified in the options(&lt;em>opt&lt;/em>) argument for all
+ * read operations.
+ * &lt;/p>
+ * @extends Enum
+ * @hideconstructor
+ */
+class Consistency extends Enum {}
+
+/**
+ * Absolute consistency
+ * @type {Consistency}
+ */
+Consistency.ABSOLUTE = new Consistency(0);
+
+/**
+ * Eventual consistency
+ * @type {Consistency}
+ */
+Consistency.EVENTUAL = new Consistency(1);
+
+Consistency.seal();
+
+/**
+ * CapacityMode specifies the type of capacity that will be set on a table. It is
+ * used in table creation and table capacity updates. See {@link TableLimits}.
+ * &lt;p>
+ * Table capacity is only used in the NoSQL Cloud Service.
+ * &lt;/p>
+ * &lt;p>
+ * {@link CapacityMode.PROVISIONED} is the default mode. In this mode, the
+ * application defines the specified maximum read and write throughput for
+ * a table.
+ * {@link CapacityMode.ON_DEMAND} mode allows for flexible throughput usage.
+ * In this mode, only the maximum storage size is specified.
+ * &lt;/p>
+ * @extends Enum
+ * @hideconstructor
+ */
+class CapacityMode extends Enum {}
+
+/**
+ * Provisioned mode. This is the default.
+ * @type {CapacityMode}
+ * @since 5.3.0
+ */
+CapacityMode.PROVISIONED = new CapacityMode(1);
+
+/**
+ * On Demand mode.
+ * @type {CapacityMode}
+ * @since 5.3.0
+ */
+CapacityMode.ON_DEMAND = new CapacityMode(2);
+
+CapacityMode.seal();
+
+
+/**
+ * On premise only: see {@link Durability}
+ * Defines the synchronization policy to be used when committing a
+ * transaction. High levels of synchronization offer a greater guarantee
+ * that the transaction is persistent to disk, but trade that off for
+ * lower performance.
+ * @extends Enum
+ * @hideconstructor
+ */
+class SyncPolicy extends Enum {}
+
+/**
+ * Write and synchronously flush the log on transaction commit.
+ * Transactions exhibit all the ACID (atomicity, consistency,
+ * isolation, and durability) properties.
+ * @type {SyncPolicy}
+ * @since 5.3.0
+ */
+SyncPolicy.SYNC = new SyncPolicy(1);
+
+/**
+ * Do not write or synchronously flush the log on transaction commit.
+ * Transactions exhibit the ACI (atomicity, consistency, and isolation)
+ * properties, but not D (durability); that is, database integrity will
+ * be maintained, but if the application or system fails, it is
+ * possible some number of the most recently committed transactions may
+ * be undone during recovery. The number of transactions at risk is
+ * governed by how many log updates can fit into the log buffer, how
+ * often the operating system flushes dirty buffers to disk, and how
+ * often log checkpoints occur.
+ * @type {SyncPolicy}
+ * @since 5.3.0
+ */
+SyncPolicy.NO_SYNC = new SyncPolicy(2);
+
+/**
+ * Write but do not synchronously flush the log on transaction commit.
+ * Transactions exhibit the ACI (atomicity, consistency, and isolation)
+ * properties, but not D (durability); that is, database integrity will
+ * be maintained, but if the operating system fails, it is possible
+ * some number of the most recently committed transactions may be
+ * undone during recovery. The number of transactions at risk is
+ * governed by how often the operating system flushes dirty buffers to
+ * disk, and how often log checkpoints occur.
+ * @type {SyncPolicy}
+ * @since 5.3.0
+ */
+SyncPolicy.WRITE_NO_SYNC = new SyncPolicy(3);
+
+SyncPolicy.seal();
+
+/**
+ * On premise only: see {@link Durability}
+ * A replicated environment makes it possible to increase an application's
+ * transaction commit guarantees by committing changes to its replicas on
+ * the network. ReplicaAckPolicy defines the policy for how such network
+ * commits are handled.
+ * @hideconstructor
+ */
+class ReplicaAckPolicy extends Enum {}
+
+/**
+ * All replicas must acknowledge that they have committed the
+ * transaction. This policy should be selected only if your replication
+ * group has a small number of replicas, and those replicas are on
+ * extremely reliable networks and servers.
+ * @type {ReplicaAckPolicy}
+ * @since 5.3.0
+ */
+ReplicaAckPolicy.ALL = new ReplicaAckPolicy(1);
+
+/**
+ * No transaction commit acknowledgments are required and the master
+ * will never wait for replica acknowledgments. In this case,
+ * transaction durability is determined entirely by the type of commit
+ * that is being performed on the master.
+ * @type {ReplicaAckPolicy}
+ * @since 5.3.0
+ */
+ReplicaAckPolicy.NONE = new ReplicaAckPolicy(2);
+
+/**
+ * A simple majority of replicas must acknowledge that they have
+ * committed the transaction. This acknowledgment policy, in
+ * conjunction with an election policy which requires at least a simple
+ * majority, ensures that the changes made by the transaction remains
+ * durable if a new election is held.
+ * @type {ReplicaAckPolicy}
+ * @since 5.3.0
+ */
+ReplicaAckPolicy.SIMPLE_MAJORITY = new ReplicaAckPolicy(3);
+
+ReplicaAckPolicy.seal();
+
+
+//Not currently used by the driver.
+/** @ignore */
+class ScanDirection extends Enum {}
+ScanDirection.UNORDERED = new ScanDirection(0);
+ScanDirection.FORWARD = new ScanDirection(1);
+ScanDirection.REVERSE = new ScanDirection(2);
+ScanDirection.seal();
+
+/**
+ * Describes the current state of the table.  See
+ * {@link NoSQLClient#tableDDL}.
+ * @extends Enum
+ * @hideconstructor
+ */
+class TableState extends Enum {}
+
+/**
+ * The table is ready to be used. This is the steady state after creation or
+ * modification.
+ * @type TableState
+ */
+TableState.ACTIVE = new TableState(0);
+
+/**
+ * The table is being created and cannot yet be used.
+ * @type TableState
+ */
+TableState.CREATING = new TableState(1);
+
+/**
+ * The table has been dropped or does not exist.
+ * @type TableState
+ */
+TableState.DROPPED = new TableState(2);
+
+/**
+ * The table is being dropped and cannot be used.
+ * @type TableState
+ */
+TableState.DROPPING = new TableState(3);
+
+/**
+ * The table is being updated. It is available for normal use, but additional
+ * table modification operations are not permitted while the table is in this
+ * state.
+ * @type TableState
+ */
+TableState.UPDATING = new TableState(4);
+
+TableState.seal();
+
+/**
+ * On premise only.
+ * &lt;p>
+ * Describes the current state of the operation performed by
+ * {@link NoSQLClient#adminDDL}.
+ * @extends Enum
+ * @hideconstructor
+ */
+class AdminState extends Enum {}
+
+/**
+ * Operation is complete and successful.
+ * @type AdminState
+ */
+AdminState.COMPLETE = new AdminState(0);
+
+/**
+ * Operation is in progress.
+ * @type AdminState
+ */
+AdminState.IN_PROGRESS = new AdminState(1);
+
+AdminState.seal();
+
+/**
+ * For now this is internal, but we may expose this enumeration
+ * when we implement custom type mappings.
+ * @ignore
+ */
+class DBType extends Enum {}
+DBType.ARRAY = new DBType(0);
+DBType.BINARY = new DBType(1);
+DBType.BOOLEAN = new DBType(2);
+DBType.DOUBLE = new DBType(3);
+DBType.INTEGER = new DBType(4);
+DBType.LONG = new DBType(5);
+DBType.MAP = new DBType(6);
+DBType.STRING = new DBType(7);
+DBType.TIMESTAMP = new DBType(8);
+DBType.NUMBER = new DBType(9);
+DBType.JSON_NULL = new DBType(10);
+DBType.NULL = new DBType(11);
+DBType.EMPTY = new DBType(12);
+DBType.seal();
+
+//Only used internally.  Not clear if some limits (in particular request
+//sizes) are specific to binary protocol.  If so, they could be moved there.
+
+const Limits = {
+    REQUEST_SIZE: 2 * 1024 * 1024,
+    BATCH_REQUEST_SIZE: 25 * 1024 * 1024,
+    BATCH_OP_NUMBER: 50,
+    READ_KB: 2 * 1024,
+    WRITE_KB: 2 * 1024,
+    //Maximum timeout for single http request accepted by the proxy
+    MAX_REQUEST_TIMEOUT: 30000
+};
+
+//Only used internally by advanced query, should not show up in the results.
+const EMPTY_VALUE = Symbol('EMPTY');
+
+//HTTP-related constants, only used internally
+const HttpConstants = {
+    POST: 'POST',
+    GET: 'GET',
+    DELETE: 'DELETE',
+    PUT: 'PUT',
+    CONTENT_TYPE: 'Content-Type',
+    APPLICATION_JSON: 'application/json',
+    CONNECTION: 'Connection',
+    ACCEPT: 'Accept',
+    AUTHORIZATION: 'Authorization',
+    CONTENT_LENGTH: 'Content-Length',
+    USER_AGENT: 'User-Agent',
+    CACHE_CONTROL: 'cache-control',
+    HOST: 'host',
+    DATE: 'date',
+    REQUEST_ID: 'x-nosql-request-id',
+    DATA_PATH_NAME: 'data',
+    NOSQL_VERSION: 'V2',
+    NOSQL_PATH_NAME: 'nosql',
+    COMPARTMENT_ID: 'x-nosql-compartment-id',
+    REQUEST_TARGET: '(request-target)',
+    CONTENT_SHA256: 'x-content-sha256',
+    HTTP_OK: 200,
+    HTTP_BAD_REQUEST: 400,
+    HTTP_UNAUTHORIZED: 401,
+    HTTP_NOT_FOUND: 404,
+    HTTP_CONFLICT: 409,
+    HTTP_SERVER_ERROR: 500,
+    HTTP_UNAVAILABLE: 503
+};
+
+HttpConstants.NOSQL_PREFIX = HttpConstants.NOSQL_VERSION + '/' +
+    HttpConstants.NOSQL_PATH_NAME;
+HttpConstants.NOSQL_DATA_PATH = HttpConstants.NOSQL_PREFIX + '/' +
+    HttpConstants.DATA_PATH_NAME;
+
+const PACKAGE_VERSION = require('../package.json').version;
+delete require.cache[require.resolve('../package.json')];
+
+module.exports = {
+    Enum,
+    ServiceType,
+    Consistency,
+    SyncPolicy,
+    ReplicaAckPolicy,
+    CapacityMode,
+    ScanDirection,
+    TableState,
+    AdminState,
+    DBType,
+    Limits,
+    EMPTY_VALUE,
+    HttpConstants,
+    PACKAGE_VERSION
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc</a> using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

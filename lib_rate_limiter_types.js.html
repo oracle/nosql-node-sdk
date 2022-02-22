@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>CapacityMode - Oracle NoSQL Database Node.js SDK</title>
+    <title>lib/rate_limiter/types.js - Oracle NoSQL Database Node.js SDK</title>
     
     
     
@@ -37,579 +37,207 @@
 
 <div id="main">
     
-    <h1 class="page-title">CapacityMode</h1>
-    
-
-    
-
-
-
-
-<section>
-
-<header>
-    
-        <h2>
-        CapacityMode
-        </h2>
-        
-            <div class="class-description usertext">CapacityMode specifies the type of capacity that will be set on a table. It is
-used in table creation and table capacity updates. See <a href="global.html#TableLimits">TableLimits</a>.
-<p>
-Table capacity is only used in the NoSQL Cloud Service.
-</p>
-<p>
-<a href="CapacityMode.html#.PROVISIONED">CapacityMode.PROVISIONED</a> is the default mode. In this mode, the
-application defines the specified maximum read and write throughput for
-a table.
-<a href="CapacityMode.html#.ON_DEMAND">CapacityMode.ON_DEMAND</a> mode allows for flexible throughput usage.
-In this mode, only the maximum storage size is specified.
-</p></div>
-        
-    
-</header>
-
-<article>
-    
-
-    
-        <h3 class="subsection-title">Extends</h3>
-
-        
-
-
-    <ul>
-        <li><a href="Enum.html">Enum</a></li>
-    </ul>
-
-
-    
-
-    
-
-    
-    
-    
-
-     
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        
-            
-<h4 class="name" id=".ON_DEMAND"><span class="type-signature">(static) </span>ON_DEMAND<span class="type-signature"> :<a href="CapacityMode.html">CapacityMode</a></span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_constants.js.html">lib/constants.js</a>, <a href="lib_constants.js.html#line283">line 283</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-since">Since:</dt>
-    <dd class="tag-since"><ul class="dummy"><li>5.3.0</li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    On Demand mode.
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="CapacityMode.html">CapacityMode</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id=".PROVISIONED"><span class="type-signature">(static) </span>PROVISIONED<span class="type-signature"> :<a href="CapacityMode.html">CapacityMode</a></span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_constants.js.html">lib/constants.js</a>, <a href="lib_constants.js.html#line276">line 276</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-since">Since:</dt>
-    <dd class="tag-since"><ul class="dummy"><li>5.3.0</li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Provisioned mode. This is the default.
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type"><a href="CapacityMode.html">CapacityMode</a></span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="description"><span class="type-signature">(readonly) </span>description<span class="type-signature"> :string</span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_constants.js.html">lib/constants.js</a>, <a href="lib_constants.js.html#line63">line 63</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Enum.html#description">Enum#description</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Optional description of the enumeration constant.
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="name"><span class="type-signature">(readonly) </span>name<span class="type-signature"> :string</span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_constants.js.html">lib/constants.js</a>, <a href="lib_constants.js.html#line45">line 45</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Enum.html#name">Enum#name</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Name of the enumeration constant, usually the same as its symbol name.
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="ordinal"><span class="type-signature">(readonly) </span>ordinal<span class="type-signature"> :number</span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_constants.js.html">lib/constants.js</a>, <a href="lib_constants.js.html#line54">line 54</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Enum.html#ordinal">Enum#ordinal</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Numeric integer value of the enumeration constant.
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">number</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id="toString"><span class="type-signature"></span>toString<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_constants.js.html">lib/constants.js</a>, <a href="lib_constants.js.html#line72">line 72</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Enum.html#toString">Enum#toString</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Returns string representation of enumeration constant as
-EnumClass.ConstantName, e.g. 'Consistenty.Absolute'
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-    
-
-    
-
-    
-</article>
-
-</section>
+    <h1 class="page-title">lib/rate_limiter/types.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*-
+ * Copyright (c) 2018, 2022 Oracle and/or its affiliates. All rights reserved.
+ *
+ * Licensed under the Universal Permissive License v 1.0 as shown at
+ *  https://oss.oracle.com/licenses/upl/
+ */
+
+'use strict';
+
+/**
+ * Describes rate limiting in the SDK.
+ */
+
+/**
+ * Cloud Service or Cloud Simulator only.
+ * &lt;p>
+ * Rate limiting is used to provide efficient access to Oracle NoSQL Database
+ * Cloud Service, maximize throughput and protect from resource starvation.
+ * The SDK provides built-in rate limiting functionality for data operations
+ * on tables such as {@link NoSQLClient#get}, {@link NoSQLClient#put},
+ * {@link NoSQLClient#delete}, {@link NoSQLClient#deleteRange},
+ * {@link NoSQLClient#prepare}, {@link NoSQLClient#query} and their variants.
+ * Rate limiting in the driver allows spreading the operations over time thus
+ * maximizing throughput by avoiding costly throttling errors and the
+ * associated retry handling (see {@link ErrorCode.READ_LIMIT_EXCEEDED} and
+ * {@link ErrorCode.WRITE_LIMIT_EXCEEDED}).
+ * &lt;p>
+ * For general understanding of rate limiting, see articles such as
+ * [Understanding and implementing rate limiting in Node.js]{@link https://blog.logrocket.com/rate-limiting-node-js/},
+ * [Rate Limiting Part 1]{@link https://hechao.li/2018/06/25/Rate-Limiter-Part1/},
+ * [Rate Limiting Part 2]{@link https://hechao.li/2018/06/27/Rate-Limiter-Part2/},
+ * and many others.
+ * &lt;p>
+ * Each operation listed above does reads and/or writes on a table and
+ * thus consumes certain number of read and write units (see
+ * {@link ConsumedCapacity} for more explanation).  Each table in NoSQL
+ * Database Cloud Service has [table limits]{@link TableLimits} defining
+ * maximum number of read and write units that can be consumed by all clients
+ * accessing the table, per 1 second time.  Thus, the total rate of
+ * operations on a given table is limited.  If a client tries to perform the
+ * operations at faster rate, the server will respond with a read or write
+ * throttling error, in which case the client can retry the operation after
+ * certain time, see {@link RetryConfig}.  Handling throttling errors and
+ * their retries is costly both for the server and the client application
+ * since the application has to wait before an operation can be retried
+ * (retrying immediately or not waiting enough will only result in another
+ * throttling error and more needless load on the server).  A much better
+ * strategy for a client is to spread out the operations over time to an extent
+ * that the table limits for given table are not exceeded and thus avoiding
+ * throttling errors and their retries.  Rate limiting built in to the SDK
+ * provides this functionality.
+ * &lt;p>
+ * An instance of {@link RateLimiter} class is used to enforce one table
+ * limit.  Thus the driver will instantiate two instances of
+ * {@link RateLimiter} class for each table in use, one for read limit and
+ * another for write limit.  You have a choice of using a default
+ * implementation of {@link RateLimiter} provided by the driver or providing
+ * a custom impelemntation of {@link RateLimiter} class.  See
+ * {@link Config}#rateLimiter.  For details on the default rate limiter, see
+ * {@link SimpleRateLimiter}. To provide custom {@link RateLimiter} class,
+ * implement a class with instance methods as described below and set
+ * {@link Config#rateLimiter} to the constructor function of that class or
+ * module name exporting this class.  The driver will create each instance
+ * of this class by using its constructor with no arguments.
+ * &lt;p>
+ * In order to create a pair of rate limiters for a table, the driver will
+ * have to know its table limits.  The table limits are already known if one
+ * of {@link NoSQLClient#tableDDL}, {@link NoSQLClient#getTable},
+ * {@link NoSQLClient#forCompletion}, {@link NoSQLClient#forTableState} has
+ * been called.  Otherwise, the driver will call {@link NoSQLClient#getTable}
+ * in the background to obtain its table limits as soon as any data operation
+ * is issued for that table.  This means that enabling rate limiting for a
+ * table may be delayed until its table limits are obtained successfully in
+ * the background.
+ * &lt;p>
+ * The main operation of rate limiting in the driver is to call
+ * {@link RateLimiter#consumeUnits} to consume a number of (read or write)
+ * units for a given operation.  Depending on impelementation of
+ * {@link RateLimiter}, its current state and the number of units to consume,
+ * this call may asynchoronously block (sleep) for certain amount of time
+ * (and return &lt;em>Promise&lt;/em> of this amount in milliseconds) before letting
+ * the operation proceed.  This API also needs to correctly operate in the
+ * presence of timeout set by the caller.  See
+ * {@link RateLimiter#consumeUnits} for details.  Note that it may be possible
+ * to consume certain amount of units without blocking (e.g. if there has been
+ * no or very little recent activity).  In this state the rate limiter is said
+ * to be under its limit. Conversely, even consuming 0 units may block as a
+ * result of consuming units for recent past operations.  In this state the
+ * rate limiter is said to be over its limit.
+ * &lt;p>
+ * Rate limiting works best when we know in advance how many units each
+ * operation will consume, which would allow to know precisely how long to
+ * wait before issuing each operation.  Unfortunately, we don't know how many
+ * units an operation requires until we get the result back, with this
+ * information returned as part of {@link ConsumedCapacity} object.  It may be
+ * difficult or impossible to estimate number of units required before the
+ * operation completes.  The driver takes an approach where
+ * {@link RateLimiter#consumeUnits} is called twice, once before the operation
+ * passing 0 units to (possibly) wait until the rate limiter is under
+ * its limit and then after the operation passing the number of units returned
+ * as part of {@link ConsumedCapacity} of the result.  This will allow to
+ * delay subsequent operations and stagger subsequent concurrent operations
+ * over time.
+ * &lt;p>
+ * Also, note that by default the rate limiting only works as expected when
+ * used within one {@link NoSQLClient} instance.  When using multiple
+ * {@link NoSQLClient} instances, whether in the same process, different
+ * process or even running on different machine, rate limiters in one instance
+ * will not be aware of operations performed by other instances and thus
+ * will not correctly rate limit the operations.  If multiple concurrent
+ * {@link NoSQLClient} instances are required, you can set
+ * {@link Config}#rateLimiterPercent to allocate only a percentage of each
+ * table's limits to each instance.  Although not optimal (not accounting for
+ * overuse or underuse at a particular instance), this will allow correct
+ * rate limiting of operations on multiple concurrent instances.
+ * &lt;p>
+ * As mentioned above, the driver provides a default rate limiter as
+ * {@link SimpleRateLimiter} class, which you can use by setting
+ * {@link Config}#rateLimiter to &lt;em>true&lt;/em>.  Alternatively, you can
+ * provide your own custom rate limiter class by setting
+ * {@link Config}#rateLimiter to its constructor function or module name
+ * that exports it.
+ * &lt;p>
+ * Unfortunately, there is no perfect driver-side rate limiting stategy so
+ * it is still possible for throttling errors to occur.  {@link RateLimiter}
+ * interface provides {@link RateLimiter#onThrottle} method that the driver
+ * calls when an operation results in throttling error.  When creating
+ * custom rate limiter, implementing this method will allow you to adjust
+ * the rate limiter's state to account for this information.
+ * 
+ * @see {@link Config}
+ * @see {@link SimpleRateLimiter}
+ * 
+ * @interface RateLimiter
+ */
+
+/**
+ * Configures rate limiter by setting its limit in units. Note that this
+ * method is called both when rate limiter is configured for the first time
+ * and also if/when table limits change, so it may need to account for the
+ * current state due to outstanding operations already rate-limited by this
+ * instance, however there is no need to change state or sleep time of these
+ * outstanding operations and the new limit only needs to apply to the new
+ * operations issued.
+ * @function RateLimiter#setLimit 
+ * @param {number} limit Limit in units
+ */
+
+/**
+ * This function should consume the number of units provided and if needed,
+ * block (sleep) asynchronoulsy for the amount of time computed from current
+ * state and the units provided.
+ * @function RateLimiter#consumeUnits
+ * @async
+ * @param {number} units Number of units to consume
+ * @param {number} timeout Timeout in milliseconds.  The resulting amount of
+ * time to sleep should not exceed this timeout.  If the sleep time exceeds
+ * the timeout, the behavior should be according to
+ * &lt;em>consumeOnTimeout&lt;/em> parameter, see below
+ * @param {boolean} consumeOnTimeout Defines how rate limiter behaves when
+ * the timeout is reached.  If &lt;em>false&lt;/em>, this call should result in
+ * error (use appropriate error class for your application) and the units
+ * should not be consumed.  If &lt;em>true&lt;/em>, the units should be consumed
+ * even when timeout is reached and the call completed successfully.  In
+ * either case, if the computed wait time exceeds timeout, this call should
+ * still block for the amount of time equal to the timeout before either
+ * throwing an error or returning successfully (depending on the value of
+ * &lt;em>consumeOnTimeout&lt;/em>).  The driver uses
+ * &lt;em>consumeOnTimeout&lt;/em>=&lt;em>true&lt;/em> when
+ * calling {@link RateLimiter#consumeUnits} after an operation completes
+ * successfully (see above), in which case the error should not be thrown and
+ * the result of the operation should be returned to the application
+ * @returns {Promise} Promise resolved with the amount of time blocked in
+ * milliseconds (or 0 if the operation was not blocked) or rejected with an
+ * error if timeout is reached and &lt;em>consumeOnTimeout&lt;/em> is &lt;em>false&lt;/em>
+ */
+
+/**
+ * Defines the behavior of the rate limiter when throttling error occurs.  If
+ * throttling error has occured, this usually means that current rate limiter
+ * state does not correctly reflect the rate of incoming operations and needs
+ * to be adjusted.  For example, you may remove any unused credits that were
+ * previously used to allow operations to proceed without waiting.
+ * @function RateLimiter#onThrottle
+ * @param {NoSQLError} error An error indicating either
+ * {@link ErrorCode.READ_LIMIT_EXCEEDED} or
+ * {@link ErrorCode.WRITE_LIMIT_EXCEEDED}
+ */
+</code></pre>
+        </article>
+    </section>
 
 
 
