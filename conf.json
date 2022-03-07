@@ -23,7 +23,7 @@
     "opts": {
         "encoding": "utf8",
         "destination": "./doc/api/",
-        "template": "node_modules/docdash",
+        "template": "./node_modules/docdash",
         "readme": "./doc/index.md",
         "tutorials": "./doc/guides",
         "title": "mytitle"
