@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## Unpublished
+
+**Added**
+
+* Support for session persistence. If a Set-Cookie HTTP header is present  the SDK will set a Cookie header using the requested session value
+
+
 ## 5.3.0 = 2022-02-18
 
 **Added**
