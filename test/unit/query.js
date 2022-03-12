@@ -446,6 +446,8 @@ limit of ${testCase.maxMemFail}`);
 function getQueryOpts(test, q, tc) {
     return [
         undefined,
+        //Because we alternate execution of query() and queryIterable(), this
+        //will ensure both are tested when no options are provided.
         undefined,
         {
             timeout: 12000
