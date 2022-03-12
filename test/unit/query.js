@@ -383,7 +383,6 @@ async function restore(client, test, updatedRows) {
 //tc - query test case, the same query may be performed with different values
 //of bound variables.  See comments before testQuery().
 async function doQuery(client, test, q, tc, stmt, opt) {
-    delete opt.continuationKey;
     let state = {}; //maintain test-related information accross query calls
     let iterCnt = 0;
     for(;;) {
@@ -391,6 +390,9 @@ async function doQuery(client, test, q, tc, stmt, opt) {
         await verifyQueryResult(res, client, test, q, tc, opt, state);
         if (!res.continuationKey) {
             return;
+        }
+        if (!opt) {
+            opt = {};
         }
         opt.continuationKey = res.continuationKey;
         //make sure we don't loop infinitely
@@ -444,6 +446,7 @@ limit of ${testCase.maxMemFail}`);
 function getQueryOpts(test, q, tc) {
     return [
         undefined,
+        undefined,
         {
             timeout: 12000
         },
@@ -492,6 +495,25 @@ function doBind(ps, bindings) {
             }
         }
     }
+}
+
+function prepCopyOpt(opt, q) {
+    //Make a copy of opt to avoid async concurrency
+    //problems.
+    if (opt) {
+        opt = Object.assign({ _updateTTL: q.updateTTL }, opt);
+        delete opt.continuationKey;
+        return opt;
+    }
+
+    //For most tests (not involving updateTTL), preserve
+    //testing path where opt is not defined.
+    
+    if (q.updateTTL) { 
+        return { _updateTTL: true };
+    }
+
+    return opt;
 }
 
 //q should contain the following:
@@ -556,10 +578,8 @@ function testQuery(client, test, q) {
                 queryFunc = withMemTest(tc, queryFunc);
                 it(`Direct execution of query: ${stmt} via \
 ${queryFunc.name} with options: ${util.inspect(opt)}`, async function() {
-                    //Make a copy of opt to avoid async concurrency
-                    //problems
-                    opt = Object.assign({ _updateTTL: q.updateTTL }, opt);
-                    await queryFunc(client, test, q, tc, stmt, opt);
+                    await queryFunc(client, test, q, tc, stmt,
+                        prepCopyOpt(opt, q));
                 });
             }
         });
@@ -596,9 +616,8 @@ ${util.inspect(tc.bindings)}`, function() {
                     queryFunc = withMemTest(tc, queryFunc);
                     it(`Execution of prepared query: ${stmt} via \
 ${queryFunc.name} with options: ${util.inspect(opt)}`, async function() {
-                        opt = Object.assign({ _updateTTL: q.updateTTL },
-                            opt);
-                        await queryFunc(client, test, q, tc, ps, opt);
+                        await queryFunc(client, test, q, tc, ps,
+                            prepCopyOpt(opt, q));
                     });
                 }
             });

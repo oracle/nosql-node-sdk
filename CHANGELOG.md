@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## Unpublished
+
+**Fixed**
+
+* Fixed a bug in queryIterable API when called with no options.
+
 ## 5.3.0 = 2022-02-18
 
 **Added**
