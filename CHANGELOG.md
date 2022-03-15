@@ -8,7 +8,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 **Fixed**
 
-* Fixed a bug in queryIterable API when called with no options.
+* Fixed a bug where queryIterable API was throwing TypeError when called
+without *opt* parameter.
 
 ## 5.3.0 = 2022-02-18
 
