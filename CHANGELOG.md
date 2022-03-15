@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## Unpublished
+
+**Fixed**
+
+* Fixed a bug where queryIterable API was throwing TypeError when called
+without *opt* parameter.
+
 ## 5.3.0 = 2022-02-18
 
 **Added**
