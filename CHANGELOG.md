@@ -8,8 +8,23 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 **Added**
 
-* Support for session persistence. If a Set-Cookie HTTP header is present  the SDK will set a Cookie header using the requested session value
+* Support for session persistence. If a recognized Set-Cookie HTTP header is present the SDK will set a Cookie header using the requested session value
 
+* Added NoSQLClient.precacheAuth() API to pre-create authorization signature
+before starting database operations, thus avoiding possible timeout errors
+when using Instance Principal.
+
+**Changed**
+
+* Auto-renew Instance Principal security token in the background in advance of
+expiration.
+* When returning authorization information, make sure security token is valid
+(or refresh it) thus avoiding retry on invalid authorization error.
+
+**Fixed**
+
+* Fixed a bug where queryIterable API was throwing TypeError when called
+without *opt* parameter.
 
 ## 5.3.0 = 2022-02-18
 
