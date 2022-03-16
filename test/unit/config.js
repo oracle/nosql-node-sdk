@@ -194,6 +194,10 @@ const badConfigs = [
     ...badRegions.map(region => ({
         region //invalid region
     })),
+    {
+        //cannot specify url, must be either endpoint or region
+        url: 'http://localhost:8080'
+    },
     {   //cannot specify both endpoint and region
         endpoint: 'https://nosql.us-phoenix-1.oci.oraclecloud.com',
         region: Region.US_PHOENIX_1

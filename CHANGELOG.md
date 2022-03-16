@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Unpublished
 
+**Added**
+
+* Added NoSQLClient.precacheAuth() API to pre-create authorization signature
+before starting database operations, thus avoiding possible timeout errors
+when using Instance Principal.
+
+**Changed**
+
+* Auto-renew Instance Principal security token in the background in advance of
+expiration.
+* When returning authorization information, make sure security token is valid
+(or refresh it) thus avoiding retry on invalid authorization error.
+
 **Fixed**
 
 * Fixed a bug where queryIterable API was throwing TypeError when called
@@ -20,18 +33,17 @@ without *opt* parameter.
 * Added NoSQLClient.queryIterable() API to iterate over query results using
 for-await-of loop.
 * Cloud only: support for on-demand tables
-  * Changes to TableLimits and addition of CapacityMode to specify on-demand tables
+* Changes to TableLimits and addition of CapacityMode to specify on-demand tables
 * Existing row modification is made available in results when the operation fails
   and the previous row is requested
 * Modification time is made available in get operations
 * On-premise only: support for setting Durability in write operations
-  * Added Durability class and methods to set Durability
+* Added Durability class and methods to set Durability
 
 **Changed**
 
 * Changes to allow the driver to work in the browser environment.
 * The SDK now detects the version of the server it's connected to  and adjusts its capabilities to match. This allows the SDK to communicate with servers that may only support an earlier protocol version, with the corresponding feature restrictions
-
 
 ## 5.2.4 - 2021-06-29
 
