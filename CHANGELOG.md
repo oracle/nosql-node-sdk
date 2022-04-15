@@ -23,6 +23,8 @@ expiration.
 
 **Fixed**
 
+* Downgrade version of @babel/parser used by JSDoc because current version
+causes missing output.
 * Fixed a bug where queryIterable API was throwing TypeError when called
 without *opt* parameter.
 
