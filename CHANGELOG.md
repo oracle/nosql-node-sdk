@@ -14,6 +14,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 before starting database operations, thus avoiding possible timeout errors
 when using Instance Principal.
 
+* Cloud only: Added OCI region codes: JNB, SIN, MAD, MRS, CDG, ARN, AUH, QRO, MCT, WGA
+
 **Changed**
 
 * Auto-renew Instance Principal security token in the background in advance of
