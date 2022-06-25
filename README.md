@@ -144,7 +144,7 @@ function createClient(serviceType) {
                     tenantId: 'your tenancy OCID',
                     userId: 'your user OCID',
                     fingerprint: 'your public key fingerprint',
-                    privateKeyFile: 'path to private key file or private key',
+                    privateKeyFile: 'path to private key file',
                     passphrase: 'pass phrase if set for your private key'
                 }
             }
@@ -271,7 +271,7 @@ iam: {
     tenantId: 'your tenancy OCID',
     userId: 'your user OCID',
     fingerprint: 'your public key fingerprint',
-    privateKeyFile: 'path to private key file or private key',
+    privateKeyFile: 'path to private key file',
     passphrase: 'pass phrase if set for your private key'
 }
 ```
