@@ -4,17 +4,39 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## Unpublished
+
+**Added**
+* Allow PreparedStatement to bind variables by position as well as by name.
+* Added copyStatement method to PreparedStatement.
+
+**Changed**
+
+* Changed timeout handling for table DDL and admin operations when called with
+_complete: true_ option to ensure that errors that are not related to
+completion of the operation on the server side do not result in long waits.
+Also, ensure that elapsed time is reflected in subsequent HTTP request
+timeouts when the operation is retried by the retry handler.
+
+**Fixed**
+
+* Github issue #6: PrivateKey / PrivateKeyFile documentation.
+_privateKeyFile_ may only specify the path to private key file, not PEM
+string.
+
 ## 5.3.1 = 2022-06-13
 
 **Added**
 
-* Support for session persistence. If a recognized Set-Cookie HTTP header is present the SDK will set a Cookie header using the requested session value
+* Support for session persistence. If a recognized Set-Cookie HTTP header is
+present the SDK will set a Cookie header using the requested session value.
 
 * Added NoSQLClient.precacheAuth() API to pre-create authorization signature
 before starting database operations, thus avoiding possible timeout errors
 when using Instance Principal.
 
-* Cloud only: Added OCI region codes: JNB, SIN, MAD, MRS, CDG, ARN, AUH, QRO, MCT, WGA
+* Cloud only: Added OCI region codes: JNB, SIN, MAD, MRS, CDG, ARN, AUH, QRO,
+MCT, WGA.
 
 **Changed**
 

@@ -194,16 +194,44 @@ function testQueryNegative(client) {
 }
 
 function verifyPrepareResult(res) {
-    expect(res).to.be.an('object');
+    expect(res).to.be.instanceOf(PreparedStatement);
     Utils.verifyConsumedCapacity(res.consumedCapacity);
     if (!Utils.isOnPrem) {
         expect(res.consumedCapacity.readKB).to.be.at.least(1);
         expect(res.consumedCapacity.readUnits).to.be.at.least(1);
         expect(res.consumedCapacity.writeKB).to.equal(0);
         expect(res.consumedCapacity.writeUnits).to.equal(0);
-        expect(res._prepStmt).to.be.instanceOf(Buffer);
-        expect(res._prepStmt.length).to.be.greaterThan(0);
     }
+    expect(res._prepStmt).to.be.instanceOf(Buffer);
+    expect(res._prepStmt.length).to.be.greaterThan(0);
+}
+
+function testPreparedStatement(client, table) {
+    it('PreparedStatement local test', async function() {
+        //It doesn't really matter which statement here, but order by should
+        //give us PS with query plan.
+        const ps = await client.prepare(
+            `SELECT * FROM ${table.name} ORDER BY \
+${table.primaryKey.join(', ')}`);
+        verifyPrepareResult(ps);
+        expect(ps.bindings).to.not.exist;
+        let psCopy = ps.copyStatement();
+        expect(psCopy).to.deep.equal(ps);
+        ps.set('$$var1', 'abc');
+        ps.set(2, 10);
+        psCopy = ps.copyStatement();
+        expect(psCopy.bindings).to.not.exist;
+        ps.set('$$var3', new Date());
+        expect(psCopy.bindings).to.not.exist;
+        const deepCopy = Utils.deepCopy(ps);
+        delete deepCopy._bindings;
+        expect(psCopy).to.deep.equal(deepCopy);
+        psCopy.set('$$var4', 1);
+        expect(psCopy.bindings['$$var4']).to.equal(1);
+        expect(ps.bindings['$$var4']).to.not.exist;
+        ps.clearAll();
+        expect(ps.bindings).to.not.exist;
+    });
 }
 
 function getUnmodifiedRows(test, updatedRows) {
@@ -643,6 +671,7 @@ function doTest(client, test) {
         });
         testPrepareNegative(client);
         testQueryNegative(client);
+        testPreparedStatement(client, test.table);
         test.queries.forEach(q => testQuery(client, test, q));
     });
 }
