@@ -23,7 +23,7 @@ installed with Node.js
   * [Oracle NoSQL Database](https://www.oracle.com/database/technologies/related/nosql.html).
 See [Oracle NoSQL Database Downloads](https://www.oracle.com/database/technologies/nosql-database-server-downloads.html) to download Oracle NoSQL Database.  See
 [Oracle NoSQL Database Documentation](https://docs.oracle.com/en/database/other-databases/nosql-database/index.html) to get started with Oracle NoSQL Database.
-In particular, see the [Administrator Guide](https://docs.oracle.com/en/database/other-databases/nosql-database/20.3/admin/index.html) on how to install, configure and run Oracle
+In particular, see the [Administrator Guide](https://docs.oracle.com/en/database/other-databases/nosql-database/22.1/admin/index.html) on how to install, configure and run Oracle
 NoSQL Database Service.
 
 ## Installation

@@ -8,7 +8,7 @@ The SDK requires:
 * [Oracle NoSQL Database](https://www.oracle.com/database/technologies/related/nosql.html).
 See [Oracle NoSQL Database Downloads](https://www.oracle.com/database/technologies/nosql-database-server-downloads.html) to download Oracle NoSQL Database.  See
 [Oracle NoSQL Database Documentation](https://docs.oracle.com/en/database/other-databases/nosql-database/index.html) to get started with Oracle NoSQL Database.
-In particular, see the [Administrator Guide](https://docs.oracle.com/en/database/other-databases/nosql-database/19.5/admin/index.html) on how to install, configure and run Oracle
+In particular, see the [Administrator Guide](https://docs.oracle.com/en/database/other-databases/nosql-database/22.1/admin/index.html) on how to install, configure and run Oracle
 NoSQL Database Service.
 * [Node.js](https://nodejs.org) 12.0.0 or higher, running on Linux, Windows or
 Mac.
@@ -57,14 +57,14 @@ components:
 1. Running instance of Oracle NoSQL Database.  See [Prerequisites](#prereq).
 2. Oracle NoSQL Database Proxy.  The proxy is the middle tier that lets Oracle
 NoSQL Database drivers communicate with the database.  See
-[Oracle NoSQL Database Proxy](https://docs.oracle.com/en/database/other-databases/nosql-database/19.5/admin/proxy.html) for information on how to configure and run the proxy.
+[Oracle NoSQL Database Proxy](https://docs.oracle.com/en/database/other-databases/nosql-database/22.1/admin/proxy.html) for information on how to configure and run the proxy.
 
 A Oracle NoSQL Database instance may be configured and run in secure or
 non-secure mode.  Secure mode is recommended.  See
-[Oracle NoSQL Database Security Guide](https://docs.oracle.com/en/database/other-databases/nosql-database/19.5/security/index.html)
+[Oracle NoSQL Database Security Guide](https://docs.oracle.com/en/database/other-databases/nosql-database/22.1/security/index.html)
 on security concepts and configuration.  Correspondingly, the proxy can be
-configured and used with [secure kvstore](https://docs.oracle.com/en/database/other-databases/nosql-database/19.5/admin/secure-proxy.html) or
-[non-secure kvstore](https://docs.oracle.com/en/database/other-databases/nosql-database/19.5/admin/non-secure-proxy.html).
+configured and used with [secure kvstore](https://docs.oracle.com/en/database/other-databases/nosql-database/22.1/admin/secure-proxy.html) or
+[non-secure kvstore](https://docs.oracle.com/en/database/other-databases/nosql-database/22.1/admin/non-secure-proxy.html).
 
 Your application  will connect and use a running NoSQL database via
 the proxy service.  The following sections describe information required in non-secure
@@ -115,12 +115,12 @@ where, the *driver_user* is the username and *driver_password* is the password
 for the *driver_user* user. In this example, the user *driver_user* is granted
 *READWRITE* role, which allows the application to perform only read and
 write operations.
-See [Configuring Authentication](https://docs.oracle.com/en/database/other-databases/nosql-database/19.5/security/configuring-authentication.html)
+See [Configuring Authentication](https://docs.oracle.com/en/database/other-databases/nosql-database/22.1/security/configuring-authentication.html)
 on how to create and modify users.
-See [Configuring Authorization](https://docs.oracle.com/en/database/other-databases/nosql-database/19.5/security/configuring-authorization.html)
+See [Configuring Authorization](https://docs.oracle.com/en/database/other-databases/nosql-database/22.1/security/configuring-authorization.html)
 on how to assign roles and privileges to users.
 
-You can use [Oracle NoSQL Database Shell](https://docs.oracle.com/en/database/other-databases/nosql-database/19.5/sqlfornosql/introduction-sql-shell.html)
+You can use [Oracle NoSQL Database Shell](https://docs.oracle.com/en/database/other-databases/nosql-database/22.1/sqlfornosql/introduction-sql-shell.html)
 to connect to secure kvstore in order to create the user.  For example:
 
 ```bash
@@ -132,13 +132,13 @@ sql-> GRANT READWRITE TO USER John
 ```
 (The password shown above is for example purpose only.  All user passwords
 should follow the password security policies.  See
-[Password Complexity Policies](https://docs.oracle.com/en/database/other-databases/nosql-database/19.5/security/password-complexity-policies.html))
+[Password Complexity Policies](https://docs.oracle.com/en/database/other-databases/nosql-database/22.1/security/password-complexity-policies.html))
 
 The driver requires user name and password created above to authenticate with
 a secure store via the proxy.
 
 3. In secure mode the proxy requires SSL
-[Certificate and Private key](https://docs.oracle.com/en/database/other-databases/nosql-database/19.5/security/generating-certificate-and-private-key-proxy.html).  If the root
+[Certificate and Private key](https://docs.oracle.com/en/database/other-databases/nosql-database/22.1/security/generating-certificate-and-private-key-proxy.html).  If the root
 certificate authority (CA) for your proxy certificate is not one of the
 trusted root CAs (which for Node.js is one of well-known CAs curated by
 Mozilla), the driver needs the certificate chain file (e.g.
