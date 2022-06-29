@@ -177,7 +177,8 @@ const goodDirectConfigs = [
         _privateKeyData: keys.privatePEM
     }),
     Object.assign({}, keyIdObj, {
-        privateKeyFile: Buffer.from(PRIVATE_KEY_FILE)
+        privateKeyFile: Buffer.from(PRIVATE_KEY_FILE),
+        _privateKeyData: keys.privatePEM
     }),
     Object.assign({}, keyIdObj, {
         privateKeyFile: PRIVATE_KEY_FILE,
