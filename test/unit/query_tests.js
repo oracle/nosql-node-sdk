@@ -158,12 +158,13 @@ colDouble - colFloat as expr2 FROM __TABLE__ ORDER BY shardId, pkString',
         {
             as: 'expr1',
             args: [ 'colInteger', 'colLong' ],
-            expr: args => args[0] + args[1]
+            expr: args => NumberUtils.wrapLong(
+                NumberUtils.add(args[0], args[1]))
         },
         {
             as: 'expr2',
             args: [ 'colDouble', 'colFloat' ],
-            expr: args => args[0] - args[1]
+            expr: args => NumberUtils.sub(args[0], args[1])
         }),
         expectedFields: queryTest2.table.fields.slice(0, 2).concat(
             { name: 'expr1', type: 'LONG' },
@@ -180,12 +181,13 @@ colDouble * 1.2345 as expr2 FROM __TABLE__ ORDER BY shardId, pkString',
         {
             as: 'expr1',
             args: [ 'colInteger', 'colLong' ],
-            expr: args => args[0] + args[1]
+            expr: args => NumberUtils.wrapLong(
+                NumberUtils.add(args[0], args[1]))
         },
         {
             as: 'expr2',
             args: [ 'colDouble' ],
-            expr: args => args[0] * 1.2345
+            expr: args => NumberUtils.mul(args[0], 1.2345)
         }),
         expectedFields: queryTest2.table.fields.slice(0, 2).concat(
             { name: 'expr1', type: 'LONG' },
@@ -286,7 +288,7 @@ aggr2 FROM __TABLE__ GROUP BY shardId',
         expectedFields: [
             { name: 'shardId', type: 'INTEGER' },
             { name: 'aggr1', type: 'STRING' },
-            { name: 'aggr2', type: 'INTEGER' }
+            { name: 'aggr2', type: 'LONG' }
         ],
         expectedRows: QueryUtils.groupBy(queryTest2.rows, [ 'shardId' ], [
             { as: 'aggr1', field: 'pkString', func: QueryUtils.max },
@@ -302,7 +304,7 @@ t.colRecord.fldString',
         unordered: true,
         expectedFields: [
             { name: 'fldString', type: 'STRING' },
-            { name: 'aggr1', type: 'INTEGER' },
+            { name: 'aggr1', type: 'LONG' },
             { name: 'aggr2', type: 'INTEGER' },
             { name: 'aggr3', type: 'DOUBLE' },
             {
@@ -384,7 +386,7 @@ t.colJSON.location, $loc, $dist)',
 __TABLE__ t GROUP BY t.colJSON.x, t.colJSON.z, t.colJSON.b',
         unordered: true,
         expectedFields: [
-            { name: 'aggr1', type: 'INTEGER' },
+            { name: 'aggr1', type: 'LONG' },
             { name: 'col2', type: 'BOOLEAN' }
         ],
         expectedRows: QueryUtils.projectRows(QueryUtils.groupBy(
@@ -402,7 +404,7 @@ LIMIT $lim OFFSET $off',
         expectedFields: [
             { name: 'fldString', type: 'STRING' },
             { name: 'aggr1', type: 'TIMESTAMP' },
-            { name: 'aggr2', type: 'INTEGER' }
+            { name: 'aggr2', type: 'LONG' }
         ],
         testCases: makeTestCasesForOffLim(QueryUtils.groupBy(
             queryTest2.rows,

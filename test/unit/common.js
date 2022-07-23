@@ -326,7 +326,15 @@ const badDriverRows = [
     },
     ...badMapKeys.map(mapKey => ({
         mapCol: new Map([ [ mapKey, 1 ] ])
-    }))
+    })),
+    {
+        //bigint value of MAX_LONG + 1
+        id: 9223372036854775808n
+    },
+    {
+        //bigint value of MIN_LONG - 1
+        id: -9223372036854775809n
+    }
 ];
 
 function getBadServerRows(tbl, row) {

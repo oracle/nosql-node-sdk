@@ -14,6 +14,10 @@ const expect = require('chai').expect;
 const Decimal = require('decimal.js');
 const Utils = require('./utils');
 
+const LONG_MAX = 0x7fffffffffffffffn;
+const LONG_MIN = -0x8000000000000000n;
+const LONG_RANGE = 0x10000000000000000n; // 2^64
+
 const ModBase = {
     stringValue: (val) => val.toString()
 };
@@ -94,8 +98,22 @@ class NumberUtils {
         }
     }
 
+    //Assumes each arg is either number or bigint.
+    static _getBuildInCons(val1, val2) {
+        if (typeof val1 === 'bigint') {
+            return (typeof val2 === 'bigint' || Number.isSafeInteger(val2)) ?
+                BigInt : Number;
+        }
+        return (typeof val2 === 'bigint' && Number.isSafeInteger(val1)) ?
+            BigInt : Number;
+    }
+
+    static isBuiltInNum(val) {
+        return typeof val === 'number' || typeof val === 'bigint';
+    }
+
     static isNumber(val) {
-        if (typeof val === 'number') {
+        if (NumberUtils.isBuiltInNum(val)) {
             return true;
         }
         if (NumberUtils._mod == null) {
@@ -168,7 +186,8 @@ class NumberUtils {
     }
 
     static cmp(val1, val2) {
-        if (typeof val1 === 'number' && typeof val2 === 'number') {
+        if (NumberUtils.isBuiltInNum(val1) &&
+            NumberUtils.isBuiltInNum(val2)) {
             return val1 > val2 ? 1 : (val1 < val2 ? -1 : 0);
         }
         if (!(val1 instanceof Decimal)) {
@@ -178,31 +197,65 @@ class NumberUtils {
     }
 
     static add(val1, val2) {
-        if (typeof val1 === 'number' && typeof val2 === 'number') {
-            return val1 + val2;
+        if (NumberUtils.isBuiltInNum(val1) &&
+            NumberUtils.isBuiltInNum(val2)) {
+            const cons = NumberUtils._getBuildInCons(val1, val2);
+            return cons(val1) + cons(val2);
         }
         return Decimal.add(NumberUtils.asString(val1),
             NumberUtils.asString(val2));
     }
 
     static sub(val1, val2) {
-        if (typeof val1 === 'number' && typeof val2 === 'number') {
-            return val1 - val2;
+        if (NumberUtils.isBuiltInNum(val1) &&
+            NumberUtils.isBuiltInNum(val2)) {
+            const cons = NumberUtils._getBuildInCons(val1, val2);
+            return cons(val1) - cons(val2);
         }
         return Decimal.sub(NumberUtils.asString(val1),
             NumberUtils.asString(val2));
     }
 
     static mul(val1, val2) {
-        if (typeof val1 === 'number' && typeof val2 === 'number') {
-            return val1 * val2;
+        if (NumberUtils.isBuiltInNum(val1) &&
+            NumberUtils.isBuiltInNum(val2)) {
+            const cons = NumberUtils._getBuildInCons(val1, val2);
+            return cons(val1) * cons(val2);
         }
         return Decimal.mul(NumberUtils.asString(val1),
             NumberUtils.asString(val2));
     }
 
-    static div(val1, val2) {
-        if (typeof val1 === 'number' && typeof val2 === 'number') {
+    static wrapInt(val) {
+        if (val > 0x7fffffff) {
+            return (val + 0x80000000) % 0x100000000 - 0x80000000;
+        }
+        if (val < -0x80000000) {
+            return (val - 0x7fffffff) % 0x100000000 + 0x7fffffff;
+        }
+        return val;
+    }
+
+    static wrapLong(val) {
+        const cons = typeof val === 'bigint' ? BigInt : Number;
+
+        if (val > cons(LONG_MAX)) {
+            return (val - cons(LONG_MIN)) % cons(LONG_RANGE) + cons(LONG_MIN);
+        }
+        if (val < cons(LONG_MIN)) {
+            return (val - cons(LONG_MAX)) % cons(LONG_RANGE) + cons(LONG_MAX);
+        }
+        return val;
+    }
+
+    static div(val1, val2, isInt) {
+        if (NumberUtils.isBuiltInNum(val1) &&
+            NumberUtils.isBuiltInNum(val2)) {
+            if (!isInt || typeof val1 !== 'bigint' ||
+                typeof val2 !== 'bigint') {
+                val1 = Number(val1);
+                val2 = Number(val2);
+            }
             return val1 / val2;
         }
         return Decimal.div(NumberUtils.asString(val1),

@@ -115,7 +115,7 @@ colMap2',
         unordered: true,
         expectedFields: [
             { name: 'colMap2', type: { name: 'MAP', elemType: 'BINARY' } },
-            { name: 'aggr1', type: 'INTEGER' }
+            { name: 'aggr1', type: 'LONG' }
         ],
         expectedRows: QueryUtils.groupBy(
             queryTest3.rows, [ 'colMap2' ],
@@ -130,7 +130,7 @@ GROUP BY t.colJSON2.z.a.b, t.colJSON2.y.b',
         expectedFields: [
             { name: 'gb1', type: 'JSON' },
             { name: 'gb2', type: 'JSON' },
-            { name: 'aggr1', type: 'INTEGER' },
+            { name: 'aggr1', type: 'LONG' },
             { name: 'aggr2', type: 'LONG' }
         ],
         expectedRows: QueryUtils.groupBy(queryTest3.rows, [
