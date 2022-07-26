@@ -23,6 +23,7 @@ timeouts when the operation is retried by the retry handler.
 * Github issue #6: PrivateKey / PrivateKeyFile documentation.
 _privateKeyFile_ may only specify the path to private key file, not PEM
 string.
+* Fixed use of session persistence to handle case-insensitive set-cookie header
 
 ## 5.3.1 = 2022-06-13
 
