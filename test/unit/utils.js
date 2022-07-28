@@ -83,6 +83,10 @@ class Utils {
         return Utils.config.serviceType === ServiceType.CLOUD;
     }
 
+    static get longAsBigInt() {
+        return Utils.config.longAsBigInt;
+    }
+
     static log() {
         if (this._printDebug == null) {
             this._printDebug = this.getArgVal('--print-debug');
@@ -258,8 +262,12 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
             val0 = Utils.date2string(val0);
         }
         expect(typeof val).to.equal(typeof val0);
-        if ([ 'string', 'boolean', 'number' ].includes(typeof val)) {
+        if (['string', 'boolean'].includes(typeof val)) {
             return expect(val).to.equal(val0);
+        }
+        if ([ 'number', 'bigint' ].includes(typeof val)) {
+            return expect(val).to.equal(typeof val === 'number' ?
+                Number(val0) : BigInt(val0));
         }
         expect(typeof val).to.equal('object');
         if (Array.isArray(val0)) {
@@ -311,6 +319,23 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
         }
     }
 
+    static verifyLong(val, val0) {
+        expect(val).to.be.a(this.longAsBigInt ? 'bigint' : 'number');
+        expect(typeof val0).to.be.oneOf(['number', 'bigint']);
+        
+        if ((typeof val0 === 'number') || typeof val === 'number') {
+            val0 = Number(val0);
+            val = Number(val);
+            if (!Number.isSafeInteger(val0)) {
+                const ratio = Math.abs(val0) / (Number.MAX_SAFE_INTEGER + 1);
+                const delta = Math.pow(2, Math.ceil(Math.log2(ratio)));
+                return expect(val).to.be.closeTo(val0, delta);
+            }
+        }
+        //I observed chai crash on some bigints so using toString for safety.
+        expect(val.toString()).to.equal(val0.toString());
+    }
+
     static verifyFloat(val, val0) {
         this.verifyFP(val, val0, FLOAT_DELTA);
     }
@@ -350,6 +375,8 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
             expect(val).to.be.instanceOf(Date);
             return expect(val.getTime()).to.equal((val0 instanceof Date ?
                 val0 : new Date(val0)).getTime());
+        case 'LONG':
+            return this.verifyLong(val, val0);
         case 'FLOAT':
             return this.verifyFloat(val, val0);
         case 'DOUBLE':

@@ -86,9 +86,99 @@ function makeObjectForJSON2(i) {
     return ret;
 }
 
+const INT_MAX = 0x7fffffffn;
+const INT_MIN = -0x80000000n;
+const LONG_MAX = 0x7fffffffffffffffn;
+const LONG_MIN = -0x8000000000000000n;
+
+const INT_EDGE_CASES = [ 0, -1, Number(INT_MAX), Number(INT_MIN) ];
+
+function getIntValue(i, opt) {
+    const edgeCaseCnt = opt && opt.simpleColInteger ?
+        0 : INT_EDGE_CASES.length;
+    let k = i % (edgeCaseCnt + 16);
+    if (k < edgeCaseCnt) {
+        return INT_EDGE_CASES[k];
+    }
+    
+    k -= edgeCaseCnt;
+    if (k === 0) {
+        return undefined;
+    }
+    if (k < 8) {
+        return (k + 1) * (((k % 3) === 0) ? -1 : 1);
+    }
+    return (0x70000000 + k) * (((k % 2) === 0) ? -1 : 1);
+}
+
+const LONG_EDGE_CASES = [ 0n, -1n, LONG_MAX, LONG_MIN, INT_MAX, INT_MIN,
+    INT_MAX + 1n, INT_MIN - 1n, 0x10000000n + 121n, -0x10000000n - 119n,
+    BigInt(Number.MAX_SAFE_INTEGER),
+    BigInt(Number.MAX_SAFE_INTEGER + 1),
+    BigInt(Number.MIN_SAFE_INTEGER),
+    BigInt(Number.MIN_SAFE_INTEGER - 1),
+    BigInt(Math.floor(Number.MAX_SAFE_INTEGER / 0x10000000) * 0x10000000 +
+        121),
+    BigInt(Math.ceil(Number.MAX_SAFE_INTEGER / 0x10000000) * 0x10000000 +
+        121),
+    BigInt(Math.ceil(Number.MIN_SAFE_INTEGER / 0x10000000) * 0x10000000 -
+        119),
+    BigInt(Math.floor(Number.MIN_SAFE_INTEGER / 0x10000000) * 0x10000000 -
+        119),
+    (LONG_MAX / 0x10000000n) * 0x10000000n + 121n,
+    (LONG_MIN / 0x10000000n + 1n) * 0x10000000n - 119n,
+];
+
+function getLongArray(i) {
+    switch(i % 9) {
+    case 0:
+        return undefined;
+    case 1:
+        return [];
+    case 2:
+        return [ LONG_MAX, Number(LONG_MIN) ];
+    case 3:
+        return LONG_EDGE_CASES;
+    case 4:
+        return LONG_EDGE_CASES.map(val => Number(val));
+    case 5:
+        return Utils.range((i % 8) + 8).map(
+            val => LONG_MAX - BigInt(val));
+    case 6:
+        return Utils.range((i % 5) + 10).map(
+            val => Number(LONG_MAX) - (val * 0x1000));
+    case 7:
+        return Utils.range((i % 4) + 7).map(
+            val => LONG_MIN + BigInt(val * Number(INT_MAX)));
+    case 8:
+        return Utils.range((i % 4) + 7).map(
+            val => Number(LONG_MIN) + ((val + 1) * Number(INT_MAX)));
+    }
+}
+
+function getLongMap(i) {
+    const arr = getLongArray(i);
+    if (!arr) {
+        return undefined;
+    }
+    return new Map(Array.from({ length: arr.length },
+        (v, j) => [`key${j}`, arr[j]]));
+}
+
+function getLongValue(i, opt) {
+    const min = opt && opt.simpleColLong ?
+        BigInt(Number.MIN_SAFE_INTEGER) : LONG_MIN;
+    const max = opt && opt.simpleColLong ?
+        BigInt(Number.MAX_SAFE_INTEGER) : LONG_MAX;
+    return ((i + 1) & 1) ? Number.MIN_SAFE_INTEGER + i * 99 :
+        ((i + 1) & 3) ? max - BigInt((i + 1) * 654321) :
+            ((i + 1) & 7) ? min + BigInt((i + 1) * 12345) :
+                undefined;
+}
+
 const ROWS_PER_SHARD = 20;
 
-function makeRowAllTypes(i, rowsPerShard = ROWS_PER_SHARD) {
+function makeRowAllTypes(i, rowsPerShard = ROWS_PER_SHARD, opt = null) {
     return {
         [_id]: i,
         [_ttl]: !(i & 1) ? ((i & 2) ? { hours: i + 1 } :
@@ -96,8 +186,8 @@ function makeRowAllTypes(i, rowsPerShard = ROWS_PER_SHARD) {
         shardId: Math.floor(i / rowsPerShard),
         pkString: 'id'.repeat(i % 20).concat(i),
         colBoolean: (i & 1) ? undefined: !(i & 3),
-        colInteger: (i & 7) ? 0x70000000 + i : undefined,
-        colLong: ((i + 1) & 7) ? Number.MIN_SAFE_INTEGER + i * 99 : undefined,
+        colInteger: getIntValue(i, opt),
+        colLong: getLongValue(i, opt),
         colFloat: (i & 1) ? (1 + 0.0001 * i) * 1e38 : undefined,
         //It looks like Float doesn't handle these now on the server side:
         //NUM_SPECIAL[i % NUM_SPECIAL.length]
@@ -125,8 +215,7 @@ function makeRowAllTypes(i, rowsPerShard = ROWS_PER_SHARD) {
             new Date(currentTimeMillis + i).toISOString()) : undefined,
         colArray2 : ((i + 3) % 16) ? Array.from({ length: (i % 5) * 3 },
             (v, j) => makeObjectForJSON(i + j)) : undefined,
-        colMap : ((i + 4) & 7) ? new Map(Array.from({ length: i % 7 },
-            (v, j) => [ `key${j}`, Number.MAX_SAFE_INTEGER - i])) : undefined,
+        colMap : getLongMap(i),
         colMap2: ((i + 5) & 7) ? Object.assign({},
             ...Array.from({ length: i % 10}, (v, j) => ({ ['abc'.repeat(j)]:
             Buffer.allocUnsafe(j).fill(j)}))) : undefined,
@@ -137,17 +226,19 @@ function makeRowAllTypes(i, rowsPerShard = ROWS_PER_SHARD) {
 
 let modifyAllTypesSeq = 0;
 
-//Can be made more sofisticated later
+//For now we don't pass opt, since it is used only in query tests.
 function modifyRowAllTypes(row) {
     const seq = ++modifyAllTypesSeq;
     const modifiedRow = Utils.deepCopy(row);
     const row2 = makeRowAllTypes(row[_id] + seq + 20);
     modifiedRow.colBoolean = !row.colBoolean;
     if (modifiedRow.colInteger != null) {
-        modifiedRow.colInteger++;
+        modifiedRow.colInteger += modifiedRow.colInteger < INT_MAX ? 1 : -1;
     }
-    if (modifiedRow.colLong != null) {
-        modifiedRow.colLong++;
+    if (typeof modifiedRow.colLong === 'bigint') {
+        modifiedRow.colLong += modifiedRow.colLong < LONG_MAX ? 1n : -1n;
+    } else if (modifiedRow.colLong != null) {
+        modifiedRow.colLong = Math.trunc(modifiedRow.colLong / 3);
     }
     for(let col of [ 'colFloat', 'colDouble', 'colNumber', 'colBinary',
         'colFixedBinary', 'colEnum', 'colTimestamp', 'colRecord', 'colArray',
@@ -209,8 +300,8 @@ class DataTest {
 }
 
 class AllTypesTest extends DataTest {
-    constructor(cnt, rowsPerShard = ROWS_PER_SHARD, start = 0) {
-        super(ALL_TYPES_TABLE, id => makeRowAllTypes(id, rowsPerShard),
+    constructor(cnt, rowsPerShard = ROWS_PER_SHARD, start = 0, opt = null) {
+        super(ALL_TYPES_TABLE, id => makeRowAllTypes(id, rowsPerShard, opt),
             modifyRowAllTypes, cnt, start);
         this.rowsPerShard = rowsPerShard;
     }
@@ -584,13 +675,13 @@ colInteger < $fldInt',
         testCases: [
             {
                 desc: 'empty result',
-                bindings: { $fldInt: 0x70000000 }
+                bindings: { $fldInt: -0x80000000 }
             },
             {
-                desc: '5 rows',
-                bindings: { $fldInt: 0x70000006 },
-                expectedRows: Utils.range(1, 6).map(i =>
-                    queryTest1.makeRow(i))
+                desc: 'has results',
+                bindings: { $fldInt: 0x70000000 },
+                expectedRows: queryTest1.rows.filter(
+                    row => row.colInteger < 0x70000000)
             }
         ]
     },
@@ -703,7 +794,7 @@ VALUES($shardId, $pkString, $colBoolean, $colNumber, $colBinary, $colJSON)',
         expectedRows: [
             { numRowsDeleted: queryTest1.rows.length }
         ],
-        expectedFields: [ { name: 'numRowsDeleted', type: 'INTEGER '} ],
+        expectedFields: [ { name: 'numRowsDeleted', type: 'LONG'} ],
         updatedRows: Utils.range(queryTest1.rows.length)
     },
     (() => {

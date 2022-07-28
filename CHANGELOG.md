@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 ## Unpublished
 
 **Added**
+* Support for longAsBigInt config option to allow return values of datatype
+LONG as JavaScript type bigint.
 * Allow PreparedStatement to bind variables by position as well as by name.
 * Added copyStatement method to PreparedStatement.
 
@@ -20,9 +22,11 @@ timeouts when the operation is retried by the retry handler.
 
 **Fixed**
 
+* Fixed some issues in writing of packed long and integer.
 * Github issue #6: PrivateKey / PrivateKeyFile documentation.
 _privateKeyFile_ may only specify the path to private key file, not PEM
 string.
+* Missing cause of the timeout error in on-prem authentication code.
 
 ## 5.3.1 = 2022-06-13
 
