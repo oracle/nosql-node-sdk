@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is version 5.2 of the Node.js SDK for
+This is version 5.3 of the Node.js SDK for
 the [Oracle NoSQL Database](https://www.oracle.com/database/technologies/related/nosql.html).
 The SDK provides interfaces, documentation, and examples to develop Node.js
 applications that use the
