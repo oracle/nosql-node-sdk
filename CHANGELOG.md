@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
-## Unpublished
+## 5.3.2 = 2022-08-18
 
 **Added**
 * Support for longAsBigInt config option to allow return values of datatype
