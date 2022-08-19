@@ -181,9 +181,9 @@ async function run(client) {
     console.log('Create table ' + TABLE_NAME);
     let res = await client.tableDDL(createDDL, {
         tableLimits: {
-            readUnits: 1,
-            writeUnits: 5,
-            storageGB: 1
+            readUnits: 50,
+            writeUnits: 50,
+            storageGB: 25
         }
     });
     console.log('  Creating table %s', res.tableName);
