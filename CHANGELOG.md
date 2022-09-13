@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+**Unpublished**
+
+**Added**
+* Added browser authentication functionality in IAM code.
+
 ## 5.3.2 = 2022-08-18
 
 **Added**
