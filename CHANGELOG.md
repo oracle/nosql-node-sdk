@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 **Unpublished**
 
 **Added**
-* Added browser authentication functionality in IAM code.
+* Cloud Service only: Added browser authentication functionality in IAM code.
 
 ## 5.3.2 = 2022-08-18
 
