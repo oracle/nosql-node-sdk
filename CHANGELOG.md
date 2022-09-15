@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
-**Unpublished**
+## 5.3.3 = 2022-09-14
 
 **Added**
 * Cloud Service only: Added browser authentication functionality in IAM code.
