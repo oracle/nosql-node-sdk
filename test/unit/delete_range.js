@@ -27,7 +27,7 @@ const _id = require('./common')._id;
 const _version = require('./common')._version;
 const badOptions = require('./common').badOptions;
 const Utils = require('./utils');
-const DELETE_RANGE_TESTS = require('./data_tests').DELETE_RANGE_TESTS;
+const DELETE_RANGE_TESTS = require('./delete_range_tests');
 
 const compartment = Utils.config.compartment;
 

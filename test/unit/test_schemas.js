@@ -288,6 +288,30 @@ ARRAY(INTEGER))'
 ALL_TYPES_TABLE.idFld =
     ALL_TYPES_TABLE.fields[ALL_TYPES_TABLE.fields.length  - 1];
 
+const ALL_TYPES_CHILD_TABLE = {
+    parent: ALL_TYPES_TABLE,
+    name: ALL_TYPES_TABLE.name + '.childTable',
+    fields: [
+        {
+            name: 'childId',
+            type: 'LONG'
+        },
+        {
+            name: 'colNumber',
+            type: 'NUMBER'
+        },
+        {
+            name: 'colJSON',
+            type: 'JSON'
+        }
+    ],
+    primaryKey: [ 'childId' ],
+    //Setting TTL different from parent table is not working with writeMany
+    //due to a bug found in the service, this can be changed once that bug is
+    //fixed.
+    ttl: { days: 3 }
+};
+
 module.exports = {
     TABLE_NAME_PFX,
     DEF_TABLE_LIMITS,
@@ -298,5 +322,6 @@ module.exports = {
     GET_TABLE_TESTS,
     LIST_TABLES_TESTS,
     TABLE_USAGE_TESTS,
-    ALL_TYPES_TABLE
+    ALL_TYPES_TABLE,
+    ALL_TYPES_CHILD_TABLE
 };

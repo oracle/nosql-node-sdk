@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+**Unpublished**
+
+**Added**
+* Support for writeMany with multiple tables that share the same shard key.
+
+**Changed**
+* Minor reorganization in unit tests, split a big file into multiple files for
+better readability.
+
 ## 5.3.3 = 2022-09-14
 
 **Added**

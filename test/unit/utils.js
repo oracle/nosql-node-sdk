@@ -31,6 +31,7 @@ const _version = Symbol('version');
 const _putTime = Symbol('putTime');
 const _ttl = Symbol('ttl');
 const _originalTTL = Symbol('originalTTL');
+const _shouldFail = Symbol('shouldFail');
 
 //Maximum accuracy of normalized binary single precision floating point number
 const FLOAT_DELTA = Math.pow(2, -24);
@@ -81,6 +82,10 @@ class Utils {
 
     static get isCloud() {
         return Utils.config.serviceType === ServiceType.CLOUD;
+    }
+
+    static get kvVersion() {
+        return Utils.getArgVal('--kv');
     }
 
     static get longAsBigInt() {
@@ -243,13 +248,24 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
         return `ALTER TABLE ${tbl.name} USING TTL ${this.ttl2string(ttl)}`;
     }
 
+    static getPrimaryKeyCols(tbl) {
+        return !tbl.parent ?
+            tbl.primaryKey :
+            this.getPrimaryKeyCols(tbl.parent).concat(tbl.primaryKey);
+    }
+
     static makePrimaryKey(tbl, row) {
         const pk = { [_id]: row[_id] };
-        tbl.primaryKey.forEach(k => {
+        this.getPrimaryKeyCols(tbl).forEach(k => {
             expect(k in row).to.equal(true);
             pk[k] = row[k];
         });
         return pk;
+    }
+
+    static getFields(tbl) {
+        return !tbl.parent ?
+            tbl.fields : this.getFields(tbl.parent).concat(tbl.fields);
     }
 
     static verifyJSON(val, val0) {
@@ -428,7 +444,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
             row = Object.assign({}, row);
             delete row[tbl.idFld.name];
         }
-        this.verifyRecord(row, row0, fields ? fields : tbl.fields);
+        this.verifyRecord(row, row0, fields ? fields : this.getFields(tbl));
     }
 
     static verifyTableResult(res, tbl, opt) {
@@ -807,5 +823,6 @@ Utils._ttl = _ttl;
 Utils._putTime = _putTime;
 Utils._version = _version;
 Utils._originalTTL = _originalTTL;
+Utils._shouldFail = _shouldFail;
 
 module.exports = Utils;
