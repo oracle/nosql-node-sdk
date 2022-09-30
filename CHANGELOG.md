@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 **Unpublished**
 
 **Added**
+* Cloud only: Added OCI region codes: ORD, TIW, BGY
 * Support for writeMany with multiple tables that share the same shard key.
 
 **Changed**
