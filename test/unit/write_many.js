@@ -16,7 +16,7 @@ const NoSQLError = require('../../index').NoSQLError;
 const Limits = require('../../lib/constants').Limits;
 const isPosInt32OrZero = require('../../lib/utils').isPosInt32OrZero;
 const Utils = require('./utils');
-const WRITE_MANY_TESTS = require('./data_tests').WRITE_MANY_TESTS;
+const WRITE_MANY_TESTS = require('./write_many_tests');
 
 const badTblNames = require('./common').badTblNames;
 const badOptsPutNoTimeout = require('./common').badOptsPutNoTimeout;
@@ -240,6 +240,24 @@ function testWriteManyNegative(client, tbl, row, row2) {
                     err instanceof NoSQLArgumentError &&
                     !err._rejectedByDriver);
         });
+
+    it('writeMany with omitted table name and no table name in ops',
+        async function() {
+            return expect(client.writeMany([ samplePut, sampleDelete]))
+                .to.eventually.be.rejected.and.satisfy(err =>
+                    err instanceof NoSQLArgumentError &&
+                    err._rejectedByDriver);
+        });
+
+    it('writeMany with table name both as arg and in ops',
+        async function() {
+            return expect(client.writeMany(tbl.name,
+                [ samplePut, Object.assign(
+                    { tableName: tbl.name }, sampleDelete) ]))
+                .to.eventually.be.rejected.and.satisfy(err =>
+                    err instanceof NoSQLArgumentError &&
+                    err._rejectedByDriver);
+        });
 }
 
 //In case the writeMany operation should succeed, individual sub operations
@@ -280,14 +298,17 @@ async function verifyWriteMany(res, client, test, ops, opt, success = true) {
             if (op.ifAbsent || op.ifPresent || op.matchVersion) {
                 readCnt++;
             }
+
+            //parent or child test object depending on op
+            const opTest = test.getTest(op.tableName);
             if (op.put) {
-                const existingRow = test.byId.get(op.put[_id]);
-                await Utils.verifyPut(res.results[i], client, test.table,
+                const existingRow = opTest.byId.get(op.put[_id]);
+                await Utils.verifyPut(res.results[i], client, opTest.table,
                     op.put, opOpt, !op._shouldFail, existingRow, true);
             } else {
                 expect(op.delete).to.exist;
-                const existingRow = test.byId.get(op.delete[_id]);
-                await Utils.verifyDelete(res.results[i], client, test.table,
+                const existingRow = opTest.byId.get(op.delete[_id]);
+                await Utils.verifyDelete(res.results[i], client, opTest.table,
                     op.delete, opOpt, !op._shouldFail, existingRow, true);
             }
         }
@@ -306,25 +327,28 @@ async function verifyWriteMany(res, client, test, ops, opt, success = true) {
         const opOpt = Object.assign(Object.create(opt), op);
         expect(opOpt.abortOnFail).to.be.ok;
 
+        //parent or child test object
+        const opTest = test.getTest(op.tableName);
         if (op.put) {
-            const existingRow = test.byId.get(op.put[_id]);
-            await Utils.verifyPut(res.failedOpResult, client, test.table,
+            const existingRow = opTest.byId.get(op.put[_id]);
+            await Utils.verifyPut(res.failedOpResult, client, opTest.table,
                 op.put, opOpt, false, existingRow, true, false);
         } else {
             expect(op.delete).to.exist;
-            const existingRow = test.byId.get(op.delete[_id]);
-            await Utils.verifyDelete(res.failedOpResult, client, test.table,
+            const existingRow = opTest.byId.get(op.delete[_id]);
+            await Utils.verifyDelete(res.failedOpResult, client, opTest.table,
                 op.delete, opOpt, false, existingRow, true);
         }
 
         //Verify that no rows has been affected by the operation
         for(let op of ops) {
-            const key = op.put ? Utils.makePrimaryKey(test.table, op.put) :
+            const opTest = test.getTest(op.tableName);
+            const key = op.put ? Utils.makePrimaryKey(opTest.table, op.put) :
                 op.delete;
-            const existingRow = test.byId.get(op.put ? op.put[_id] :
+            const existingRow = opTest.byId.get(op.put ? op.put[_id] :
                 op.delete[_id]);
-            const getRes = await client.get(test.table.name, key);
-            Utils.verifyGetResult(client, getRes, test.table, existingRow);
+            const getRes = await client.get(opTest.table.name, key);
+            Utils.verifyGetResult(client, getRes, opTest.table, existingRow);
         }
     }
 }
@@ -333,24 +357,27 @@ async function verifyWriteMany(res, client, test, ops, opt, success = true) {
 //common options (opt) and expected success status (success)
 //For putMany and deleteMany, instead of ops array, there are rows and keys
 //arrays respectively.  Only one of ops, rows or keys may be present.
-function testWriteMany(client, test, testCase) {
+function doTestWriteMany(client, test, testCase) {
     if (testCase.rows) {
-        //if we use rows array, we specify _shouldFail as row symbol property
+        //if we use rows array, we specify _shouldFail as
+        //a row symbol property
         testCase.ops = testCase.rows.map(row => ({ put: row }));
-        it(`putMany on table ${test.table.name}, test case: ${testCase.desc}`,
-            async function() {
-                const res = await client.putMany(test.table.name,
-                    testCase.rows, testCase.opt);
-                await verifyWriteMany(res, client, test, testCase.ops,
-                    testCase.opt, testCase.success);
-            });
+        it(`putMany on table ${test.table.name}, test case: \
+${testCase.desc}`,
+        async function() {
+            const res = await client.putMany(test.table.name,
+                testCase.rows, testCase.opt);
+            await verifyWriteMany(res, client, test, testCase.ops,
+                testCase.opt, testCase.success);
+        });
     } else if (testCase.keys) {
-        //if we use keys array, we specify _shouldFail as key symbol property
+        //if we use keys array, we specify _shouldFail
+        //as a key symbol property
         testCase.ops = testCase.keys.map(key => ({ delete: key }));
         it(`deleteMany on table ${test.table.name}, test case: \
 ${testCase.desc}`, async function() {
-            const res = await client.deleteMany(test.table.name, testCase.keys,
-                testCase.opt);
+            const res = await client.deleteMany(test.table.name,
+                testCase.keys, testCase.opt);
             await verifyWriteMany(res, client, test, testCase.ops,
                 testCase.opt, testCase.success);
         });
@@ -364,7 +391,27 @@ ${testCase.desc}`, async function() {
             await verifyWriteMany(res, client, test, testCase.ops,
                 testCase.opt, testCase.success);
         });
+}
 
+function doTestMultiTableWriteMany(client, test, testCase) {
+    //test self-check
+    expect(testCase.ops).to.exist;
+    //putMany and deleteMany are not used for multi-table testing
+    it(`writeMany on tables ${test.table.name} and ${test.child.table.name}, \
+test case: ${testCase.desc}`,
+    async function() {
+        const res = await client.writeMany(testCase.ops, testCase.opt);
+        await verifyWriteMany(res, client, test, testCase.ops,
+            testCase.opt, testCase.success);
+    });
+}
+
+function testWriteMany(client, test, testCase) {
+    if (!test.isMultiTable(testCase)) {
+        doTestWriteMany(client, test, testCase);
+    } else {
+        doTestMultiTableWriteMany(client, test, testCase);
+    }
     //We have to back up these in original format since they will be needed
     //to prepare() multiple times.  This will be executed before actual tests.
     testCase.srcOps = Utils.deepCopy(testCase.ops);
@@ -383,26 +430,33 @@ function prepare(test, testCase) {
     for(let i = 0; i < testCase.ops.length; i++) {
         const op = testCase.ops[i];
         const srcOp = testCase.srcOps[i];
+        const opTest = test.isMultiTable(testCase) ?
+            (srcOp.isChild ? test.child : test) : test;
         if (srcOp.put) {
             expect(op.put).to.exist;
-            if (srcOp.put.shouldFail != null) {
-                op._shouldFail = srcOp.put.shouldFail;
+            if (srcOp.put[Utils._shouldFail] != null) {
+                op._shouldFail = srcOp.put[Utils._shouldFail];
             }
-            op.put = test.ptr2row(srcOp.put);
+            op.put = opTest.ptr2row(srcOp.put);
         } else {
             expect(srcOp.delete).to.exist;
             expect(op.delete).to.exist;
-            if (srcOp.delete.shouldFail != null) {
-                op._shouldFail = srcOp.delete.shouldFail;
+            if (srcOp.delete[Utils._shouldFail] != null) {
+                op._shouldFail = srcOp.delete[Utils._shouldFail];
             }
-            op.delete = test.ptr2pk(srcOp.delete);
+            op.delete = opTest.ptr2pk(srcOp.delete);
         }
         if (srcOp.matchVersion) {
-            op.matchVersion = test.ptr2version(srcOp.matchVersion);
+            op.matchVersion = opTest.ptr2version(srcOp.matchVersion);
+        }
+        if (test.isMultiTable(testCase)) {
+            op.tableName = opTest.table.name;
         }
     }
     if (testCase.srcOpt) {
         expect(testCase.opt).to.exist;
+        //Technically, matchVersion should not be used in global opt, only as
+        //per-operation option, only using here for failure testing.
         if (testCase.srcOpt.matchVersion) {
             expect(testCase.opt.matchVersion).to.exist;
             testCase.opt.matchVersion = test.ptr2version(
@@ -422,18 +476,19 @@ function prepare(test, testCase) {
 //property
 async function restore(client, test, ops) {
     for(let op of ops) {
+        const opTest = test.getTest(op.tableName);
         if (op.put) {
-            const origRow = test.byId.get(op.put[_id]);
+            const origRow = opTest.byId.get(op.put[_id]);
             if (origRow) { //was put on existing row
-                await Utils.putRow(client, test.table, origRow);
+                await Utils.putRow(client, opTest.table, origRow);
             } else { //was put on new row
-                await Utils.deleteRow(client, test.table,
-                    Utils.makePrimaryKey(test.table, op.put));
+                await Utils.deleteRow(client, opTest.table,
+                    Utils.makePrimaryKey(opTest.table, op.put));
             }
         } else {
-            const origRow = test.byId.get(op.delete[_id]);
+            const origRow = opTest.byId.get(op.delete[_id]);
             if (origRow) { //was delete on existing row
-                await Utils.putRow(client, test.table, origRow);
+                await Utils.putRow(client, opTest.table, origRow);
             }
             //ignore delete on non-existing row
         }
@@ -447,8 +502,17 @@ function doTest(client, test) {
             for(let row of test.rows) {
                 await Utils.putRow(client, test.table, row);
             }
+            if (test.child) {
+                await Utils.createTable(client, test.child.table);
+                for(let row of test.child.rows) {
+                    await Utils.putRow(client, test.child.table, row);
+                }    
+            }
         });
         after(async function() {
+            if (test.child) {
+                await Utils.dropTable(client, test.child.table);    
+            }
             await Utils.dropTable(client, test.table);
         });
         testWriteManyNegative(client, test.table, test.rowFromShard(0),

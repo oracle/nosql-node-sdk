@@ -491,7 +491,7 @@ let pre20_1;
 let pre20_2;
 
 const compareVersions = require('compare-versions');
-const kvVer = Utils.getArgVal('--kv');
+const kvVer = Utils.kvVersion;
 if (kvVer) {
     pre20_1 = compareVersions(kvVer, '20.1') < 0;
     pre20_2 = compareVersions(kvVer, '20.2') < 0;

@@ -34,7 +34,7 @@ const QueryUtils = require('./query_utils');
 
 const basicQueryOnly = Utils.getArgVal('--basic-query-only');
 
-const QUERY_TESTS = basicQueryOnly ? require('./data_tests').QUERY_TESTS :
+const QUERY_TESTS = basicQueryOnly ? require('./query_tests_simple') :
     require(pre20_2 ? './query_tests' : './query_tests2');
 
 const negativeTestTable = require('./test_schemas').SIMPLE_TABLE;
