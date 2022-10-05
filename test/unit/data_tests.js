@@ -348,6 +348,7 @@ class AllTypesChildTableTest extends DataTest {
         super(ALL_TYPES_CHILD_TABLE,
             id => makeChildRowAllTypes(id, rowsPerShard),
             modifyChildRowAllTypes, cnt, start);
+        this.rowsPerShard = rowsPerShard;
     }
 }
 
