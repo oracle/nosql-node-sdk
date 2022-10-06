@@ -255,9 +255,10 @@ async function multiTableWriteManyLoop(client, test, seconds, stats) {
     } while(Date.now() < endTime);
 }
 
-//Noticed an issue with cloudsim where performans of the loop above slows down
-//after cloudsim has been run a while, so we can't test this.  Needs to be
-//investigated.
+//Noticed an issue with cloudsim where performance of the loop above slows
+//down after cloudsim has been run a while, so we can't test for mininum
+//write units. Needs to be investigated.
+
 //multiTableWriteManyLoop.chkMinWrites = true;
 
 async function queryLoop(client, test, seconds, stats, isSinglePartition,
