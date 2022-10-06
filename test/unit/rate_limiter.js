@@ -18,6 +18,8 @@ const SimpleRateLimiter =
 const TestConfig = require('../utils').TestConfig;
 const Utils = require('./utils');
 const AllTypesTest = require('./data_tests').AllTypesTest;
+const AllTypesWithChildTableTest = require('./data_tests')
+    .AllTypesWithChildTableTest;
 const DEF_TABLE_LIMITS = require('./common').DEF_TABLE_LIMITS;
 
 const BURST_SECS = 1;
@@ -237,6 +239,27 @@ async function writeManyLoop(client, test, seconds, stats) {
 
 writeManyLoop.chkMinWrites = true;
 
+async function multiTableWriteManyLoop(client, test, seconds, stats) {
+    expect(test.child).to.exist; // test self-check
+    const ROW_CNT = 3;
+    const endTime = Date.now() + seconds * 1000;
+    do {
+        const startIdx = Math.floor(Math.random() *
+            (test.rowsPerShard - ROW_CNT + 1));
+        const ops = test.rows.slice(startIdx, startIdx + ROW_CNT).map(
+            row => ({ put: row, tableName: test.table.name })).concat(
+            test.child.rows.slice(startIdx, startIdx + ROW_CNT).map(
+                row => ({ put: row, tableName: test.child.table.name })));
+        const res = await client.writeMany(ops, { ifPresent: true });
+        addStats(stats, res, true, true);
+    } while(Date.now() < endTime);
+}
+
+//Noticed an issue with cloudsim where performans of the loop above slows down
+//after cloudsim has been run a while, so we can't test this.  Needs to be
+//investigated.
+//multiTableWriteManyLoop.chkMinWrites = true;
+
 async function queryLoop(client, test, seconds, stats, isSinglePartition,
     isAdvanced) {
     const endTime = Date.now() + seconds * 1000;
@@ -247,8 +270,9 @@ async function queryLoop(client, test, seconds, stats, isSinglePartition,
 $pkString STRING; SELECT * FROM ${test.table.name} WHERE shardId = $shardId \
 AND pkString = $pkString`);
     } else {
-        pStmt = await client.prepare(`DECLARE $colInteger INTEGER; \
-SELECT * FROM ${test.table.name} WHERE colInteger >= $colInteger` +
+        //colNumber exists in both parent and child tables
+        pStmt = await client.prepare(`DECLARE $colNumber NUMBER; \
+SELECT * FROM ${test.table.name} WHERE colNumber >= $colNumber` +
             (isAdvanced ? ' ORDER BY shardId DESC, pkString DESC \
 LIMIT 20 OFFSET 1' : ''));
     }
@@ -260,7 +284,7 @@ LIMIT 20 OFFSET 1' : ''));
             pStmt.set('$shardId', test.rows[idx].shardId);
             pStmt.set('$pkString', test.rows[idx].pkString);
         } else {
-            pStmt.set('$colInteger', test.rows[idx].colInteger);
+            pStmt.set('$colNumber', test.rows[idx].colNumber);
         }
 
         const opt = {};
@@ -282,15 +306,15 @@ async function unprepQueryLoop(client, test, seconds, stats,
         const idx = Math.floor(Math.random() * test.rows.length);
         const shardId = test.rows[idx].shardId;
         const pkString = test.rows[idx].pkString;
-        const colInteger = test.rows[idx].colInteger;
+        const colNumber = test.rows[idx].colNumber;
         let stmt;
 
         if (isSinglePartition) {
             stmt = `SELECT * FROM ${test.table.name} WHERE shardId = \
 '${shardId}' AND pkString = '${pkString}'`;
         } else {
-            stmt = `SELECT * FROM ${test.table.name} WHERE colInteger >= \
-'${colInteger}'` + (isAdvanced ? ' ORDER BY shardId DESC, pkString DESC \
+            stmt = `SELECT * FROM ${test.table.name} WHERE colNumber >= \
+'${colNumber}'` + (isAdvanced ? ' ORDER BY shardId DESC, pkString DESC \
 LIMIT 20 OFFSET 1' : '');
         }
 
@@ -347,12 +371,17 @@ function chkStats(stats, tc, percent, chkMinReadUnits, chkMinWriteUnits) {
     }
 }
 
-function testLoop(loop, client, test, tc, stats) {
+function testLoop(loop, client, test, tc, stats, isMultiTable) {
+    if(isMultiTable && !test.child) {
+        return;
+    }
     it(loop.name, async function() {
         resetStats(stats);
         const startTime = Date.now();
-        await Promise.all(Array.from({ length: tc.loopCnt }, () =>
-            loop(client, test, tc.seconds, stats)));
+        //odd-numbered loops will use child table
+        await Promise.all(Array.from({ length: tc.loopCnt }, (_, idx) =>
+            loop(client, isMultiTable || !test.child || !(idx & 1) ?
+                test : test.child, tc.seconds, stats)));
         stats.totalTime = Date.now() - startTime;
         stats.readUnits = stats.totalReadUnits * 1000 / stats.totalTime;
         stats.writeUnits = stats.totalWriteUnits * 1000 / stats.totalTime;
@@ -406,6 +435,7 @@ function testTableOps(client, test, tc) {
         testLoop(deleteLoop, client, test, tc, stats);
         testLoop(deleteRangeLoop, client, test, tc, stats);
         testLoop(writeManyLoop, client, test, tc, stats);
+        testLoop(multiTableWriteManyLoop, client, test, tc, stats, true);
         testLoop(queryLoop, client, test, tc, stats);
         testLoop(queryLoopSP, client, test, tc, stats);
         testLoop(advQueryLoop, client, test, tc, stats);
@@ -421,7 +451,7 @@ function testTableOps(client, test, tc) {
 const TESTS = [
     {
         desc: 'default',
-        __proto__: new AllTypesTest(20),
+        __proto__: new AllTypesWithChildTableTest(20),
         rateLimiter: true,
         testCases: [
             {
@@ -498,8 +528,17 @@ function doTest(test) {
                 for(let row of test.rows) {
                     await Utils.putRow(client, test.table, row);
                 }
+                if (test.child) {
+                    await Utils.createTable(client, test.child.table);
+                    for(let row of test.child.rows) {
+                        await Utils.putRow(client, test.child.table, row);
+                    }    
+                }    
             });
             after(async function() {
+                if (test.child) {
+                    await Utils.dropTable(client, test.child.table);
+                }    
                 await Utils.dropTable(client, test.table);
                 client.close();
             });
