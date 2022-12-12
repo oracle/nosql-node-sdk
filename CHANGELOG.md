@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
-**Unpublished**
+## 5.3.4 - 2022-12-12
 
 **Added**
 * Cloud only: Added OCI region codes: ORD, TIW, BGY, ORK, SNN, MXP, DUS, DTM,
@@ -15,12 +15,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 * Minor reorganization in unit tests, split a big file into multiple files for
 better readability.
 
-## 5.3.3 = 2022-09-14
+## 5.3.3 - 2022-09-14
 
 **Added**
 * Cloud Service only: Added browser authentication functionality in IAM code.
 
-## 5.3.2 = 2022-08-18
+## 5.3.2 - 2022-08-18
 
 **Added**
 * Support for longAsBigInt config option to allow return values of datatype
@@ -44,7 +44,7 @@ _privateKeyFile_ may only specify the path to private key file, not PEM
 string.
 * Missing cause of the timeout error in on-prem authentication code.
 
-## 5.3.1 = 2022-06-13
+## 5.3.1 - 2022-06-13
 
 **Added**
 
@@ -72,7 +72,7 @@ causes missing output.
 * Fixed a bug where queryIterable API was throwing TypeError when called
 without *opt* parameter.
 
-## 5.3.0 = 2022-02-18
+## 5.3.0 - 2022-02-18
 
 **Added**
 
