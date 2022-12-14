@@ -12,6 +12,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 * Support for writeMany with multiple tables that share the same shard key.
 
 **Changed**
+* Upgraded versions of developer dependencies to remove vulnerabilities and
+deprecation warnings.
 * Minor reorganization in unit tests, split a big file into multiple files for
 better readability.
 
