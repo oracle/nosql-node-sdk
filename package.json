@@ -27,19 +27,19 @@
     "database"
   ],
   "devDependencies": {
-    "eslint": "^6.8.0",
+    "eslint": "^8.29.0",
     "eslint-plugin-require-path-exists": "^1.1.9",
     "jsdoc": "^3.5.5",
-    "docdash": "^1.0.3",
-    "mocha": "^6.0.0",
-    "chai": "^4.2.0",
+    "docdash": "^1.2.0",
+    "mocha": "^9.2.2",
+    "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
-    "lodash": "^4.17.11",
-    "decimal.js": "^10.0.2",
-    "geolib": "^3.0.4",
-    "sinon": "^9.0.2",
-    "mock-fs": "^5.1.2",
-    "compare-versions": "^3.6.0"
+    "lodash": "^4.17.21",
+    "decimal.js": "^10.4.3",
+    "geolib": "^3.3.3",
+    "sinon": "^15.0.0",
+    "mock-fs": "^5.2.0",
+    "compare-versions": "^5.0.3"
   },
   "overrides": {
     "@babel/parser": "7.14.7"
