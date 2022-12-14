@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
-## 5.3.4 - 2022-12-12
+## 5.3.4 - 2022-12-14
 
 **Added**
 * Cloud only: Added OCI region codes: ORD, TIW, BGY, ORK, SNN, MXP, DUS, DTM,
