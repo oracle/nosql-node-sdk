@@ -304,14 +304,19 @@
  * {@link NoSQLClient#put} and {@link NoSQLClient#delete} and they override
  * options specified in &lt;em>opt&lt;/em> parameter of
  * {@link NoSQLClient#writeMany} for this sub operation.  Exceptions to
- * this are &lt;em>timeout&lt;/em> and &lt;em>compartment&lt;/em>
+ * this are &lt;em>timeout&lt;/em>, &lt;em>compartment&lt;/em> and &lt;em>durability&lt;/em>
  * which cannot be specified per sub-operation, but
  * only for the whole {@link NoSQLClient#writeMany} operation.
  * &lt;p>
- * Note that in more simple cases where operations are either all &lt;em>put&lt;/em>
- * or all &lt;em>delete&lt;/em> and you don't need to set per-operation options, you
- * may prefer to use {@link NoSQLClient#putMany} or
- * {@link NoSQLClient#deleteMany} methods and avoid using this type.
+ * If issuing operations for multiple tables, you must also specify
+ * {@link WriteOperation}#tableName for each operation.  See
+ * {@link NoSQLClient#writeMany} for more details.
+ * &lt;p>
+ * Note that in a more simple case where operations are for a single table and
+ * are either all &lt;em>put&lt;/em> or all &lt;em>delete&lt;/em> and you don't need to
+ * set per-operation options, you may prefer to use
+ * {@link NoSQLClient#putMany} or {@link NoSQLClient#deleteMany} methods and
+ * avoid using this type.
  *
  * @example //Adding WriteOperations to operations array
  * operations.push({
@@ -328,6 +333,10 @@
  *
  * @global
  * @typedef {object} WriteOperation
+ * @property {string} [tableName] Table name for the operation.  Only needed
+ * when issuing operations for multiple tables.  This property is mutually
+ * exclusive with &lt;em>tableName&lt;/em> parameter to
+ * {@link NoSQLClient#writeMany}.
  * @property {Row} [put] Row for &lt;em>put&lt;/em> operation, designates this
  * operation as &lt;em>put&lt;/em>.  One and only one of &lt;em>put&lt;/em> or
  * &lt;em>delete&lt;/em> properties must be set.

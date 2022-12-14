@@ -491,7 +491,7 @@ missing required properties or contains invalid property values
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1322">line 1322</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1346">line 1346</a>
     </li></ul></dd>
     
 
@@ -881,7 +881,7 @@ Defaults to <a href="global.html#Config">Config</a>#adminPollDelay.  Has no effe
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1350">line 1350</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1374">line 1374</a>
     </li></ul></dd>
     
 
@@ -2189,7 +2189,7 @@ specified.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1079">line 1079</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1103">line 1103</a>
     </li></ul></dd>
     
 
@@ -2233,10 +2233,11 @@ specified.
 share the same <em>shard key</em> portion of their primary keys, all
 the specified operations are executed within the scope of single
 transaction, thus making the operation atomic.
-This API is a shortcut to <a href="NoSQLClient.html#writeMany">NoSQLClient#writeMany</a> with two
-simplifications:
+This API is a shortcut to <a href="NoSQLClient.html#writeMany">NoSQLClient#writeMany</a> with the
+following simplifications:
 <ul>
 <li>The sequence contains only delete operations.</li>
+<li>All operations are for a single table.</li>
 <li>Options are specified only in the <em>opt</em> argument of this API
 and are same for all delete sub-operations (no per-sub-operation
 options).</li>
@@ -3003,7 +3004,7 @@ continuation key still require the primary key</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1430">line 1430</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1454">line 1454</a>
     </li></ul></dd>
     
 
@@ -4865,7 +4866,7 @@ information on all indexes is returned</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1500">line 1500</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1524">line 1524</a>
     </li></ul></dd>
     
 
@@ -5731,7 +5732,7 @@ usage records may be returned due to size limitations</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1450">line 1450</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1474">line 1474</a>
     </li></ul></dd>
     
 
@@ -6021,7 +6022,7 @@ milliseconds</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1492">line 1492</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1516">line 1516</a>
     </li></ul></dd>
     
 
@@ -6696,7 +6697,7 @@ from given namespace only, otherwise list all tables for the user.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1472">line 1472</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1496">line 1496</a>
     </li></ul></dd>
     
 
@@ -7164,7 +7165,7 @@ try {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1113">line 1113</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1137">line 1137</a>
     </li></ul></dd>
     
 
@@ -9708,7 +9709,7 @@ specified.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1041">line 1041</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1064">line 1064</a>
     </li></ul></dd>
     
 
@@ -9752,10 +9753,11 @@ specified.
 share the same <em>shard key</em> portion of their primary keys, all
 the specified operations are executed within the scope of single
 transaction, thus making the operation atomic.
-This API is a shortcut to <a href="NoSQLClient.html#writeMany">NoSQLClient#writeMany</a> with two
-simplifications:
+This API is a shortcut to <a href="NoSQLClient.html#writeMany">NoSQLClient#writeMany</a> with the
+following simplifications:
 <ul>
 <li>The sequence contains only put operations.</li>
+<li>All operations are for a single table.</li>
 <li>Options are specified only in the <em>opt</em> argument of this API
 and are same for all put sub operations (no per-sub-operation options).
 </li>
@@ -10022,7 +10024,7 @@ in error</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1199">line 1199</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1223">line 1223</a>
     </li></ul></dd>
     
 
@@ -10584,7 +10586,7 @@ will not look ahead to check if any more results remain</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1244">line 1244</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1268">line 1268</a>
     </li></ul></dd>
     
 
@@ -11698,7 +11700,7 @@ Defaults to <a href="global.html#Config">Config</a>#tablePollDelay.  Has no effe
 
     
 
-    <h4 class="name" id="writeMany"><span class="type-signature">(async) </span>writeMany<span class="signature">(tableName, operations, opt<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id="writeMany"><span class="type-signature">(async) </span>writeMany<span class="signature">(tableName<span class="signature-attributes">opt</span>, operations, opt<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
 
     
 
@@ -11710,7 +11712,7 @@ Defaults to <a href="global.html#Config">Config</a>#tablePollDelay.  Has no effe
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1002">line 1002</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1017">line 1017</a>
     </li></ul></dd>
     
 
@@ -11751,10 +11753,10 @@ Defaults to <a href="global.html#Config">Config</a>#tablePollDelay.  Has no effe
 
 <div class="description usertext">
     Executes a sequence of put and delete operations associated with
-a table that share the same <em>shard key</em> portion of their primary
-keys, all the specified operations are executed within the scope of a
-single transaction, thus making the operation atomic.  It is an
-efficient way to atomically modify multiple related rows.
+a table or tables that share the same <em>shard key</em> portion of
+their primary keys, all the specified operations are executed within
+the scope of a single transaction, thus making the operation atomic.
+It is an efficient way to atomically modify multiple related rows.
 <p>
 There are some size-based limitations on this operation:
 <ul>
@@ -11769,7 +11771,7 @@ operation was aborted because of failure of a sub operation which has
 <em>opt.abortOnFail</em> set to true, then the index and execution
 result of the failed sub operation will be stored in
 <a href="global.html#WriteMultipleResult">WriteMultipleResult</a> (thus the API call in this case is still
-successful no error results).
+successful and no error results).
 <p>
 Note that in addition to <em>opt</em> argument of this API, each
 sub operation may have its own <em>opt</em> property as
@@ -11780,7 +11782,16 @@ which can only be specified for the whole operation in <em>opt</em>
 argument).  Each option value explicitly set in
 WriteOperation#opt will take precedence over its value in
 <em>opt</em> argument, otherwise the <em>opt</em> argument can be used
-to specify options that should be same for all sub operations.
+to specify options that should be the same for all sub operations.
+<p>
+It is possible to issue operations for multiple tables as long as
+these tables have the same shard key.  This means that these tables
+must be part of the same parent/child table hierarchy that has a single
+ancestor table specifying the shard key (you may include operations for
+this ancestor table and/or any of its descendants).  To issue
+operations for multiple tables, omit the <em>tableName</em> parameter
+(and thus use <em>writeMany(operations[, opt])</em>) and specify
+table per operation as <a href="global.html#WriteOperation">WriteOperation</a>#tableName.
 </div>
 
 
@@ -11835,6 +11846,8 @@ to specify options that should be same for all sub operations.
             
                 <td class="attributes">
                 
+                    &lt;optional><br>
+                
 
                 
 
@@ -11844,7 +11857,12 @@ to specify options that should be same for all sub operations.
 
             
 
-            <td class="description last">Table name</td>
+            <td class="description last">Table name, if all operations are for a
+single table.  If issuing operations for multiple tables, omit this
+parameter and specify table name for each operation as
+<a href="global.html#WriteOperation">WriteOperation</a>#tableName. Specifying this parameter together
+with <a href="global.html#WriteOperation">WriteOperation</a>#tableName for any operation will result in
+error</td>
         </tr>
 
     
@@ -11913,9 +11931,10 @@ operation, see <a href="global.html#WriteOperation">WriteOperation</a></td>
             <td class="description last">Options object, specifies options that should be
 same for all put and delete sub operations (options relevant
 only to put but not to delete will be ignored for delete operations).
-Options for specific sub operation, other than <em>timeout</em>
-may be specified in <a href="global.html#WriteOperation">WriteOperation</a>#opt and will override values
-specified here. For list of options, see <a href="global.html#WriteOperation">WriteOperation</a>#opt
+Options for specific sub operation, other than <em>timeout</em>,
+<em>compartment</em> and <em>durability</em> may be specified in
+<a href="global.html#WriteOperation">WriteOperation</a> and will override values specified here. For
+list of options, see <a href="global.html#WriteOperation">WriteOperation</a>
                 <h6>Properties</h6>
                 
 
@@ -12120,7 +12139,7 @@ milliseconds.  Defaults to <a href="global.html#Config">Config</a>#timeout</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1538">line 1538</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1562">line 1562</a>
     </li></ul></dd>
     
 
@@ -12286,7 +12305,7 @@ capacity, see <a href="global.html#Operation">Operation</a></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1505">line 1505</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1529">line 1529</a>
     </li></ul></dd>
     
 
@@ -12453,7 +12472,7 @@ caused the error, see <a href="global.html#Operation">Operation</a></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1521">line 1521</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1545">line 1545</a>
     </li></ul></dd>
     
 
@@ -12649,7 +12668,7 @@ be performed</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1553">line 1553</a>
+        <a href="nosql_client.js.html">nosql_client.js</a>, <a href="nosql_client.js.html#line1577">line 1577</a>
     </li></ul></dd>
     
 

@@ -8903,7 +8903,7 @@ Also see <a href="global.html#RoundingModesMap">RoundingModesMap</a> for explana
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_param.js.html">types/param.js</a>, <a href="types_param.js.html#line306">line 306</a>
+        <a href="types_param.js.html">types/param.js</a>, <a href="types_param.js.html#line315">line 315</a>
     </li></ul></dd>
     
 
@@ -12683,6 +12683,40 @@ case.  You may check for the success of the entire operation by whether
 
         <tr>
             
+                <td class="name"><code>tableName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Table name for the operation.  Only needed
+when issuing operations for multiple tables.  This property is mutually
+exclusive with <em>tableName</em> parameter to
+<a href="NoSQLClient.html#writeMany">NoSQLClient#writeMany</a>.</td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>put</code></td>
             
 
@@ -12985,14 +13019,19 @@ options for this sub operation.  These options are the same as used for
 <a href="NoSQLClient.html#put">NoSQLClient#put</a> and <a href="NoSQLClient.html#delete">NoSQLClient#delete</a> and they override
 options specified in <em>opt</em> parameter of
 <a href="NoSQLClient.html#writeMany">NoSQLClient#writeMany</a> for this sub operation.  Exceptions to
-this are <em>timeout</em> and <em>compartment</em>
+this are <em>timeout</em>, <em>compartment</em> and <em>durability</em>
 which cannot be specified per sub-operation, but
 only for the whole <a href="NoSQLClient.html#writeMany">NoSQLClient#writeMany</a> operation.
 <p>
-Note that in more simple cases where operations are either all <em>put</em>
-or all <em>delete</em> and you don't need to set per-operation options, you
-may prefer to use <a href="NoSQLClient.html#putMany">NoSQLClient#putMany</a> or
-<a href="NoSQLClient.html#deleteMany">NoSQLClient#deleteMany</a> methods and avoid using this type.
+If issuing operations for multiple tables, you must also specify
+<a href="global.html#WriteOperation">WriteOperation</a>#tableName for each operation.  See
+<a href="NoSQLClient.html#writeMany">NoSQLClient#writeMany</a> for more details.
+<p>
+Note that in a more simple case where operations are for a single table and
+are either all <em>put</em> or all <em>delete</em> and you don't need to
+set per-operation options, you may prefer to use
+<a href="NoSQLClient.html#putMany">NoSQLClient#putMany</a> or <a href="NoSQLClient.html#deleteMany">NoSQLClient#deleteMany</a> methods and
+avoid using this type.
 </div>
 
 

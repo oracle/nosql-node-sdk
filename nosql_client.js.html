@@ -996,10 +996,10 @@ class NoSQLClient extends NoSQLClientImpl {
 
     /**
      * Executes a sequence of put and delete operations associated with
-     * a table that share the same &lt;em>shard key&lt;/em> portion of their primary
-     * keys, all the specified operations are executed within the scope of a
-     * single transaction, thus making the operation atomic.  It is an
-     * efficient way to atomically modify multiple related rows.
+     * a table or tables that share the same &lt;em>shard key&lt;/em> portion of
+     * their primary keys, all the specified operations are executed within
+     * the scope of a single transaction, thus making the operation atomic.
+     * It is an efficient way to atomically modify multiple related rows.
      * &lt;p>
      * There are some size-based limitations on this operation:
      * &lt;ul>
@@ -1014,7 +1014,7 @@ class NoSQLClient extends NoSQLClientImpl {
      * &lt;em>opt.abortOnFail&lt;/em> set to true, then the index and execution
      * result of the failed sub operation will be stored in
      * {@link WriteMultipleResult} (thus the API call in this case is still
-     * successful no error results).
+     * successful and no error results).
      * &lt;p>
      * Note that in addition to &lt;em>opt&lt;/em> argument of this API, each
      * sub operation may have its own &lt;em>opt&lt;/em> property as
@@ -1025,18 +1025,33 @@ class NoSQLClient extends NoSQLClientImpl {
      * argument).  Each option value explicitly set in
      * {@link WriteOperation#opt} will take precedence over its value in
      * &lt;em>opt&lt;/em> argument, otherwise the &lt;em>opt&lt;/em> argument can be used
-     * to specify options that should be same for all sub operations.
+     * to specify options that should be the same for all sub operations.
+     * &lt;p>
+     * It is possible to issue operations for multiple tables as long as
+     * these tables have the same shard key.  This means that these tables
+     * must be part of the same parent/child table hierarchy that has a single
+     * ancestor table specifying the shard key (you may include operations for
+     * this ancestor table and/or any of its descendants).  To issue
+     * operations for multiple tables, omit the &lt;em>tableName&lt;/em> parameter
+     * (and thus use &lt;em>writeMany(operations[, opt])&lt;/em>) and specify
+     * table per operation as {@link WriteOperation}#tableName.
      * @async
-     * @param {string} tableName Table name
+     * @param {string} [tableName] Table name, if all operations are for a
+     * single table.  If issuing operations for multiple tables, omit this
+     * parameter and specify table name for each operation as
+     * {@link WriteOperation}#tableName. Specifying this parameter together
+     * with {@link WriteOperation}#tableName for any operation will result in
+     * error
      * @param {WriteOperation[]} operations Array of
      * {@link WriteOperation} objects each representing single put or delete
      * operation, see {@link WriteOperation}
      * @param {object} [opt] Options object, specifies options that should be
      * same for all put and delete sub operations (options relevant
      * only to put but not to delete will be ignored for delete operations).
-     * Options for specific sub operation, other than &lt;em>timeout&lt;/em>
-     * may be specified in {@link WriteOperation}#opt and will override values
-     * specified here. For list of options, see {@link WriteOperation}#opt
+     * Options for specific sub operation, other than &lt;em>timeout&lt;/em>,
+     * &lt;em>compartment&lt;/em> and &lt;em>durability&lt;/em> may be specified in
+     * {@link WriteOperation} and will override values specified here. For
+     * list of options, see {@link WriteOperation}
      * @param {Durability} [opt.durability] On-premise only. Set the desired
      * durability for master/replica sync/acks. If this is not set, the
      * default server-side durability settings are used. See {@link Durability}
@@ -1049,6 +1064,13 @@ class NoSQLClient extends NoSQLClientImpl {
      * @returns {Promise} Promise of {@link WriteMultipleResult}
      */
     writeMany(tableName, operations, opt) {
+        //Check if tableName parameter was omitted and operations is the first
+        //parameter.
+        if (Array.isArray(tableName) &amp;&amp; !Array.isArray(operations)) {
+            opt = operations;
+            operations = tableName;
+            tableName = undefined;
+        }
         return this._execute(ops.WriteMultipleOp, {
             api: this.writeMany,
             tableName,
@@ -1062,10 +1084,11 @@ class NoSQLClient extends NoSQLClientImpl {
      * share the same &lt;em>shard key&lt;/em> portion of their primary keys, all
      * the specified operations are executed within the scope of single
      * transaction, thus making the operation atomic.
-     * This API is a shortcut to {@link NoSQLClient#writeMany} with two
-     * simplifications:
+     * This API is a shortcut to {@link NoSQLClient#writeMany} with the
+     * following simplifications:
      * &lt;ul>
      * &lt;li>The sequence contains only put operations.&lt;/li>
+     * &lt;li>All operations are for a single table.&lt;/li>
      * &lt;li>Options are specified only in the &lt;em>opt&lt;/em> argument of this API
      * and are same for all put sub operations (no per-sub-operation options).
      * &lt;/li>
@@ -1101,10 +1124,11 @@ class NoSQLClient extends NoSQLClientImpl {
      * share the same &lt;em>shard key&lt;/em> portion of their primary keys, all
      * the specified operations are executed within the scope of single
      * transaction, thus making the operation atomic.
-     * This API is a shortcut to {@link NoSQLClient#writeMany} with two
-     * simplifications:
+     * This API is a shortcut to {@link NoSQLClient#writeMany} with the
+     * following simplifications:
      * &lt;ul>
      * &lt;li>The sequence contains only delete operations.&lt;/li>
+     * &lt;li>All operations are for a single table.&lt;/li>
      * &lt;li>Options are specified only in the &lt;em>opt&lt;/em> argument of this API
      * and are same for all delete sub-operations (no per-sub-operation
      * options).&lt;/li>
