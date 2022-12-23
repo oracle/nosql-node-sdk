@@ -32,6 +32,8 @@ const pre20_2 = require('./common').pre20_2;
 const Utils = require('./utils');
 const QueryUtils = require('./query_utils');
 
+const _modTime = Utils._modTime;
+
 const basicQueryOnly = Utils.getArgVal('--basic-query-only');
 
 const QUERY_TESTS = basicQueryOnly ? require('./query_tests_simple') :
@@ -366,6 +368,9 @@ async function verifyQueryResult(res, client, test, q, tc, opt, state) {
                 pk = test.ptr2pk(row);
                 row = null;
             } else {
+                //Rough estimation of modification time, since this function
+                //is called right after update query.
+                row[_modTime] = currDate;
                 if (opt._updateTTL) {
                     row[_putTime] = currDate;
                 } else {
