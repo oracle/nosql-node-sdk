@@ -29,6 +29,7 @@ const TestConfig = require('../utils').TestConfig;
 const _id = Symbol('id');
 const _version = Symbol('version');
 const _putTime = Symbol('putTime');
+const _modTime = Symbol('modTime');
 const _ttl = Symbol('ttl');
 const _originalTTL = Symbol('originalTTL');
 const _shouldFail = Symbol('shouldFail');
@@ -562,18 +563,19 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
         }
     }
 
-    // Check for modificationTime being within a short time before now.
-    static verifyModificationTime(res) {
+    static verifyModificationTime(res, row) {
         expect(res.modificationTime).to.be.instanceOf(Date);
-        var diff = Date.now() - res.modificationTime.getTime();
-        expect(Math.abs(diff)).to.be.at.most(12000);
+        expect(row[_modTime]).to.be.instanceOf(Date); //test self-check
+        var diff = res.modificationTime.getTime() - row[_modTime].getTime();
+        expect(Math.abs(diff)).to.be.at.most(5000);
     }
 
-    // Check for existingModificationTime being within a short time before now.
-    static verifyExistingModificationTime(res) {
+    static verifyExistingModificationTime(res, row) {
         expect(res.existingModificationTime).to.be.instanceOf(Date);
-        var diff = Date.now() - res.existingModificationTime.getTime();
-        expect(Math.abs(diff)).to.be.at.most(12000);
+        expect(row[_modTime]).to.be.instanceOf(Date); //test self-check
+        var diff = res.existingModificationTime.getTime() -
+            row[_modTime].getTime();
+        expect(Math.abs(diff)).to.be.at.most(5000);
     }
 
     static verifyGetResult(client, res, tbl, row, opt) {
@@ -598,7 +600,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
         }
         this.verifyExpirationTime(tbl, row, res.expirationTime);
         if (client.getSerialVersion() > 2) {
-            this.verifyModificationTime(res);
+            this.verifyModificationTime(res, row);
         }
         expect(res.version).to.be.instanceOf(Buffer);
         //For update queries (unlike puts) we don't know the row's
@@ -613,7 +615,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
     //putIfAbsent or putIfVersion fails
     //isSub - whether this is a sub-operation of writeMany
     static async verifyPut(res, client, tbl, row, opt, success = true,
-        existingRow, isSub, checkModTime = true) {
+        existingRow, isSub, checkExistingModTime = true) {
         if (!opt) {
             opt = {};
         }
@@ -656,6 +658,9 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
                     row[_version] == null);
             }*/
             row[_version] = res.version;
+            //Rough estimation of modification time, since this function is
+            //called right after update.
+            row[_modTime] = new Date();
             //We update put time if ttl is indicated in options or if this is
             //new row, in this case unless opt.ttl is set, the row's ttl will
             //become undefined and only table ttl, if any, would be used for
@@ -670,14 +675,10 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
             if (opt.returnExisting && existingRow) {
                 this.verifyRow(res.existingRow, existingRow, tbl);
                 expect(res.existingVersion).to.be.instanceOf(Buffer);
-                if (opt.ifAbsent) {
-                    expect(res.existingVersion).to.deep.equal(row[_version]);
-                } else if (opt.matchVersion) {
-                    expect(res.existingVersion).to.deep.equal(
-                        existingRow[_version]);
-                }
-                if (checkModTime && client.getSerialVersion() > 2) {
-                    this.verifyExistingModificationTime(res);
+                expect(res.existingVersion).to.deep.equal(
+                    existingRow[_version]);
+                if (checkExistingModTime && client.getSerialVersion() > 2) {
+                    this.verifyExistingModificationTime(res, existingRow);
                 }
             } else {
                 expect(res.existingRow).to.not.exist;
@@ -702,7 +703,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
     //existingRow argument is to verify returned existing row when
     //deleteIfVersion fails
     static async verifyDelete(res, client, tbl, key, opt, success = true,
-        existingRow, isSub) {
+        existingRow, isSub, checkExistingModTime = true) {
         if (!opt) {
             opt = {};
         }
@@ -729,6 +730,9 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
             existingRow) {
             this.verifyRow(res.existingRow, existingRow, tbl);
             expect(res.existingVersion).to.deep.equal(existingRow[_version]);
+            if (checkExistingModTime && client.getSerialVersion() > 2) {
+                this.verifyExistingModificationTime(res, existingRow);
+            }
         } else {
             expect(res.existingRow).to.not.exist;
             expect(res.existingVersion).to.not.exist;
@@ -738,7 +742,8 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
         //or delete on non-existent row, or that the row is the same as
         //existingRow if deleteIfVersion fails on existing row
         const getRes = await client.get(tbl.name, key);
-        Utils.verifyGetResult(client, getRes, tbl, success ? null : existingRow);
+        Utils.verifyGetResult(client, getRes, tbl, success ?
+            null : existingRow);
     }
 
     static async createTable(client, tbl, indexes) {
@@ -780,6 +785,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
         let res = await client.put(tbl.name, row, opt);
         expect(res.success).to.equal(true);
         row[_putTime] = new Date();
+        row[_modTime] = row[_putTime];
         row[_version] = res.version;
     }
 
@@ -821,6 +827,7 @@ Utils.range = _.range;
 Utils._id = _id;
 Utils._ttl = _ttl;
 Utils._putTime = _putTime;
+Utils._modTime = _modTime;
 Utils._version = _version;
 Utils._originalTTL = _originalTTL;
 Utils._shouldFail = _shouldFail;

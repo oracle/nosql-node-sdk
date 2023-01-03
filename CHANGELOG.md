@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## Unreleased
+
+**Fixed**
+* Fixed unit test failures due to error in checking of row modification time
+in the tests.
+
 ## 5.3.4 - 2022-12-14
 
 **Added**

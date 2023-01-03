@@ -337,7 +337,7 @@ async function verifyWriteMany(res, client, test, ops, opt, success = true) {
             expect(op.delete).to.exist;
             const existingRow = opTest.byId.get(op.delete[_id]);
             await Utils.verifyDelete(res.failedOpResult, client, opTest.table,
-                op.delete, opOpt, false, existingRow, true);
+                op.delete, opOpt, false, existingRow, true, false);
         }
 
         //Verify that no rows has been affected by the operation
