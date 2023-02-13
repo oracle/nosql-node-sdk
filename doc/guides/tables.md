@@ -121,8 +121,8 @@ indexes, use method {@link NoSQLClient#tableDDL}.
 Before creating a table, learn about:
 
 * Supported data types for the Oracle NoSQL Database. See
-[Supported Data Types](https://docs.oracle.com/pls/topic/lookup?ctx=en/cloud/paas/nosql-cloud&id=CSNSD-GUID-833B2B2A-1A32-48AB-A19E-413EAFB964B8).
-* Cloud limits. See [Oracle NoSQL Database Cloud Limits](https://docs.oracle.com/pls/topic/lookup?ctx=en/cloud/paas/nosql-cloud&id=CSNSD-GUID-30129AB3-906B-4E71-8EFB-8E0BBCD67144).
+[Supported Data Types](https://docs.oracle.com/en/cloud/paas/nosql-cloud/rnpxl/index.html#RNPXL-GUID-833B2B2A-1A32-48AB-A19E-413EAFB964B8).
+* Cloud limits. See [Oracle NoSQL Database Cloud Limits](https://docs.oracle.com/en/cloud/paas/nosql-cloud/fkdyw/index.html).
 
 Examples of DDL statements are:
 ```sql
@@ -889,7 +889,7 @@ This means that there are mappings between Oracle NoSQL database types and
 JavaScript and Node.js types used by the SDK.
 
 For details on Oracle NoSQL database types, see
-[Supported Data Types](https://docs.oracle.com/pls/topic/lookup?ctx=en/cloud/paas/nosql-cloud&id=CSNSD-GUID-833B2B2A-1A32-48AB-A19E-413EAFB964B8).
+[Supported Data Types](https://docs.oracle.com/en/cloud/paas/nosql-cloud/rnpxl/index.html#RNPXL-GUID-833B2B2A-1A32-48AB-A19E-413EAFB964B8).
 
 For example, if the table was created using the following statement:
 ```sql
