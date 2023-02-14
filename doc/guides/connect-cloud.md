@@ -89,8 +89,8 @@ example running.
 
 #### <a name="creds"></a>Acquire Credentials for the Oracle NoSQL Database Cloud Service
 
-See [Acquiring Credentials](https://www.oracle.com/pls/topic/lookup?ctx=en/cloud/paas/nosql-cloud/csnsd&id=acquire-creds) for details of credentials you will need
-to configure an application.
+See [Authentication to connect to Oracle NoSQL Database](https://docs.oracle.com/en/cloud/paas/nosql-cloud/dtddt/index.html)
+for details of credentials you will need to configure an application.
 
 These steps only need to be performed one time for a user. If they have already
 been done they can be skipped. You need to obtain the following credentials:
@@ -562,7 +562,7 @@ The configuration instructions above are for getting connected to the actual
 Oracle NoSQL Database Cloud Service.
 
 You may first get familiar with Oracle NoSQL Database Node.js
-SDK and its interfaces by using the [Oracle NoSQL Cloud Simulator](https://docs.oracle.com/en/cloud/paas/nosql-cloud/csnsd/develop-oracle-nosql-cloud-simulator.html).
+SDK and its interfaces by using the [Oracle NoSQL Cloud Simulator](https://www.oracle.com/downloads/cloud/nosql-cloud-sdk-downloads.html).
 
 The Cloud Simulator simulates the cloud service and lets you write and test
 applications locally without accessing Oracle NoSQL Database Cloud Service.
@@ -576,7 +576,7 @@ move your application to the Oracle NoSQL Database Cloud Service.
 Follow these instructions to run an example program against the Cloud
 Simulator:
 
-1. [Download](https://docs.oracle.com/pls/topic/lookup?ctx=en/cloud/paas/nosql-cloud&id=CSNSD-GUID-3E11C056-B144-4EEA-8224-37F4C3CB83F6)
+1. [Download](https://www.oracle.com/downloads/cloud/nosql-cloud-sdk-downloads.html)
 and start the Cloud Simulator.
 
 2. Edit the cloudsim.json configuration file in the examples directory and

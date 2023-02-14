@@ -23,7 +23,7 @@ installed with Node.js
   * [Oracle NoSQL Database](https://www.oracle.com/database/technologies/related/nosql.html).
 See [Oracle NoSQL Database Downloads](https://www.oracle.com/database/technologies/nosql-database-server-downloads.html) to download Oracle NoSQL Database.  See
 [Oracle NoSQL Database Documentation](https://docs.oracle.com/en/database/other-databases/nosql-database/index.html) to get started with Oracle NoSQL Database.
-In particular, see the [Administrator Guide](https://docs.oracle.com/en/database/other-databases/nosql-database/22.1/admin/index.html) on how to install, configure and run Oracle
+In particular, see the [Administrator Guide](https://docs.oracle.com/en/database/other-databases/nosql-database/22.3/admin/index.html) on how to install, configure and run Oracle
 NoSQL Database Service.
 
 ## Installation
@@ -47,7 +47,7 @@ See the [API and user guide documentation](https://oracle.github.io/nosql-node-s
 
 * Open an issue in the [Issues](https://github.com/oracle/nosql-node-sdk/issues) page.
 * [Email to nosql\_sdk\_help\_grp@oracle.com](mailto:nosql_sdk_help_grp@oracle.com)
-* [Oracle NoSQL Developer Forum](https://community.oracle.com/community/groundbreakers/database/nosql_database)
+* [Oracle NoSQL Developer Forum](https://forums.oracle.com/ords/apexds/domain/dev-community/category/nosql_database)
 
 When requesting help please be sure to include as much detail as possible,
 including version of the SDK and **simple**, standalone example code as needed.
@@ -341,7 +341,7 @@ You can run the examples
 
 * Against the Oracle NoSQL Database Cloud Service using your Oracle Cloud
 account and credentials.
-* Locally using the [Oracle NoSQL Database Cloud Simulator](https://docs.oracle.com/en/cloud/paas/nosql-cloud/csnsd/develop-oracle-nosql-cloud-simulator.html).
+* Locally using the [Oracle NoSQL Database Cloud Simulator](https://www.oracle.com/downloads/cloud/nosql-cloud-sdk-downloads.html).
 * Against the On-Premise Oracle NoSQL Database via the proxy.
 
 These configuration files are provided in the examples directory:
