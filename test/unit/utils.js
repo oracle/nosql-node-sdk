@@ -228,7 +228,14 @@ PRIMARY KEY(${pk}))` + (tbl.ttl ? ' USING TTL ' + this.ttl2string(tbl.ttl) :
     }
 
     static makeCreateIndex(tbl, idx) {
-        const flds = idx.fields.join(', ');
+        let flds = !idx.fieldTypes ? idx.fields :
+            //Support for JSON typed indexes.
+            Utils.range(idx.fieldTypes.length).map(i =>
+                idx.fieldTypes[i] != null ?
+                    `${idx.fields[i]} AS ${idx.fieldTypes[i]}` :
+                    idx.fields[i]);
+
+        flds = flds.join(', ');
         return `CREATE INDEX ${idx.name} ON ${tbl.name}(${flds})`;
     }
 
@@ -599,7 +606,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
             return;
         }
         this.verifyExpirationTime(tbl, row, res.expirationTime);
-        if (client.getSerialVersion() > 2) {
+        if (client._serialVersion > 2) {
             this.verifyModificationTime(res, row);
         }
         expect(res.version).to.be.instanceOf(Buffer);
@@ -677,7 +684,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
                 expect(res.existingVersion).to.be.instanceOf(Buffer);
                 expect(res.existingVersion).to.deep.equal(
                     existingRow[_version]);
-                if (checkExistingModTime && client.getSerialVersion() > 2) {
+                if (checkExistingModTime && client._serialVersion > 2) {
                     this.verifyExistingModificationTime(res, existingRow);
                 }
             } else {
@@ -730,7 +737,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
             existingRow) {
             this.verifyRow(res.existingRow, existingRow, tbl);
             expect(res.existingVersion).to.deep.equal(existingRow[_version]);
-            if (checkExistingModTime && client.getSerialVersion() > 2) {
+            if (checkExistingModTime && client._serialVersion > 2) {
                 this.verifyExistingModificationTime(res, existingRow);
             }
         } else {

@@ -8,6 +8,7 @@
             "lib/error.js",
             "lib/ttl_util.js",
             "lib/region.js",
+            "lib/durability.js",
             "lib/types/config.js",
             "lib/types/param.js",
             "lib/types/result.js",

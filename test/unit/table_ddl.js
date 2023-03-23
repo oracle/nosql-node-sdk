@@ -99,7 +99,7 @@ function testOnDemandTable(client, tbl) {
     // test on demand tables: in V2 this should throw an illegal argument
     const stmt = Utils.makeCreateTable(tbl);
     it(`Create table ${tbl.name} with on demand`, async function() {
-        var serialVersion = client.getSerialVersion();
+        const serialVersion = client._serialVersion;
         if (serialVersion < 3) {
             return expect(client.tableDDL(stmt, {
                 compartment,

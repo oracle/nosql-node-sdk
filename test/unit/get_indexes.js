@@ -22,7 +22,7 @@ const GET_INDEXES_TESTS = require('./test_schemas').GET_INDEXES_TESTS;
 
 const compartment = Utils.config.compartment;
 
-function verifyIndexes(res, idx) {
+function verifyIndexes(client, res, idx) {
     if (Array.isArray(idx)) {
         expect(res).to.be.an('array');
         expect(res.length).to.equal(idx.length);
@@ -31,12 +31,33 @@ function verifyIndexes(res, idx) {
         res.sort((v1, v2) => { return v1.indexName >
             v2.indexName ? 1 : -1; });
         for(let i = 0; i < idx.length; i++) {
-            verifyIndexes(res[i], idx[i]);
+            verifyIndexes(client, res[i], idx[i]);
         }
         return;
     }
     expect(res.indexName).to.equal(idx.name);
     expect(res.fields).to.deep.equal(idx.fields);
+
+    //Verify JSON typed index fields if any.
+    if (client._serialVersion >= 4) {
+        if (res.fieldTypes == null) {
+            expect(idx.fieldTypes).to.not.exist;
+            return;
+        }
+        expect(res.fieldTypes).to.be.an('array');
+        const cnt = idx.fields.length;
+        expect(res.fieldTypes.length).to.equal(cnt);
+        for(let i = 0; i < cnt; i++) {
+            const expected = idx.fieldTypes ? idx.fieldTypes[i] : null;
+            const actual = res.fieldTypes[i];
+            if (expected == null) {
+                expect(actual).to.not.exist;
+                continue;
+            }
+            expect(actual).to.be.a('string');
+            expect(actual.toUpperCase()).to.equal(expected.toUpperCase());
+        }
+    }
 }
 
 function testGetIndexes(client, tbl, idxs) {
@@ -72,7 +93,7 @@ ${util.inspect(badOpt)}`, async function() {
     //Positive tests
     it(`getIndexes on table ${tbl.name}`, async function() {
         const res = await client.getIndexes(tbl.name);
-        verifyIndexes(res, idxs);
+        verifyIndexes(client, res, idxs);
     });
 
     it(`getIndexes on table ${tbl.name} with timeout`, async function() {
@@ -80,14 +101,14 @@ ${util.inspect(badOpt)}`, async function() {
             timeout: 8000,
             compartment
         });
-        verifyIndexes(res, idxs);
+        verifyIndexes(client, res, idxs);
     });
 
     it(`getIndexes on table ${tbl.name} with index name ${idxs[0].name}`,
         async function() {
             const res = await client.getIndexes(tbl.name,
                 { indexName: idxs[0].name });
-            verifyIndexes(res, [ idxs[0] ]);
+            verifyIndexes(client, res, [ idxs[0] ]);
         });
 }
 
@@ -140,14 +161,14 @@ ${util.inspect(badOpt)}`, async function() {
     //Positive tests
     it(`getIndex ${idx.name} on table ${tbl.name}`, async function() {
         const res = await client.getIndex(tbl.name, idx.name);
-        verifyIndexes(res, idx);
+        verifyIndexes(client, res, idx);
     });
 
     it(`getIndex ${idx.name} on table ${tbl.name} with timeout`,
         async function() {
             const res = await client.getIndex(tbl.name, idx.name,
                 { timeout: 8000, compartment });
-            verifyIndexes(res, idx);
+            verifyIndexes(client, res, idx);
         });
 }
 

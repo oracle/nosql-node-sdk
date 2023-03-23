@@ -125,8 +125,6 @@ function testPutNegative(client, tbl, row) {
         badOptsPutIfPres);
     testPutFuncNegative(client.putIfVersion.bind(client), tbl, row,
         badOptsPutIfVer);
-    const badOptsDur = badOptsPut.concat({ durability: { masterSync: 'foo'} });
-    testPutFuncNegative(client.put.bind(client), tbl, row, badOptsDur);
 }
 
 //Note that when we put new row to test successful operation, we must specify

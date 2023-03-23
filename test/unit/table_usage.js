@@ -66,6 +66,7 @@ function verifyTableUsageResult(res, tbl, opt) {
         if (!Utils.isCloudSim) {
             expect(usageRec.storageGB).to.equal(0);
         }
+        expect(usageRec.maxShardUsagePercent).to.satisfy(isPosInt32OrZero);
         expect(usageRec.readThrottleCount).to.equal(0);
         expect(usageRec.writeThrottleCount).to.equal(0);
         expect(usageRec.storageThrottleCount).to.equal(0);

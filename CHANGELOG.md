@@ -6,6 +6,33 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Unreleased
 
+**Added**
+
+* Support for new, flexible wire protocol (V4) has been added. The previous
+protocol is still supported for communication with servers that do not yet
+support V4. The version negotation is internal and automatic; however, use
+of new V4 features will not work at runtime when attempted with an older
+server: options new to V4 will be ignored, result properties new to V4 will be
+null or default and new APIs added in V4 will throw
+NoSQLUnsupportedProtocolError.
+The following new features or interfaces depend on the new protocol version:
+ - added durability to options for NoSQLClient.query for queries that modify
+ data
+ - added pagination properties to TableUsageResult and options for
+ NoSQLClient.getTableUsage
+ - added new API NoSQLClient.tableUsageIterable to asynchronously iterate over
+table usage records
+ - added shard percent usage information to TableUsageResult
+ - added IndexInfo.FieldTypes to return the type information on an index on
+a JSON field from NoSQLClient.getIndexes and NoSQLClient.getIndex APIs
+ - added the ability to ask for and receive the schema of a query using
+option getResultSchema for NoSQLClient.prepare and
+PreparedStatement.resultSchema property
+ - Cloud only: added use of etags, defined tags and free-form tags in APIs
+NoSQLClient.tableDDL and NoSQLClient.getTable
+ - Cloud only: added new API NoSQLClient.setTableTags to apply defined tags
+ and free-form tags to a table
+
 **Fixed**
 * Fixed unit test failures due to error in checking of row modification time
 in the tests.

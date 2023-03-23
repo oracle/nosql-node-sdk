@@ -8,6 +8,7 @@
 'use strict';
 
 const con = require('./lib/constants');
+const dur = require('./lib/durability');
 const err = require('./lib/error');
 
 module.exports = {
@@ -16,10 +17,10 @@ module.exports = {
     ServiceType: con.ServiceType,
     Region: require('./lib/region'),
     Consistency: con.Consistency,
-    LimitsMode: con.LimitsMode,
     CapacityMode: con.CapacityMode,
-    ReplicaAckPolicy: con.ReplicaAckPolicy,
-    SyncPolicy: con.SyncPolicy,
+    ReplicaAckPolicy: dur.ReplicaAckPolicy,
+    Durabilities: dur.Durabilities,
+    SyncPolicy: dur.SyncPolicy,
     ScanDirection: con.ScanDirection,
     TableState: con.TableState,
     AdminState: con.AdminState,
