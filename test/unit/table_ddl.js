@@ -278,11 +278,14 @@ function testDropTable(client, tbl) {
 
 function doTest(client, test) {
     describe(`Running ${test.desc}`, function() {
+        const tbl = test.table;
+        test.table = Utils.deepCopy(tbl);
         before(async function() {
             await Utils.dropTable(client, test.table);
         });
         after(async function() {
             await Utils.dropTable(client, test.table);
+            test.table = tbl;
         });
 
         testCreateTable(client, test.table);
