@@ -511,11 +511,18 @@ function verifyEndpoint(url, endpoint, region) {
 let pre20_1;
 let pre20_2;
 
-const compareVersions = require('compare-versions');
+const compareVersions = require('compare-versions').compareVersions;
 const kvVer = Utils.kvVersion;
 if (kvVer) {
     pre20_1 = compareVersions(kvVer, '20.1') < 0;
     pre20_2 = compareVersions(kvVer, '20.2') < 0;
+}
+
+const writeManyWithChildTablesVer = '22.3.3';
+
+function supportsMultiTableWriteMany(kvVer) {
+    return kvVer == null || compareVersions(kvVer,
+        writeManyWithChildTablesVer) >= 0;
 }
 
 module.exports = {
@@ -568,5 +575,6 @@ module.exports = {
     _originalTTL,
     verifyEndpoint,
     pre20_1,
-    pre20_2
+    pre20_2,
+    supportsMultiTableWriteMany
 };

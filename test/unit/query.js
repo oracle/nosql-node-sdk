@@ -44,6 +44,7 @@ const QUERY_TESTS = basicQueryOnly ? require('./query_tests_simple') :
 const negativeTestTable = require('./test_schemas').SIMPLE_TABLE;
 
 const compartment = Utils.config.compartment;
+const serialVersion = Utils.protocolVersion;
 
 const badPrepareStmts = [
     ...badStrings,
@@ -165,11 +166,11 @@ ${negativeTestTable.name} WHERE firstName = $fn AND lastName = $ln`;
     });
 }
 
-function testQueryFuncNegative(queryFunc, badOpts) {
+function testQueryFuncNegative(client, queryFunc, badOpts) {
     for(let badStmt of badQueryStmts) {
         it(`${queryFunc._name} with invalid statement: \
 ${util.inspect(badStmt)}`, async function() {
-            return expect(queryFunc(badStmt)).to.be.rejectedWith(
+            return expect(queryFunc(client, badStmt)).to.be.rejectedWith(
                 NoSQLArgumentError);
         });
     }
@@ -177,25 +178,33 @@ ${util.inspect(badStmt)}`, async function() {
     for(let badOpt of badOpts) {
         it(`${queryFunc._name} with invalid options: ${util.inspect(badOpt)}`,
             async function() {
-                return expect(queryFunc(`SELECT * FROM ${negativeTestTable.name}`,
-                    badOpt)).to.be.rejectedWith(NoSQLArgumentError);
+                return expect(queryFunc(client,
+                    `SELECT * FROM ${negativeTestTable.name}`, badOpt))
+                    .to.eventually.be.rejected.and.satisfy(
+                        err => err instanceof NoSQLError &&
+                        err.errorCode ===
+                        // durability is only supported with protocol >= V4
+                        (serialVersion < 4 && typeof badOpt === 'object' &&
+                            'durability' in badOpt ?
+                            ErrorCode.OPERATION_NOT_SUPPORTED :
+                            ErrorCode.ILLEGAL_ARGUMENT));
             });
     }
 }
 
 function testQueryNegative(client) {
-    const queryFunc = client.query.bind(client);
+    const queryFunc = async (client, stmt, opt) => client.query(stmt, opt);
     queryFunc._name = 'query';
-    testQueryFuncNegative(queryFunc, badQueryOpts);
+    testQueryFuncNegative(client, queryFunc, badQueryOpts);
 
-    const iterableFunc = async (stmt, opt) => {
+    const iterableFunc = async (client, stmt, opt) => {
         //eslint-disable-next-line no-unused-vars
         for await(const res of client.queryIterable(stmt, opt)) {
             break;
         }
     };
     iterableFunc._name = 'queryIterable';
-    testQueryFuncNegative(iterableFunc, badIterableOpts);
+    testQueryFuncNegative(client, iterableFunc, badIterableOpts);
 }
 
 function verifyPrepareResult(client, res, opt) {
@@ -218,7 +227,7 @@ function verifyPrepareResult(client, res, opt) {
         expect(res.queryPlan).to.not.exist;
     }
     
-    if (client._serialVersion >= 4) {
+    if (serialVersion >= 4) {
         if (opt && opt.getResultSchema) {
             expect(res.resultSchema).to.be.a('string').that.is.not.empty;
         } else {
@@ -541,15 +550,22 @@ function getQueryOpts(test, q, tc) {
             maxReadKB: q.maxReadKB ? q.maxReadKB : 4
         }
     ];
-    return !q.isUpdate ? opts : opts.concat([
-        {
-            maxWriteKB: q.maxWriteKB ? q.maxWriteKB :
-                (test.maxRowKB ? (test.maxRowKB + 1) : 3)
-        },
-        {
+    
+    if (!q.isUpdate) {
+        return opts;
+    }
+
+    opts.push({
+        maxWriteKB: q.maxWriteKB ? q.maxWriteKB :
+            (test.maxRowKB ? (test.maxRowKB + 1) : 3)
+    });
+    if (serialVersion >= 4) {
+        opts.push({
             durability: Durabilities.COMMIT_SYNC
-        }
-    ]);
+        });
+    }
+    
+    return opts;
 }
 
 //verify testcase for correctness

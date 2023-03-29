@@ -27,6 +27,7 @@ const TABLE_DDL_TESTS = require('./test_schemas').TABLE_DDL_TESTS;
 //compartment will be undefined. We use the same in other tests.
 
 const compartment = Utils.config.compartment;
+const serialVersion = Utils.protocolVersion;
 
 const badDDLOptsNoTableLimits = [
     ...badOptions,
@@ -99,7 +100,6 @@ function testOnDemandTable(client, tbl) {
     // test on demand tables: in V2 this should throw an illegal argument
     const stmt = Utils.makeCreateTable(tbl);
     it(`Create table ${tbl.name} with on demand`, async function() {
-        const serialVersion = client._serialVersion;
         if (serialVersion < 3) {
             return expect(client.tableDDL(stmt, {
                 compartment,

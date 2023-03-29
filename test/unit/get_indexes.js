@@ -21,8 +21,9 @@ const Utils = require('./utils');
 const GET_INDEXES_TESTS = require('./test_schemas').GET_INDEXES_TESTS;
 
 const compartment = Utils.config.compartment;
+const serialVersion = Utils.protocolVersion;
 
-function verifyIndexes(client, res, idx) {
+function verifyIndexes(res, idx) {
     if (Array.isArray(idx)) {
         expect(res).to.be.an('array');
         expect(res.length).to.equal(idx.length);
@@ -31,7 +32,7 @@ function verifyIndexes(client, res, idx) {
         res.sort((v1, v2) => { return v1.indexName >
             v2.indexName ? 1 : -1; });
         for(let i = 0; i < idx.length; i++) {
-            verifyIndexes(client, res[i], idx[i]);
+            verifyIndexes(res[i], idx[i]);
         }
         return;
     }
@@ -39,7 +40,7 @@ function verifyIndexes(client, res, idx) {
     expect(res.fields).to.deep.equal(idx.fields);
 
     //Verify JSON typed index fields if any.
-    if (client._serialVersion >= 4) {
+    if (serialVersion >= 4) {
         if (res.fieldTypes == null) {
             expect(idx.fieldTypes).to.not.exist;
             return;
@@ -93,7 +94,7 @@ ${util.inspect(badOpt)}`, async function() {
     //Positive tests
     it(`getIndexes on table ${tbl.name}`, async function() {
         const res = await client.getIndexes(tbl.name);
-        verifyIndexes(client, res, idxs);
+        verifyIndexes(res, idxs);
     });
 
     it(`getIndexes on table ${tbl.name} with timeout`, async function() {
@@ -101,14 +102,14 @@ ${util.inspect(badOpt)}`, async function() {
             timeout: 8000,
             compartment
         });
-        verifyIndexes(client, res, idxs);
+        verifyIndexes(res, idxs);
     });
 
     it(`getIndexes on table ${tbl.name} with index name ${idxs[0].name}`,
         async function() {
             const res = await client.getIndexes(tbl.name,
                 { indexName: idxs[0].name });
-            verifyIndexes(client, res, [ idxs[0] ]);
+            verifyIndexes(res, [ idxs[0] ]);
         });
 }
 
@@ -161,14 +162,14 @@ ${util.inspect(badOpt)}`, async function() {
     //Positive tests
     it(`getIndex ${idx.name} on table ${tbl.name}`, async function() {
         const res = await client.getIndex(tbl.name, idx.name);
-        verifyIndexes(client, res, idx);
+        verifyIndexes(res, idx);
     });
 
     it(`getIndex ${idx.name} on table ${tbl.name} with timeout`,
         async function() {
             const res = await client.getIndex(tbl.name, idx.name,
                 { timeout: 8000, compartment });
-            verifyIndexes(client, res, idx);
+            verifyIndexes(res, idx);
         });
 }
 

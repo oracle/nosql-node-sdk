@@ -12,6 +12,7 @@ chai.use(require('chai-as-promised'));
 
 const expect = require('chai').expect;
 const _ = require('lodash');
+const compareVersions = require('compare-versions').compareVersions;
 
 const util = require('util');
 const fs = require('fs');
@@ -42,9 +43,31 @@ const NOSQL_CONFIG_ARG = '--nosql-config';
 
 const DEFAULT_TIMEOUT = 120000;
 
+const USE_LATEST_PROTO = Number.MAX_SAFE_INTEGER;
+
 let NumberUtils;
 
 class Utils {
+
+    static _proxyVer2protoVer(proxyVer) {
+        if (compareVersions(proxyVer, '5.11.0') >= 0) {
+            return 4;
+        }
+        if (compareVersions(proxyVer, '5.6.2') >= 0) {
+            return 3;
+        }
+        return 2;
+    }
+
+    static _kvVer2ProtoVer(kvVer) {
+        if (compareVersions(kvVer, '22.3') >= 0) {
+            return 4;
+        }
+        if (compareVersions(kvVer, '21.2.5') >= 0) {
+            return 3;
+        }
+        return 2;
+    }
 
     static getArgVal(arg, def) {
         let val = def;
@@ -89,6 +112,30 @@ class Utils {
         return Utils.getArgVal('--kv');
     }
 
+    static get proxyVersion() {
+        return Utils.getArgVal('--proxy');
+    }
+
+    static get protocolVersion() {
+        const protoVer = Utils.getArgVal('--proto');
+        if (protoVer != null) {
+            return Number(protoVer);
+        }
+        
+        const proxyVer = Utils.proxyVersion;
+        if (proxyVer != null) {
+            return Utils._proxyVer2protoVer(proxyVer);
+        }
+
+        const kvVer = Utils.kvVersion;
+        if (kvVer != null) {
+            return Utils._kvVer2ProtoVer(kvVer);
+        }
+
+        //If not specified, assume latest version.
+        return USE_LATEST_PROTO;
+    }
+
     static get longAsBigInt() {
         return Utils.config.longAsBigInt;
     }
@@ -112,6 +159,12 @@ class Utils {
             return Utils.config.consistency.toUpperCase() !== 'ABSOLUTE';
         }
         return Utils.config.consistency !== Consistency.ABSOLUTE;
+    }
+
+    static verifyProtocolVersion(client) {
+        if (Utils.serialVersion < USE_LATEST_PROTO) {
+            expect(client._serialVersion).to.be.at.least(Utils.serialVersion);
+        }
     }
 
     static sleep(ms) {
@@ -586,6 +639,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
     }
 
     static verifyGetResult(client, res, tbl, row, opt) {
+        this.verifyProtocolVersion(client);
         if (!opt) {
             opt = {};
         }
@@ -606,7 +660,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
             return;
         }
         this.verifyExpirationTime(tbl, row, res.expirationTime);
-        if (client._serialVersion > 2) {
+        if (this.serialVersion > 2) {
             this.verifyModificationTime(res, row);
         }
         expect(res.version).to.be.instanceOf(Buffer);
@@ -684,7 +738,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
                 expect(res.existingVersion).to.be.instanceOf(Buffer);
                 expect(res.existingVersion).to.deep.equal(
                     existingRow[_version]);
-                if (checkExistingModTime && client._serialVersion > 2) {
+                if (checkExistingModTime && this.serialVersion > 2) {
                     this.verifyExistingModificationTime(res, existingRow);
                 }
             } else {
@@ -737,7 +791,7 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
             existingRow) {
             this.verifyRow(res.existingRow, existingRow, tbl);
             expect(res.existingVersion).to.deep.equal(existingRow[_version]);
-            if (checkExistingModTime && client._serialVersion > 2) {
+            if (checkExistingModTime && this.serialVersion > 2) {
                 this.verifyExistingModificationTime(res, existingRow);
             }
         } else {
@@ -828,6 +882,8 @@ ${util.inspect(Utils.config)}`,
     }
 
 }
+
+Utils.serialVersion = Utils.protocolVersion;
 
 Utils.range = _.range;
 
