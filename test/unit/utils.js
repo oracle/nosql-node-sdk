@@ -217,11 +217,8 @@ class Utils {
         return obj;
     }
 
-    //Server returns date strings in ISO8601 format in UTC but without
-    //trailing 'Z'
     static date2string(d) {
-        const s = d.toISOString();
-        return s.endsWith('Z') ? s.substring(0, s.length - 1) : s;
+        return d.toISOString();
     }
 
     //Extract binary mantissa and exponent

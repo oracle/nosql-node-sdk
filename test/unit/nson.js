@@ -20,17 +20,17 @@ const DOUBLE_ZERO = Symbol('DOUBLE_ZERO');
 const NSON_COMPAT_TESTS = [
     {
         desc: 'compat-test1',
-        nson: `BgAAAjwAAAAYiGludF92YWx1ZQT5BFmGaW50X21heAT7f///hoZpbnRfbWluBAS
+        nson: `BgAAAkAAAAAYiGludF92YWx1ZQT5BFmGaW50X21heAT7f///hoZpbnRfbWluBAS
 AAAB3iWxvbmdfdmFsdWUF/By+mRmbh2xvbmdfbWF4Bf9/////////hodsb25nX21pbgUAgAAAAAAAA
 HeLZG91YmxlX3ZhbHVlAz/zwIMSbpeNiWRvdWJsZV9tYXgDf+////////+JZG91YmxlX21pbgMAAAA
-AAAAAAYlkb3VibGVfTmFOA3/4AAAAAAAAi251bWJlcl92YWx1ZQmJMjE0NzQ4MzY0N4tzdHJpbmdfd
-mFsdWUHhmFiY2RlZmeJdGltZV92YWx1ZQiaMjAxNy0wNy0xNVQxNToxODo1OS4xMjM0NTZainRpbWV
-fdmFsdWUxCJoyMDE3LTA3LTE1VDE1OjE4OjU5LjEyMzQ1NlqKdGltZV92YWx1ZTIIlTE5MjctMDctM
-DVUMTU6MDg6MDkuMVqKdGltZV92YWx1ZTMIkzE5MjctMDctMDVUMDA6MDA6MDBainRpbWVfdmFsdWU
-0CJMxOTI3LTA3LTA1VDAwOjAwOjAwWol0cnVlX3ZhbHVlAgGKZmFsc2VfdmFsdWUCAIludWxsX3Zhb
-HVlC4plbXB0eV92YWx1ZQyLYmluYXJ5X3ZhbHVlAZthYmNkZWZnQUJDREVGR2FiY2RlZmdBQkNERUZ
-HiG1hcF92YWx1ZQYAAAAPAAAAAoBhBICAYgeCZGVmimFycmF5X3ZhbHVlAAAAAA4AAAAFBIAEgQSCB
-IMEhA==`,
+AAAAAAYlkb3VibGVfTmFOA//4AAAAAAAAi251bWJlcl92YWx1ZQmJMjE0NzQ4MzY0N4tzdHJpbmdfd
+mFsdWUHhmFiY2RlZmeJdGltZV92YWx1ZQiXMjAxNy0wNy0xNVQxNToxODo1OS4xMjNainRpbWVfdmF
+sdWUxCJcyMDE3LTA3LTE1VDE1OjE4OjU5LjEyM1qKdGltZV92YWx1ZTIIlzE5MjctMDctMDVUMTU6M
+Dg6MDkuMTAwWop0aW1lX3ZhbHVlMwiXMTkyNy0wNy0wNVQwMDowMDowMC4wMDBainRpbWVfdmFsdWU
+0CJcxOTI3LTA3LTA1VDAwOjAwOjAwLjAwMFqJdHJ1ZV92YWx1ZQIBimZhbHNlX3ZhbHVlAgCJbnVsb
+F92YWx1ZQuKZW1wdHlfdmFsdWUMi2JpbmFyeV92YWx1ZQGbYWJjZGVmZ0FCQ0RFRkdhYmNkZWZnQUJ
+DREVGR4htYXBfdmFsdWUGAAAADwAAAAKAYQSAgGIHgmRlZophcnJheV92YWx1ZQAAAAAOAAAABQSAB
+IEEggSDBIQ=`,
         value: {
             int_value: 1234,
             int_max: 2147483647,
@@ -44,11 +44,11 @@ IMEhA==`,
             double_NaN: NaN,
             number_value: new Decimal(2147483647),
             string_value: 'abcdefg',
-            time_value: new Date('2017-07-15T15:18:59.123456Z'),
-            time_value1: new Date('2017-07-15T15:18:59.123456Z'),
-            time_value2: new Date('1927-07-05T15:08:09.1Z'),
-            time_value3: new Date('1927-07-05T00:00:00Z'),
-            time_value4: new Date('1927-07-05T00:00:00Z'),
+            time_value: new Date('2017-07-15T15:18:59.123Z'),
+            time_value1: new Date('2017-07-15T15:18:59.123Z'),
+            time_value2: new Date('1927-07-05T15:08:09.100Z'),
+            time_value3: new Date('1927-07-05T00:00:00.000Z'),
+            time_value4: new Date('1927-07-05T00:00:00.000Z'),
             true_value: true,
             false_value: false,
             null_value: undefined,

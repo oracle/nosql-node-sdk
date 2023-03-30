@@ -15,6 +15,7 @@
         "test/unit/write_many.js",
         "test/unit/query.js",
         "test/unit/rate_limiter.js",
+        "test/unit/nson.js",
         "test/unit/iam/auth_provider.js",
         "test/unit/iam/oci_region.js",
         "test/unit/iam/instance_principal.js",
