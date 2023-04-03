@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Unreleased
 
+**Added**
+* Cloud only: Added OCI region codes: MTY, STR, BEG, VLL, YUM
+
 **Fixed**
 * Fixed unit test failures due to error in checking of row modification time
 in the tests.
