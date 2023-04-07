@@ -87,6 +87,7 @@ __TABLE__ t WHERE t.colJSON.x = $fldString',
 __TABLE__ t SET t.colDouble = $fldDouble, SET t.colJSON.x = "X" WHERE \
 shardId = 0 AND pkString = $fldPKString',
         expectedFields: [ { name: 'NumRowsUpdated', type: 'INTEGER '} ],
+        isUpdate: true,
         testCases: [
             {
                 desc: 'update non-existent row, no updates',
@@ -120,6 +121,7 @@ shardId = 0 AND pkString = $fldPKString',
 pkString = "0" RETURNING remaining_days($t) AS remainingDays',
         expectedRows: [ { remainingDays: 5 } ],
         expectedFields: [ { name: 'remainingDays', type: 'INTEGER '} ],
+        isUpdate: true,
         updateTTL: true,
         updatedRows: [ Object.assign(Utils.deepCopy(queryTest1.rows[0]), {
             [_ttl]: { days: 5 }
@@ -131,6 +133,7 @@ pkString = "0" RETURNING remaining_days($t) AS remainingDays',
 colTimestamp) VALUES(10, "new_pk_string1", 1, "1990-01-01")',
         expectedRows: [ { NumRowsInserted: 1 } ],
         expectedFields: [ { name: 'NumRowsInserted', type: 'INTEGER '} ],
+        isUpdate: true,
         updatedRows: [
             Object.assign(Utils.makeNullRow(ALL_TYPES_TABLE), {
                 shardId: 10,
@@ -150,7 +153,8 @@ colTimestamp) VALUES(10, "new_pk_string1", 1, "1990-01-01")',
 BOOLEAN; $colNumber NUMBER; $colBinary BINARY; $colJSON JSON; INSERT \
 INTO __TABLE__(shardId, pkString, colBoolean, colNumber, colBinary, colJSON) \
 VALUES($shardId, $pkString, $colBoolean, $colNumber, $colBinary, $colJSON)',
-            expectedFields: [ { name: 'NumRowsInserted', type: 'INTEGER '} ]
+            expectedFields: [ { name: 'NumRowsInserted', type: 'INTEGER '} ],
+            isUpdate: true
         };
         const colNames = [ 'shardId', 'pkString', 'colBoolean', 'colNumber',
             'colBinary', 'colJSON' ];
@@ -171,6 +175,7 @@ VALUES($shardId, $pkString, $colBoolean, $colNumber, $colBinary, $colJSON)',
             { numRowsDeleted: queryTest1.rows.length }
         ],
         expectedFields: [ { name: 'numRowsDeleted', type: 'LONG'} ],
+        isUpdate: true,
         updatedRows: Utils.range(queryTest1.rows.length)
     },
     (() => {
@@ -180,7 +185,8 @@ VALUES($shardId, $pkString, $colBoolean, $colNumber, $colBinary, $colJSON)',
             desc: 'delete with where and returing',
             stmt: 'DELETE FROM __TABLE__ t WHERE t.colRecord.fldString > \
 "a" RETURNING ' + retCols.join(', '),
-            unordered: true
+            unordered: true,
+            isUpdate: true,
         };
         ret.updatedRows = Utils.range(queryTest1.rows.length).filter(i =>
             (i % 4 != 0 && i % 5 >= 2));
@@ -194,7 +200,8 @@ VALUES($shardId, $pkString, $colBoolean, $colNumber, $colBinary, $colJSON)',
             stmt: 'DECLARE $fldDouble DOUBLE; $fldDate TIMESTAMP; DELETE \
 FROM __TABLE__ AS t WHERE t.colDouble = $fldDouble AND t.colArray[] >ANY $fldDate \
 RETURNING colFixedBinary',
-            expectedFields: [ { name: 'colFixedBinary', type: 'BINARY' } ]
+            expectedFields: [ { name: 'colFixedBinary', type: 'BINARY' } ],
+            isUpdate: true,
         };
         ret.testCases = [];
         let tc = {

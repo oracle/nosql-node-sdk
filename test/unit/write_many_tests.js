@@ -6,15 +6,14 @@
  */
 
 'use strict';
-const compareVersions = require('compare-versions');
-const Utils = require('./query_utils');
+const Utils = require('./utils');
+const supportsMultiTableWriteMany = require('./common')
+    .supportsMultiTableWriteMany;
 const AllTypesTest = require('./data_tests').AllTypesTest;
 const AllTypesWithChildTableTest = require('./data_tests')
     .AllTypesWithChildTableTest;
 
 const compartment = Utils.config.compartment;
-
-const withChildTablesVer = '22.3.3';
 
 const WRITE_MANY_TESTS = [
     {
@@ -247,9 +246,7 @@ and abortOnFail in opt, no updates, fail',
     }
 ];
 
-const kvVer = Utils.kvVersion;
-
-if (!kvVer || compareVersions(kvVer, withChildTablesVer) >= 0) {
+if (supportsMultiTableWriteMany(Utils.kvVersion)) {
     WRITE_MANY_TESTS.push({
         desc: 'writeMany test with child table 1',
         __proto__: new AllTypesWithChildTableTest(10, 100),

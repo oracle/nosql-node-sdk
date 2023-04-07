@@ -49,6 +49,11 @@ const SIMPLE_TABLE_INDEXES = [
     {
         name: 'idx_start_date',
         fields: [ 'startDate' ]
+    },
+    {
+        name: 'idx_info_address',
+        fields: [ 'info.street', 'info.bldgNo' ],
+        fieldTypes: [ 'String', 'Integer' ]
     }
 ];
 
@@ -60,6 +65,9 @@ const TABLE_DDL_TESTS = [
         drop_indexes: [
             {
                 name: 'idx_name'
+            },
+            {
+                name: 'idx_info_address'
             }
         ],
         add_fields: [

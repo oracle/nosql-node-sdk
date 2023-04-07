@@ -17,6 +17,8 @@ const SimpleRateLimiter =
 
 const TestConfig = require('../utils').TestConfig;
 const Utils = require('./utils');
+const supportsMultiTableWriteMany = require('./common')
+    .supportsMultiTableWriteMany;
 const AllTypesTest = require('./data_tests').AllTypesTest;
 const AllTypesWithChildTableTest = require('./data_tests')
     .AllTypesWithChildTableTest;
@@ -436,7 +438,9 @@ function testTableOps(client, test, tc) {
         testLoop(deleteLoop, client, test, tc, stats);
         testLoop(deleteRangeLoop, client, test, tc, stats);
         testLoop(writeManyLoop, client, test, tc, stats);
-        testLoop(multiTableWriteManyLoop, client, test, tc, stats, true);
+        if (supportsMultiTableWriteMany(Utils.kvVersion)) {
+            testLoop(multiTableWriteManyLoop, client, test, tc, stats, true);
+        }
         testLoop(queryLoop, client, test, tc, stats);
         testLoop(queryLoopSP, client, test, tc, stats);
         testLoop(advQueryLoop, client, test, tc, stats);
