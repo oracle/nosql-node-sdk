@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 **Added**
 
+* Cloud only: Added OCI region codes: MTY, STR, BEG, VLL, YUM
+
 * Support for new, flexible wire protocol (V4) has been added. The previous
 protocol is still supported for communication with servers that do not yet
 support V4. The version negotation is internal and automatic; however, use
@@ -32,6 +34,7 @@ PreparedStatement.resultSchema property
 NoSQLClient.tableDDL and NoSQLClient.getTable
  - Cloud only: added new API NoSQLClient.setTableTags to apply defined tags
  and free-form tags to a table
+
 
 **Fixed**
 * Fixed unit test failures due to error in checking of row modification time
