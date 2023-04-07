@@ -23,6 +23,7 @@ const Utils = require('./utils');
 const TABLE_USAGE_TESTS = require('./test_schemas').TABLE_USAGE_TESTS;
 
 const compartment= Utils.config.compartment;
+const serialVersion = Utils.protocolVersion;
 
 const badOpts = [
     ...badOptions,
@@ -65,6 +66,10 @@ function verifyTableUsageResult(res, tbl, opt) {
         expect(usageRec.storageGB).to.satisfy(isPosInt32OrZero);
         if (!Utils.isCloudSim) {
             expect(usageRec.storageGB).to.equal(0);
+        }
+        if (serialVersion >= 4) {
+            expect(usageRec.maxShardUsagePercent).to.satisfy(
+                isPosInt32OrZero);
         }
         expect(usageRec.readThrottleCount).to.equal(0);
         expect(usageRec.writeThrottleCount).to.equal(0);

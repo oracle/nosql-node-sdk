@@ -21,6 +21,7 @@ const Utils = require('./utils');
 const GET_INDEXES_TESTS = require('./test_schemas').GET_INDEXES_TESTS;
 
 const compartment = Utils.config.compartment;
+const serialVersion = Utils.protocolVersion;
 
 function verifyIndexes(res, idx) {
     if (Array.isArray(idx)) {
@@ -37,6 +38,27 @@ function verifyIndexes(res, idx) {
     }
     expect(res.indexName).to.equal(idx.name);
     expect(res.fields).to.deep.equal(idx.fields);
+
+    //Verify JSON typed index fields if any.
+    if (serialVersion >= 4) {
+        if (res.fieldTypes == null) {
+            expect(idx.fieldTypes).to.not.exist;
+            return;
+        }
+        expect(res.fieldTypes).to.be.an('array');
+        const cnt = idx.fields.length;
+        expect(res.fieldTypes.length).to.equal(cnt);
+        for(let i = 0; i < cnt; i++) {
+            const expected = idx.fieldTypes ? idx.fieldTypes[i] : null;
+            const actual = res.fieldTypes[i];
+            if (expected == null) {
+                expect(actual).to.not.exist;
+                continue;
+            }
+            expect(actual).to.be.a('string');
+            expect(actual.toUpperCase()).to.equal(expected.toUpperCase());
+        }
+    }
 }
 
 function testGetIndexes(client, tbl, idxs) {

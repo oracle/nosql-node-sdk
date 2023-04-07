@@ -1,37 +1,37 @@
 module.exports = {
-    "env": {
-        "es2020": true,
-        "node": true
+    'env': {
+        'es2020': true,
+        'node': true
     },
-    "extends": [
-        "eslint:recommended",
-        "plugin:require-path-exists/recommended"
+    'extends': [
+        'eslint:recommended',
+        'plugin:require-path-exists/recommended'
     ],
-    "parserOptions": {
-        "ecmaVersion": 2020,
-        "sourceType": "module"
+    'parserOptions': {
+        'ecmaVersion': 2022,
+        'sourceType': 'module'
     },
-    "rules": {
-        "indent": [
-            "error",
+    'rules': {
+        'indent': [
+            'error',
             4
         ],
-        "linebreak-style": [
-            "error",
-            "unix"
+        'linebreak-style': [
+            'error',
+            'unix'
         ],
-        "quotes": [
-            "error",
-            "single"
+        'quotes': [
+            'error',
+            'single'
         ],
-        "semi": [
-            "error",
-            "always"
+        'semi': [
+            'error',
+            'always'
         ],
-        "no-fallthrough": "off",
-        "no-console": "off"
+        'no-fallthrough': 'off',
+        'no-console': 'off'
     },
     plugins: [
-        "require-path-exists"
+        'require-path-exists'
     ]
 };

@@ -12,6 +12,7 @@ const assert = require('chai').assert;
 const util = require('util');
 
 const PreparedStatement = require('../../index').PreparedStatement;
+const Durabilities = require('../../index').Durabilities;
 const NoSQLArgumentError = require('../../index').NoSQLArgumentError;
 const NoSQLQueryError = require('../../index').NoSQLQueryError;
 const Consistency = require('../../index').Consistency;
@@ -20,6 +21,7 @@ const NoSQLError = require('../../index').NoSQLError;
 const Limits = require('../../lib/constants').Limits;
 const badMillis = require('./common').badMillis;
 const badConsistencies = require('./common').badConsistencies;
+const badDurabilities = require('./common').badDurabilities;
 const badStrings = require('./common').badStrings;
 const badPosInt32NotNull = require('./common').badPosInt32NotNull;
 const badNonNegInt32NotNull = require('./common').badNonNegInt32NotNull;
@@ -42,6 +44,7 @@ const QUERY_TESTS = basicQueryOnly ? require('./query_tests_simple') :
 const negativeTestTable = require('./test_schemas').SIMPLE_TABLE;
 
 const compartment = Utils.config.compartment;
+const serialVersion = Utils.protocolVersion;
 
 const badPrepareStmts = [
     ...badStrings,
@@ -61,6 +64,7 @@ const badIterableOpts = [
     ...badOptions,
     ...badMillis.map(timeout => ({ timeout })),
     ...badConsistencies.map(consistency => ({ consistency })),
+    ...badDurabilities.map(durability => ({ durability })),
     ...badNonNegInt32NotNull.map(limit => ({ limit })),
     ...badMaxReadKB.map(maxReadKB => ({ maxReadKB })),
     ...badMaxWriteKB.map(maxWriteKB => ({ maxWriteKB })),
@@ -162,11 +166,11 @@ ${negativeTestTable.name} WHERE firstName = $fn AND lastName = $ln`;
     });
 }
 
-function testQueryFuncNegative(queryFunc, badOpts) {
+function testQueryFuncNegative(client, queryFunc, badOpts) {
     for(let badStmt of badQueryStmts) {
         it(`${queryFunc._name} with invalid statement: \
 ${util.inspect(badStmt)}`, async function() {
-            return expect(queryFunc(badStmt)).to.be.rejectedWith(
+            return expect(queryFunc(client, badStmt)).to.be.rejectedWith(
                 NoSQLArgumentError);
         });
     }
@@ -174,38 +178,62 @@ ${util.inspect(badStmt)}`, async function() {
     for(let badOpt of badOpts) {
         it(`${queryFunc._name} with invalid options: ${util.inspect(badOpt)}`,
             async function() {
-                return expect(queryFunc(`SELECT * FROM ${negativeTestTable.name}`,
-                    badOpt)).to.be.rejectedWith(NoSQLArgumentError);
+                return expect(queryFunc(client,
+                    `SELECT * FROM ${negativeTestTable.name}`, badOpt))
+                    .to.eventually.be.rejected.and.satisfy(
+                        err => err instanceof NoSQLError &&
+                        err.errorCode ===
+                        // durability is only supported with protocol >= V4
+                        (serialVersion < 4 && typeof badOpt === 'object' &&
+                            'durability' in badOpt ?
+                            ErrorCode.OPERATION_NOT_SUPPORTED :
+                            ErrorCode.ILLEGAL_ARGUMENT));
             });
     }
 }
 
 function testQueryNegative(client) {
-    const queryFunc = client.query.bind(client);
+    const queryFunc = async (client, stmt, opt) => client.query(stmt, opt);
     queryFunc._name = 'query';
-    testQueryFuncNegative(queryFunc, badQueryOpts);
+    testQueryFuncNegative(client, queryFunc, badQueryOpts);
 
-    const iterableFunc = async (stmt, opt) => {
+    const iterableFunc = async (client, stmt, opt) => {
         //eslint-disable-next-line no-unused-vars
         for await(const res of client.queryIterable(stmt, opt)) {
             break;
         }
     };
     iterableFunc._name = 'queryIterable';
-    testQueryFuncNegative(iterableFunc, badIterableOpts);
+    testQueryFuncNegative(client, iterableFunc, badIterableOpts);
 }
 
-function verifyPrepareResult(res) {
+function verifyPrepareResult(client, res, opt) {
     expect(res).to.be.instanceOf(PreparedStatement);
     Utils.verifyConsumedCapacity(res.consumedCapacity);
+    
     if (!Utils.isOnPrem) {
         expect(res.consumedCapacity.readKB).to.be.at.least(1);
         expect(res.consumedCapacity.readUnits).to.be.at.least(1);
         expect(res.consumedCapacity.writeKB).to.equal(0);
         expect(res.consumedCapacity.writeUnits).to.equal(0);
     }
+    
     expect(res._prepStmt).to.be.instanceOf(Buffer);
     expect(res._prepStmt.length).to.be.greaterThan(0);
+
+    if (opt && opt.getQueryPlan) {
+        expect(res.queryPlan).to.be.a('string').that.is.not.empty;
+    } else {
+        expect(res.queryPlan).to.not.exist;
+    }
+    
+    if (serialVersion >= 4) {
+        if (opt && opt.getResultSchema) {
+            expect(res.resultSchema).to.be.a('string').that.is.not.empty;
+        } else {
+            expect(res.resultSchema).to.not.exist;
+        }
+    }
 }
 
 function testPreparedStatement(client, table) {
@@ -215,7 +243,7 @@ function testPreparedStatement(client, table) {
         const ps = await client.prepare(
             `SELECT * FROM ${table.name} ORDER BY \
 ${table.primaryKey.join(', ')}`);
-        verifyPrepareResult(ps);
+        verifyPrepareResult(client, ps);
         expect(ps.bindings).to.not.exist;
         let psCopy = ps.copyStatement();
         expect(psCopy).to.deep.equal(ps);
@@ -476,8 +504,28 @@ limit of ${testCase.maxMemFail}`);
     };
 }
 
+const prepareOpts = [
+    null,
+    {
+        timeout: 12002,
+        compartment
+    },
+    {
+        getQueryPlan: true,
+        getResultSchema: true
+    },
+    {
+        timeout: 8000,
+        getQueryPlan: true
+    },
+    {
+        timeout: 10000,
+        getResultSchema: true
+    }
+];
+
 function getQueryOpts(test, q, tc) {
-    return [
+    const opts = [
         undefined,
         //Because we alternate execution of query() and queryIterable(), this
         //will ensure both are tested when no options are provided.
@@ -500,12 +548,24 @@ function getQueryOpts(test, q, tc) {
         {
             limit: 3,
             maxReadKB: q.maxReadKB ? q.maxReadKB : 4
-        },
-        {
-            maxWriteKB: q.maxWriteKB ? q.maxWriteKB :
-                (test.maxRowKB ? (test.maxRowKB + 1) : 3)
         }
     ];
+    
+    if (!q.isUpdate) {
+        return opts;
+    }
+
+    opts.push({
+        maxWriteKB: q.maxWriteKB ? q.maxWriteKB :
+            (test.maxRowKB ? (test.maxRowKB + 1) : 3)
+    });
+    if (serialVersion >= 4) {
+        opts.push({
+            durability: Durabilities.COMMIT_SYNC
+        });
+    }
+    
+    return opts;
 }
 
 //verify testcase for correctness
@@ -620,12 +680,14 @@ ${queryFunc.name} with options: ${util.inspect(opt)}`, async function() {
         });
     }
 
+    //Alternate between prepareOpts for different queries to avoid multiple
+    //preparations.
+    let prepSeq = 0;
+
     it(`Prepare query: ${stmt}`, async function() {
-        const ps = await client.prepare(stmt, {
-            timeout: 10000,
-            compartment
-        });
-        verifyPrepareResult(ps);
+        const opt = prepareOpts[(prepSeq++) % prepareOpts.length];
+        const ps = await client.prepare(stmt, opt);
+        verifyPrepareResult(client, ps, opt);
     });
 
     describe(`Prepared query execution: ${stmt}`, function() {
