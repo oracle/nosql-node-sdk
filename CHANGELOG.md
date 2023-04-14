@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
-## Unreleased
+## 5.4.0 - 2023-04-13
 
 **Added**
 
@@ -34,7 +34,6 @@ PreparedStatement.resultSchema property
 NoSQLClient.tableDDL and NoSQLClient.getTable
  - Cloud only: added new API NoSQLClient.setTableTags to apply defined tags
  and free-form tags to a table
-
 
 **Fixed**
 * Fixed unit test failures due to error in checking of row modification time
