@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>CapacityMode - Oracle NoSQL Database Node.js SDK</title>
+    <title>Durabilities - Oracle NoSQL Database Node.js SDK</title>
     
     
     
@@ -37,7 +37,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">CapacityMode</h1>
+    <h1 class="page-title">Durabilities</h1>
     
 
     
@@ -50,38 +50,19 @@
 <header>
     
         <h2>
-        CapacityMode
+        Durabilities
         </h2>
         
-            <div class="class-description usertext">CapacityMode specifies the type of capacity that will be set on a table. It is
-used in table creation and table capacity updates. See <a href="global.html#TableLimits">TableLimits</a>.
-<p>
-Table capacity is only used in the NoSQL Cloud Service.
-</p>
-<p>
-<a href="CapacityMode.html#.PROVISIONED">CapacityMode.PROVISIONED</a> is the default mode. In this mode, the
-application defines the specified maximum read and write throughput for
-a table.
-<a href="CapacityMode.html#.ON_DEMAND">CapacityMode.ON_DEMAND</a> mode allows for flexible throughput usage.
-In this mode, only the maximum storage size is specified.
-</p></div>
+            <div class="class-description usertext">On-premises service only.
+Helper class that defines some useful <a href="global.html#Durability">Durability</a> constants as well
+as a method to create <a href="global.html#Durability">Durability</a> instances. Note that durability
+instance is a plain JavaScript object as described in <a href="global.html#Durability">Durability</a>.</div>
         
     
 </header>
 
 <article>
     
-
-    
-        <h3 class="subsection-title">Extends</h3>
-
-        
-
-
-    <ul>
-        <li><a href="Enum.html">Enum</a></li>
-    </ul>
-
 
     
 
@@ -100,7 +81,7 @@ In this mode, only the maximum storage size is specified.
 
         
             
-<h4 class="name" id=".ON_DEMAND"><span class="type-signature">(static) </span>ON_DEMAND<span class="type-signature"> :<a href="CapacityMode.html">CapacityMode</a></span></h4>
+<h4 class="name" id="COMMIT_NO_SYNC"><span class="type-signature"></span>COMMIT_NO_SYNC<span class="type-signature"> :<a href="global.html#Durability">Durability</a></span></h4>
 
 
 
@@ -111,15 +92,12 @@ In this mode, only the maximum storage size is specified.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="constants.js.html">constants.js</a>, <a href="constants.js.html#line283">line 283</a>
+        <a href="durability.js.html">durability.js</a>, <a href="durability.js.html#line139">line 139</a>
     </li></ul></dd>
     
 
     
 
-    
-    <dt class="tag-since">Since:</dt>
-    <dd class="tag-since"><ul class="dummy"><li>5.3.0</li></ul></dd>
     
 
     
@@ -154,7 +132,12 @@ In this mode, only the maximum storage size is specified.
 
 
 <div class="description usertext">
-    On Demand mode.
+    A convenience constant that defines a durability policy with
+COMMIT_NO_SYNC for Master commit synchronization.
+<p>
+The policies default to COMMIT_NO_SYNC for commits of replicated
+transactions that need acknowledgment and SIMPLE_MAJORITY for the
+acknowledgment policy.
 </div>
 
 
@@ -163,7 +146,7 @@ In this mode, only the maximum storage size is specified.
     <ul>
         <li>
             
-<span class="param-type"><a href="CapacityMode.html">CapacityMode</a></span>
+<span class="param-type"><a href="global.html#Durability">Durability</a></span>
 
 
         </li>
@@ -176,7 +159,7 @@ In this mode, only the maximum storage size is specified.
 
         
             
-<h4 class="name" id=".PROVISIONED"><span class="type-signature">(static) </span>PROVISIONED<span class="type-signature"> :<a href="CapacityMode.html">CapacityMode</a></span></h4>
+<h4 class="name" id="COMMIT_SYNC"><span class="type-signature"></span>COMMIT_SYNC<span class="type-signature"> :<a href="global.html#Durability">Durability</a></span></h4>
 
 
 
@@ -187,15 +170,12 @@ In this mode, only the maximum storage size is specified.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="constants.js.html">constants.js</a>, <a href="constants.js.html#line276">line 276</a>
+        <a href="durability.js.html">durability.js</a>, <a href="durability.js.html#line127">line 127</a>
     </li></ul></dd>
     
 
     
 
-    
-    <dt class="tag-since">Since:</dt>
-    <dd class="tag-since"><ul class="dummy"><li>5.3.0</li></ul></dd>
     
 
     
@@ -230,7 +210,12 @@ In this mode, only the maximum storage size is specified.
 
 
 <div class="description usertext">
-    Provisioned mode. This is the default.
+    A convenience constant that defines a durability policy with COMMIT_SYNC
+for Master commit synchronization.
+<p>
+The policies default to COMMIT_NO_SYNC for commits of replicated
+transactions that need acknowledgment and SIMPLE_MAJORITY for the
+acknowledgment policy.
 </div>
 
 
@@ -239,7 +224,7 @@ In this mode, only the maximum storage size is specified.
     <ul>
         <li>
             
-<span class="param-type"><a href="CapacityMode.html">CapacityMode</a></span>
+<span class="param-type"><a href="global.html#Durability">Durability</a></span>
 
 
         </li>
@@ -252,7 +237,7 @@ In this mode, only the maximum storage size is specified.
 
         
             
-<h4 class="name" id="description"><span class="type-signature">(readonly) </span>description<span class="type-signature"> :string</span></h4>
+<h4 class="name" id="COMMIT_WRITE_NO_SYNC"><span class="type-signature"></span>COMMIT_WRITE_NO_SYNC<span class="type-signature"> :<a href="global.html#Durability">Durability</a></span></h4>
 
 
 
@@ -263,7 +248,7 @@ In this mode, only the maximum storage size is specified.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="constants.js.html">constants.js</a>, <a href="constants.js.html#line63">line 63</a>
+        <a href="durability.js.html">durability.js</a>, <a href="durability.js.html#line151">line 151</a>
     </li></ul></dd>
     
 
@@ -271,11 +256,6 @@ In this mode, only the maximum storage size is specified.
 
     
 
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Enum.html#description">Enum#description</a>
-    </li></ul></dd>
     
 
     
@@ -308,7 +288,12 @@ In this mode, only the maximum storage size is specified.
 
 
 <div class="description usertext">
-    Optional description of the enumeration constant.
+    A convenience constant that defines a durability policy with
+COMMIT_WRITE_NO_SYNC for Master commit synchronization.
+<p>
+The policies default to COMMIT_NO_SYNC for commits of replicated
+transactions that need acknowledgment and SIMPLE_MAJORITY for the
+acknowledgment policy.
 </div>
 
 
@@ -317,163 +302,7 @@ In this mode, only the maximum storage size is specified.
     <ul>
         <li>
             
-<span class="param-type">string</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="name"><span class="type-signature">(readonly) </span>name<span class="type-signature"> :string</span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="constants.js.html">constants.js</a>, <a href="constants.js.html#line45">line 45</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Enum.html#name">Enum#name</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Name of the enumeration constant, usually the same as its symbol name.
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">string</span>
-
-
-        </li>
-    </ul>
-
-
-
-
-
-
-        
-            
-<h4 class="name" id="ordinal"><span class="type-signature">(readonly) </span>ordinal<span class="type-signature"> :number</span></h4>
-
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="constants.js.html">constants.js</a>, <a href="constants.js.html#line54">line 54</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Enum.html#ordinal">Enum#ordinal</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description usertext">
-    Numeric integer value of the enumeration constant.
-</div>
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">number</span>
+<span class="param-type"><a href="global.html#Durability">Durability</a></span>
 
 
         </li>
@@ -495,7 +324,7 @@ In this mode, only the maximum storage size is specified.
 
     
 
-    <h4 class="name" id="toString"><span class="type-signature"></span>toString<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id=".create"><span class="type-signature">(static) </span>create<span class="signature">(masterSync, replicaSync, replicaAck)</span><span class="type-signature"> &rarr; {<a href="global.html#Durability">Durability</a>}</span></h4>
 
     
 
@@ -507,7 +336,7 @@ In this mode, only the maximum storage size is specified.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="constants.js.html">constants.js</a>, <a href="constants.js.html#line72">line 72</a>
+        <a href="durability.js.html">durability.js</a>, <a href="durability.js.html#line169">line 169</a>
     </li></ul></dd>
     
 
@@ -515,11 +344,6 @@ In this mode, only the maximum storage size is specified.
 
     
 
-    
-    <dt class="inherited-from">Inherited From:</dt>
-    <dd class="inherited-from"><ul class="dummy"><li>
-        <a href="Enum.html#toString">Enum#toString</a>
-    </li></ul></dd>
     
 
     
@@ -552,8 +376,8 @@ In this mode, only the maximum storage size is specified.
 
 
 <div class="description usertext">
-    Returns string representation of enumeration constant as
-EnumClass.ConstantName, e.g. 'Consistenty.Absolute'
+    Creates a <a href="global.html#Durability">Durability</a> instance while validating the arguments
+passed.
 </div>
 
 
@@ -566,6 +390,102 @@ EnumClass.ConstantName, e.g. 'Consistenty.Absolute'
 
 
 
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>masterSync</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="SyncPolicy.html">SyncPolicy</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Sync policy when committing transaction
+on the master node</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>replicaSync</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="SyncPolicy.html">SyncPolicy</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Sync policy when committing transaction
+at a replica node</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>replicaAck</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ReplicaAckPolicy.html">ReplicaAckPolicy</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The acknowledgment policy used
+when obtaining transaction acknowledgments from replicas</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -578,11 +498,48 @@ EnumClass.ConstantName, e.g. 'Consistenty.Absolute'
 
 
 
+
+
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc usertext">
+        If any of the provided values for
+<em>masterSync</em>, <em>replicaSync</em> or <em>replicaAck</em> is
+missing or invalid.
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl class="param-type">
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type"><a href="NoSQLArgumentError.html">NoSQLArgumentError</a></span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
 
 
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    Durability object
+</div>
+
 
 
 <dl class="param-type">
@@ -591,7 +548,7 @@ EnumClass.ConstantName, e.g. 'Consistenty.Absolute'
     </dt>
     <dd>
         
-<span class="param-type">string</span>
+<span class="param-type"><a href="global.html#Durability">Durability</a></span>
 
 
     </dd>
