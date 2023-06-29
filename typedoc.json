@@ -1,0 +1,58 @@
+{
+    "name": "Oracle NoSQL Database Node.js SDK",
+    "readme": "doc/index.md",
+    "entryPoints": [ "./index.d.ts" ],
+    "out": "doc/site",
+    "includeVersion": true,
+    "disableSources": true,
+    "intentionallyNotExported": [ "Expand", "OpaqueTypeKey", "Tag",
+        "OpaqueType", "ExtractByType" ],
+    "validation": {
+        "notExported": false,
+        "invalidLink": true,
+        "notDocumented": false
+    },
+    "plugin": [ "@knodes/typedoc-plugin-pages" ],
+    "externalSymbolLinkMappings": {
+        "typescript": {
+            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+            "Date": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date"
+        },
+        "global": {
+            "Buffer": "https://nodejs.org/api/buffer.html",
+            "Promise": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+            "Date": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date",
+            "Date.parse": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse",
+            "Infinity": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity",
+            "Number.MAX_SAFE_INTEGER": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER",
+            "Number.MIN_SAFE_INTEGER": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MIN_SAFE_INTEGER",
+            "BigInt": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt",
+            "SyntaxError": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError"
+        },
+        "@types/node": {
+            "Buffer": "https://nodejs.org/api/buffer.html"
+        }
+    },
+    "pluginPages": {
+        "source": "doc/guides",
+        "pages": [
+            {
+                "name": "Guides",
+                "children": [
+                    {
+                        "name": "Connecting an Application to Oracle NoSQL Database Cloud Service",
+                        "source": "connect-cloud.md"
+                    },
+                    {
+                        "name": "Connecting an Application to On-Premise Oracle NoSQL Database",
+                        "source": "connect-on-prem.md"
+                    },
+                    {
+                        "name": "Working With Tables",
+                        "source": "tables.md"
+                    }
+                ]
+            }
+        ]
+    }
+}

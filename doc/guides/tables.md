@@ -6,14 +6,35 @@ available options, see the API reference.
 
 ## Create a NoSQLClient Instance
 
-Class {@link NoSQLClient} represents the main access point to the service.  To
+### On importing from the SDK
+
+Importing {@link NoSQLClient} class and other classes/types from the SDK is
+done differently depending on whether you are using TypeScript or JavaScript
+with ES6 modules, or if you are using JavaScript with CommonJS modules:
+
+*TypeScript or JavaScript with ES6 modules:*
+```ts
+import { NoSQLClient } from 'oracle-nosqldb';
+```
+*JavaScript with CommonJS modules:*
+```js
+const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+```
+
+We will use TypeScript/ES6 imports in the tutorial, but both types of imports
+are supported. For more information, see
+[TypeScript Modules](https://www.typescriptlang.org/docs/handbook/2/modules.html)
+and
+[Node.js ECMAScript Modules](https://nodejs.org/dist/latest-v18.x/docs/api/esm.html).
+
+### Specifying Configuration
+
+Class {@link NoSQLClient} represents the main access point to the service. To
 create instance of {@link NoSQLClient} you need to provide appropriate
-configuration information.  This information is represented by a plain
-JavaScript object and may be provided to the constructor of
-{@link NoSQLClient} as the object literal.  Alternatively, you may choose to
-store this information in a JSON configuration file and the constructor of
-{@link NoSQLClient} with the path (absolute or relative to the application's
-current directory) to that file.
+configuration information in the form of {@link Config} object. Alternatively,
+you may choose to store this information in a JSON configuration file and
+create {@link NoSQLClient} instance using the path (absolute or relative to
+the application's current directory) to that file.
 
 Required configuration properties are different depending on what
 {@link ServiceType} is used by your application.  Supported service types are
@@ -24,10 +45,10 @@ or region and some require authentication/authorization information.
 Other properties are optional and default values will be used if not explicitly
 provided.
 
-See {@tutorial connect-cloud} guide on how to configure and connect to the
+See {@page connect-cloud.md} guide on how to configure and connect to the
 Oracle NoSQL Database Cloud Service as well as the Cloud Simulator.
 
-See {@tutorial connect-on-prem} guide on how to configure and connect to the
+See {@page connect-on-prem.md} guide on how to configure and connect to the
 On-Premise Oracle NoSQL Database.
 
 The first example below creates instance of {@link NoSQLClient} for the Cloud
@@ -35,7 +56,7 @@ Service using configuration object literal.  It also adds a default compartment
 and overrides some default timeout values in the configuration object:
 
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 
 let client = new NoSQLClient({
     region: Region.US_ASHBURN_1,
@@ -102,18 +123,18 @@ When you are done using {@link NoSQLClient} instance, you must call
 Failure to call this method may cause your application to hang on exit.
 
 Most methods of {@link NoSQLClient} take an *opt* argument as an optional
-last argument.  This is an options object (plain JavaScript object) which
-allows you to customize the behavior of each operation.  You may pass it as
-object literal.  Any option you specify in this object will override the
-corresponding option that was specified in {@link Config} object when
-{@link NoSQLClient} instance was created, for this particular operation.
-If not specified, option values in {@link Config} will be used.
+last argument. This is an options object with the format different for each
+operation (e.g. see {@link TableDDLOpt}, {@link GetOpt}, {@link PutOpt},
+{@link QueryOpt}, etc). Each of these options will override corresponding
+option in {@link Config}, if exists, for the particular operation. 
+If not specified, each option defaults to a corrensponding value in
+{@link Config}, if exists.
 
 ## Create Tables and Indexes
 
 Learn how to create tables and indexes in the Oracle NoSQL Database.
 
-Creating a table is the first step of developing your application.  To create
+Creating a table is the first step of developing your application. To create
 tables and execute other Data Definition Language (DDL) statements, such as
 creating, modifying and dropping tables as well as creating and dropping
 indexes, use method {@link NoSQLClient#tableDDL}.
@@ -141,16 +162,15 @@ Examples of DDL statements are:
 Table DDL statements are executed by {@link NoSQLClient#tableDDL} method.
 Like most other methods of {@link NoSQLClient} class, this method is
 asynchronous and it returns a *Promise* of {@link TableResult}.
-{@link TableResult} is a plain JavaScript object that contains status of DDL
-operation such as its {@link TableState}, name, schema and its
-{@link TableLimits}.  See {@link TableResult} for description.
-{@link TableState} is an enumeration that tells you the current
-state of the table.
+{@link TableResult} contains status of DDL operation such as its
+{@link TableState}, name, schema and its {@link TableLimits}.
+For more information, see {@link TableResult}. {@link TableState} is an
+enumeration that indicates the current state of the table.
 
 As well as the statement to execute, {@link NoSQLClient#tableDDL} method
-takes *opt* object as the 2nd optional argument.  When you are creating a
-table, you must specify its {@link TableLimits} as part of the *opt*
-argument.  {@link TableLimits} specifies maximum throughput and storage
+takes *opt* optinal parameter in the form of {@link TableDDLOpt}. When you are
+creating a table, you must specify {@link TableDDLOpt#tableLimits} as part of
+*opt*. {@link TableLimits} specifies maximum throughput and storage
 capacity for the table as the amount of read units, write units, and
 Gigabytes of storage.
 
@@ -176,18 +196,16 @@ to it to reflect operation completion.
 * Call {@link NoSQLClient#getTable} method periodically to get the
 {@link TableResult} information about the table at a given moment until the
 table state changes to {@link TableState.ACTIVE} (or
-{@link TableState.DROPPED} for *DROP TABLE* operation).  There are more
-convenient ways of accomplishing this described below.
+{@link TableState.DROPPED} for *DROP TABLE* operation).
 * If you are only interested in operation completion and not any intermediate
-states, you may pass *complete* option set to *true* when calling
-{@link NoSQLClient#tableDDL}.  In this case, {@link NoSQLCLient#tableDDL}
-returns {@link TableResult} only when the operation is completed in the
-underlying store, or results in error if the execution of the operation failed
-at any time.
+states, you may pass {@link TableDDLOpt#complete} option set to *true* when
+calling {@link NoSQLClient#tableDDL}.  In this case,
+{@link NoSQLClient#tableDDL} returns {@link TableResult} only when the
+operation is completed in the underlying store, or results in error if the
+execution of the operation failed at any time.
 
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
-const TableState = require('oracle-nosqldb').TableState;
+import { NoSQLClient, TableState } from 'oracle-nosqldb';
 .....
 const client = new NoSQLClient('config.json');
 
@@ -209,6 +227,7 @@ async function createUsersTable() {
     }
 }
 ```
+
 After the above call returns, *result* will reflect final state of
 the operation.
 
@@ -240,40 +259,51 @@ in the same way as waiting for completion of operations initiated by
 
 Add rows to your table.
 
-When you store data in table rows, your application can easily retrieve, add to,
-or delete information from the table.
+When you store data in table rows, your application can easily retrieve, add
+to, or delete information from the table.
 
 Method {@link NoSQLClient#put} is used to insert a single row into the table.
-It takes table name, row value as plain JavaScript object and *opts*
-as an optional 3rd argument.  This method can be used for unconditional and
-conditional puts to:
+It takes table name, row value and optional *opt* parameter in the form of
+{@link PutOpt}. This method can be used for unconditional and conditional puts
+to:
 
 * Overwrite existing row with the same primary key if present. This is the
 default.
 * Succeed only if the row with the same primary key does not exist.
-Specify *ifAbsent* in the *opt* argument for this case: *{ ifAbsent: true }*.
+Specify *ifAbsent* in the *opt* argument for this case: *\{ ifAbsent: true \}*.
  Alternatively, you may use {@link NoSQLClient#putIfAbsent} method.
 * Succeed only if the row with the same primary key exists. Specify
-*ifPresent* in the *opt* argument for this case: *{ ifPresent: true }*.
+*ifPresent* in the *opt* argument for this case: *\{ ifPresent: true \}*.
 Alternatively, you may use {@link NoSQLClient#putIfPresent} method.
 * Succeed only if the row with the same primary key exists and its
-{@link Version} matches a specific {@link Version} value.  Set *matchVersion*
-in the *opt* argument for this case to the specific version:
-*{ matchVersion: my_version }*.  Alternatively, you may use
+{@link RowVersion} matches a specific {@link RowVersion} value.  Set
+*matchVersion* in the *opt* argument for this case to the specific version:
+*\{ matchVersion: my_version \}*.  Alternatively, you may use
 {@link NoSQLClient#putIfVersion} method and specify the version value
 as the 3rd argument (after table name and row).
 
-Each put method returns a *Promise* of {@link PutResult} which is a plain
-JavaScript object containing information such as success status and resulting
-row {@link Version}.
+Each put method returns a *Promise* of {@link PutResult} containing
+information such as success status and resulting {@link RowVersion}.
 
 Note that the property names in the provided row object should be the same
-as underlying table column names.  See {@link Row}.
+as underlying table column names.  See {@link AnyRow}.
+
+For TypeScript users:
+
+You may provide a row schema as the type parameter to {@link NoSQLClient#put},
+{@link NoSQLClient#putIfAbsent}, {@link NoSQLClient#putIfPresent},
+{@link NoSQLClient#putIfVersion} and other data-related methods.
+
+This is strictly optional, but would allow TypeScript compiler to provide type
+hints for the returned {@link PutResult}, as well as type-check that the
+passed row object conforms to the specified schema. This is shown in the
+TypeScript example below.
 
 To add rows to your table:
 
+*In JavaScript:*
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 .....
 const client = new NoSQLClient('config.json');
 
@@ -314,7 +344,59 @@ async function putRowsIntoUsersTable() {
 }
 ```
 
-Note that {@link PutResult}#success results in *false* value only if
+*In TypeScript:*
+```ts
+import { NoSQLClient } from 'oracle-nosqldb';
+.....
+
+interface Person {
+    id: number;
+    name: string;
+}
+
+const client = new NoSQLClient('config.json');
+
+async function putRowsIntoUsersTable() {
+    const tableName = 'users';
+    try {
+        // Uncondintional put, should succeed
+        // Type of result is PutResult<Person>
+        let result = await client.put<Person>(tableName,
+            { id: 1, name: 'John' });
+
+        // Will fail since the row with the same primary key exists
+        result = await client.putIfAbsent<Person>(tableName,
+            { id: 1, name: 'Jane' });
+        // Expected output: putIfAbsent failed
+        console.log('putIfAbsent ' + result.success ? 'succeeded' : 'failed');
+
+        // Will succeed because the row with the same primary key exists
+        res = await client.putIfPresent<Person>(tableName,
+            { id: 1 , name: 'Jane' });
+        // Expected output: putIfAbsent succeeded
+        console.log('putIfPresent ' + result.success ?
+            'succeeded' : 'failed');
+
+        let version = result.version;
+        // Will succeed because the version matches existing row
+        result = await client.putIfVersion<Person>(tableName,
+            { id: 1, name: 'Kim' }, version);
+        // Expected output: putIfVersion succeeded
+        console.log('putIfVersion ' + result.success ? 'succeeded' : 'failed');
+
+        // Will fail because the previous put has changed the row version, so
+        // the old version no longer matches.
+        result = await client.putIfVersion<Person>(tableName,
+            { id: 1, name: 'June' }, version);
+        // Expected output: putIfVersion failed
+        console.log('putIfVersion ' + result.success ? 'succeeded' : 'failed');
+    } catch(error) {
+        //handle errors
+    }
+}
+```
+
+Note that {@link PutResult#success} results in *false* value only if
 conditional put operation fails due to condition not being satisfied (e.g. row
 exists for {@link NoSQLClient#putIfAbsent}, row doesn't exist for
 {@link NoSQLClient#putIfPresent} or version doesn't match for
@@ -333,10 +415,14 @@ if the sequence includes both puts and deletes.  For details, see the API
 Reference.
 
 Using columns of type *JSON* allows more flexibility in the use of data as
-the data in the JSON column does not have predefined schema.  To put data
-into JSON column, provide either plain JavaScript object or a JSON string
-as the column value.  Note that the data in plain JavaScript object must be of
+the data in the JSON column does not have predefined schema in the database.
+To put data into JSON column, provide either an object or a JSON string as the
+column value. Note that the field values inside JSON column must be of
 supported JSON types.
+
+If using TypeScript, you can still specify row schema as described above,
+since it is used only on the client side by TypeScript compiler. The schema
+may be nested to in order describe expected shape of your JSON data.
 
 ## Read Data
 
@@ -351,37 +437,74 @@ enumeration. By default all read operations are eventually consistent, using
 {@link Consistency.EVENTUAL}.  This type of read is less costly than those
 using absolute consistency, {@link Consistency.ABSOLUTE}.  This default
 consnstency for read operations can be set in the initial configuration used
-to create {@link NoSQLClient} instance using {@link Config}#consistency
+to create {@link NoSQLClient} instance using {@link Config#consistency}
 property.  You may also change it for a single read operation by setting
-*consistency* property in the *opt* argument of the {@link NoSQLClient#get}
-method.
+{@link GetOpt#consistency} in the *opt* argument.
 
-{@link NoSQLClient#get} method returns *Promise* of {@link GetResult} which
-which is plain JavaScript object containing the resulting row and its
-{@link Version}.  If the provided primary key does not exist in the table,
-the value of {@link GetResult}#row property will be null.
+{@link NoSQLClient#get} method returns *Promise* of {@link GetResult} that
+contains the resulting row and its {@link RowVersion}. If the provided
+primary key does not exist in the table, the value of {@link GetResult#row}
+property will be *null*.
 
 Note that the property names in the provided primary key key object should be
-the same as underlying table column names.  See {@link Key}.
+the same as underlying table column names.  See {@link AnyKey}.
 
+For TypeScript users:
+
+You may provide a row schema as the type parameter to {@link NoSQLClient#get}
+and other data-related methods.
+
+This is strictly optional, but would allow TypeScript compiler to provide type
+hints for the returned {@link GetResult}, as well as type-check the passed
+key, which is expected to contain any subset of fields from row schema having
+types allowed for primary key (see {@link RowKey}). This is shown in the
+TypeScript example below.
+
+To use {@link NoSQLClient#get} method:
+
+*In JavaScript:*
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
-const Consistency = require('oracle-nosqldb').Consistency;
+import { NoSQLClient, Consistency } from 'oracle-nosqldb';
 .....
 const client = new NoSQLClient('config.json');
 
 async function getRowsFromUsersTable() {
-        const tableName = 'users';
-        try {
-            let result = await client.get(tableName, { id: 1 });
-            console.log('Got row: ' + result.row);
-            // Use absolute consistency
-            result = await client.get(tableName, 'users',
-                { id: 1 }, { consistency: Consistency.ABSOLUTE });
-            console.log('Got row with absolute consistency: ' + result.row);
-        } catch(error) {
-            //handle errors
-        }
+    const tableName = 'users';
+    try {
+        let result = await client.get(tableName, { id: 1 });
+        console.log('Got row: ' + result.row);
+        // Use absolute consistency
+        result = await client.get(tableName, 'users',
+            { id: 1 }, { consistency: Consistency.ABSOLUTE });
+        console.log('Got row with absolute consistency: ' + result.row);
+    } catch(error) {
+        //handle errors
+    }
+}
+```
+
+*In TypeScript:*
+```ts
+import { NoSQLClient, Consistency } from 'oracle-nosqldb';
+.....
+
+interface Person {
+    id: number;
+    name: string;
+}
+
+const client = new NoSQLClient('config.json');
+
+async function getRowsFromUsersTable() {
+    const tableName = 'users';
+    try {
+        // result is of type GetResult<Person>
+        let result = await client.get<Person>(tableName, { id: 1 });
+        console.log('Got row: ' + result.row);
+        // Use absolute consistency
+        result = await client.get<Person>(tableName, 'users',
+            { id: 1 }, { consistency: Consistency.ABSOLUTE });
+        console.log('Got row with absolute consistency: ' + result.row);
     } catch(error) {
         //handle errors
     }
@@ -390,41 +513,55 @@ async function getRowsFromUsersTable() {
 
 ## Use Queries
 
-Learn about  using queries in your application.
+Learn about using queries in your application.
 
 The Oracle NoSQL Database provides a rich query language to read and
 update data. See [SQL For NoSQL Specification](http://www.oracle.com/pls/topic/lookup?ctx=en/cloud/paas/nosql-cloud&id=sql_nosql)
 for a full description of the query language.
 
 To execute a query use {@link NoSQLClient#query} method.  This method returns
-returns *Promise* of {@link QueryResult} which is plain JavaScript object that
-contains an *Array* of resulting rows as well as continuation key.
+returns *Promise* of {@link QueryResult} that contains an *Array* of resulting
+rows as well as continuation key.
 
 The amount of data returned by the query is limited by the system default
-and could be further limited by setting *maxReadKB* property in the *opt*
-argument of {@link NoSQLClient#query}, which means that one invocation of
-{@link NoSQLClient#query} method may not return all available results.
-Likewise, the amount of data written by an update query is limited by the
-system default and can be further limited by setting *maxWriteKB* property in
-the *opt* argument of {@link NoSQLClient#query}, which mean that one
-invocation of {@link NoSQLClient#query} may not finish all the updates or
-deletes specified by the query.
+and could be further limited by setting {@link QueryOpt#maxReadKB} property in
+the *opt* argument, which means that one invocation of
+{@link NoSQLClient#query} method may not return all available
+results. Likewise, the amount of data written by an update query is limited by
+the system default and can be further limited by setting
+{@link QueryOpt#maxWriteKB} property in the *opt* argument, which means
+that one invocation of {@link NoSQLClient#query} may not finish all the
+updates or deletes specified by the query.
 
-This situation is dealt with by using {@link QueryResult}#continuationKey
+This situation is dealt with by using {@link QueryResult#continuationKey}
 property.  Not-null continuation key means that more query results may be
-available.  This means that queries should generally run in a loop,
-looping until continuation key becomes *null*.  Note that it is possible
-for {@link QueryResult}#rows to be empty yet have not-null
-{@link QueryResult}#continuationKey, which means the query loop should
+available. This means that queries should generally run in a loop,
+looping until continuation key becomes *undefined*.  Note that it is possible
+for {@link QueryResult#rows} to be empty yet have non-null
+{@link QueryResult#continuationKey}, which means the query loop should
 continue.  See {@link NoSQLClient#query} and {@link QueryResult} for details.
 
 In order to receive all the results, call {@link NoSQLClient#query} in a loop.
 At each iteration, if non-null continuation key is received in
 {@link QueryResult}, set *continuationKey* property in the *opt* argument for
-the next iteration:
+the next iteration.
 
+For TypeScript users:
+
+You may provide a query result schema as the type parameter to
+{@link NoSQLClient#query} and {@link NoSQLClient#queryIterable}. Note that
+this may not be the same as table row schema (unless using *SELECT \** query),
+because the query may include projection, name aliases, aggregate values, etc.
+
+This is strictly optional, but would allow TypeScript compiler to provide type
+hints for the returned rows in {@link QueryResult}. This is shown in the
+subsequent TypeScript examples below.
+
+To use {@link NoSQLClient#query} method:
+
+*In JavaScript:*
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 .....
 const client = new NoSQLClient('config.json');
 
@@ -444,14 +581,44 @@ async function queryUsersTable() {
 }
 ```
 
+*In TypeScript:*
+```ts
+import { NoSQLClient } from 'oracle-nosqldb';
+.....
+const client = new NoSQLClient('config.json');
+
+interface Person {
+    id: number;
+    name: string;
+}
+
+async function queryUsersTable() {
+    const opt = {};
+    try {
+        do {
+            // result is of type QueryResult<Person>
+            const result = await client.query<Person>('SELECT * FROM users',
+                opt);
+            for(let row of result.rows) {
+                console.log(row);
+            }
+            opt.continuationKey = result.continuationKey;
+        } while(opt.continuationKey);
+    } catch(error) {
+        //handle errors
+    }
+}
+```
+
 Another, more convenient way to iterate over query results is to use
 {@link NoSQLClient.queryIterable} API.  This API returns an iterable object
 that you can iterate over with *for-await-of* loop.  You do not need to manage
-continuation key if using this API.  The following example is equivalent to
+continuation key if using this API. The following example is equivalent to
 the previous example:
 
+*In JavaScript:*
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 .....
 const client = new NoSQLClient('config.json');
 
@@ -470,9 +637,36 @@ async function queryUsersTable() {
 }
 ```
 
-Note that you may also pass the same options in the *opt* argument to
-{@link NoSQLClient#queryIterable} as to {@link NoSQLClient#query}, except
-*continuationKey*.
+*In TypeScript:*
+```ts
+import { NoSQLClient } from 'oracle-nosqldb';
+.....
+const client = new NoSQLClient('config.json');
+
+interface Person {
+    id: number;
+    name: string;
+}
+
+async function queryUsersTable() {
+    const opt = {};
+    try {
+        // result is of type QueryResult<Person>
+        for await(let result of client.queryIterable<Person>(
+            'SELECT * FROM users')) {
+            for(let row of result.rows) {
+                console.log(row);
+            }
+        }
+    } catch(error) {
+        //handle errors
+    }
+}
+```
+
+Note that you may also pass the same options as specified by {@link QueryOpt}
+to {@link NoSQLClient#queryIterable} same as to {@link NoSQLClient#query},
+except {@link QueryOpt#continuationKey}.
 
 There are only few cases where you can make a single call to
 {@link NoSQLClient#query} without having to loop.  These are the cases where
@@ -490,7 +684,7 @@ queries, the execution is much more efficient than starting with a query
 string every time. The query language and API support query variables to
 assist with query reuse. See {@link NoSQLClient#prepare} and
 {@link PreparedStatement} for more information.
-* Using *opt* argument of {@link NoSQLClient#query} and
+* Using {@link QueryOpt} with {@link NoSQLClient#query} and
 {@link NoSQLClient#queryIterable} allows you to set the read consistency for
 query as well as modifying the maximum amount of data it reads or writes in a
 single call. This can be important to prevent a query from getting throttled.
@@ -501,8 +695,9 @@ returns *Promise* of {@link PreparedStatement} object.  Use
 query, pass {@link PreparedStatement} to the {@link NoSQLClient#query} or
 {@link NoSQLClient#queryIterable} instead of the statement string.
 
+*In JavaScript:*
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 .....
 const client = new NoSQLClient('config.json');
 
@@ -533,16 +728,61 @@ async function queryUsersTable() {
 }
 ```
 
+*In TypeScript:*
+```ts
+import { NoSQLClient } from 'oracle-nosqldb';
+.....
+
+interface Employee {
+    id: number;
+    firstName: string;
+    lastName: string;
+    dept: string;
+}
+
+const client = new NoSQLClient('config.json');
+
+async function queryUsersTable() {
+    const statement = 'DECLARE $dept STRING; SELECT * FROM emp WHERE ' +
+        'dept = $dept';
+    try {
+        let prepStatement = await client.prepare(statement);
+
+        // Set value for $dept variable
+        prepStatement.set('$dept', 'Development');
+        for await(let result of client.queryIterable<Employee>(
+            prepStatement)) {
+            // result is of type QueryResult<Employee>
+            for(let row of result.rows) {
+                console.log(row);
+            }
+        }
+
+        // Set different value for $dept and re-execute the query
+        prepStatement.set('$dept', 'Marketing');
+        for await(let result of client.queryIterable<Employee>(
+            prepStatement)) {
+            // result is of type QueryResult<Employee>
+            for(let row of result.rows) {
+                console.log(row);
+            }
+        }
+    } catch(error) {
+        //handle errors
+    }
+}
+```
+
 ## Delete Data
 
 Learn how to delete rows from your table.
 
 To delete a row, use {@link NoSQLClient#delete} method.  Pass to it the
 table name and primary key of the row to delete.  In addition, you can
-make delete operation conditional by specifying on a {@link Version} of the
+make delete operation conditional by specifying on a {@link RowVersion} of the
 row that was previously returned by {@link NoSQLClient#get} or
 {@link NoSQLClient#put}.  You can pass it as *matchVersion* property of the
-*opt* argument: *{ matchVersion: my_version }*.  Alternatively you may use
+*opt* argument: *\{ matchVersion: my_version \}*.  Alternatively you may use
 {@link NoSQLClient#deleteIfVersion} method.
 
 {@link NoSQLClient#delete} and {@link NoSQLClient#deleteIfVersion} methods
@@ -553,10 +793,23 @@ version mismatch and *returnExisting* property was set to *true* in the *opt*
 argument.
 
 Note that the property names in the provided primary key key object should be
-the same as underlying table column names.  See {@link Key}.
+the same as underlying table column names.  See {@link AnyKey}.
 
+For TypeScript users:
+
+You may provide a row schema as the type parameter to
+{@link NoSQLClient#delete}, {@link NoSQLClient#deleteIfVersion} and other
+data-related methods.
+
+This is strictly optional, but would allow TypeScript compiler to provide type
+hints for the returned {@link DeleteResult}, as well as type-check the passed
+key, which is expected to contain any subset of fields from row schema having
+types allowed for primary key (see {@link RowKey}). This is shown in the
+TypeScript example below.
+
+*In JavaScript:*
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 .....
 const client = new NoSQLClient('config.json');
 
@@ -605,7 +858,72 @@ async function deleteRowsFromUsersTable() {
 }
 ```
 
-Note that similar to put operations, {@link DeleteResult}#success results in
+*In TypeScript:*
+```ts
+import { NoSQLClient } from 'oracle-nosqldb';
+.....
+
+interface Person {
+    id: number;
+    name: string;
+}
+
+const client = new NoSQLClient('config.json');
+
+async function deleteRowsFromUsersTable() {
+    const tableName = 'users';
+    try {
+        // putResult is of type PutResult<Person>
+        let putResult = await client.put<Person>(tableName,
+            { id: 1, name: 'John' });
+
+        // Unconditional delete, should succeed
+        // deleteResult is of type DeleteResult<Person>
+        let deleteResult = await client.delete<Person>(tableName, { id: 1 });
+        // Expected output: delete succeeded
+        console.log('delete ' + deleteResult.success ?
+            'succeeded' : 'failed');
+
+        // Delete with non-existent primary key, will fail
+        deleteResult = await client.delete<Person>(tableName, { id: 2 });
+        // Expected output: delete failed
+        console.log('delete ' + deleteResult.success ?
+            'succeeded' : 'failed');
+
+        // Re-insert the row
+        putResult = await client.put<Person>(tableName,
+            { id: 1, name: 'John' });
+        let version = putResult.version;
+
+        // Will succeed because the version matches existing row
+        deleteResult = await client.deleteIfVersion<Person>(tableName,
+            { id: 1 }, version);
+        // Expected output: deleteIfVersion succeeded
+        console.log('deleteIfVersion ' + deleteResult.success ?
+            'succeeded' : 'failed');
+
+        // Re-insert the row
+        putResult = await client.put<Person>(tableName, { id: 1,
+            name: 'John' });
+
+        // Will fail because the last put has changed the row version, so
+        // the old version no longer matches.  The result will also contain
+        // existing row and its version because we specified returnExisting in
+        // the opt argument.
+        deleteResult = await client.deleteIfVersion<Person>(tableName,
+            { id: 1 }, version, { returnExisting: true });
+        // Expected output: deleteIfVersion failed
+        console.log('deleteIfVersion ' + deleteResult.success ?
+            'succeeded' : 'failed');
+        // Expected output: { id: 1, name: 'John' }
+        console.log(deleteResult.existingRow);
+    } catch(error) {
+        //handle errors
+    }
+}
+```
+
+Note that similar to put operations, {@link DeleteResult#success} results in
 *false* value only if trying to delete row with non-existent primary key or
 because of version mismatch when matching version was specified.  Failure
 for any other reason will result in error.
@@ -647,8 +965,7 @@ It takes table name and new {@link TableLimits} as arguments and returns
 *Promise* of {@link TableResult}.
 
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
-const TableState = require('oracle-nosqldb').TableState;
+import { NoSQLClient, TableState } from 'oracle-nosqldb';
 .....
 const client = new NoSQLClient('config.json');
 
@@ -681,11 +998,11 @@ the {@link TableState} upon return will most likely be intermediate state
 for the operation completion in one of the ways described in
 **Create Tables and Indexes** section.
 
-Note that {@link NoSQLClient#forCompletion} works by polling for the information
-about the operation at regular intervals.  You may customize the wait timeout
-(*timeout* property) and the polling interval (*delay* property) by
-setting them in the *opt* argument as shown above (otherwise applicable
-default values are used).
+Note that {@link NoSQLClient#forCompletion} works by polling for the
+information about the operation at regular intervals.  You may customize the
+wait timeout (see {@link CompletionOpt#timeout}) and the polling interval
+(see {@link CompletionOpt#delay}) by setting them in the *opt* argument as
+shown above (otherwise applicable default values will be used).
 
 ## Delete Tables and Indexes
 
@@ -712,8 +1029,7 @@ operation in the underlying store in one of the ways described in
 **Create Tables and Indexes** section.
 
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
-const TableState = require('oracle-nosqldb').TableState;
+import { NoSQLClient, TableState } from 'oracle-nosqldb';
 .....
 const client = new NoSQLClient('config.json');
 
@@ -806,13 +1122,13 @@ handler determines:
 * How long to wait before each retry.
 
 {@link RetryHandler} is an interface with with 2 properties:
-* {@link RetryHandler}#doRetry that determines whether the operation should be
+* {@link RetryHandler#doRetry} that determines whether the operation should be
 retried based on the operation, number of retries happened so far and the
 error occurred.  This property is usually a function, but may be also be set
 to boolean *false* to disable automatic retries.
-* {@link RetryHandler}#delay that determines how long to wait before each
+* {@link RetryHandler#delay} that determines how long to wait before each
 successive retry based on the same information as provided to
-{@link RetryHandler}#doRetry.  This property is usually a function, but may
+{@link RetryHandler#doRetry}.  This property is usually a function, but may
 also be set to number of milliseconds for constant delay.
 
 The driver is configured with default retry handler that will retry retryable
@@ -824,7 +1140,7 @@ retries, base delay and other properties may be customized in
 {@link NoSQLClient} instance.
 
 Alternatively, instead of using default {@link RetryHandler} you may choose to
-create your own {@link RetryHandler} and set it as {@link RetryConfig}#handler
+create your own {@link RetryHandler} and set it as {@link RetryConfig#handler}
 property to use custom retry logic.
 
 See documentation for {@link RetryConfig} and {@link RetryHandler} for details.
@@ -864,29 +1180,29 @@ of rows in a loop also using continuation key.
 This approach may be improved by computing the delay based on how much
 throughput has been consumed by an operation. All data-related operation
 results such as {@link GetResult}, {@link PutResult}, {@link DeleteResult},
-{@link MultiDeleteResult}, {@link WriteMultipleResult}, {@link PrepareResult}
-and {@link QueryResult} include *consumedCapacity* property.
+{@link MultiDeleteResult}, {@link WriteMultipleResult},
+{@link PreparedStatement} and {@link QueryResult} include
+{@link ConsumedCapacityResult#consumedCapacity} property.
 {@link ConsumedCapacity} tells you how many write and read units, as well as
 write and read KB has been consumed by an operation.  You may use this
 information to keep the throughput within the table limits.
 
 For queries, another option would be to reduce the amount of data read in
-a single {@link NoSQLClient#query} call by setting *maxReadKB* parameter in the
-*opt* argument.  The same can be done for {@link NoSQLClient#deleteRange}
-operation by using *maxWriteKB*.
+a single {@link NoSQLClient#query} call by setting {@link QueryOpt#maxReadKB}.
+The same can be done for {@link NoSQLClient#deleteRange} operation by setting
+{@link MultiDeleteOpt#maxWriteKB}.
 
 ## Data Types
 
 Plain JavaScript objects (object literals) are used as rows for *put*
 operations and as primary keys for *get* and *delete* operations.  The
 property names of these objects must match corresponding column names of
-the table.  See {@link Row} and {@link Key} for more details on the format
-of rows and primary keys.
+the table.  See {@link AnyRow} and {@link AnyKey} for more details.
 
-In addition, the property values of {@link Row} and {@link Key} objects must
-be compatible with the underlying database types for corresponding columns.
-This means that there are mappings between Oracle NoSQL database types and
-JavaScript and Node.js types used by the SDK.
+In addition, the property values of rows and keys must be compatible with the
+underlying database types for corresponding columns. This means that there are
+mappings between Oracle NoSQL database types and JavaScript and Node.js types
+used by the SDK.
 
 For details on Oracle NoSQL database types, see
 [Supported Data Types](https://docs.oracle.com/en/cloud/paas/nosql-cloud/rnpxl/index.html#RNPXL-GUID-833B2B2A-1A32-48AB-A19E-413EAFB964B8).
@@ -914,13 +1230,77 @@ The mappings between JavaScript/Node.js types and the database types are
 described in detail in {@link FieldValue}.
 
 Note that for some database types more than one JavaScript/Node.js type may
-be used on input (such as {@link Row}s for put operations or {@link Key}s for
-get and delete operations).  In general the system is permissive in terms of
-valid conversions among types and that any lossless conversion is allowed.
-For values returned by the driver (such as results of {@link NoSQLClient#get}
-or {@link NoSQLClient#query}) there is a definite JavaScript/Node.js type for
-each database type.  {@link FieldValue} describes data type mappings in both
+be used on input.  In general the system is permissive in terms of valid
+conversions among types and that any lossless conversion is allowed.
+For values returned by the driver (such as {@link GetResult} or
+{@link QueryResult}) there is a definite JavaScript/Node.js type for
+each database type. {@link FieldValue} describes data type mappings in both
 directions.
+
+For TypeScript users:
+
+All data-related methods such as {@link NoSQLClient#get},
+{@link NoSQLClient#put}, {@link NoSQLClient#delete},
+{@link NoSQLClient#deleteRange}, {@link NoSQLClient#writeMany},
+{@link NoSQLClient#query} and their variants take an optional type parameter
+*TRow* that specifies table row schema (or query result schema for query
+operations).  This allows typescript compiler to check that the input provided
+conforms to the schema and will also returned a typed version of the
+corresponding operation result. In addition, it will check that primary key
+fileds belong to the schema and of types supported for primary keys (see
+{@link RowKey}):
+
+```ts
+import { NoSQLClient, Consistency } from 'oracle-nosqldb';
+.....
+
+interface Person {
+    id: number;
+    name: string;
+    friends?: number[];
+}
+
+const client = new NoSQLClient('config.json');
+
+async function getRow() {
+    const tableName = 'users';
+    try {
+        // result is of type GetResult<Person>
+        let result = await client.get<Person>(tableName, { id: 1 });
+
+        // @ts-expect-error result.row is possibly null
+        console.log(res.row.id); // Error
+        if (result.row) {
+            console.log(result.row.id); // OK
+            console.log(result.row.name); // OK
+            // @ts-expect-error result.row.friends is possibly undefined
+            console.log(result.row.friends[0]); // Error
+            if (result.row.friends && result.row.friends.length) {
+                console.log(result.row.friends[0]); // OK
+            }
+            // @ts-expect-error No property "address" in Person
+            console.log(result.row.address); // Error
+            // @ts-expect-error Wrong type for result.row.name
+            const n: number = result.row.name; // Error
+            // @ts-expect-error result.row is read-only
+            result.row = null; // Error
+        }
+
+        // @ts-expect-error Property "id2" does not exist in Person
+        result = await client.get<Person>(tableName, { id2: 1 }); // Error
+        result = await client.get<Person>(tableName,
+        // @ts-expect-error Unsupported type for primary key (array)
+            { id: 1, friends: [ 1 ] }); // Error
+
+    } catch(error) {
+        //handle errors
+    }
+}
+```
+
+Using *TRow* type parameter is optional.  If not using *TRow*, the type of
+table rows, keys and query results is assumed to be any object with fields of
+type *any*.  See {@link AnyRow} and {@link AnyKey} for more details.
 
 ## Administrative Operations (On-Premise only)
 
@@ -966,12 +1346,11 @@ underlying store, or results in error if the execution of the operation failed
 at any time.
 
 Because some of admin DDL statements may include passwords, you may pass them
-as *Buffer* containing UTF-8 encoded statement string so that it can be
-erased afterwards to avoid keeping sensitive information in memory.
+as {@link !Buffer | Buffer} containing UTF-8 encoded statement string so that
+it can be erased afterwards to avoid keeping sensitive information in memory.
 
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
-const AdminState = require('oracle-nosqldb').AdminState;
+import { NoSQLClient, AdminState } from 'oracle-nosqldb';
 .....
 const client = new NoSQLClient('config.json');
 
@@ -1010,4 +1389,4 @@ In addition, there are methods such as {@link NoSQLClient#listNamespaces},
 namespaces, users and roles, respectively, present in the store.  These
 methods get this information by executing *SHOW* DDL commands (such as
 *SHOW AS JSON NAMESPACES*) via {@link NoSQLClient#adminDDL} and parsing the
-JSON output of the command which is returned as {@link AdminResult}#output.
+JSON output of the command which is returned as {@link AdminResult#output}.

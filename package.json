@@ -1,22 +1,27 @@
 {
   "name": "oracle-nosqldb",
-  "version": "5.4.0",
+  "version": "5.5.0",
   "description": "Node.js driver for Oracle NoSQL Database",
   "main": "index.js",
+  "types": "index.d.ts",
   "directories": {
     "doc": "./doc",
     "lib": "./lib",
+    "src": "./src",
     "test": "./test",
     "examples": "./examples"
   },
   "files": [
     "THIRD_PARTY_LICENSES.txt",
+    "index.js",
+    "index.d.ts",
     "lib/**/*.js",
+    "src/**/*.ts",
     "examples/*",
     "doc/api/**"
   ],
   "scripts": {
-    "test": "mocha",
+    "test": "mocha && tsc --project test/unit/types",
     "docs": "jsdoc -c conf.json"
   },
   "keywords": [
@@ -27,19 +32,25 @@
     "database"
   ],
   "devDependencies": {
-    "eslint": "^8.29.0",
-    "eslint-plugin-require-path-exists": "^1.1.9",
-    "jsdoc": "^3.5.5",
-    "docdash": "^1.2.0",
-    "mocha": "^9.2.2",
+    "@microsoft/type2docfx": "^2.0.4",
+    "@types/node": "^12.12.6",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
-    "lodash": "^4.17.21",
+    "compare-versions": "^5.0.3",
     "decimal.js": "^10.4.3",
+    "docdash": "^1.2.0",
+    "eslint": "^8.29.0",
+    "eslint-plugin-require-path-exists": "^1.1.9",
+    "expect-type": "^0.15.0",
     "geolib": "^3.3.3",
-    "sinon": "^15.0.0",
+    "jsdoc": "^3.5.5",
+    "@knodes/typedoc-plugin-pages": "^0.23.4",
+    "lodash": "^4.17.21",
+    "mocha": "^9.2.2",
     "mock-fs": "^5.2.0",
-    "compare-versions": "^5.0.3"
+    "sinon": "^15.0.0",
+    "typedoc": "^0.23.28",
+    "typescript": "^5.0.4"
   },
   "overrides": {
     "@babel/parser": "7.14.7"
@@ -49,6 +60,5 @@
   },
   "author": "Oracle",
   "license": "UPL-1.0",
-  "repository": {},
-  "dependencies": {}
+  "repository": {}
 }

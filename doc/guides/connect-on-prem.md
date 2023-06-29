@@ -14,6 +14,8 @@ NoSQL Database Service.
 Mac.
 * [Node Package Manager (npm)](https://www.npmjs.com/get-npm) that is
 installed with Node.js
+* If using TypeScript, [TypeScript](https://www.npmjs.com/package/typescript)
+version 5.0.x or higher.
 
 ## Downloading and Installing the SDK
 
@@ -87,7 +89,7 @@ You may also omit the protocol portion:
     const endpoint = 'myhost:8080'
 ```
 
-See {@link Config}#endpoint for details.
+See {@link Config#endpoint} for details.
 
 ### <a name="secure"></a>Configuring the SDK for a Secure Store
 
@@ -101,7 +103,7 @@ The following information is required:
     const endpoint = 'https://localhost:8181';
 ```
 Note that unless using port 443, the protocol portion of the url is required.
-See {@link Config}#endpoint for details.
+See {@link Config#endpoint} for details.
 
 2. User for the driver which is used by the application to access the kvstore
 through the proxy.  Use the following SQL to create the driver user:
@@ -172,13 +174,34 @@ supply a {@link Config} object containing information needed to access the
 service.  Alternatively, you may choose to supply a path to JSON file
 that contains the same configuration information as in {@link Config}.
 
+### On importing from the SDK
+
+Importing {@link NoSQLClient} class and other classes/types from the SDK is
+done differently depending on whether you are using TypeScript or JavaScript
+with ES6 modules, or if you are using JavaScript with CommonJS modules:
+
+*TypeScript or JavaScript with ES6 modules:*
+```ts
+import { NoSQLClient } from 'oracle-nosqldb';
+```
+*JavaScript with CommonJS modules:*
+```js
+const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+```
+
+We will use TypeScript/ES6 imports in the tutorial, but both types of imports
+are supported. For more information, see
+[TypeScript Modules](https://www.typescriptlang.org/docs/handbook/2/modules.html)
+and
+[Node.js ECMAScript Modules](https://nodejs.org/dist/latest-v18.x/docs/api/esm.html).
+
 ### Specifying Service Type
 
 Since NoSQL Node.js driver is used both for Oracle NoSQL Cloud Service and
 On-Premise Oracle NoSQL Database, the {@link Config} object can specify
 that we are connecting to on-premise NoSQL Database by setting
-{@link Config}#serviceType property to {@link ServiceType.KVSTORE}.  You can
-always explicitly specify {@link Config}#serviceType property, but in some
+{@link Config#serviceType} property to {@link ServiceType.KVSTORE}.  You can
+always explicitly specify {@link Config#serviceType} property, but in some
 cases such as when connecting to secure store and the configuration has *auth*
 object that contains *kvstore* property, the service type will be deduced
 by the driver.  See {@link ServiceType} for details.
@@ -193,8 +216,7 @@ endpoint.
 
 For example, if using configuration JavaScript object:
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
-const ServiceType = require('oracle-nosqldb').ServiceType;
+import { NoSQLClient, ServiceType } from 'oracle-nosqldb';
 
 const client = new NoSQLClient({
     serviceType: ServiceType.KVSTORE,
@@ -213,7 +235,7 @@ You may also choose to store the same configuration in a file.  Create file
 
 Then you may use this file to create {@link NoSQLClient} instance:
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 
 const client = new NoSQLClient('/path/to/config.json');
 ```
@@ -226,7 +248,7 @@ as a string (as well as {@link ServiceType} constant in JavaScript code). See
 
 To connect to the proxy in secure mode, in addition to communication endpoint,
 you need to specify user name and password of the driver user.  This
-information is passed in {@link Config}#auth object under *kvstore* property
+information is passed in {@link Config#auth} object under *kvstore* property
 and can be specified in one of 3 ways as described below.
 
 Note that in the examples below we will omit *serviceType* in configuration
@@ -238,7 +260,7 @@ in the configuration contains only *kvstore* property.
 You may choose to specify user name and password directly:
 
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 
 const client = new NoSQLClient({
     endpoint: 'https://myhost:8081',
@@ -272,7 +294,7 @@ Credentials file should have the following format:
 Then you may reference this credentials file as following:
 
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 
 const client = new NoSQLClient({
     endpoint: 'https://myhost:8081',
@@ -299,7 +321,7 @@ create {@link NoSQLClient} instance as was shown for non-secure store:
 }
 ```
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 
 const client = new NoSQLClient('/path/to/config.json');
 ```
@@ -315,7 +337,7 @@ to be so.  Note that *loadCredentials* returns a Promise and thus can
 be implemented as an *async* function:
 
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 
 class MyKVStoreCredentialsProvider {
     constructor() {
@@ -350,7 +372,7 @@ If you don't need to store any state information, the provider can
 be just a function conforming to {@link loadKVStoreCredentials} interface:
 
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 
 async function loadMyCredentials() {
     //.....
@@ -377,16 +399,14 @@ the rest.  For a non-secure store, remove all properties in the *kvstore* object
 or remove the *auth* property entirely.
 
 To run an example:
+
 1. An Oracle NoSQL Database instance must be running
+
 2. A proxy server instance must be running, connected to the database
+
 3. Edit the *kvstore_template.json* file as described above, based on the
 proxy configuration.
-4.  Run an example using the syntax:
-```ini
-$ node <example> <config.json>
-e.g.
-$ node basic_example.js kvstore_template.json
-```
+
 Here's an example of a config file for a not-secure, local proxy:
 ```ini
 {
@@ -411,4 +431,39 @@ certificates. See [Configuring the SDK for a Secure Store](#secure).
         }
     }
 }
+```
+
+4.  Run JavaScript example using the syntax:
+
+```bash
+$ node <example.js> <config.json>
+```
+e.g.
+```bash
+$ node basic_example.js kvstore_template.json
+```
+
+5. TypeScript examples are in *examples/typescript* directory. There are 4
+examples: *table_ops.ts*, *single_row_ops.ts*, *multi_row_ops.ts* and
+*query_ops.ts*.  They also share some common functionality (see *setup.ts* and
+*common.ts*).
+
+The most simple way to get started is to install
+[tsx](https://www.npmjs.com/package/tsx) and run an example as follows:
+
+```bash
+npx tsx <example.ts> <config.json>
+```
+e.g.
+```bash
+npx tsx single_row_ops.ts kvstore_config.json
+```
+
+Instead of *tsx* you may also use
+[ts-node](https://www.npmjs.com/package/ts-node). Alternatively, you may
+compile the examples into JavaScript and run them with *node*, e.g.
+
+```bash
+npx tsc
+node single_row_ops.js kvstore_config.json
 ```
