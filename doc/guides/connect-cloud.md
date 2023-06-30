@@ -541,7 +541,7 @@ value overrides the initial configuration value.
 
 ## <a name="quickstart"></a>Example Quick Start
 
-The examples in the examples directory are configured to make it simple to
+The examples in the *examples* directory are configured to make it simple to
 connect and run against the Oracle NoSQL Database Cloud Service. Follow
 these steps. It is assumed that the SDK has been installed and will be found
 by the *node* command.
@@ -576,11 +576,12 @@ Instead of using a configuration file it is possible to modify the example code
 to directly provide your credentials as described in
 [Specifying Credentials Directly](#config_api).
 
-3.  JavaScript examples are in *examples* directory. Run an example using the
+3.  JavaScript examples are in *examples/javascript* directory. You can copy
+all files in this directory to a separate directory. Run an example using the
 syntax:
 
 ```bash
-$ node example.js [optional_config_file.json]
+$ node <example.js> [optional_config_file.json]
 ```
 e.g.
 ```bash
@@ -590,27 +591,40 @@ $ node basic_example.js
 4. TypeScript examples are in *examples/typescript* directory. There are 4
 examples: *table_ops.ts*, *single_row_ops.ts*, *multi_row_ops.ts* and
 *query_ops.ts*.  They also share some common functionality (see *setup.ts* and
-*common.ts*).
+*common.ts*). *package.json* in the same directory contains scripts to build
+and run the examples. You can copy all files in this directory to a separate
+directory.
 
-The most simple way to get started is to install
-[tsx](https://www.npmjs.com/package/tsx) and run an example as follows:
-
-```bash
-npx tsx example.ts [optional_config_file.json]
-```
-e.g.
-```bash
-npx tsx single_row_ops.ts
-```
-
-Instead of *tsx* you may also use
-[ts-node](https://www.npmjs.com/package/ts-node). Alternatively, you may
-compile the examples into JavaScript and run them with *node*, e.g.
+Use *npm* to install the dependencies, then you can run each example as
+follows:
 
 ```bash
-npx tsc
-node single_row_ops.js
+npm install
+npm run <example> [-- optional_config_file.json]
 ```
+
+Note that the example names are without .ts extension.  E.g.:
+
+```bash
+npm install
+npm run table_ops
+```
+
+The last parameter is an optional JSON config file, e.g.
+```bash
+npm run single_row_ops -- config.json
+```
+
+The commands above use [tsx](https://www.npmjs.com/package/tsx) to run the
+examples.  Alternatively, you can build the examples into JavaScript. Then
+run the resulting .js files, which are created in the *dist* directory, e.g.:
+
+```bash
+npm run build
+node dist/single_row_ops.js
+```
+
+See *examples/typescript/package.json* for more details.
 
 ## <a name="cloudsim"></a>Using the Cloud Simulator
 
@@ -643,24 +657,28 @@ machine. It should look like this:
     "endpoint": "http://localhost:8080"
 }
 ```
-3. Run a JavaScript example using the syntax:
+3. Run a JavaScript example in *examples/javascript* directory using the
+syntax:
 
 ```bash
-$ node <example.js> <config.json>
+node <example.js> <config.json>
 ```
+
 e.g.
 ```bash
-$ node basic_example.js cloudsim.json
+node basic_example.js ../cloudsim.json
 ```
 
-4. Run a TypeScript example using the syntax:
+4. Run a TypeScript example in *examples/typescript* directory using the
+syntax:
 
 ```bash
-npx tsx <example.ts> <config.json>
+npm run <example> -- <config.json>
 ```
+
 e.g.
 ```bash
-npx tsx single_row_ops.ts ../cloudsim.json
+npm run single_row_ops -- ../cloudsim.json
 ```
 
 Note that the Cloud Simulator does not require authorization information and

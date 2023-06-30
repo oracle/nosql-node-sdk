@@ -25,6 +25,8 @@ See [Oracle NoSQL Database Downloads](https://www.oracle.com/database/technologi
 [Oracle NoSQL Database Documentation](https://docs.oracle.com/en/database/other-databases/nosql-database/index.html) to get started with Oracle NoSQL Database.
 In particular, see the [Administrator Guide](https://docs.oracle.com/en/database/other-databases/nosql-database/22.3/admin/index.html) on how to install, configure and run Oracle
 NoSQL Database Service.
+* If using TypeScript, [TypeScript](https://www.npmjs.com/package/typescript)
+version 5.0.x or higher.
 
 ## Installation
 
@@ -63,8 +65,8 @@ first step is to cut the program below and paste it into an editor for minor
 modifications. The instructions assume that is stored as quickstart.js, but you
 can use any name you like. The quickstart example supports 3 environments:
 1. Oracle NoSQL Database Cloud Service
-2. Oracle NoSQL  Cloud Simulator
-3. Oracle NoSQL  Database on-premise, using the proxy server
+2. Oracle NoSQL Cloud Simulator
+3. Oracle NoSQL Database on-premise, using the proxy server
 
 See [running quickstart](#run_quickstart) for instructions on how to edit and
 run the quickstart program in different environments.

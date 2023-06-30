@@ -7,7 +7,7 @@
 
 'use strict';
 
-import * as assert from "assert";
+import assert = require("assert");
 
 import { NoSQLClient, CapacityMode, ServiceType, NoSQLError, ErrorCode }
     from "oracle-nosqldb";

@@ -7,7 +7,7 @@
 
 'use strict';
 
-import * as assert from "assert";
+import assert = require("assert");
 import Decimal from "decimal.js";
 
 import { NoSQLClient, PreparedStatement, QueryOpt, Consistency, AnyRow }

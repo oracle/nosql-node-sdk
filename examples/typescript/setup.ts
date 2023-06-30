@@ -7,10 +7,10 @@
 
 'use strict';
 
-import * as assert from "assert";
-import * as fs from "fs";
+import assert = require("assert");
+import fs = require("fs");
 
-import { NoSQLClient, Config, NoSQLError } from "oracle-nosqldb";
+import { NoSQLClient, Config, NoSQLError, ServiceType } from "oracle-nosqldb";
 import { Decimal } from "decimal.js";
 import type { PurchaseOrder } from "./common";
 
@@ -93,10 +93,14 @@ export async function runExample(
     populateTable: boolean) {
     let client: NoSQLClient | undefined;
     try {
+        // If JSON config file is not specified, we assume Cloud Service with
+        // credentials and region specified in the default OCI config file.
+        const cfg: Config = process.argv[2] ?
+            JSON.parse(fs.readFileSync(process.argv[2], 'utf8')) : {
+                serviceType: ServiceType.CLOUD
+            };
         // We modify config to add dbNumber property in case it was not set
         // in the JSON config file.
-        const cfg: Config = JSON.parse(fs.readFileSync(process.argv[2],
-            'utf8'));
         cfg.dbNumber = Decimal;
 
         client = new NoSQLClient(cfg);

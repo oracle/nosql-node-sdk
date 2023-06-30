@@ -433,37 +433,48 @@ certificates. See [Configuring the SDK for a Secure Store](#secure).
 }
 ```
 
-4.  Run JavaScript example using the syntax:
+4. JavaScript examples are in *examples/javascript* directory. You can copy
+all files in this directory to a separate directory. Run an example using the
+syntax:
 
 ```bash
 $ node <example.js> <config.json>
 ```
+
 e.g.
 ```bash
-$ node basic_example.js kvstore_template.json
+$ node basic_example.js kvstore_config.json
 ```
 
 5. TypeScript examples are in *examples/typescript* directory. There are 4
 examples: *table_ops.ts*, *single_row_ops.ts*, *multi_row_ops.ts* and
 *query_ops.ts*.  They also share some common functionality (see *setup.ts* and
-*common.ts*).
+*common.ts*). *package.json* in the same directory contains scripts to build
+and run the examples. You can copy all files in this directory to a separate
+directory.
 
-The most simple way to get started is to install
-[tsx](https://www.npmjs.com/package/tsx) and run an example as follows:
-
-```bash
-npx tsx <example.ts> <config.json>
-```
-e.g.
-```bash
-npx tsx single_row_ops.ts kvstore_config.json
-```
-
-Instead of *tsx* you may also use
-[ts-node](https://www.npmjs.com/package/ts-node). Alternatively, you may
-compile the examples into JavaScript and run them with *node*, e.g.
+Use *npm* to install the dependencies, then you can run each example as
+follows:
 
 ```bash
-npx tsc
-node single_row_ops.js kvstore_config.json
+npm install
+npm run <example> -- <config.json>
 ```
+
+Note that the example names are without .ts extension.  E.g.:
+
+```bash
+npm install
+npm run table_ops -- kvstore_config.json
+```
+
+The commands above use [tsx](https://www.npmjs.com/package/tsx) to run the
+examples.  Alternatively, you can build the examples into JavaScript. Then
+run the resulting .js files, which are created in the *dist* directory, e.g.:
+
+```bash
+npm run build
+node dist/single_row_ops.js kvstore_config.json
+```
+
+See *examples/typescript/package.json* for more details.
