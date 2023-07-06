@@ -1,0 +1,15 @@
+{
+  "name": "oracle-nosqldb-js-examples",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Oracle NoSQL JavaScript Examples",
+  "dependencies": {
+    "oracle-nosqldb": "latest"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "author": "Oracle",
+  "license": "UPL-1.0",
+  "repository": {}
+}

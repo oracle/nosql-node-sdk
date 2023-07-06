@@ -10,9 +10,11 @@ source code, run and modify tests and examples and build documentation.
 
 1. Make sure you have [Node.js](https://nodejs.org) and
 [NPM](https://www.npmjs.com/get-npm) package manager installed on your
-system.  The driver requires Node.js version 10.0.0 or later.  It is
-recommended to install LTS version.  NPM package manager is installed
+system.  The driver requires Node.js version 12.0.0 or later.  It is
+recommended to install LTS version. NPM package manager is installed
 with Node.js but could be updated if needed.
+
+TypeScript support is provided for TypeScript versions 5.0.x and higher. 
 
 2.  Clone the repository and install development dependencies:
 
@@ -22,15 +24,21 @@ cd nosql-node-sdk
 npm install
 ```
 
+Although the driver is implemented in JavaScript, with the source code in
+*lib* directory, TypeScript support is provided via .d.ts declaration files
+located *src/types* directory.  For JavaScript and TypeScript, the exports
+are declared in *index.js* and *index.d.ts* correspondingly.
+
 Development dependencies are listed in package.json in _devDependencies_
 section.  The driver does not have runtime external dependencies.
-__npm install__ command above will install all development dependencies locally
-in node_modules subdirectory.  You may also install some of these dependencies
-globally if needed for convenience.
+__npm install__ command above will install all development dependencies
+locally in node_modules subdirectory.  You may also install some of these
+dependencies globally if needed for convenience.
 
 3. The driver may be used to access
 [Oracle NoSQL Database Cloud Service](https://cloud.oracle.com/nosqldatabase)
-and [On-Premise Oracle NoSQL Database](https://docs.oracle.com/en/database/other-databases/nosql-database/index.html).
+and
+[On-Premise Oracle NoSQL Database](https://docs.oracle.com/en/database/other-databases/nosql-database/index.html).
 
 4.  If developing for the Cloud Service, during development you may use the
 driver locally by running tests and examples against
@@ -38,35 +46,33 @@ driver locally by running tests and examples against
 
 5. In order to run against Oracle NoSQL Database Cloud Service or against
 On-Premise Oracle NoSQL Database you need to set up appropriate configuration.
-Please follow instructions in the __Set up__ section of [README](./README.md).
+Please follow instructions in the __Quickstart__ section of
+[README](./README.md).
 
 ## Running Examples
 
-Examples are located under *examples* directory.  Note that because examples
-need to locate the SDK package, in addition to cloning Github repository, the
-SDK package needs to be installed on your system.  Instead of installing from
-NPM registry, you can link the package folder that you cloned from Github.
-This will enable any changes you make in the cloned repository to be visible
-in the linked package.
+Two sets of examples are provided, for JavaScript and TypeScript in
+*examples/javascript* and *examples/typescript* directories correspondingly.
+*examples/config* directory contains template JSON configuration files used to
+run the examples.
 
-To link the package into a global folder, for example, if you did a global install of dependencies, execute **npm link** command from
-the root of the cloned repository:
+For each set of examples, it is better to copy its contents
+into a separate directory before running, then follow the *Examples* section
+of [README](./README.md) for futher instructions.
 
-```bash
-cd nosql-node-sdk
-sudo npm link
-```
-
-Alternatively, you may link into a different directory as local dependency
-of another project, in which case the package will be linked into
-*node_modules* directory of that project. For example, if you installed dependencies in nosql-node-sdk/node_modules:
+Note that *package.json* files for each set of examples contain the example
+dependencies, which include the SDK itself, and they will be installed from
+NPM registry.  Sometimes you may wish to instead use the SDK directly from
+the reposity you just cloned instead of NPM version (e.g. when you need to
+test your changes).  In this case you may use **npm link** command to link to
+the SDK in your repository before running **npm install**.  E.g.
 
 ```bash
-cd node_modules
-npm link <path-to-nosql-node-sdk>
+cd typescript_examples_directory
+npm link path/to/nosql-node-sdk
+npm install
+npx tsx table_ops.ts config.json
 ```
-
-Then follow *Examples* section of [README](./README.md) to run the examples.
 
 ## Running Tests
 
@@ -190,6 +196,27 @@ cd test/unit
 This option allows you to run unit tests against older releases and thus skip
 testing latest features not supported in these releases.
 
+### Unit Tests for TypeScript Declarations
+
+Unit tests for TypeScript declarations for the driver are located in
+*test/unit/types* directory.  These are compile-time only tests and check the
+correctness of API signatures and accompanying interfaces and types, as well
+as make sure TypeScript compiler flags errors when the APIs are used
+incorrectly.  As such, these test files only need to be compiled (you can
+also see any errors flagged in VSCode).
+
+These tests use [expect-type](https://www.npmjs.com/package/expect-type)
+package as well as *@ts-expect-error* directive to detect incorrect use of the
+APIs.
+
+Using **npm test** command as above will also invoke these tests.
+Alternatively, you can invoke (compile) them separately:
+
+```bash
+cd test/unit/types
+npx tsc
+```
+
 ## Linting and Debugging
 
 ### Linting
@@ -254,9 +281,11 @@ individual unit test:
 
 ## Building Documentation
 
-API documentation is built with [JSDoc](https://jsdoc.app/) and it uses
-[Docdash](https://github.com/clenemt/docdash) template.  Both are installed
-as part of development dependencies.
+API documentation is built with [TypeDoc](https://typedoc.org/) using:
+
+* Documentation comments in the TypeScript declaration files in *src/types*
+directory.
+* Tutorials in *doc/guides* directory.
 
 To build API documentation, in the repository root directory do:
 
@@ -264,27 +293,17 @@ To build API documentation, in the repository root directory do:
 npm run docs
 ```
 
-or use jsdoc directly:
+or use typedoc directly:
 
 ```
-node_modules/.bin/jsdoc -c conf.json
+npx typedoc
 ```
 
-If jsdoc is installed but node_modules isn't populated it is possible specify the
-expected template file on the command line or by modifying config.json, e.g.
-```
-jsdoc -c conf.json -t /usr/local/lib/node_modules/docdash
-```
+The resulting API documentation is generated in *doc/site* directory. You can
+start browsing from __doc/site/index.html__ file.
 
-JSDoc configuration options and list of source files to build the doc from are
-specified in __conf.json__ file in the repository root directory.
-
-The resulting API documentation is output into doc/api directory under the
-repository root directory.  You can start browsing from __doc/api/index.html__
-file.
-
-Note that the doc should be rebuilt if any public classes/interfaces are
-modified.
+The build is controled by *typedoc.json* configuration file. For more
+information see [TypeDoc Options](https://typedoc.org/options/).
 
 ### Publishing Documentation
 
@@ -308,12 +327,12 @@ a fresh clone of the gh-pages branch (see instructions below).
 repository:
 
         $ cd <nosql-node-sdk>
-        $ rm -rf doc/api
+        $ rm -rf doc/site
         $ npm run docs
 
 3. copy generated doc to the gh-pages repo
 
-        $ cp -r <nosql-node-sdk>/doc/api/* <nosql-node-doc>
+        $ cp -r <nosql-node-sdk>/doc/site/* <nosql-node-doc>
 
 4. commit and push after double-checking the diff in the nosql-node-doc
 repository
@@ -329,7 +348,7 @@ The new documentation will automatically be published.
 The release package includes
 
 * the library runtime
-* user documentation
+* typescript declaration files
 * examples
 
 ### Intallable Archive
@@ -347,7 +366,7 @@ npm install oracle-nosqldb-x.y.z.tgz
 
 ### Smoke Test for Validity
 
-TBD
+See *smoke.js* in section **Running Tests**.
 
 ### Upload to npmjs.com
 

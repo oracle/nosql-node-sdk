@@ -933,6 +933,16 @@ export class NoSQLClient extends EventEmitter {
      * @returns {Promise} Promise of {@link WriteMultipleResult}
      * @see {@link WriteOperation}
      * @see {@link WriteMultipleResult}
+     * @overload
+     * @async
+     * @param {WriteOperation} operations Array of {@link WriteOperation}
+     * objects each representing single put or delete operation, see
+     * {@link WriteOperation}
+     * @param {WriteMultipleOpt} [opt] Options object, see
+     * {@link WriteMultipleOpt}
+     * @returns {Promise} Promise of {@link WriteMultipleResult}
+     * @see {@link WriteOperation}
+     * @see {@link WriteMultipleResult}
      */
     writeMany<TRow extends AnyRow>(tableName: string,
         operations: WriteOperation<TRow>[], opt?: WriteMultipleOpt):

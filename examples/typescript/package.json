@@ -4,7 +4,7 @@
   "private": true,
   "description": "Oracle NoSQL TypeScript Examples",
   "dependencies": {
-    "oracle-nosqldb": "~5.5",
+    "oracle-nosqldb": "latest",
     "decimal.js": "^10.4.3"
   },
   "devDependencies": {
@@ -13,11 +13,7 @@
     "tsx": "^3.12.7"
   },
   "scripts": {
-    "build": "tsc",
-    "table_ops": "tsx ./table_ops.ts",
-    "single_row_ops": "tsx ./single_row_ops.ts",
-    "multi_row_ops": "tsx ./multi_row_ops.ts",
-    "query_ops": "tsx ./query_ops.ts"
+    "build": "tsc"
   },
   "engines": {
     "node": ">=12.0.0"

@@ -543,8 +543,7 @@ value overrides the initial configuration value.
 
 The examples in the *examples* directory are configured to make it simple to
 connect and run against the Oracle NoSQL Database Cloud Service. Follow
-these steps. It is assumed that the SDK has been installed and will be found
-by the *node* command.
+these steps:
 
 1. Acquire credentials. See [Acquire Credentials](#creds). You will need these:
 
@@ -568,31 +567,38 @@ pass_phrase=<your-private-key-passphrase>
 region=<your-region-identifier>
 ```
 
-Alternatively, you may create your own config file based on
-*cloud_template.json* (or *cloudsim.json* for Cloud Simulator). Each example
-takes the config file path as an optional first command line argument.
+Alternatively, you may create your own JSON config file to pass to the
+examples. Each example takes a JSON config file path as an optional first
+command line parameter. Config file templates are in *examples/config*
+directory. Make a copy of *cloud_template.json*, fill in appropriate
+properties and remove any unused properties.
 
 Instead of using a configuration file it is possible to modify the example code
 to directly provide your credentials as described in
 [Specifying Credentials Directly](#config_api).
 
-3.  JavaScript examples are in *examples/javascript* directory. You can copy
-all files in this directory to a separate directory. Run an example using the
-syntax:
+3.  JavaScript examples are in *examples/javascript* directory. You may copy
+all files in this directory to a separate directory. The SDK package
+*oracle-nosqldb* is the only dependency for these examples.  You may install
+it via *package.json* in the same directory (alternatively, you may install
+the SDK globally). To run an example:
 
 ```bash
-$ node <example.js> [optional_config_file.json]
+npm install
+node <example.js> [optional_config_file.json]
 ```
+
 e.g.
 ```bash
-$ node basic_example.js
+npm install
+node basic_example.js
 ```
 
 4. TypeScript examples are in *examples/typescript* directory. There are 4
 examples: *table_ops.ts*, *single_row_ops.ts*, *multi_row_ops.ts* and
 *query_ops.ts*.  They also share some common functionality (see *setup.ts* and
 *common.ts*). *package.json* in the same directory contains scripts to build
-and run the examples. You can copy all files in this directory to a separate
+and run the examples. You may copy all files in this directory to a separate
 directory.
 
 Use *npm* to install the dependencies, then you can run each example as
@@ -600,23 +606,26 @@ follows:
 
 ```bash
 npm install
-npm run <example> [-- optional_config_file.json]
+npx tsx <example.ts> [optional_config_file.json]
 ```
 
-Note that the example names are without .ts extension.  E.g.:
-
+E.g.
 ```bash
 npm install
-npm run table_ops
+npx tsx single_row_ops.ts
 ```
 
-The last parameter is an optional JSON config file, e.g.
+The commands above use [tsx](https://www.npmjs.com/package/tsx) which is
+installed as one of the dependencies.
+
+The last parameter is an optional JSON config file (only needed if not using
+default OCI config file as described above), e.g.:
+
 ```bash
-npm run single_row_ops -- config.json
+npx tsx single_row_ops.ts config.json
 ```
 
-The commands above use [tsx](https://www.npmjs.com/package/tsx) to run the
-examples.  Alternatively, you can build the examples into JavaScript. Then
+Alternatively, you can build the examples into JavaScript. Then
 run the resulting .js files, which are created in the *dist* directory, e.g.:
 
 ```bash
@@ -624,7 +633,7 @@ npm run build
 node dist/single_row_ops.js
 ```
 
-See *examples/typescript/package.json* for more details.
+See *package.json* for more details.
 
 ## <a name="cloudsim"></a>Using the Cloud Simulator
 
@@ -639,8 +648,8 @@ applications locally without accessing Oracle NoSQL Database Cloud Service.
 
 You can start developing your application with the Oracle NoSQL Cloud
 Simulator, using and understanding the basic examples, before you get
-started with the Oracle NoSQL Database Cloud Service. After building, debugging,
-and testing your application with the Oracle NoSQL Cloud Simulator,
+started with the Oracle NoSQL Database Cloud Service. After building,
+debugging, and testing your application with the Oracle NoSQL Cloud Simulator,
 move your application to the Oracle NoSQL Database Cloud Service.
 
 Follow these instructions to run an example program against the Cloud
@@ -649,15 +658,22 @@ Simulator:
 1. [Download](https://www.oracle.com/downloads/cloud/nosql-cloud-sdk-downloads.html)
 and start the Cloud Simulator.
 
-2. Edit the cloudsim.json configuration file in the examples directory and
-modify the endpoint if using a non-default port or if it is running on another
-machine. It should look like this:
+2. Copy and edit *cloudsim.json* configuration file in *examples/config*
+directory and modify the endpoint if using a non-default port or if it is
+running on another machine.  If using default settings, you may use the file
+*cloudsim.json* as it is.
+
+It should look like this:
 ```ini
 {
     "endpoint": "http://localhost:8080"
 }
 ```
-3. Run a JavaScript example in *examples/javascript* directory using the
+
+3. Run examples using instructions provided in the previous section (pars 3
+and 4) and the JSON configuration file as described above:
+
+Run a JavaScript example in *examples/javascript* directory using the
 syntax:
 
 ```bash
@@ -666,19 +682,19 @@ node <example.js> <config.json>
 
 e.g.
 ```bash
-node basic_example.js ../cloudsim.json
+node basic_example.js ../config/cloudsim.json
 ```
 
-4. Run a TypeScript example in *examples/typescript* directory using the
+Run a TypeScript example in *examples/typescript* directory using the
 syntax:
 
 ```bash
-npm run <example> -- <config.json>
+npx tsx <example.ts> -- <config.json>
 ```
 
 e.g.
 ```bash
-npm run single_row_ops -- ../cloudsim.json
+npx tsx single_row_ops.ts -- ../cloudsim.json
 ```
 
 Note that the Cloud Simulator does not require authorization information and

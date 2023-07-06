@@ -390,15 +390,18 @@ let client = new NoSQLClient({
 
 ### Examples
 
-In the *examples* directory, you will see a configuration file template
+The examples in the *examples* directory are configured to make it simple to
+connect and run against the On-Premise Oracle NoSQL Database.
+
+In the *examples/config* directory, you will see a configuration file template
 *kvstore_template.json*.  It is used as configuration file to create
 {@link NoSQLClient} instance as shown above.  Make a copy of this file and
 fill in appropriate values.  For a secure store, leave either *user* and
-*password* or the *credentials* property inside the *kvstore* object and remove
-the rest.  For a non-secure store, remove all properties in the *kvstore* object
-or remove the *auth* property entirely.
+*password* or the *credentials* property inside the *kvstore* object and
+remove the rest. For a non-secure store, remove all properties in the
+*kvstore* object or remove the *auth* property entirely.
 
-To run an example:
+Follow these steps:
 
 1. An Oracle NoSQL Database instance must be running
 
@@ -434,15 +437,19 @@ certificates. See [Configuring the SDK for a Secure Store](#secure).
 ```
 
 4. JavaScript examples are in *examples/javascript* directory. You can copy
-all files in this directory to a separate directory. Run an example using the
-syntax:
+all files in this directory to a separate directory. The SDK package
+*oracle-nosqldb* is the only dependency for these examples. You may install
+it via *package.json* in the same directory (alternatively, you may install
+the SDK globally). To run an example:
 
 ```bash
-$ node <example.js> <config.json>
+npm install
+node <example.js> <config.json>
 ```
 
-e.g.
+E.g.
 ```bash
+npm install
 $ node basic_example.js kvstore_config.json
 ```
 
@@ -458,18 +465,19 @@ follows:
 
 ```bash
 npm install
-npm run <example> -- <config.json>
+npx tsx <example.ts> <config.json>
 ```
 
-Note that the example names are without .ts extension.  E.g.:
-
+E.g.
 ```bash
 npm install
-npm run table_ops -- kvstore_config.json
+npx tsx single_row_ops.ts kvstore_config.json
 ```
 
-The commands above use [tsx](https://www.npmjs.com/package/tsx) to run the
-examples.  Alternatively, you can build the examples into JavaScript. Then
+The commands above use [tsx](https://www.npmjs.com/package/tsx) which is
+installed as one of the dependencies.
+
+Alternatively, you can build the examples into JavaScript. Then
 run the resulting .js files, which are created in the *dist* directory, e.g.:
 
 ```bash
@@ -477,4 +485,4 @@ npm run build
 node dist/single_row_ops.js kvstore_config.json
 ```
 
-See *examples/typescript/package.json* for more details.
+See *package.json* for more details.

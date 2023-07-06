@@ -329,24 +329,20 @@ node quickstart.js kvstore
 ```
 ## Examples
 
-There are examples in the *examples* directory of the repository and in the
-installed module. You can copy the *examples* directory (or files within it)
-into a separate location. If you installed the SDK locally (as dependency of
-your project), copy the examples into a location within your project so that
-they can locate the SDK package (which should be installed in the
-*node_modules* directory).  See
-[Loading from node_modules Folders](https://nodejs.org/dist/latest-v12.x/docs/api/modules.html#modules_loading_from_node_modules_folders).
-If you installed the SDK globally, you may copy the examples to the location
-of your choice.
+The examples are located in the *examples* directory.  There are two sets of
+examples: JavaScript in *examples/javascript* directory and TypeScript in
+*examples/typescript* directory.
 
-You can run the examples
+You can run the examples:
 
 * Against the Oracle NoSQL Database Cloud Service using your Oracle Cloud
 account and credentials.
-* Locally using the [Oracle NoSQL Database Cloud Simulator](https://www.oracle.com/downloads/cloud/nosql-cloud-sdk-downloads.html).
+* Locally using the
+[Oracle NoSQL Database Cloud Simulator](https://www.oracle.com/downloads/cloud/nosql-cloud-sdk-downloads.html).
 * Against the On-Premise Oracle NoSQL Database via the proxy.
 
-These configuration files are provided in the examples directory:
+*examples/config* directory contains template JSON configuration files used to
+run the examples:
 
 * **cloud\_template.json** is used to access a cloud service instance and
 allows you to customize configuration. See
@@ -361,19 +357,66 @@ the proxy.  Copy that file and fill in appropriate values as described in
 [Configuring the SDK](https://oracle.github.io/nosql-node-sdk/tutorial-connect-on-prem.html#config).
 If configuring for a not secure store the *auth* section should be removed.
 
-Run an example by pointing to the config file. This command assumes
-*my_config.json* is a copy of a config file template modified for your
-environment:
-
-`node basic_example.js my_config.json`
-
 Alternatively, when using cloud service with default configuration as
 described in
-[Configuring the SDK](https://oracle.github.io/nosql-node-sdk/tutorial-connect-cloud.html#configure_cloud), you may run the example without providing JSON config
+[Configuring the SDK](https://oracle.github.io/nosql-node-sdk/tutorial-connect-cloud.html#configure_cloud), you may examples without providing JSON configuration
 file.  This assumes that your credentials and your region identifier are
-present in a file, *~/.oci/config*:
+present in an OCI config file *~/.oci/config*.
 
-`node basic_example.js`
+### JavaScript Examples
+
+JavaScript examples are in *examples/javascript* directory. You can copy
+all files in this directory to a separate directory. The SDK package
+*oracle-nosqldb* is the only dependency for these examples. You may install
+it via *package.json* in the same directory (alternatively, you may install
+the SDK globally). To run an example:
+
+```bash
+npm install
+node <example.js> [optinal_config_file.json]
+```
+
+E.g.
+```bash
+npm install
+$ node basic_example.js config.json
+```
+
+### TypeScript Examples
+
+TypeScript examples are in *examples/typescript* directory. There are 4
+examples: *table_ops.ts*, *single_row_ops.ts*, *multi_row_ops.ts* and
+*query_ops.ts*.  They also share some common functionality (see *setup.ts* and
+*common.ts*). *package.json* in the same directory contains scripts to build
+and run the examples. You may copy all files in this directory to a separate
+directory.
+
+Use *npm* to install the dependencies, then you can run each example as
+follows:
+
+```bash
+npm install
+npx tsx <example.ts> [optional_config_file.json]
+```
+
+E.g.
+```bash
+npm install
+npx tsx single_row_ops.ts config.json
+```
+
+The commands above use [tsx](https://www.npmjs.com/package/tsx) which is
+installed as one of the dependencies.
+
+Alternatively, you can build the examples into JavaScript. Then
+run the resulting .js files, which are created in the *dist* directory, e.g.:
+
+```bash
+npm run build
+node dist/single_row_ops.js config.json
+```
+
+See *package.json* for more details.
 
 ## License
 
@@ -382,7 +425,6 @@ package for a copy of the license and additional information.
 
 The [THIRD\_PARTY\_LICENSES](THIRD_PARTY_LICENSES.txt) file contains third
 party notices and licenses.
-
 
 ## Contributing
 See [CONTRIBUTING](./CONTRIBUTING.md) for details.
