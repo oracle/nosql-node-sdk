@@ -71,6 +71,10 @@ async function async_smoke() {
             console.log('Caused by -->');
             console.log(cause.stack);
         }
+        if (err.operation) {
+            console.log('From:');
+            console.log(err.operation);
+        }
     } finally {
         if (client) {
             client.close();

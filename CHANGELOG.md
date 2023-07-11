@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## Unpublished
+
+**Fixed**
+
+* Remove authentication information from the *operation* object so that it is
+not publicly visible.
+
 ## 5.4.0 - 2023-04-13
 
 **Added**
