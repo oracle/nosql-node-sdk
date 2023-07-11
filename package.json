@@ -21,7 +21,7 @@
     "examples/**"
   ],
   "scripts": {
-    "test": "mocha && tsc --project test/unit/types",
+    "test": "tsc --project test/unit/types && mocha",
     "docs": "typedoc"
   },
   "keywords": [

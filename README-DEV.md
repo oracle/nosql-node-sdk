@@ -246,6 +246,8 @@ will show any problems found by ESLint directly in the source code editor.
 The following applies if you are using
 [Visual Studio Code](https://code.visualstudio.com/):
 
+#### JavaScript
+
 Once you open the repository root directory in VSCode, you can add and edit
 launch configurations that will be stored in .vscode/launch.json file.
 
@@ -278,6 +280,36 @@ individual unit test:
         "internalConsoleOptions": "neverOpen"
     }
 ```
+
+#### TypeScript
+
+To debug your Node.js TypeScript application that uses the SDK, please follow
+[this guide](https://code.visualstudio.com/docs/typescript/typescript-debugging).
+
+Note that *tsconfig.json* for your application must include either *sourceMap*
+or *inlineSourceMap* set to *true* in *compilerOptions*.
+
+Here is the example launch configuration to run one of the TypeScript examples
+that come with the SDK:
+
+```json
+    {
+        "type": "node",
+        "request": "launch",
+        "name": "debug_query_ops_example",
+        "program": "${workspaceFolder}/query_ops.ts",
+        "args": [ "config_cloud.json" ],
+        "preLaunchTask": "npm: build",
+        "outFiles": [ "${workspaceFolder}/dist/*.js" ]
+    }
+```
+
+This will allow you to debug your application code and also go into JavaScript
+code of the SDK.
+
+The *preLaunchTask* property enables building the application before running,
+with compiled JavaScript code going into *dist* directory (see *outFiles*
+property).
 
 ## Building Documentation
 
