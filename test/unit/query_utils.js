@@ -246,17 +246,22 @@ class QueryUtils extends Utils {
         return QueryUtils._sortRows(rows, fields, -1);
     }
 
-    //We assume all input values are of comparable type or
-    //null/undefined/EMPTY_VALUE
-    static aggregate(rows, field, aggrFunc, initVal) {
+    static _isNullOrEmpty(val) {
+        return val == null || val === EMPTY_VALUE;
+    }
+
+    static _skipForMinMax(val) {
+        return QueryUtils._isNullOrEmpty(val);
+    }
+
+    static _aggregate(rows, field, skipFunc, aggrFunc, initVal) {
         let ret = initVal;
         for(let row of rows) {
             const val = QueryUtils.getFieldValue(row, field);
-            if (ret == null) {
-                ret = (val == null || val === EMPTY_VALUE ? undefined : val);
-            } else if (val != null && val !== EMPTY_VALUE) {
-                ret = aggrFunc(ret, val);
+            if (skipFunc(val)) {
+                continue;
             }
+            ret = (ret === initVal) ? val : aggrFunc(ret, val);
         }
         return ret;
     }
@@ -264,37 +269,40 @@ class QueryUtils extends Utils {
     //shortcut for use in group by
     static count(rows, field) {
         return field == null ? rows.length :
-            QueryUtils.aggregate(rows, field, v1 => v1 + 1, 0);
+            QueryUtils._aggregate(rows, field, QueryUtils._isNullOrEmpty,
+                v1 => v1 + 1, 0);
     }
 
     static min(rows, field) {
-        return QueryUtils.aggregate(rows, field, (v1, v2) =>
-            QueryUtils.compareFieldValues(v1, v2) < 0 ? v1 : v2);
+        return QueryUtils._aggregate(rows, field, QueryUtils._skipForMinMax,
+            (v1, v2) => QueryUtils.compareFieldValues(v1, v2) < 0 ? v1 : v2);
     }
 
     static max(rows, field) {
-        return QueryUtils.aggregate(rows, field, (v1, v2) =>
-            QueryUtils.compareFieldValues(v1, v2) > 0 ? v1 : v2);
+        return QueryUtils._aggregate(rows, field, QueryUtils._skipForMinMax,
+            (v1, v2) => QueryUtils.compareFieldValues(v1, v2) > 0 ? v1 : v2);
     }
 
     static sum(rows, field) {
-        return QueryUtils.aggregate(rows, field, (v1, v2) =>
-            NumberUtils.add(v1, v2));
+        return QueryUtils._aggregate(rows, field,
+            v => !NumberUtils.isNumber(v),
+            (v1, v2) => NumberUtils.add(v1, v2));
     }
 
     static avg(rows, field) {
-        const res = QueryUtils.aggregate(rows, field, (v1, v2) => {
-            if (NumberUtils.isNumber(v1)) {
-                v1 = { cnt: 1, val: v1};
-            }
-            return {
-                cnt: v1.cnt + 1,
-                val: NumberUtils.add(v1.val, v2)
-            };
-        });
+        const res = QueryUtils._aggregate(rows, field,
+            v => !NumberUtils.isNumber(v), (v1, v2) => {
+                if (NumberUtils.isNumber(v1)) {
+                    v1 = { cnt: 1, val: v1};
+                }
+                return {
+                    cnt: v1.cnt + 1,
+                    val: NumberUtils.add(v1.val, v2)
+                };
+            });
         //handle cases of only one row or multiple rows
-        return NumberUtils.isNumber(res) ? res :
-            NumberUtils.div(res.val, res.cnt);
+        return res === undefined || NumberUtils.isNumber(res) ?
+            res : NumberUtils.div(res.val, res.cnt);
     }
 
     //create array of arrays where each element array contains rows for

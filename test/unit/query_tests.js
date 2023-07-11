@@ -382,18 +382,23 @@ t.colJSON.location, $loc, $dist)',
     },
     {
         desc: '[15] group by JSON fields, test EMPTY',
-        stmt: 'SELECT sum(t.colJSON.y) as aggr1, t.colJSON.b as col2 FROM \
-__TABLE__ t GROUP BY t.colJSON.x, t.colJSON.z, t.colJSON.b',
+        stmt: 'SELECT sum(t.colJSON.y) as aggr1, avg(t.colJSON.u) as aggr2, \
+t.colJSON.b as col2 FROM __TABLE__ t GROUP BY t.colJSON.x, t.colJSON.z, \
+t.colJSON.b',
         unordered: true,
         expectedFields: [
             { name: 'aggr1', type: 'LONG' },
+            { name: 'aggr2', type: 'DOUBLE' },
             { name: 'col2', type: 'BOOLEAN' }
         ],
         expectedRows: QueryUtils.projectRows(QueryUtils.groupBy(
             queryTest2.rows, [ 'colJSON.x', 'colJSON.z',
                 { name: 'colJSON.b', as: 'col2' }],
-            [ { as: 'aggr1', field: 'colJSON.y', func: QueryUtils.sum } ]),
-        'aggr1', 'col2')
+            [
+                { as: 'aggr1', field: 'colJSON.y', func: QueryUtils.sum },
+                { as: 'aggr2', field: 'colJSON.u', func: QueryUtils.avg },
+            ]),
+        'aggr1', 'aggr2', 'col2')
     },
     {
         desc: '[16] group by shards with offset and limit, bindings',

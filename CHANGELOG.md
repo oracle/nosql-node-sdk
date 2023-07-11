@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 **Fixed**
 
+* Fixed to make AVG SQL operator return null instead of jnull when there are
+no numeric values in input.
 * Remove authentication information from the *operation* object so that it is
 not publicly visible.
 
