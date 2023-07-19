@@ -28,6 +28,7 @@ module.exports = {
     NoSQLError: err.NoSQLError,
     NoSQLArgumentError: err.NoSQLArgumentError,
     NoSQLProtocolError: err.NoSQLProtocolError,
+    NoSQLUnsupportedProtocolError: err.NoSQLUnsupportedProtocolError,
     NoSQLNetworkError: err.NoSQLNetworkError,
     NoSQLServiceError: err.NoSQLServiceError,
     NoSQLTimeoutError: err.NoSQLTimeoutError,

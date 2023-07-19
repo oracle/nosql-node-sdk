@@ -5,10 +5,8 @@
  *  https://oss.oracle.com/licenses/upl/
  */
 
-'use strict';
-
-const isPosInt = require('./utils').isPosInt;
-const NoSQLArgumentError = require('./error').NoSQLArgumentError;
+import type { ConsumedCapacity, ConsumedCapacityResult } from "./result";
+import type { FieldValue } from "./data";
 
 /**
  * Defines classes related to SQL statement and query execution such as
@@ -25,7 +23,7 @@ const NoSQLArgumentError = require('./error').NoSQLArgumentError;
  * execution and be reused for multiple queries, potentially with different
  * values of bind variables.
  * <p>
- * You may share an instance of {@link PreparedStatements} by queries running
+ * You may share an instance of {@link PreparedStatement} by queries running
  * async-concurrently, e.g. queries invoked concurrently by different async
  * functions.  This is referred to as async-safety:
  * <br>
@@ -35,9 +33,18 @@ const NoSQLArgumentError = require('./error').NoSQLArgumentError;
  * using {@link PreparedStatement#copyStatement} method in order to share it
  * among async-concurrent queries.
  * @extends {PrepareResult}
- * @hideconstructor
  */
-class PreparedStatement {
+export class PreparedStatement implements ConsumedCapacityResult {
+
+    /**
+     * @hidden
+     */
+    private constructor();
+
+    /**
+     * @inheritDoc
+     */
+    readonly consumedCapacity?: ConsumedCapacity;
 
     /**
      * Sets and gets the bindings object explicitly.  Bindings object is an
@@ -46,23 +53,41 @@ class PreparedStatement {
      * is the variable name and the value is the variable value.  Note that
      * "$" in the variable name is included in its property name.  For
      * positional variables, the names are determined by the query engine.
-     * @type {object}
-     * @example //Setting bindings
+     * @example
+     * Setting bindings.
+     * ```ts
      * prepStmt.bindings = {
      *     $id: 100,
      *     $name: 'John'
      * };
-     * //This is equivalent to:
+     * // This is equivalent to:
      * prepStmt.set('$id', 100);
      * prepStmt.set('$name', 'John');
+     * ```
      */
-    set bindings(value) {
-        this._bindings = value;
-    }
+    bindings: { [name: string]: FieldValue };
 
-    get bindings() {
-        return this._bindings;
-    }
+    /**
+     * SQL text of this prepared statement.
+     * @readonly
+     */
+    readonly sql: string;
+
+    /**
+     * Query execution plan printout if was requested by
+     * {@link NoSQLClient#prepare} (see {@link PrepareOpt#getQueryPlan}),
+     * otherwise undefined.
+     * @readonly
+     */
+    readonly queryPlan: string;
+
+    /**
+     * JSON representation of the query result schema if was requested by
+     * {@link NoSQLClient#prepare} (see {@link PrepareOpt#getResultSchema}),
+     * otherwise undefined.
+     * @readonly
+     */
+    readonly resultSchema: string;
 
     /**
      * Binds a variable to use for the query.  The variable can be identified
@@ -82,7 +107,9 @@ class PreparedStatement {
      * overwritten. The names, positions and types are validated when the
      * query is executed.
      * 
-     * @example // Using PreparedStatement, binding variables by name.
+     * @example
+     * Binding variables by name.
+     * ```ts
      * let client = new NoSQLClient(//.....
      * let prepStmt = await client.prepare(
      *     'DECLARE $id INTEGER; $sal DOUBLE;  SELECT id, firstName, lastName ' +
@@ -90,91 +117,37 @@ class PreparedStatement {
      * ps.set('$id', 1100);
      *   .set('$sal', 100500);
      * for await(const res of client.queryIterable(stmt)) {
-     * //.....
+     *     //.....
      * }
      * ps.set('$id', 2000);
      * for await(const res of client.queryIterable(stmt)) {
-     * //.....
+     *     //.....
      * }
      * //.....
-     * @example // Binding variables by position.
+     * ```
+     * @example
+     * Binding variables by position.
+     * ```ts
      * let prepStmt = await client.prepare(
      *     'SELECT id, firstName, lastName FROM Emp WHERE ' + 
      *     'id <= ? AND salary <= ?');
      * ps.set(1, 1100)
      *   .set(2, 100500);
      * //.....
+     * ```
      * @param {string|number} nameOrPosition Name or position of the variable
      * @param {FieldValue} val Value of the variable of the appropriate type
      * @returns {PreparedStatement} This instance for chaining
      * @throws {NoSQLArgumentError} If binding by position and the position is
      * invalid.
      */
-    set(nameOrPosition, val) {
-        if (!this._bindings) {
-            this._bindings = {};
-        }
-
-        let key = nameOrPosition;
-        if (typeof key === 'number') {
-            if (!isPosInt(key)) {
-                throw new NoSQLArgumentError(
-                    `Invalid bind variable position: ${key}`);
-            }
-            if (this._varNames == null) {
-                key = '#' + key;
-            } else {
-                if (key > this._varNames.length) {
-                    throw new NoSQLArgumentError(`Invalid bind variable \
-position: ${key}, exceeds total ${this._varNames.length}`);
-                }
-                key = this._varNames[key - 1];
-            }
-        }
-
-        this._bindings[key] = val;
-        return this;
-    }
+    set(nameOrPosition: string|number, val: FieldValue): PreparedStatement;
 
     /**
      * Clears all variables in bindings for this prepared statement.
      * @returns {PreparedStatement} This instance for chaining
      */
-    clearAll() {
-        delete this._bindings;
-        return this;
-    }
-
-    /**
-     * SQL text of this prepared statement.
-     * @type {string}
-     * @readonly
-     */
-    get sql() {
-        return this._sql;
-    }
-
-    /**
-     * Query execution plan printout if was requested by
-     * {@link NoSQLClient#prepare} (see <em>opt.getQueryPlan</em>), otherwise
-     * undefined.
-     * @type {string}
-     * @readonly
-     */
-    get queryPlan() {
-        return this._queryPlanStr;
-    }
-
-    /**
-     * JSON representation of the query result schema if was requested by
-     * {@link NoSQLClient#prepare} (see <em>opt.getResultSchema</em>),
-     * otherwise undefined.
-     * @type {string}
-     * @readonly
-     */
-    get resultSchema() {
-        return this._schema;
-    }
+    clearAll(): PreparedStatement;
 
     /**
      * Returns a copy of this prepared statement without its variables.
@@ -187,14 +160,5 @@ position: ${key}, exceeds total ${this._varNames.length}`);
      * @returns {PreparedStatement} A copy of this prepared statement without
      * its variables
      */
-    copyStatement() {
-        const res = Object.assign({ __proto__: PreparedStatement.prototype },
-            this);
-        delete res._bindings;
-        return res;
-    }
+    copyStatement(): PreparedStatement;
 }
-
-module.exports = {
-    PreparedStatement
-};

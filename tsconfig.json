@@ -1,0 +1,10 @@
+{
+  "include": [ "index.d.ts", "src/types/*" ],
+  "compilerOptions": {
+    "target": "es2022",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "strict": true
+  }
+}

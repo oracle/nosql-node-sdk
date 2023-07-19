@@ -1,0 +1,24 @@
+{
+  "name": "oracle-nosqldb-ts-examples",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Oracle NoSQL TypeScript Examples",
+  "dependencies": {
+    "oracle-nosqldb": "latest",
+    "decimal.js": "^10.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^12.12.6",
+    "typescript": "^5.0.4",
+    "tsx": "^3.12.7"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "author": "Oracle",
+  "license": "UPL-1.0",
+  "repository": {}
+}

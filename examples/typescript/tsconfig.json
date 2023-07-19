@@ -1,0 +1,11 @@
+{
+  "include": [ "*.ts" ],
+  "compilerOptions": {
+    "target": "es2022",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "strict": true,
+    "outDir": "dist",
+    "inlineSourceMap": true
+  }
+}

@@ -12,6 +12,8 @@ desired permissions.
 Mac.
 * [Node Package Manager (npm)](https://www.npmjs.com/get-npm) that is
 installed with Node.js
+* If using TypeScript, [TypeScript](https://www.npmjs.com/package/typescript)
+version 5.0.x or higher.
 
 ## Downloading and Installing the SDK
 
@@ -75,6 +77,27 @@ service resource such as
 [Functions](https://docs.cloud.oracle.com/en-us/iaas/Content/Functions/Concepts/functionsoverview.htm),
 use Resource Principal.
 See [Authorizing with Resource Principal](#resource_principal).
+
+### On importing from the SDK
+
+Importing {@link NoSQLClient} class and other classes/types from the SDK is
+done differently depending on whether you are using TypeScript or JavaScript
+with ES6 modules, or if you are using JavaScript with CommonJS modules:
+
+*TypeScript or JavaScript with ES6 modules:*
+```ts
+import { NoSQLClient } from 'oracle-nosqldb';
+```
+*JavaScript with CommonJS modules:*
+```js
+const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+```
+
+We will use TypeScript/ES6 imports in the tutorial, but both types of imports
+are supported. For more information, see
+[TypeScript Modules](https://www.typescriptlang.org/docs/handbook/2/modules.html)
+and
+[Node.js ECMAScript Modules](https://nodejs.org/dist/latest-v18.x/docs/api/esm.html).
 
 ### <a name="user"></a>Authorize with Oracle Cloud User's Identity
 
@@ -155,14 +178,14 @@ credentials, you do not need to provide initial configuration and can use
 the no-argument constructor:
 
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 
 let client = new NoSQLClient();
 ```
 
 Alternatively, you may choose to specify the region in the configuration:
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 
 let client = new NoSQLClient({ region: Region.US_ASHBURN_1 });
 ```
@@ -188,7 +211,7 @@ user=..........
 Then create {@link NoSQLClient} instance as follows:
 
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 
 let client = new NoSQLClient({
     region: Region.US_ASHBURN_1,
@@ -211,7 +234,7 @@ initial configuration (see {@link IAMConfig}).  Create {@link NoSQLClient}
 instance as follows:
 
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 
 let client = new NoSQLClient({
     region: <your-service-region>
@@ -229,13 +252,13 @@ let client = new NoSQLClient({
 
 ##### <a name="config_obj"></a>Creating Your Own IAMCredentialsProvider
 
-{@link IMACredentialsProvider} may be any object (class instance or otherwise)
+{@link IAMCredentialsProvider} may be any object (class instance or otherwise)
 implementing *loadCredentials* function.  This function returns a *Promise* of
 {@link IAMCredentials} (and thus can be implemented as an *async* function).
 See {@link loadIAMCredentials}.
 
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 
 class MyIAMCredentialsProvider {
     constructor() {
@@ -273,7 +296,7 @@ information you may provide *loadCredentials* function itself as
 value of *credentialsProvider* property:
 
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 
 async function loadMyCredentials() {
     //.....
@@ -308,7 +331,7 @@ Principal.
 Once set up, create {@link NoSQLClient} instance as follows:
 
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 
 const client = new NoSQLClient({
     region: Region.US_ASHBURN_1,
@@ -345,7 +368,7 @@ for how to set up Resource Principal.
 Once set up, create {@link NoSQLClient} instance as follows:
 
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 
 const client = new NoSQLClient({
     region: Region.US_ASHBURN_1,
@@ -393,7 +416,7 @@ be specified as well.  See API documentation for {@link NoSQLClient},
 
 For example, to specify the configuration as an object:
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 
 const client = new NoSQLClient({
     region: Region.US_ASHBURN_1,
@@ -424,7 +447,7 @@ You may choose to store the same configuration in a JSON file.  Create file
 
 Then you may create {@link NoSQLClient} instance as follows:
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 
 const client = new NoSQLClient('/path/to/config.json');
 ```
@@ -447,8 +470,8 @@ credentials and the region as described in section
 Because this SDK is used both for the Oracle NoSQL Cloud Service and the
 On-Premise Oracle NoSQL Database, the {@link Config} object can specify
 that we are connecting to the cloud service by setting
-{@link Config}#serviceType property to {@link ServiceType.CLOUD}.  You can
-always explicitly specify the {@link Config}#serviceType property, but in
+{@link Config#serviceType} property to {@link ServiceType.CLOUD}.  You can
+always explicitly specify the {@link Config#serviceType} property, but in
 cases such in code snippets above where the configuration contains the region,
 where configuration has *auth* object that contains *iam* property or where
 an initial configuration is not provided (because the region is specified in OCI
@@ -472,8 +495,7 @@ when using the default configuration file and default profile:
 
 In code:
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
-const ServiceType = require('oracle-nosqldb').ServiceType;
+import { NoSQLClient, ServiceType } from 'oracle-nosqldb';
 
 const client = new NoSQLClient({
     serviceType: ServiceType.CLOUD,
@@ -498,10 +520,10 @@ It is recommended that compartments be created for tables to better organize
 them and control security, which is a feature of compartments.The default
 compartment for tables is the root compartment of
 the user's tenancy. A default compartment for all requests performed on a handle
-can be specified by setting the {@link Config}#compartment property. For example,
-to specify a default compartment:
+can be specified by setting the {@link Config#compartment} property. For
+example, to specify a default compartment:
 ```js
-const NoSQLClient = require('oracle-nosqldb').NoSQLClient;
+import { NoSQLClient } from 'oracle-nosqldb';
 
 const client = new NoSQLClient({
     region: Region.US_ASHBURN_1,
@@ -519,16 +541,15 @@ value overrides the initial configuration value.
 
 ## <a name="quickstart"></a>Example Quick Start
 
-The examples in the examples directory are configured to make it simple to
+The examples in the *examples* directory are configured to make it simple to
 connect and run against the Oracle NoSQL Database Cloud Service. Follow
-these steps. It is assumed that the SDK has been installed and will be found
-by the *node* command.
+these steps:
 
 1. Acquire credentials. See [Acquire Credentials](#creds). You will need these:
 
 * Tenancy ID
 * User ID
-* API signing key (private key file in PEM format
+* API signing key (private key file in PEM format)
 * Fingerprint for the public key uploaded to the user's account
 * Private key pass phrase, needed only if the private key is encrypted
 
@@ -545,16 +566,74 @@ key_file=<path-to-your-private-key-file>
 pass_phrase=<your-private-key-passphrase>
 region=<your-region-identifier>
 ```
+
+Alternatively, you may create your own JSON config file to pass to the
+examples. Each example takes a JSON config file path as an optional first
+command line parameter. Config file templates are in *examples/config*
+directory. Make a copy of *cloud_template.json*, fill in appropriate
+properties and remove any unused properties.
+
 Instead of using a configuration file it is possible to modify the example code
 to directly provide your credentials as described in
 [Specifying Credentials Directly](#config_api).
 
-3.  Run an example using the syntax:
-```ini
-$ node <example>
-e.g.
-$ node basic_example.js
+3.  JavaScript examples are in *examples/javascript* directory. You may copy
+all files in this directory to a separate directory. The SDK package
+*oracle-nosqldb* is the only dependency for these examples.  You may install
+it via *package.json* in the same directory (alternatively, you may install
+the SDK globally). To run an example:
+
+```bash
+npm install
+node <example.js> [optional_config_file.json]
 ```
+
+e.g.
+```bash
+npm install
+node basic_example.js
+```
+
+4. TypeScript examples are in *examples/typescript* directory. There are 4
+examples: *table_ops.ts*, *single_row_ops.ts*, *multi_row_ops.ts* and
+*query_ops.ts*.  They also share some common functionality (see *setup.ts* and
+*common.ts*). *package.json* in the same directory contains scripts to build
+and run the examples. You may copy all files in this directory to a separate
+directory.
+
+Use *npm* to install the dependencies, then you can run each example as
+follows:
+
+```bash
+npm install
+npx tsx <example.ts> [optional_config_file.json]
+```
+
+E.g.
+```bash
+npm install
+npx tsx single_row_ops.ts
+```
+
+The commands above use [tsx](https://www.npmjs.com/package/tsx) which is
+installed as one of the dependencies.
+
+The last parameter is an optional JSON config file (only needed if not using
+default OCI config file as described above), e.g.:
+
+```bash
+npx tsx single_row_ops.ts config.json
+```
+
+Alternatively, you can build the examples into JavaScript. Then
+run the resulting .js files, which are created in the *dist* directory, e.g.:
+
+```bash
+npm run build
+node dist/single_row_ops.js
+```
+
+See *package.json* for more details.
 
 ## <a name="cloudsim"></a>Using the Cloud Simulator
 
@@ -569,8 +648,8 @@ applications locally without accessing Oracle NoSQL Database Cloud Service.
 
 You can start developing your application with the Oracle NoSQL Cloud
 Simulator, using and understanding the basic examples, before you get
-started with the Oracle NoSQL Database Cloud Service. After building, debugging,
-and testing your application with the Oracle NoSQL Cloud Simulator,
+started with the Oracle NoSQL Database Cloud Service. After building,
+debugging, and testing your application with the Oracle NoSQL Cloud Simulator,
 move your application to the Oracle NoSQL Database Cloud Service.
 
 Follow these instructions to run an example program against the Cloud
@@ -579,19 +658,43 @@ Simulator:
 1. [Download](https://www.oracle.com/downloads/cloud/nosql-cloud-sdk-downloads.html)
 and start the Cloud Simulator.
 
-2. Edit the cloudsim.json configuration file in the examples directory and
-modify the endpoint if using a non-default port or if it is running on another
-machine. It should look like this:
+2. Copy and edit *cloudsim.json* configuration file in *examples/config*
+directory and modify the endpoint if using a non-default port or if it is
+running on another machine.  If using default settings, you may use the file
+*cloudsim.json* as it is.
+
+It should look like this:
 ```ini
 {
     "endpoint": "http://localhost:8080"
 }
 ```
-3.  Run an example using the syntax:
-```ini
-$ node <example> <config.json>
+
+3. Run examples using instructions provided in the previous section (pars 3
+and 4) and the JSON configuration file as described above:
+
+Run a JavaScript example in *examples/javascript* directory using the
+syntax:
+
+```bash
+node <example.js> <config.json>
+```
+
 e.g.
-$ node basic_example.js cloudsim.json
+```bash
+node basic_example.js ../config/cloudsim.json
+```
+
+Run a TypeScript example in *examples/typescript* directory using the
+syntax:
+
+```bash
+npx tsx <example.ts> -- <config.json>
+```
+
+e.g.
+```bash
+npx tsx single_row_ops.ts -- ../cloudsim.json
 ```
 
 Note that the Cloud Simulator does not require authorization information and

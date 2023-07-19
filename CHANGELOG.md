@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Unpublished
 
+**Added**
+
+* TypeScript support.  This includes declarations for all classes and types
+used by the SDK, related tests, new examples and new documentation.
+
 **Fixed**
 
 * Fixed to make AVG SQL operator return null instead of jnull when there are
