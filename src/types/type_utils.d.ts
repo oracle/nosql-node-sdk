@@ -5,14 +5,8 @@
  *  https://oss.oracle.com/licenses/upl/
  */
 
-// Taken from:
-// https://stackoverflow.com/questions/57683303/how-can-i-see-the-full-expanded-contract-of-a-typescript-type
-
+// Allow to display properties of the type in VSCode.
 export type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
-
-// Based on:
-// https://dev.to/tiagof/opaque-branded-types-in-typescript-59fd
-// https://stackoverflow.com/questions/76277426/opaque-type-and-index-signatures
 
 declare const opaqueTypeKey: unique symbol;
 
@@ -22,11 +16,10 @@ declare type Tag<T> = {
     readonly [key: PropertyKey]: unknown;
 };
 
+// Define opaque type that can be explicitly cast to its BaseType.
 export type OpaqueType<BaseType, T> = (BaseType & Tag<T>) | Tag<T>;
 
-// Based on:
-// https://stackoverflow.com/questions/46583883/typescript-pick-properties-with-a-defined-type
-
+// Construct a new type by picking only properties of specified type.
 export type ExtractByType<T, PType> = {
     [P in keyof T as T[P] extends PType | undefined ? P : never]: T[P]
 }

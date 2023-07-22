@@ -3,7 +3,8 @@
 This is version 5.5 of Oracle NoSQL Database Node.js SDK for The Oracle NoSQL
 Database. It supports both the
 [Oracle NoSQL Database Cloud Service](https://cloud.oracle.com/nosqldatabase)
-and the on-premise product, [Oracle NoSQL Database](https://www.oracle.com/database/technologies/related/nosql.html).
+and the on-premise product, [Oracle NoSQL Database](https://www.oracle.com/database/technologies/related/nosql.html). You can use the SDK to access Oracle NoSQL Database in
+JavaScript or TypeScript.
 
 To get started, please see the following:
 
