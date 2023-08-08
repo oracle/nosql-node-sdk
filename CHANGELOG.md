@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 **Added**
 
+* Cloud only: support for session token-based authentication.
 * TypeScript support.  This includes declarations for all classes and types
 used by the SDK, related tests, new examples and new documentation.
 
@@ -17,6 +18,10 @@ used by the SDK, related tests, new examples and new documentation.
 no numeric values in input.
 * Remove authentication information from the *operation* object so that it is
 not publicly visible.
+
+**Changed**
+
+* Cloud only: improved error reporting for IAM authentication.
 
 ## 5.4.0 - 2023-04-13
 

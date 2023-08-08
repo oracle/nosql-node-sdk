@@ -21,6 +21,8 @@ const FINGERPRINT = require('./constants').FINGERPRINT;
 const PASSPHRASE = require('./constants').PASSPHRASE;
 const PRIVATE_KEY_FILE = require('./constants').PRIVATE_KEY_FILE;
 const OCI_CONFIG_FILE = require('./constants').OCI_CONFIG_FILE;
+const SESSION_TOKEN_FILE = require('./constants').SESSION_TOKEN_FILE;
+const SESSION_TOKEN = require('./constants').SESSION_TOKEN;
 const createKeys = require('./utils').createKeys;
 
 const keys = createKeys();
@@ -50,6 +52,11 @@ const creds = Object.assign({}, keyIdObj, {
     publicKey: keys.publicKey
 });
 
+const sessTokenCreds = {
+    token: SESSION_TOKEN,
+    publicKey: keys.publicKey
+};
+
 const badRefreshConfigs = [
     ...badPosInt32NotNull.map(durationSeconds => ({
         durationSeconds
@@ -61,6 +68,88 @@ const badRefreshConfigs = [
     ...badMillisWithOverride.map(refreshAheadMs => ({
         durationSeconds: 200,
         refreshAheadMs
+    }))
+];
+
+// These are only to construct bad exclusive configs.
+const userCredsProps = {
+    ...keyIdObj,
+    privateKey : keys.privatePEM,
+    privateKeyFile: PRIVATE_KEY_FILE,
+    passphrase: PASSPHRASE
+};
+
+const ociConfigProps = {
+    configFile: OCI_CONFIG_FILE,
+    profileName: 'DEFAULT'
+};
+
+const credsProviderProps = {
+    credentialsProvider: async () => ({
+        ...keyIdObj,
+        privateKeyFile: PRIVATE_KEY_FILE,
+    })
+};
+
+//Configs that have multiple properties that cannot be used together.
+const badExclPropsConfigsCons = [
+    {
+        useResourcePrincipal: true,
+        useInstancePrincipal: true
+    },
+    {
+        useResourcePrincipal: true,
+        useSessionToken: true
+    },
+    ...Object.entries({
+        ...userCredsProps,
+        ...ociConfigProps,
+        ...credsProviderProps
+    }).map(ent => ({
+        useResourcePrincipal: true,
+        [ent[0]]: ent[1]
+    })),
+    {
+        useInstancePrincipal: true,
+        useSessionToken: true
+    },
+    ...Object.entries({
+        ...userCredsProps,
+        ...ociConfigProps,
+        ...credsProviderProps
+    }).map(ent => ({
+        useInstancePrincipal: true,
+        [ent[0]]: ent[1]
+    })),
+    ...Object.entries({
+        ...userCredsProps,
+        ...credsProviderProps
+    }).map(ent => ({
+        useSessionToken: true,
+        [ent[0]]: ent[1]
+    })),
+    ...Object.entries({
+        ...ociConfigProps,
+        ...credsProviderProps
+    }).map(ent => ({
+        ...keyIdObj,
+        privateKeyFile: PRIVATE_KEY_FILE,
+        passphrase: PASSPHRASE,
+        [ent[0]]: ent[1]
+    })),
+    ...Object.entries({
+        ...userCredsProps,
+        ...ociConfigProps
+    }).map(ent => ({
+        ...credsProviderProps,
+        [ent[0]]: ent[1]
+    })),
+    ...Object.entries({
+        ...userCredsProps,
+        ...credsProviderProps
+    }).map(ent => ({
+        ...ociConfigProps,
+        [ent[0]]: ent[1]
     }))
 ];
 
@@ -118,6 +207,8 @@ const badDirectConfigsCons = [
         fingerprint: FINGERPRINT
     }
 ];
+
+const badConfigsCons = badDirectConfigsCons.concat(badExclPropsConfigsCons);
 
 const badDirectConfigs = [
     ...badDirectConfigsCons,
@@ -196,13 +287,15 @@ const credsLines = [
     'key_file=' + PRIVATE_KEY_FILE
 ];
 
-const credsLinesEncKey = [
+const credsLinesSessToken = [
     'tenancy=' + creds.tenantId,
-    'user=' + creds.userId,
-    'fingerprint=' + creds.fingerprint,
-    'key_file=' + PRIVATE_KEY_FILE,
-    'pass_phrase=' + PASSPHRASE
+    'security_token_file=' + SESSION_TOKEN_FILE,
+    'key_file=' + PRIVATE_KEY_FILE
 ];
+
+const credsLinesEncKey = credsLines.concat('pass_phrase=' + PASSPHRASE);
+const credsLinesEncKeySessToken = credsLinesSessToken.concat(
+    'pass_phrase=' + PASSPHRASE);
 
 const defaultOCIFileLines = [ '# comment', '[DEFAULT]', ...credsLines ];
 
@@ -224,6 +317,60 @@ const badOCIConfigs = [
         //missing passphrase for encrypted key
         data: [ '[DEFAULT]', ...credsLinesEncKey.slice(0, -1), '' ],
         pkData: keys.privateEncPEM
+    },
+    //missing one of the required properties in the profile
+    ...Utils.range(credsLines.length).map(idx => ({
+        data: [ '[DEFAULT]', ...credsLines.toSpliced(idx, 1)]
+    })),
+    //same as above for session token auth
+    ...Utils.range(credsLinesSessToken.length).map(idx => ({
+        data: [ '[DEFAULT]', ...credsLinesSessToken.toSpliced(idx, 1) ],
+        useSessToken: true
+    })),
+    {
+        //invalid tenant id
+        data: [ '[DEFAULT]', ...credsLines.toSpliced(0, 1,
+            'tenancy=nosuchtenant') ]
+    },
+    {
+        //invalid user id
+        data: [ '[DEFAULT]', ...credsLines.toSpliced(1, 1,
+            'user=nosuchuser') ]
+    },
+    {
+        //empty fingerprint
+        data: [ '[DEFAULT]', ...credsLines.toSpliced(2, 1,
+            'fingerprint=') ]
+    },
+    //bad private key data
+    ...badPrivateKeyPEMs.map(pem => ({
+        data: [ '[DEFAULT]', ...credsLines ],
+        pkData: pem
+    })),
+    //same for session token auth
+    ...badPrivateKeyPEMs.map(pem => ({
+        data: [ '[DEFAULT]', ...credsLinesSessToken ],
+        pkData: pem,
+        useSessToken: true
+    })),
+    {
+        //invalid session token file
+        data: [ 'test_profile', ...credsLinesSessToken.toSpliced(1, 1,
+            'security_token_file=nosuchfile') ],
+        profile: 'test_profile',
+        useSessToken: true
+    },
+    {
+        //invalid tenant id for session token auth
+        data: [ '[DEFAULT]', ...credsLinesSessToken.toSpliced(0, 1,
+            'tenancy=nosuchtenant') ],
+        useSessToken: true
+    },
+    {
+        data: [ '[DEFAULT]', ...credsLinesSessToken ],
+        useSessToken: true,
+        //empty session token
+        sessToken: ''
     }
 ];
 
@@ -233,7 +380,8 @@ const goodOCIConfigs = [
         profile: 'test_profile'
     },
     {
-        data: [ '[DEFAULT]', '', ...credsLinesEncKey, '', '', '\n' ]
+        data: [ '[DEFAULT]', '', ...credsLinesEncKey, '', '', '\n' ],
+        pkData: keys.privateEncPEM
     },
     {
         data: [ '[sample1]', 'property 1 = 2', '[DEFAULT]', ...credsLines,
@@ -243,6 +391,22 @@ const goodOCIConfigs = [
         data: [].concat(...Utils.range(100).map(i => [ `[profile${i}]`,
             ...credsLinesEncKey ])),
         profile: 'profile70'
+    },
+    {
+        data: [ '[DEFAULT]', ...credsLinesSessToken ],
+        useSessToken: true
+    },
+    {
+        data: [ '[test_profile]', ...credsLinesSessToken,
+            //extra properties not needed for sess token auth
+            'user=' + creds.userId, 'fingerprint=' + creds.fingerprint ],
+        profile: 'test_profile',
+        useSessToken: true
+    },
+    {
+        data: [ '[DEFAULT]', ...credsLinesEncKeySessToken ],
+        pkData: keys.privateEncPEM,
+        useSessToken: true
     }
 ];
 
@@ -255,17 +419,21 @@ const badFileConfigs = [
     ...badOCIConfigs.map(cfg => ({
         configFile: OCI_CONFIG_FILE,
         profileName: cfg.profile != null ? cfg.profile : undefined,
+        useSessionToken: cfg.useSessToken,
         _ociConfigData: cfg.data.join('\n'),
-
-        _privateKeyData: cfg.pkData != null ? cfg.pkData : keys.privatePEM
+        _privateKeyData: cfg.pkData != null ? cfg.pkData : keys.privatePEM,
+        _sessTokenData: cfg.sessToken
     }))
 ];
 
 const goodFileConfigs = goodOCIConfigs.map(cfg => Object.assign({
     configFile: OCI_CONFIG_FILE,
     _ociConfigData: cfg.data.join('\n'),
-    _privateKeyData: cfg.pkData != null ? cfg.pkData : keys.privatePEM
-}, cfg.profile != null ? { profileName: cfg.profile } : {}));
+    _privateKeyData: cfg.pkData != null ? cfg.pkData : keys.privatePEM,
+    _sessTokenData: cfg.sessToken
+},
+cfg.profile != null ? { profileName: cfg.profile } : {},
+cfg.useSessToken ? { useSessionToken: true } : {}));
 
 //user-defined credentials provider configs
 
@@ -347,8 +515,10 @@ badUserConfigs.push(...badRefreshConfigs.map(cfg =>
 module.exports = {
     PRIVATE_KEY_FILE,
     creds,
-    badDirectConfigsCons,
+    sessTokenCreds,
+    badConfigsCons,
     badDirectConfigs,
+    badExclPropsConfigsCons,
     goodDirectConfigs,
     credsLines,
     credsLinesEncKey,

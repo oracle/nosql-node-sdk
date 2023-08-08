@@ -23,6 +23,8 @@ const OCI_CONFIG_FILE = path.resolve('config');
 const DELEGATION_TOKEN_FILE = path.resolve('delegation_token');
 const DELEGATION_TOKEN = 'token-header.token-payload.token-sig';
 const DELEGATION_TOKEN2 = 'token-header2.token-payload2.token-sig2';
+const SESSION_TOKEN_FILE = path.resolve('security_token');
+const SESSION_TOKEN = 'token-header.token-payload.token-sig';
 
 //default OCI config file
 const DEFAULT_OCI_DIR = path.join(os.homedir(), '.oci');
@@ -106,6 +108,8 @@ module.exports = {
     DELEGATION_TOKEN_FILE,
     DELEGATION_TOKEN,
     DELEGATION_TOKEN2,
+    SESSION_TOKEN_FILE,
+    SESSION_TOKEN,
     DEFAULT_OCI_DIR,
     DEFAULT_OCI_FILE,
     DEFAULT_OCI_FILE_BACKUP,

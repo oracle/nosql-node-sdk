@@ -19,13 +19,17 @@ const NoSQLError = require('../../../lib/error').NoSQLError;
 const Utils = require('../utils');
 const COMPARTMENT_ID = require('./constants').COMPARTMENT_ID;
 const PRIVATE_KEY_FILE = require('./constants').PRIVATE_KEY_FILE;
+const SESSION_TOKEN_FILE = require('./constants').SESSION_TOKEN_FILE;
+const SESSION_TOKEN = require('./constants').SESSION_TOKEN;
 const creds = require('./config').creds;
+const sessTokenCreds = require('./config').sessTokenCreds;
 const badDirectConfigs = require('./config').badDirectConfigs;
 const goodDirectConfigs = require('./config').goodDirectConfigs;
 const badFileConfigs = require('./config').badFileConfigs;
 const goodFileConfigs = require('./config').goodFileConfigs;
 const badUserConfigs = require('./config').badUserConfigs;
 const goodUserConfigs = require('./config').goodUserConfigs;
+const badExclPropsConfigsCons = require('./config').badExclPropsConfigsCons;
 const iam2cfg = require('./utils').iam2cfg;
 const makeReq = require('./utils').makeReq;
 const writeOrRemove = require('./utils').writeOrRemove;
@@ -44,6 +48,11 @@ function prepConfig(cfg) {
         }
         writeOrRemove(pkFile, cfg._privateKeyData);
         writeOrRemove(cfg.configFile, cfg._ociConfigData);
+
+        if (cfg.useSessionToken) {
+            writeOrRemove(SESSION_TOKEN_FILE, cfg._sessTokenData != null ?
+                cfg._sessTokenData : SESSION_TOKEN);
+        }
     }
 }
 
@@ -137,7 +146,7 @@ function doTest() {
     for(let cfg of goodFileConfigs) {
         it(`Valid file config: ${inspect(cfg)}`, async function() {
             const auth = await testConfig(cfg);
-            verifyAuth(auth, creds);
+            verifyAuth(auth, cfg.useSessionToken ? sessTokenCreds : creds);
         });
     }
     for(let cfg of badUserConfigs) {
@@ -154,6 +163,16 @@ testCaseId=${testCaseId}`, async function() {
             verifyAuth(auth, creds);
         });
     }
+
+    for(let cfg of badExclPropsConfigsCons) {
+        it(`Invalid config with exclusive properties: ${inspect(cfg)}`,
+            async function() {
+                return expect(testConfig(cfg)).to.eventually.be
+                    .rejected.and.satisfy(err => err instanceof NoSQLError &&
+                    err.errorCode == ErrorCode.ILLEGAL_ARGUMENT);
+            });
+    }
+
     //test with all 3 config types
     testCacheAndRefresh(goodDirectConfigs[0]);
     testCacheAndRefresh(goodFileConfigs[0]);
