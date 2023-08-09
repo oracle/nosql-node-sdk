@@ -94,7 +94,7 @@ const badCredsProviders = [
 ];
 
 //only configs that will throw in the constructor of IAMAuthorizationProvider
-const badIAMConfigs = require('./iam/config').badDirectConfigsCons;
+const badIAMConfigs = require('./iam/config').badConfigsCons;
 
 const badKVStoreAuthConfigs = [
     0, //must be object

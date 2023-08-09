@@ -165,13 +165,18 @@ export interface IAMCredentials {
  * The driver will determine the method of authorization as follows:
  * <ol>
  * <li>If {@link IAMConfig#useResourcePrincipal} is set to <em>true</em>, then
- * Resource Principal authorization will be used.  No other properties listed
+ * Resource Principal authentication will be used.  No other properties listed
  * below are allowed for Resource Prinicpal authorization.</li>
  * <li>If {@link IAMConfig#useInstancePrincipal} is set to <em>true</em>, then
- * Instance Principal authorization will be used.  You may also set
+ * Instance Principal authentication will be used.  You may also set
  * {@link IAMConfig#federationEndpoint}, although it is not requred and in
  * most cases federation endpoint will be auto-detected.  No other properties
  * listed below are allowed for Instance Principal authorization.</li>
+ * <li>If {@link useSessionToken} is set to <em>true</em>, then session
+ * token-based authentication will be used. Note that this method uses OCI
+ * config file, so settings to properties {@link configFile} and
+ * {@link profileName} also apply. See {@link useSessionToken} for more
+ * information.
  * <li>If {@link IAMConfig} has any of user identity properties such as
  * {@link tenantId}, {@link userId}, {@link privateKey}, {@link fingerprint}
  * or {@link passphrase}, the driver assumes that you are using a specific
@@ -310,7 +315,7 @@ export interface IAMConfig extends Partial<IAMCredentials> {
      * be combined with {@link useResourcePrincipal} or any properties used
      * for specific user's identity.
      */
-    useInstancePrincipal?: true;
+    useInstancePrincipal?: boolean;
     
     /**
      * When using Instance Principal, specifies endpoint to use to communicate
@@ -353,13 +358,43 @@ export interface IAMConfig extends Partial<IAMCredentials> {
      * be combined with {@link useInstancePrincipal} or any properties used
      * for specific user's identity.
      */
-    useResourcePrincipal?: true;
+    useResourcePrincipal?: boolean;
+
+    /**
+     * If set to true,
+     * {@link https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdk_authentication_methods.htm#sdk_authentication_methods_session_token | Session Token-Based Authentication}
+     * will be used. This method uses temporary session token read from a
+     * token file. The path of the token file is read from a profile in OCI
+     * configuration file as the value of field <em>security_token_file</em>.
+     * See
+     * {@link https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdkconfig.htm | SDK Configuration File} for details of the file's contents and format. In
+     * addition, see the description of {@link IAMConfig} above.
+     * <p>
+     * Because this method uses OCI Configuration File, you may use the
+     * properties {@link configFile} and {@link profileName} to specify the
+     * path to the configuration file and the profile name within the
+     * configuration file. The same defaults apply.
+     * <p>
+     * For session token-based authentication, the properties required in the 
+     * OCI config file by the driver are <em>tenancy</em> for tenant OCID,
+     * <em>security_token_file</em> for security token file and
+     * <em>key_file</em> for private key file.
+     * You may also specify <em>pass_phrase</em> property for private key
+     * passphrase as well as <em>region</em> property (instead of specifying
+     * {@link Config#region} property in the {@link Config} as previously
+     * described).
+     * <p>
+     * You can use the OCI CLI to authenticate and create a token, see
+     * {@link https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/clitoken.htm" | Token-based Authentication for the CLI}.
+     * <p>
+     */
+    useSessionToken?: boolean;
 
     /**
      *  OCI configuration file path. May be absolute or relative to current
      * directory.  May be <em>string</em> or UTF-8 encoded
      * {@link !Buffer | Buffer}.
-     * @defaultValue Path "~/.oci/config", where "~" represents user's home
+     * @defaultValue Path "\~/.oci/config", where "\~" represents user's home
      * directory on Unix systems and %USERPROFILE% directory on Windows
      * (see USERPROFILE environment variable).
      */

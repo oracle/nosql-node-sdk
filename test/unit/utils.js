@@ -35,6 +35,14 @@ const _ttl = Symbol('ttl');
 const _originalTTL = Symbol('originalTTL');
 const _shouldFail = Symbol('shouldFail');
 
+if (!Array.prototype.toSpliced) {
+    Array.prototype.toSpliced = function(...args) {
+        const arr = this.slice();
+        Array.prototype.splice.apply(arr, args);
+        return arr;
+    };
+}
+
 //Maximum accuracy of normalized binary single precision floating point number
 const FLOAT_DELTA = Math.pow(2, -24);
 const DOUBLE_DELTA = Math.pow(2, -52);
