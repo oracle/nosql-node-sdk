@@ -16,6 +16,8 @@ const QUERY_TESTS = require('./query_tests_simple').slice();
 const DEFAULT_LOCATION = require('./data_tests').DEFAULT_LOCATION;
 const pre20_1 = require('./common').pre20_1;
 const pre20_2 = require('./common').pre20_2;
+const hasArrayCollect =
+    require('./common').supportsArrayCollect(QueryUtils.kvVersion);
 
 //Note that currently sorting on enumeration columns is only possible if
 //enumeration constants are defined in alphabetic order (because server sorts
@@ -256,18 +258,36 @@ t.colIden DESC LIMIT $lim OFFSET $off`
     })(),
     {
         desc: '[8] aggregates, no group by',
-        stmt: 'SELECT max(pkString) as aggr1, min(colDouble) as aggr2, \
-avg(colInteger) as aggr3 from __TABLE__',
-        expectedRows: [ {
+        stmt: 'SELECT max(t.pkString) as aggr1, min(t.colDouble) as aggr2, \
+avg(t.colInteger) as aggr3' +
+            (hasArrayCollect ?
+                ', array_collect(distinct t.colRecord.fldString) as aggr4, \
+count(distinct t.colRecord.fldArray) as aggr5' : '') +
+            ' from __TABLE__ t',
+        expectedRows: [ Object.assign({
             aggr1: QueryUtils.max(queryTest2.rows, 'pkString'),
             aggr2: QueryUtils.min(queryTest2.rows, 'colDouble'),
             aggr3: QueryUtils.avg(queryTest2.rows, 'colInteger')
-        } ],
+        }, hasArrayCollect ? {
+            aggr4: QueryUtils.collectDistinct(queryTest2.rows,
+                'colRecord.fldString'),
+            aggr5: QueryUtils.countDistinct(queryTest2.rows,
+                'colRecord.fldArray')
+        } : {}) ],
         expectedFields: [
             { name: 'aggr1', type: 'STRING' },
             { name: 'aggr2', type: 'DOUBLE' },
             { name: 'aggr3', type: 'FLOAT' }
-        ]
+        ].concat(hasArrayCollect ? [
+            {
+                name: 'aggr4',
+                type: {
+                    name: 'UNORDERED_ARRAY',
+                    elemType: 'STRING'
+                }
+            },
+            { name: 'aggr5', type: 'INTEGER' }
+        ] : [])
     },
     {
         desc: '[9] array index, duplicate elimination, select *, bindings',
@@ -299,8 +319,11 @@ aggr2 FROM __TABLE__ GROUP BY shardId',
         desc: '[11] simple group by shards',
         stmt: 'SELECT t.colRecord.fldString, count(*) as aggr1, \
 min(t.colInteger) as aggr2, avg(t.colDouble) as aggr3, \
-sum(t.colRecord.fldNumber) as aggr4 from __TABLE__ t GROUP BY \
-t.colRecord.fldString',
+sum(t.colRecord.fldNumber) as aggr4' + (hasArrayCollect ?
+            ', array_collect(t.colArray2) as aggr5, \
+array_collect(distinct t.colArray) as aggr6, count(distinct t.colMap) as \
+aggr7' : '') +
+            ' from __TABLE__ t GROUP BY t.colRecord.fldString',
         unordered: true,
         expectedFields: [
             { name: 'fldString', type: 'STRING' },
@@ -314,7 +337,32 @@ t.colRecord.fldString',
                     roundingDelta: 1
                 }
             }
-        ],
+        ].concat(hasArrayCollect ? [
+            {
+                name: 'aggr5',
+                type: {
+                    name: 'UNORDERED_ARRAY',
+                    elemType: {
+                        name: 'ARRAY',
+                        elemType: 'JSON'
+                    }
+                }
+            },
+            {
+                name: 'aggr6',
+                type: {
+                    name: 'UNORDERED_ARRAY',
+                    elemType: {
+                        name: 'ARRAY',
+                        elemType: 'TIMESTAMP'
+                    }
+                }
+            },
+            {
+                name: 'aggr7',
+                type: 'INTEGER'
+            }
+        ] : []),
         expectedRows: QueryUtils.groupBy(queryTest2.rows,
             [ { as: 'fldString', name: 'colRecord.fldString' } ], [
                 { as: 'aggr1', func: QueryUtils.count },
@@ -322,7 +370,13 @@ t.colRecord.fldString',
                 { as: 'aggr3', field: 'colDouble', func: QueryUtils.avg },
                 { as: 'aggr4', field: 'colRecord.fldNumber',
                     func: QueryUtils.sum }
-            ])
+            ].concat(hasArrayCollect ? [
+                { as: 'aggr5', field: 'colArray2', func: QueryUtils.collect },
+                { as: 'aggr6', field: 'colArray',
+                    func: QueryUtils.collectDistinct },
+                { as: 'aggr7', field: 'colMap',
+                    func: QueryUtils.countDistinct }
+            ] : []))
     },
     {
         desc: '[12] geo_near with select *',
@@ -383,22 +437,49 @@ t.colJSON.location, $loc, $dist)',
     {
         desc: '[15] group by JSON fields, test EMPTY',
         stmt: 'SELECT sum(t.colJSON.y) as aggr1, avg(t.colJSON.u) as aggr2, \
-t.colJSON.b as col2 FROM __TABLE__ t GROUP BY t.colJSON.x, t.colJSON.z, \
+t.colJSON.b as col2' + (hasArrayCollect ?
+            ', count(distinct t.colJSON2.z) as aggr3, \
+array_collect(t.colJSON2.y) as aggr4, array_collect(distinct t.colJSON.u) \
+as aggr5' : '') +
+            ' FROM __TABLE__ t GROUP BY t.colJSON.x, t.colJSON.z, \
 t.colJSON.b',
         unordered: true,
         expectedFields: [
             { name: 'aggr1', type: 'LONG' },
             { name: 'aggr2', type: 'DOUBLE' },
             { name: 'col2', type: 'BOOLEAN' }
-        ],
+        ].concat(hasArrayCollect ? [
+            { name: 'aggr3', type: 'INTEGER' },
+            {
+                name: 'aggr4',
+                type: {
+                    name: 'UNORDERED_ARRAY',
+                    elemType: 'JSON'
+                }
+            },
+            {
+                name: 'aggr5',
+                type: {
+                    name: 'UNORDERED_ARRAY',
+                    elemType: 'JSON'
+                }
+            },
+        ] : []),
         expectedRows: QueryUtils.projectRows(QueryUtils.groupBy(
             queryTest2.rows, [ 'colJSON.x', 'colJSON.z',
                 { name: 'colJSON.b', as: 'col2' }],
             [
                 { as: 'aggr1', field: 'colJSON.y', func: QueryUtils.sum },
                 { as: 'aggr2', field: 'colJSON.u', func: QueryUtils.avg },
-            ]),
-        'aggr1', 'aggr2', 'col2')
+            ].concat(hasArrayCollect ? [
+                { as: 'aggr3', field: 'colJSON2.z',
+                    func: QueryUtils.countDistinct },
+                { as: 'aggr4', field: 'colJSON2.y',
+                    func: QueryUtils.collect },
+                { as: 'aggr5', field: 'colJSON.u',
+                    func: QueryUtils.collectDistinct },
+            ]: [])), ...['aggr1', 'aggr2', 'col2'].concat(hasArrayCollect ?
+            [ 'aggr3', 'aggr4', 'aggr5'] : []))
     },
     {
         desc: '[16] group by shards with offset and limit, bindings',

@@ -188,6 +188,26 @@ class NumberUtils {
     static cmp(val1, val2) {
         if (NumberUtils.isBuiltInNum(val1) &&
             NumberUtils.isBuiltInNum(val2)) {
+            //Note: when not using longAsBigInt option but having very big
+            //LONG values, the below works for array_collect(distinct) and
+            //count(distinct) operators, but would be problematic when the
+            //comparisons are done on the server, such as group by using
+            //secondary index on a LONG column.
+            //To do: when such cases arises, introduce a parameter controling
+            //this behavior, this would have to be passed through several
+            //layers depending on the test case (need to know if secondary
+            //index on the LONG column was used).
+            //Alternatively, we may need to change the behavior of the driver
+            //to always use longAsBigInt as far as query calculations are
+            //concerned, and only convert the final results to Number if
+            //longAsBigInt option was not specified in the config. This way,
+            //when using very big LONG values (> MAX_SAFE_INTEGER) the results
+            //will be more consistent with languages that support type long.
+            //This needs to be discussed.
+            if (!Utils.config.longAsBigInt) {
+                val1 = Number(val1);
+                val2 = Number(val2);
+            }
             return val1 > val2 ? 1 : (val1 < val2 ? -1 : 0);
         }
         if (!(val1 instanceof Decimal)) {

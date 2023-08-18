@@ -304,7 +304,7 @@ function verifyResultRows(rows, table, expectedRows, expectedFields,
     }
 
     for(let i = 0; i < rows.length; i++) {
-        Utils.verifyRow(rows[i], expectedRows[i], table, expectedFields);
+        QueryUtils.verifyRow(rows[i], expectedRows[i], table, expectedFields);
     }
 }
 
