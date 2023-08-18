@@ -26,12 +26,12 @@ a fresh clone of the gh-pages branch (see instructions below).
 repository:
 
         $ cd <nosql-node-sdk>
-        $ rm -rf doc/api
+        $ rm -rf doc/site
         $ npm run docs
 
 3. copy generated doc to the gh-pages repo
 
-        $ cp -r <nosql-node-sdk>/doc/api/* <nosql-node-doc>
+        $ cp -r <nosql-node-sdk>/doc/site/* <nosql-node-doc>
 
 4. commit and push after double-checking the diff in the nosql-node-doc
 repository

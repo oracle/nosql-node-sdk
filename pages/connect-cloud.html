@@ -1,0 +1,650 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Connecting an Application to Oracle NoSQL Database Cloud Service | Oracle NoSQL Database Node.js SDK - v5.5.0</title><meta name="description" content="Documentation for Oracle NoSQL Database Node.js SDK - v5.5.0"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script><link rel="stylesheet" href="../assets/pages.css"/></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container">
+<div class="table-cell" id="tsd-search" data-base="..">
+<div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<div class="field">
+<div id="tsd-toolbar-links"></div></div>
+<ul class="results">
+<li class="state loading">Preparing search index...</li>
+<li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">Oracle NoSQL Database Node.js SDK - v5.5.0</a></div>
+<div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="container container-main">
+<div class="col-8 col-content">
+<div class="tsd-page-title">
+<ul class="tsd-breadcrumb">
+<li><a href="../modules.html">Oracle NoSQL Database Node.js SDK - v5.5.0</a></li>
+<li><span>Guides</span></li>
+<li><a href="connect-cloud.html">Connecting an Application to Oracle NoSQL Database Cloud Service</a></li></ul>
+<h1> Connecting an Application to Oracle NoSQL Database Cloud Service</h1></div>
+<div class="tsd-panel tsd-typography"><p>This guide describes how to install, configure, and use the Oracle NoSQL
+Database Node.js SDK with the Oracle NoSQL Database Cloud Service.</p>
+
+<a href="#prerequisites" id="prerequisites" style="color: inherit; text-decoration: none;">
+  <h2>Prerequisites</h2>
+</a>
+<p>The SDK requires:</p>
+<ul>
+<li>An Oracle Cloud Infrastructure account</li>
+<li>A user created in that account, in a group with a policy that grants the
+desired permissions.</li>
+<li><a href="https://nodejs.org">Node.js</a> 12.0.0 or higher, running on Linux, Windows or
+Mac.</li>
+<li><a href="https://www.npmjs.com/get-npm">Node Package Manager (npm)</a> that is
+installed with Node.js</li>
+<li>If using TypeScript, <a href="https://www.npmjs.com/package/typescript">TypeScript</a>
+version 5.0.x or higher.</li>
+</ul>
+
+<a href="#downloading-and-installing-the-sdk" id="downloading-and-installing-the-sdk" style="color: inherit; text-decoration: none;">
+  <h2>Downloading and Installing the SDK</h2>
+</a>
+<p>You can install the SDK from the npm registry, or alternatively from GitHub.</p>
+
+<a href="#npm" id="npm" style="color: inherit; text-decoration: none;">
+  <h3>npm</h3>
+</a>
+<p>You may install the Node.js SDK from
+<a href="https://www.npmjs.com/package/oracle-nosqldb">npm registry</a></p>
+<p>either as a dependency of your project:</p>
+<pre><code class="language-bash"><span class="hl-3">npm</span><span class="hl-1"> </span><span class="hl-4">install</span><span class="hl-1"> </span><span class="hl-4">oracle-nosqldb</span><span class="hl-1"> </span><span class="hl-0">--save</span>
+</code></pre>
+<p>or globally:</p>
+<pre><code class="language-bash"><span class="hl-3">sudo</span><span class="hl-1"> </span><span class="hl-4">npm</span><span class="hl-1"> </span><span class="hl-4">install</span><span class="hl-1"> </span><span class="hl-0">-g</span><span class="hl-1"> </span><span class="hl-4">oracle-nosqldb</span>
+</code></pre>
+
+<a href="#github" id="github" style="color: inherit; text-decoration: none;">
+  <h3>GitHub</h3>
+</a>
+<p>To install from GitHub:</p>
+<ol>
+<li>Download the SDK release from
+<a href="https://github.com/oracle/nosql-node-sdk/releases">GitHub</a>. The download is
+a tarball containing the SDK.</li>
+<li>Install the SDK from the tarball either as a dependency of your project:</li>
+</ol>
+<pre><code class="language-bash"><span class="hl-3">npm</span><span class="hl-1"> </span><span class="hl-4">install</span><span class="hl-1"> </span><span class="hl-4">oracle-nosqldb-5.x.x.tgz</span><span class="hl-1"> </span><span class="hl-0">--save</span>
+</code></pre>
+<p>or globally:</p>
+<pre><code class="language-bash"><span class="hl-3">sudo</span><span class="hl-1"> </span><span class="hl-4">npm</span><span class="hl-1"> </span><span class="hl-4">install</span><span class="hl-1"> </span><span class="hl-0">-g</span><span class="hl-1"> </span><span class="hl-4">oracle-nosqldb-5.x.x.tgz</span>
+</code></pre>
+
+<a href="#configuring-the-sdk" id="configuring-the-sdk" style="color: inherit; text-decoration: none;">
+  <h2><a name="configure_cloud"></a>Configuring the SDK</h2>
+</a>
+<p>The SDK requires an Oracle Cloud account and a subscription to the Oracle
+NoSQL Database Cloud Service. If you do not already have an Oracle Cloud
+account you can start <a href="https://docs.cloud.oracle.com/en-us/iaas/Content/GSG/Concepts/baremetalintro.htm">here</a>.</p>
+<p>The SDK is using Oracle Cloud Infrastructure Identity and Access Management
+(IAM) to authorize database operations.  For more information on IAM see
+<a href="https://docs.cloud.oracle.com/iaas/Content/Identity/Concepts/overview.htm">Overview of Oracle Cloud Infrastructure Identity and Access Management</a></p>
+<p>To use the SDK, you need to configure it for use with IAM.  The best way to
+get started with the service is to use your Oracle Cloud user&#39;s identity to
+obtain required credentials and provide them to the application.  This is
+applicable in most use cases and described below in section
+<a href="#user">Authorize with Oracle Cloud User&#39;s Identity</a>.</p>
+<p>A different configuration that does not require user&#39;s credentials may be used
+in a couple of special use cases:</p>
+<ul>
+<li><p>To access Oracle NoSQL Database Cloud Service from a compute instance in the
+Oracle Cloud Infrastructure (OCI), use Instance Principal.  See
+<a href="#instance_principal">Authorizing with Instance Principal</a>.</p>
+</li>
+<li><p>To access Oracle NoSQL Database Cloud Service from other Oracle Cloud
+service resource such as
+<a href="https://docs.cloud.oracle.com/en-us/iaas/Content/Functions/Concepts/functionsoverview.htm">Functions</a>,
+use Resource Principal.
+See <a href="#resource_principal">Authorizing with Resource Principal</a>.</p>
+</li>
+</ul>
+
+<a href="#on-importing-from-the-sdk" id="on-importing-from-the-sdk" style="color: inherit; text-decoration: none;">
+  <h3>On importing from the SDK</h3>
+</a>
+<p>Importing <a href="../classes/NoSQLClient.html">NoSQLClient</a> class and other classes/types from the SDK is
+done differently depending on whether you are using TypeScript or JavaScript
+with ES6 modules, or if you are using JavaScript with CommonJS modules:</p>
+<p><em>TypeScript or JavaScript with ES6 modules:</em></p>
+<pre><code class="language-ts"><span class="hl-6">import</span><span class="hl-1"> { </span><span class="hl-5">NoSQLClient</span><span class="hl-1"> } </span><span class="hl-6">from</span><span class="hl-1"> </span><span class="hl-4">&#39;oracle-nosqldb&#39;</span><span class="hl-1">;</span>
+</code></pre>
+<p><em>JavaScript with CommonJS modules:</em></p>
+<pre><code class="language-js"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">NoSQLClient</span><span class="hl-1"> = </span><span class="hl-3">require</span><span class="hl-1">(</span><span class="hl-4">&#39;oracle-nosqldb&#39;</span><span class="hl-1">).</span><span class="hl-5">NoSQLClient</span><span class="hl-1">;</span>
+</code></pre>
+<p>We will use TypeScript/ES6 imports in the tutorial, but both types of imports
+are supported. For more information, see
+<a href="https://www.typescriptlang.org/docs/handbook/2/modules.html">TypeScript Modules</a>
+and
+<a href="https://nodejs.org/dist/latest-v18.x/docs/api/esm.html">Node.js ECMAScript Modules</a>.</p>
+
+<a href="#authorize-with-oracle-cloud-user39s-identity" id="authorize-with-oracle-cloud-user39s-identity" style="color: inherit; text-decoration: none;">
+  <h3><a name="user"></a>Authorize with Oracle Cloud User&#39;s Identity</h3>
+</a>
+<p>See sections below on how to <a href="#creds">aquire credentials</a> and
+<a href="#supply">configure the application</a> to connect to Oracle NoSQL Database Cloud
+Service.  You may also need to perform <a href="#connecting">additional configuration</a>
+such as choosing your region, specifying compartment and other configuration
+options.</p>
+<p>See <a href="#quickstart">Example Quick Start</a> for the quickest way to get an
+example running.</p>
+
+<a href="#acquire-credentials-for-the-oracle-nosql-database-cloud-service" id="acquire-credentials-for-the-oracle-nosql-database-cloud-service" style="color: inherit; text-decoration: none;">
+  <h4><a name="creds"></a>Acquire Credentials for the Oracle NoSQL Database Cloud Service</h4>
+</a>
+<p>See <a href="https://docs.oracle.com/en/cloud/paas/nosql-cloud/dtddt/index.html">Authentication to connect to Oracle NoSQL Database</a>
+for details of credentials you will need to configure an application.</p>
+<p>These steps only need to be performed one time for a user. If they have already
+been done they can be skipped. You need to obtain the following credentials:</p>
+<ul>
+<li>Tenancy ID</li>
+<li>User ID</li>
+<li>API signing key (private key file in PEM format)</li>
+<li>Fingerprint for the public key uploaded to the user&#39;s account</li>
+<li>Private key pass phrase, needed only if the private key is encrypted</li>
+</ul>
+
+<a href="#supply-credentials-to-the-application" id="supply-credentials-to-the-application" style="color: inherit; text-decoration: none;">
+  <h4><a name="supply"></a>Supply Credentials to the Application</h4>
+</a>
+<p>Credentials are used to authorize your application to use the service.
+There are 3 ways to supply credentials:</p>
+<ol>
+<li>Store credentials in a <a href="#config_file">configuration file</a>.</li>
+<li>Store credentials directly in a <a href="#config_api">configuration object</a> used to create
+<a href="../classes/NoSQLClient.html">NoSQLClient</a> instance.</li>
+<li><a href="#config_obj">Create your own</a>
+<a href="../types/IAMCredentialsProvider.html">IAMCredentialsProvider</a> to load credentials on
+demand from the location of your choice (e.g. keystore,
+keychain, encrypted file, etc.).</li>
+</ol>
+<p>The configuration object used to create <a href="../classes/NoSQLClient.html">NoSQLClient</a> instance (see
+<a href="#connecting">Connecting an Application</a>) will indicate how the driver obtains
+the credentials and will be different depending on which of the above options
+is chosen.</p>
+<p>Creating <a href="../types/IAMCredentialsProvider.html">IAMCredentialsProvider</a> is the most secure option, because
+you are in control of how credentials are stored and loaded by the driver.
+Otherwise, the recommended option is to use an Oracle Cloud Infrastructure
+configuration file.  Supplying credentials directly in a configuration object is
+less secure because sensitive information such as private key will be kept in
+memory for the duration of the <a href="../classes/NoSQLClient.html">NoSQLClient</a> instance.</p>
+
+<a href="#using-a-configuration-file" id="using-a-configuration-file" style="color: inherit; text-decoration: none;">
+  <h5><a name="config_file"></a>Using a Configuration File</h5>
+</a>
+<p>You can store the credentials in an Oracle Cloud Infrastructure configuration
+file.</p>
+<p>The default path for the configuration file is <em>~/.oci/config</em>.  The
+file may contain multiple profiles.  By default, the SDK uses profile named
+<strong>DEFAULT</strong> to store the credentials.</p>
+<p>To use these default values, create file named <em>config</em> in <em>~/.oci</em> directory
+with the following contents:</p>
+<pre><code class="language-ini"><span class="hl-1">[DEFAULT]</span><br/><span class="hl-0">tenancy</span><span class="hl-1">=&lt;your-tenancy-ocid&gt;</span><br/><span class="hl-0">user</span><span class="hl-1">=&lt;your-user-ocid&gt;</span><br/><span class="hl-0">fingerprint</span><span class="hl-1">=&lt;fingerprint-of-your-public-key&gt;</span><br/><span class="hl-0">key_file</span><span class="hl-1">=&lt;path-to-your-private-key-file&gt;</span><br/><span class="hl-0">pass_phrase</span><span class="hl-1">=&lt;your-private-key-passphrase&gt;</span><br/><span class="hl-0">region</span><span class="hl-1">=&lt;your-region-identifier&gt;</span>
+</code></pre>
+<p>Note that you may also specify your region identifier together with
+credentials in the OCI configuration file.  The driver will look at the
+location above by default, and if a region is provided together with
+credentials, you do not need to provide initial configuration and can use
+the no-argument constructor:</p>
+<pre><code class="language-js"><span class="hl-6">import</span><span class="hl-1"> { </span><span class="hl-5">NoSQLClient</span><span class="hl-1"> } </span><span class="hl-6">from</span><span class="hl-1"> </span><span class="hl-4">&#39;oracle-nosqldb&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-0">let</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">NoSQLClient</span><span class="hl-1">();</span>
+</code></pre>
+<p>Alternatively, you may choose to specify the region in the configuration:</p>
+<pre><code class="language-js"><span class="hl-6">import</span><span class="hl-1"> { </span><span class="hl-5">NoSQLClient</span><span class="hl-1"> } </span><span class="hl-6">from</span><span class="hl-1"> </span><span class="hl-4">&#39;oracle-nosqldb&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-0">let</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">NoSQLClient</span><span class="hl-1">({ </span><span class="hl-5">region:</span><span class="hl-1"> </span><span class="hl-5">Region</span><span class="hl-1">.</span><span class="hl-2">US_ASHBURN_1</span><span class="hl-1"> });</span>
+</code></pre>
+<p>You may choose to use different path for OCI configuration file as well as
+different profile within the configuration file.  In this case, specify these
+within <strong>auth.iam</strong> property of the initial configuration
+(see <a href="../interfaces/IAMConfig.html">IAMConfig</a>).  For example, if your OCI configuration file path is
+<em>~/myapp/.oci/config</em> and you store your credentials under profile <strong>Jane</strong>:</p>
+<pre><code class="language-ini"><span class="hl-1">...............</span><br/><span class="hl-1">...............</span><br/><span class="hl-1">[Jane]</span><br/><span class="hl-0">tenancy</span><span class="hl-1">=.......</span><br/><span class="hl-0">user</span><span class="hl-1">=..........</span><br/><span class="hl-1">...............</span><br/><span class="hl-1">[John]</span><br/><span class="hl-0">tenancy</span><span class="hl-1">=.......</span><br/><span class="hl-0">user</span><span class="hl-1">=..........</span><br/><span class="hl-1">...............</span>
+</code></pre>
+<p>Then create <a href="../classes/NoSQLClient.html">NoSQLClient</a> instance as follows:</p>
+<pre><code class="language-js"><span class="hl-6">import</span><span class="hl-1"> { </span><span class="hl-5">NoSQLClient</span><span class="hl-1"> } </span><span class="hl-6">from</span><span class="hl-1"> </span><span class="hl-4">&#39;oracle-nosqldb&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-0">let</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">NoSQLClient</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-5">region:</span><span class="hl-1"> </span><span class="hl-5">Region</span><span class="hl-1">.</span><span class="hl-2">US_ASHBURN_1</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">auth:</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-5">iam:</span><span class="hl-1"> {</span><br/><span class="hl-1">            </span><span class="hl-5">configFile:</span><span class="hl-1"> </span><span class="hl-4">&#39;~/myapp/.oci/config&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-5">profileName:</span><span class="hl-1"> </span><span class="hl-4">&#39;Jane&#39;</span><br/><span class="hl-1">        }</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">});</span>
+</code></pre>
+<p>(Note that you don&#39;t have to specify service type if you specified
+<strong>auth.iam</strong> property, see section <strong>Specifying Service Type</strong>)</p>
+
+<a href="#specifying-credentials-directly" id="specifying-credentials-directly" style="color: inherit; text-decoration: none;">
+  <h5><a name="config_api"></a>Specifying Credentials Directly</h5>
+</a>
+<p>You may specify credentials directly as part of <strong>auth.iam</strong> property in the
+initial configuration (see <a href="../interfaces/IAMConfig.html">IAMConfig</a>).  Create <a href="../classes/NoSQLClient.html">NoSQLClient</a>
+instance as follows:</p>
+<pre><code class="language-js"><span class="hl-6">import</span><span class="hl-1"> { </span><span class="hl-5">NoSQLClient</span><span class="hl-1"> } </span><span class="hl-6">from</span><span class="hl-1"> </span><span class="hl-4">&#39;oracle-nosqldb&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-0">let</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">NoSQLClient</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-5">region:</span><span class="hl-1"> </span><span class="hl-13">&lt;</span><span class="hl-10">your-service-region</span><span class="hl-13">&gt;</span><br/><span class="hl-1">    auth: </span><span class="hl-0">{</span><br/><span class="hl-9">        </span><span class="hl-5">iam</span><span class="hl-9">: {</span><br/><span class="hl-9">            </span><span class="hl-5">tenantId:</span><span class="hl-9"> </span><span class="hl-5">myTenancyOCID</span><span class="hl-9">,</span><br/><span class="hl-9">            </span><span class="hl-5">userId:</span><span class="hl-9"> </span><span class="hl-5">myUserOCID</span><span class="hl-9">,</span><br/><span class="hl-9">            </span><span class="hl-5">fingerprint:</span><span class="hl-9"> </span><span class="hl-5">myPublicKeyFingerprint</span><span class="hl-9">,</span><br/><span class="hl-9">            </span><span class="hl-5">privateKeyFile:</span><span class="hl-9"> </span><span class="hl-5">myPrivateKeyFile</span><span class="hl-9">,</span><br/><span class="hl-9">            </span><span class="hl-5">passphrase:</span><span class="hl-9"> </span><span class="hl-5">myPrivateKeyPassphrase</span><br/><span class="hl-9">        }</span><br/><span class="hl-9">    </span><span class="hl-0">}</span><br/><span class="hl-1">});</span>
+</code></pre>
+
+<a href="#creating-your-own-iamcredentialsprovider" id="creating-your-own-iamcredentialsprovider" style="color: inherit; text-decoration: none;">
+  <h5><a name="config_obj"></a>Creating Your Own IAMCredentialsProvider</h5>
+</a>
+<p><a href="../types/IAMCredentialsProvider.html">IAMCredentialsProvider</a> may be any object (class instance or otherwise)
+implementing <em>loadCredentials</em> function.  This function returns a <em>Promise</em> of
+<a href="../interfaces/IAMCredentials.html">IAMCredentials</a> (and thus can be implemented as an <em>async</em> function).
+See <a href="../types/loadIAMCredentials.html">loadIAMCredentials</a>.</p>
+<pre><code class="language-js"><span class="hl-6">import</span><span class="hl-1"> { </span><span class="hl-5">NoSQLClient</span><span class="hl-1"> } </span><span class="hl-6">from</span><span class="hl-1"> </span><span class="hl-4">&#39;oracle-nosqldb&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-0">class</span><span class="hl-1"> </span><span class="hl-10">MyIAMCredentialsProvider</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-0">constructor</span><span class="hl-1">() {</span><br/><span class="hl-1">        </span><span class="hl-8">// Initialize required state information if needed</span><br/><span class="hl-1">    }</span><br/><br/><span class="hl-1">    </span><span class="hl-0">async</span><span class="hl-1"> </span><span class="hl-3">loadCredentials</span><span class="hl-1">() {</span><br/><span class="hl-1">        .......... </span><span class="hl-8">//retrieve credentials in preferred manner</span><br/><span class="hl-1">        ..........</span><br/><span class="hl-1">        </span><span class="hl-6">return</span><span class="hl-1"> {</span><br/><span class="hl-1">            </span><span class="hl-5">tenantId:</span><span class="hl-1"> </span><span class="hl-5">myTenancyOCID</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-5">userId:</span><span class="hl-1"> </span><span class="hl-5">myUserOCID</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-5">fingerprint:</span><span class="hl-1"> </span><span class="hl-5">myPublicKeyFingerprint</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-5">privateKey:</span><span class="hl-1"> </span><span class="hl-5">myPEMPrivateKeyData</span><br/><span class="hl-1">        };</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-0">let</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">NoSQLClient</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-5">region:</span><span class="hl-1"> </span><span class="hl-5">Region</span><span class="hl-1">.</span><span class="hl-2">US_ASHBURN_1</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">auth:</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-5">iam:</span><span class="hl-1"> {</span><br/><span class="hl-1">            </span><span class="hl-5">credentialsProvider:</span><span class="hl-1"> </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">MyIAMCredentialsProvider</span><span class="hl-1">(</span><span class="hl-5">myArgs</span><span class="hl-1">...)</span><br/><span class="hl-1">        }</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">});</span>
+</code></pre>
+<p>It is advised that properties such as <em>privateKey</em> and <em>passphrase</em> returned
+by <a href="../types/IAMCredentialsProvider.html">IAMCredentialsProvider</a> be instances of <em>Buffer</em> rather than strings
+in which case that the driver will clear them right after they are used.</p>
+<p>If your <a href="../types/IAMCredentialsProvider.html">IAMCredentialsProvider</a> does not need to store any state
+information you may provide <em>loadCredentials</em> function itself as
+value of <em>credentialsProvider</em> property:</p>
+<pre><code class="language-js"><span class="hl-6">import</span><span class="hl-1"> { </span><span class="hl-5">NoSQLClient</span><span class="hl-1"> } </span><span class="hl-6">from</span><span class="hl-1"> </span><span class="hl-4">&#39;oracle-nosqldb&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-0">async</span><span class="hl-1"> </span><span class="hl-0">function</span><span class="hl-1"> </span><span class="hl-3">loadMyCredentials</span><span class="hl-1">() {</span><br/><span class="hl-1">    </span><span class="hl-8">//.....</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-0">let</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">NoSQLClient</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-5">region:</span><span class="hl-1"> </span><span class="hl-5">Region</span><span class="hl-1">.</span><span class="hl-2">US_ASHBURN_1</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">auth:</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-5">iam:</span><span class="hl-1"> {</span><br/><span class="hl-1">            </span><span class="hl-5">credentialsProvider:</span><span class="hl-1"> </span><span class="hl-5">loadMyCredentials</span><br/><span class="hl-1">        }</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">});</span>
+</code></pre>
+<p>You may also specify <em>credentialsProvider</em> property as string, in which case
+it specifies a module name or path that exports
+<a href="../types/IAMCredentialsProvider.html">IAMCredentialsProvider</a>.  This will allow you to store initial
+configuration in a JSON file (see <a href="#connecting">Connecting an Application</a>).
+Note that the provider (whether as an object or a function) should be that
+module&#39;s sole export.</p>
+
+<a href="#authorizing-with-instance-principal" id="authorizing-with-instance-principal" style="color: inherit; text-decoration: none;">
+  <h3><a name="instance_principal"></a>Authorizing with Instance Principal</h3>
+</a>
+<p><em>Instance Principal</em> is an IAM service feature that enables instances to be
+authorized actors (or principals) to perform actions on service resources.
+Each compute instance has its own identity, and it authenticates using the
+certificates that are added to it.  See
+<a href="https://docs.cloud.oracle.com/en-us/iaas/Content/Identity/Tasks/callingservicesfrominstances.htm">Calling Services from an Instance</a> for prerequisite steps to set up Instance
+Principal.</p>
+<p>Once set up, create <a href="../classes/NoSQLClient.html">NoSQLClient</a> instance as follows:</p>
+<pre><code class="language-js"><span class="hl-6">import</span><span class="hl-1"> { </span><span class="hl-5">NoSQLClient</span><span class="hl-1"> } </span><span class="hl-6">from</span><span class="hl-1"> </span><span class="hl-4">&#39;oracle-nosqldb&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">client</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">NoSQLClient</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-5">region:</span><span class="hl-1"> </span><span class="hl-5">Region</span><span class="hl-1">.</span><span class="hl-2">US_ASHBURN_1</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">compartment:</span><span class="hl-1"> </span><span class="hl-4">&#39;ocid1.compartment.oc1.............................&#39;</span><br/><span class="hl-1">    </span><span class="hl-5">auth</span><span class="hl-1">: {</span><br/><span class="hl-1">        </span><span class="hl-5">iam:</span><span class="hl-1"> {</span><br/><span class="hl-1">            </span><span class="hl-5">useInstancePrincipal:</span><span class="hl-1"> </span><span class="hl-0">true</span><br/><span class="hl-1">        }</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">});</span>
+</code></pre>
+<p>You may also use JSON config file with the same configuration as described in
+<a href="#connecting">Connecting an Application</a>.</p>
+<p>Note that when using Instance Principal you must specify compartment id
+(OCID) as <em>compartment</em> property (see
+<a href="#compartment">Specifying a Compartment</a>).  This is required even if you wish
+to use default compartment.  Note that you must use compartment id and not
+compartment name or path.  In addition, when using Instance Principal, you may
+not prefix table name with compartment name or path when calling
+<a href="../classes/NoSQLClient.html">NoSQLClient</a> APIs.</p>
+
+<a href="#authorizing-with-resource-principal" id="authorizing-with-resource-principal" style="color: inherit; text-decoration: none;">
+  <h3><a name="resource_principal"></a>Authorizing with Resource Principal</h3>
+</a>
+<p><em>Resource Principal</em> is an IAM service feature that enables the resources to
+be authorized actors (or principals) to perform actions on service resources.
+You may use Resource Principal when calling Oracle NoSQL Database Cloud
+Service from other Oracle Cloud service resource such as
+<a href="https://docs.cloud.oracle.com/en-us/iaas/Content/Functions/Concepts/functionsoverview.htm">Functions</a>.
+See <a href="https://docs.cloud.oracle.com/en-us/iaas/Content/Functions/Tasks/functionsaccessingociresources.htm">Accessing Other Oracle Cloud Infrastructure Resources from Running Functions</a>
+for how to set up Resource Principal.</p>
+<p>Once set up, create <a href="../classes/NoSQLClient.html">NoSQLClient</a> instance as follows:</p>
+<pre><code class="language-js"><span class="hl-6">import</span><span class="hl-1"> { </span><span class="hl-5">NoSQLClient</span><span class="hl-1"> } </span><span class="hl-6">from</span><span class="hl-1"> </span><span class="hl-4">&#39;oracle-nosqldb&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">client</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">NoSQLClient</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-5">region:</span><span class="hl-1"> </span><span class="hl-5">Region</span><span class="hl-1">.</span><span class="hl-2">US_ASHBURN_1</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">compartment:</span><span class="hl-1"> </span><span class="hl-4">&#39;ocid1.compartment.oc1.............................&#39;</span><br/><span class="hl-1">    </span><span class="hl-5">auth</span><span class="hl-1">: {</span><br/><span class="hl-1">        </span><span class="hl-5">iam:</span><span class="hl-1"> {</span><br/><span class="hl-1">            </span><span class="hl-5">useResourcePrincipal:</span><span class="hl-1"> </span><span class="hl-0">true</span><br/><span class="hl-1">        }</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">});</span>
+</code></pre>
+<p>You may also use JSON config file with the same configuration as described in
+<a href="#connecting">Connecting an Application</a>.</p>
+<p>Note that when using Resource Principal you must specify compartment id
+(OCID) as <em>compartment</em> property (see
+<a href="#compartment">Specifying a Compartment</a>).  This is required even if you wish
+to use default compartment.  Note that you must use compartment id and not
+compartment name or path.  In addition, when using Resource Principal, you may
+not prefix table name with compartment name or path when calling
+<a href="../classes/NoSQLClient.html">NoSQLClient</a> APIs.</p>
+
+<a href="#connecting-an-application" id="connecting-an-application" style="color: inherit; text-decoration: none;">
+  <h2><a name="connecting"></a>Connecting an Application</h2>
+</a>
+<p>The first step in your Oracle NoSQL Database Cloud Service application is to
+create an instance of <a href="../classes/NoSQLClient.html">NoSQLClient</a> class which is the main point of
+access to the service.  To create <a href="../classes/NoSQLClient.html">NoSQLClient</a> instance, you need to
+supply a <a href="../interfaces/Config.html">Config</a> object containing information needed to access the
+service.  Alternatively, you may choose to supply a path to a JSON file
+that contains the same configuration information as in <a href="../interfaces/Config.html">Config</a>.</p>
+<p>The required information consists of the communication region or endpoint and
+authorization information described in section
+<strong>Acquire Credentials for the Oracle NoSQL Database Cloud Service</strong> (also see
+<a href="../interfaces/AuthConfig.html">AuthConfig</a>).</p>
+<p>It is possible to specify a <a href="../classes/Region.html">Region</a> or a string endpoint, but not both. If you
+use a Region the endpoint of that Region is inferred. If an endpoint is used it
+needs to be either the endpoint of a Region or a reference to a host and port.
+For example when using the Cloud Simulator you would use an endpoint string
+like <strong><a href="http://localhost:8080">http://localhost:8080</a></strong>.  Other, optional parameters may
+be specified as well.  See API documentation for <a href="../classes/NoSQLClient.html">NoSQLClient</a>,
+<a href="../interfaces/Config.html">Config</a> and <a href="../interfaces/AuthConfig.html">AuthConfig</a> for more information.</p>
+<p>For example, to specify the configuration as an object:</p>
+<pre><code class="language-js"><span class="hl-6">import</span><span class="hl-1"> { </span><span class="hl-5">NoSQLClient</span><span class="hl-1"> } </span><span class="hl-6">from</span><span class="hl-1"> </span><span class="hl-4">&#39;oracle-nosqldb&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">client</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">NoSQLClient</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-5">region:</span><span class="hl-1"> </span><span class="hl-5">Region</span><span class="hl-1">.</span><span class="hl-2">US_ASHBURN_1</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">auth:</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-5">iam:</span><span class="hl-1"> {</span><br/><span class="hl-1">            </span><span class="hl-5">configFile:</span><span class="hl-1"> </span><span class="hl-4">&#39;~/myapp/.oci/config&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-5">profileName:</span><span class="hl-1"> </span><span class="hl-4">&#39;Jane&#39;</span><br/><span class="hl-1">        }</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">});</span>
+</code></pre>
+<p>You may choose to store the same configuration in a JSON file.  Create file
+<strong>config.json</strong> with following contents:</p>
+<pre><code class="language-json"><span class="hl-1">{</span><br/><span class="hl-1">    </span><span class="hl-11">&quot;region&quot;</span><span class="hl-1">: </span><span class="hl-4">&quot;US_ASHBURN_1&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-11">&quot;auth&quot;</span><span class="hl-1">:</span><br/><span class="hl-1">    {</span><br/><span class="hl-1">        </span><span class="hl-11">&quot;iam&quot;</span><span class="hl-1">:</span><br/><span class="hl-1">       {</span><br/><span class="hl-1">            </span><span class="hl-11">&quot;configFile&quot;</span><span class="hl-1">: </span><span class="hl-4">&quot;~/myapp/.oci/config&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-11">&quot;profileName&quot;</span><span class="hl-1">: </span><span class="hl-4">&quot;Jane&quot;</span><br/><span class="hl-1">        }</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">}</span>
+</code></pre>
+<p>Then you may create <a href="../classes/NoSQLClient.html">NoSQLClient</a> instance as follows:</p>
+<pre><code class="language-js"><span class="hl-6">import</span><span class="hl-1"> { </span><span class="hl-5">NoSQLClient</span><span class="hl-1"> } </span><span class="hl-6">from</span><span class="hl-1"> </span><span class="hl-4">&#39;oracle-nosqldb&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">client</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">NoSQLClient</span><span class="hl-1">(</span><span class="hl-4">&#39;/path/to/config.json&#39;</span><span class="hl-1">);</span>
+</code></pre>
+<p>In the <em>examples</em> directory, you will see JSON configuration files that are
+used to create a <a href="../classes/NoSQLClient.html">NoSQLClient</a> instance as shown above:</p>
+<ul>
+<li>Use <em>cloud_template.json</em> for the cloud service to create a configuration of
+your choice as described in <a href="#supply">Supply Credentials to the Application</a>.
+Fill in appropriate values for properties needed and remove the rest.</li>
+<li>Use <em>cloudsim.json</em> for the Cloud Simulator.</li>
+</ul>
+<p>Alternatively, you may create <a href="../classes/NoSQLClient.html">NoSQLClient</a> instance for the cloud
+service with no-argument constructor (without config parameter) if you are
+using a default configuration file and default profile containing the
+credentials and the region as described in section
+<a href="#config_file">Using a Configuration File</a>.</p>
+
+<a href="#specifying-service-type" id="specifying-service-type" style="color: inherit; text-decoration: none;">
+  <h3>Specifying Service Type</h3>
+</a>
+<p>Because this SDK is used both for the Oracle NoSQL Cloud Service and the
+On-Premise Oracle NoSQL Database, the <a href="../interfaces/Config.html">Config</a> object can specify
+that we are connecting to the cloud service by setting
+<a href="../interfaces/Config.html#serviceType">serviceType</a> property to <a href="../enums/ServiceType.html#CLOUD">CLOUD</a>.  You can
+always explicitly specify the <a href="../interfaces/Config.html#serviceType">serviceType</a> property, but in
+cases such in code snippets above where the configuration contains the region,
+where configuration has <em>auth</em> object that contains <em>iam</em> property or where
+an initial configuration is not provided (because the region is specified in OCI
+configuration file) the service type will be deduced by the driver.
+See <a href="../enums/ServiceType.html">ServiceType</a> for details.</p>
+<p>You may need to specify the service type explicitly as
+<a href="../enums/ServiceType.html#CLOUD">CLOUD</a> only if the <em>auth.iam</em> is not present in the
+configuration (such as when using OCI configuration file with default profile
+for credentials) and the configuration specifies <em>endpoint</em> instead of
+<em>region</em>.  It is recommended to use <em>region</em> instead of <em>endpoint</em> for Cloud
+Service.</p>
+<p>Note that the configuration containing endpoint and not containing either
+<em>serviceType</em> or <em>auth</em> will default to <a href="../enums/ServiceType.html#CLOUDSIM">CLOUDSIM</a> (see
+<a href="#cloudsim">Using the Cloud Simulator</a>).</p>
+<p>You may specify service type either as <a href="../enums/ServiceType.html">ServiceType</a> enumeration
+constant (in code) or as a string (in code and in JSON file).  For example,
+when using the default configuration file and default profile:</p>
+<p>In code:</p>
+<pre><code class="language-js"><span class="hl-6">import</span><span class="hl-1"> { </span><span class="hl-5">NoSQLClient</span><span class="hl-1">, </span><span class="hl-5">ServiceType</span><span class="hl-1"> } </span><span class="hl-6">from</span><span class="hl-1"> </span><span class="hl-4">&#39;oracle-nosqldb&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">client</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">NoSQLClient</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-5">serviceType:</span><span class="hl-1"> </span><span class="hl-5">ServiceType</span><span class="hl-1">.</span><span class="hl-2">CLOUD</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">region:</span><span class="hl-1"> </span><span class="hl-5">Region</span><span class="hl-1">.</span><span class="hl-2">US_ASHBURN_1</span><br/><span class="hl-1">});</span>
+</code></pre>
+<p>In JSON configuration file:</p>
+<pre><code class="language-json"><span class="hl-1">{</span><br/><span class="hl-1">    </span><span class="hl-11">&quot;serviceType&quot;</span><span class="hl-1">: </span><span class="hl-4">&quot;CLOUD&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-11">&quot;region&quot;</span><span class="hl-1">: </span><span class="hl-4">&quot;us-ashburn-1&quot;</span><br/><span class="hl-1">}</span>
+</code></pre>
+
+<a href="#specifying-a-compartment" id="specifying-a-compartment" style="color: inherit; text-decoration: none;">
+  <h3><a name="compartment"></a>Specifying a Compartment</h3>
+</a>
+<p>In the Oracle NoSQL Cloud Service environment tables are always created in an
+Oracle Cloud Infrastructure <em>compartment</em> (see
+<a href="https://docs.cloud.oracle.com/en-us/iaas/Content/Identity/Tasks/managingcompartments.htm">Managing Compartments</a>).
+It is recommended that compartments be created for tables to better organize
+them and control security, which is a feature of compartments.The default
+compartment for tables is the root compartment of
+the user&#39;s tenancy. A default compartment for all requests performed on a handle
+can be specified by setting the <a href="../interfaces/Config.html#compartment">compartment</a> property. For
+example, to specify a default compartment:</p>
+<pre><code class="language-js"><span class="hl-6">import</span><span class="hl-1"> { </span><span class="hl-5">NoSQLClient</span><span class="hl-1"> } </span><span class="hl-6">from</span><span class="hl-1"> </span><span class="hl-4">&#39;oracle-nosqldb&#39;</span><span class="hl-1">;</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">client</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">NoSQLClient</span><span class="hl-1">({</span><br/><span class="hl-1">    </span><span class="hl-5">region:</span><span class="hl-1"> </span><span class="hl-5">Region</span><span class="hl-1">.</span><span class="hl-2">US_ASHBURN_1</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">compartment:</span><span class="hl-1"> </span><span class="hl-4">&#39;mycompartment&#39;</span><br/><span class="hl-1">});</span>
+</code></pre>
+<p>The string value may be either a compartment id or a compartment name or path.
+If it is a simple name it must specify a top-level compartment. If it is a
+path to a nested compartment, the top-level compartment must be excluded as it
+is inferred from the tenancy.</p>
+<p>A compartment can also be specified in each request in the options object. This
+value overrides the initial configuration value.</p>
+
+<a href="#example-quick-start" id="example-quick-start" style="color: inherit; text-decoration: none;">
+  <h2><a name="quickstart"></a>Example Quick Start</h2>
+</a>
+<p>The examples in the <em>examples</em> directory are configured to make it simple to
+connect and run against the Oracle NoSQL Database Cloud Service. Follow
+these steps:</p>
+<ol>
+<li>Acquire credentials. See <a href="#creds">Acquire Credentials</a>. You will need these:</li>
+</ol>
+<ul>
+<li>Tenancy ID</li>
+<li>User ID</li>
+<li>API signing key (private key file in PEM format)</li>
+<li>Fingerprint for the public key uploaded to the user&#39;s account</li>
+<li>Private key pass phrase, needed only if the private key is encrypted</li>
+</ul>
+<ol start="2">
+<li>Put the information in a configuration file, ~/.oci/config, based on
+the format described in <a href="#config_file">Using a Configuration File</a>. It should
+look like this:</li>
+</ol>
+<pre><code class="language-ini"><span class="hl-1">[DEFAULT]</span><br/><span class="hl-0">tenancy</span><span class="hl-1">=&lt;your-tenancy-ocid&gt;</span><br/><span class="hl-0">user</span><span class="hl-1">=&lt;your-user-ocid&gt;</span><br/><span class="hl-0">fingerprint</span><span class="hl-1">=&lt;fingerprint-of-your-public-key&gt;</span><br/><span class="hl-0">key_file</span><span class="hl-1">=&lt;path-to-your-private-key-file&gt;</span><br/><span class="hl-0">pass_phrase</span><span class="hl-1">=&lt;your-private-key-passphrase&gt;</span><br/><span class="hl-0">region</span><span class="hl-1">=&lt;your-region-identifier&gt;</span>
+</code></pre>
+<p>Alternatively, you may create your own JSON config file to pass to the
+examples. Each example takes a JSON config file path as an optional first
+command line parameter. Config file templates are in <em>examples/config</em>
+directory. Make a copy of <em>cloud_template.json</em>, fill in appropriate
+properties and remove any unused properties.</p>
+<p>Instead of using a configuration file it is possible to modify the example code
+to directly provide your credentials as described in
+<a href="#config_api">Specifying Credentials Directly</a>.</p>
+<ol start="3">
+<li>JavaScript examples are in <em>examples/javascript</em> directory. You may copy
+all files in this directory to a separate directory. The SDK package
+<em>oracle-nosqldb</em> is the only dependency for these examples.  You may install
+it via <em>package.json</em> in the same directory (alternatively, you may install
+the SDK globally). To run an example:</li>
+</ol>
+<pre><code class="language-bash"><span class="hl-3">npm</span><span class="hl-1"> </span><span class="hl-4">install</span><br/><span class="hl-3">node</span><span class="hl-1"> &lt;</span><span class="hl-4">example.j</span><span class="hl-1">s&gt; [optional_config_file.json]</span>
+</code></pre>
+<p>e.g.</p>
+<pre><code class="language-bash"><span class="hl-3">npm</span><span class="hl-1"> </span><span class="hl-4">install</span><br/><span class="hl-3">node</span><span class="hl-1"> </span><span class="hl-4">basic_example.js</span>
+</code></pre>
+<ol start="4">
+<li>TypeScript examples are in <em>examples/typescript</em> directory. There are 4
+examples: <em>table_ops.ts</em>, <em>single_row_ops.ts</em>, <em>multi_row_ops.ts</em> and
+<em>query_ops.ts</em>.  They also share some common functionality (see <em>setup.ts</em> and
+<em>common.ts</em>). <em>package.json</em> in the same directory contains scripts to build
+and run the examples. You may copy all files in this directory to a separate
+directory.</li>
+</ol>
+<p>Use <em>npm</em> to install the dependencies, then you can run each example as
+follows:</p>
+<pre><code class="language-bash"><span class="hl-3">npm</span><span class="hl-1"> </span><span class="hl-4">install</span><br/><span class="hl-3">npx</span><span class="hl-1"> </span><span class="hl-4">tsx</span><span class="hl-1"> &lt;</span><span class="hl-4">example.t</span><span class="hl-1">s&gt; [optional_config_file.json]</span>
+</code></pre>
+<p>E.g.</p>
+<pre><code class="language-bash"><span class="hl-3">npm</span><span class="hl-1"> </span><span class="hl-4">install</span><br/><span class="hl-3">npx</span><span class="hl-1"> </span><span class="hl-4">tsx</span><span class="hl-1"> </span><span class="hl-4">single_row_ops.ts</span>
+</code></pre>
+<p>The commands above use <a href="https://www.npmjs.com/package/tsx">tsx</a> which is
+installed as one of the dependencies.</p>
+<p>The last parameter is an optional JSON config file (only needed if not using
+default OCI config file as described above), e.g.:</p>
+<pre><code class="language-bash"><span class="hl-3">npx</span><span class="hl-1"> </span><span class="hl-4">tsx</span><span class="hl-1"> </span><span class="hl-4">single_row_ops.ts</span><span class="hl-1"> </span><span class="hl-4">config.json</span>
+</code></pre>
+<p>Alternatively, you can build the examples into JavaScript. Then
+run the resulting .js files, which are created in the <em>dist</em> directory, e.g.:</p>
+<pre><code class="language-bash"><span class="hl-3">npm</span><span class="hl-1"> </span><span class="hl-4">run</span><span class="hl-1"> </span><span class="hl-4">build</span><br/><span class="hl-3">node</span><span class="hl-1"> </span><span class="hl-4">dist/single_row_ops.js</span>
+</code></pre>
+<p>See <em>package.json</em> for more details.</p>
+
+<a href="#using-the-cloud-simulator" id="using-the-cloud-simulator" style="color: inherit; text-decoration: none;">
+  <h2><a name="cloudsim"></a>Using the Cloud Simulator</h2>
+</a>
+<p>The configuration instructions above are for getting connected to the actual
+Oracle NoSQL Database Cloud Service.</p>
+<p>You may first get familiar with Oracle NoSQL Database Node.js
+SDK and its interfaces by using the <a href="https://www.oracle.com/downloads/cloud/nosql-cloud-sdk-downloads.html">Oracle NoSQL Cloud Simulator</a>.</p>
+<p>The Cloud Simulator simulates the cloud service and lets you write and test
+applications locally without accessing Oracle NoSQL Database Cloud Service.</p>
+<p>You can start developing your application with the Oracle NoSQL Cloud
+Simulator, using and understanding the basic examples, before you get
+started with the Oracle NoSQL Database Cloud Service. After building,
+debugging, and testing your application with the Oracle NoSQL Cloud Simulator,
+move your application to the Oracle NoSQL Database Cloud Service.</p>
+<p>Follow these instructions to run an example program against the Cloud
+Simulator:</p>
+<ol>
+<li><p><a href="https://www.oracle.com/downloads/cloud/nosql-cloud-sdk-downloads.html">Download</a>
+and start the Cloud Simulator.</p>
+</li>
+<li><p>Copy and edit <em>cloudsim.json</em> configuration file in <em>examples/config</em>
+directory and modify the endpoint if using a non-default port or if it is
+running on another machine.  If using default settings, you may use the file
+<em>cloudsim.json</em> as it is.</p>
+</li>
+</ol>
+<p>It should look like this:</p>
+<pre><code class="language-ini"><span class="hl-1">{</span><br/><span class="hl-1">    </span><span class="hl-4">&quot;endpoint&quot;</span><span class="hl-1">: </span><span class="hl-4">&quot;http://localhost:8080&quot;</span><br/><span class="hl-1">}</span>
+</code></pre>
+<ol start="3">
+<li>Run examples using instructions provided in the previous section (pars 3
+and 4) and the JSON configuration file as described above:</li>
+</ol>
+<p>Run a JavaScript example in <em>examples/javascript</em> directory using the
+syntax:</p>
+<pre><code class="language-bash"><span class="hl-3">node</span><span class="hl-1"> &lt;</span><span class="hl-4">example.j</span><span class="hl-1">s&gt; &lt;</span><span class="hl-4">config.jso</span><span class="hl-1">n&gt;</span>
+</code></pre>
+<p>e.g.</p>
+<pre><code class="language-bash"><span class="hl-3">node</span><span class="hl-1"> </span><span class="hl-4">basic_example.js</span><span class="hl-1"> </span><span class="hl-4">../config/cloudsim.json</span>
+</code></pre>
+<p>Run a TypeScript example in <em>examples/typescript</em> directory using the
+syntax:</p>
+<pre><code class="language-bash"><span class="hl-3">npx</span><span class="hl-1"> </span><span class="hl-4">tsx</span><span class="hl-1"> &lt;</span><span class="hl-4">example.t</span><span class="hl-1">s&gt; </span><span class="hl-0">--</span><span class="hl-1"> &lt;</span><span class="hl-4">config.jso</span><span class="hl-1">n&gt;</span>
+</code></pre>
+<p>e.g.</p>
+<pre><code class="language-bash"><span class="hl-3">npx</span><span class="hl-1"> </span><span class="hl-4">tsx</span><span class="hl-1"> </span><span class="hl-4">single_row_ops.ts</span><span class="hl-1"> </span><span class="hl-0">--</span><span class="hl-1"> </span><span class="hl-4">../cloudsim.json</span>
+</code></pre>
+<p>Note that the Cloud Simulator does not require authorization information and
+credentials described above that are required by Oracle NoSQL Database
+Cloud Service.  Only the endpoint is required and is by default <em>localhost:8080</em>.
+The service type for Cloud Simulator is <a href="../enums/ServiceType.html#CLOUDSIM">CLOUDSIM</a>.  It is a
+default service type when authorization information is not present, so the
+configuration that contains only <em>endpoint</em> property will be interpreted as
+configuration for Cloud Simulator.  See <a href="../enums/ServiceType.html">ServiceType</a> and
+<em>cloudsim.json</em> in <em>examples</em> directory.</p>
+</div></div>
+<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+<div class="tsd-navigation settings">
+<details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility">
+<h4 class="uppercase">Member Visibility</h4><form>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
+<div class="tsd-theme-toggle">
+<h4 class="uppercase">Theme</h4><select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<nav class="tsd-navigation primary">
+<details class="tsd-index-accordion" open><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
+<div class="tsd-accordion-details">
+<ul>
+<li class="current"><a href="../modules.html">Oracle <wbr/>NoSQL <wbr/>Database <wbr/>Node.js SDK -<wbr/> v5.5.0</a>
+<ul>
+<li class="current pages-entry pages-entry-menu pages-entry-depth-1"><a>Guides</a>
+<ul>
+<li class="current selected pages-entry pages-entry-page pages-entry-depth-2"><a href="connect-cloud.html">Connecting an <wbr/>Application to <wbr/>Oracle <wbr/>NoSQL <wbr/>Database <wbr/>Cloud <wbr/>Service</a></li>
+<li class="pages-entry pages-entry-page pages-entry-depth-2"><a href="connect-on-prem.html">Connecting an <wbr/>Application to <wbr/>On-<wbr/>Premise <wbr/>Oracle <wbr/>NoSQL <wbr/>Database</a></li>
+<li class="pages-entry pages-entry-page pages-entry-depth-2"><a href="tables.html">Working <wbr/>With <wbr/>Tables</a></li></ul></li></ul></li></ul></div></details></nav>
+<nav class="tsd-navigation secondary menu-sticky">
+<ul>
+<li class="tsd-kind-enum"><a href="../enums/AdminState.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-enum)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-8-path"></rect><path d="M9.45 16V7.24H14.49V8.224H10.518V10.936H14.07V11.908H10.518V15.016H14.49V16H9.45Z" fill="var(--color-text)" id="icon-8-text"></path></svg>Admin<wbr/>State</a></li>
+<li class="tsd-kind-enum"><a href="../enums/CapacityMode.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Capacity<wbr/>Mode</a></li>
+<li class="tsd-kind-enum"><a href="../enums/Consistency.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Consistency</a></li>
+<li class="tsd-kind-enum"><a href="../enums/ErrorCode.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Error<wbr/>Code</a></li>
+<li class="tsd-kind-enum"><a href="../enums/ReplicaAckPolicy.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Replica<wbr/>Ack<wbr/>Policy</a></li>
+<li class="tsd-kind-enum"><a href="../enums/ServiceType.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Service<wbr/>Type</a></li>
+<li class="tsd-kind-enum"><a href="../enums/SyncPolicy.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Sync<wbr/>Policy</a></li>
+<li class="tsd-kind-enum"><a href="../enums/TableState.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Table<wbr/>State</a></li>
+<li class="tsd-kind-class"><a href="../classes/Durabilities.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-128-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-128-text"></path></svg>Durabilities</a></li>
+<li class="tsd-kind-class"><a href="../classes/NoSQLArgumentError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>NoSQLArgument<wbr/>Error</a></li>
+<li class="tsd-kind-class"><a href="../classes/NoSQLAuthorizationError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>NoSQLAuthorization<wbr/>Error</a></li>
+<li class="tsd-kind-class"><a href="../classes/NoSQLClient.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>NoSQLClient</a></li>
+<li class="tsd-kind-class"><a href="../classes/NoSQLError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>NoSQLError</a></li>
+<li class="tsd-kind-class"><a href="../classes/NoSQLNetworkError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>NoSQLNetwork<wbr/>Error</a></li>
+<li class="tsd-kind-class"><a href="../classes/NoSQLProtocolError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>NoSQLProtocol<wbr/>Error</a></li>
+<li class="tsd-kind-class"><a href="../classes/NoSQLQueryError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>NoSQLQuery<wbr/>Error</a></li>
+<li class="tsd-kind-class"><a href="../classes/NoSQLServiceError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>NoSQLService<wbr/>Error</a></li>
+<li class="tsd-kind-class"><a href="../classes/NoSQLTimeoutError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>NoSQLTimeout<wbr/>Error</a></li>
+<li class="tsd-kind-class"><a href="../classes/NoSQLUnsupportedProtocolError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>NoSQLUnsupported<wbr/>Protocol<wbr/>Error</a></li>
+<li class="tsd-kind-class"><a href="../classes/PreparedStatement.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Prepared<wbr/>Statement</a></li>
+<li class="tsd-kind-class"><a href="../classes/Region.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Region</a></li>
+<li class="tsd-kind-class"><a href="../classes/SimpleRateLimiter.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Simple<wbr/>Rate<wbr/>Limiter</a></li>
+<li class="tsd-kind-class"><a href="../classes/TTLUtil.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>TTLUtil</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/AbortOnFailOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg>Abort<wbr/>On<wbr/>Fail<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/AdminDDLOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>AdminDDLOpt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/AdminListOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Admin<wbr/>List<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/AdminResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Admin<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/AdminStatusOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Admin<wbr/>Status<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/AuthConfig.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Auth<wbr/>Config</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/CompartmentOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Compartment<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/CompletionOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Completion<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/Config.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Config</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/ConsistencyOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Consistency<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/ConsumedCapacity.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Consumed<wbr/>Capacity</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/ConsumedCapacityResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Consumed<wbr/>Capacity<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/CustomFieldTypes.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Custom<wbr/>Field<wbr/>Types</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/DBNumberConstructor.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>DBNumber<wbr/>Constructor</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/DefinedTags.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Defined<wbr/>Tags</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/DeleteIfOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Delete<wbr/>If<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/DeleteManyOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Delete<wbr/>Many<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/DeleteOpResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Delete<wbr/>Op<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/DeleteOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Delete<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/DeleteResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Delete<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/Durability.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Durability</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/DurabilityOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Durability<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/FieldRange.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Field<wbr/>Range</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/FreeFormTags.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Free<wbr/>Form<wbr/>Tags</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/GetIndexOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Get<wbr/>Index<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/GetIndexesOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Get<wbr/>Indexes<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/GetOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Get<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/GetResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Get<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/GetTableOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Get<wbr/>Table<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/IAMConfig.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>IAMConfig</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/IAMCredentials.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>IAMCredentials</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/IndexInfo.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Index<wbr/>Info</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/KVStoreAuthConfig.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>KVStore<wbr/>Auth<wbr/>Config</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/KVStoreCredentials.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>KVStore<wbr/>Credentials</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/ListTablesOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>List<wbr/>Tables<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/ListTablesResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>List<wbr/>Tables<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/ModifyTableOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Modify<wbr/>Table<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/MultiDeleteOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Multi<wbr/>Delete<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/MultiDeleteResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Multi<wbr/>Delete<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/NoSQLClientEvents.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>NoSQLClient<wbr/>Events</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/NumberLibConfig.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Number<wbr/>Lib<wbr/>Config</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/NumberLibMethods.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Number<wbr/>Lib<wbr/>Methods</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/Operation.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Operation</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/PrepareOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Prepare<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/PutIfOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Put<wbr/>If<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/PutManyOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Put<wbr/>Many<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/PutOpResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Put<wbr/>Op<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/PutOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Put<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/PutResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Put<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/QueryOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Query<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/QueryResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Query<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/RateLimiter.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Rate<wbr/>Limiter</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/RateLimiterConstructor.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Rate<wbr/>Limiter<wbr/>Constructor</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/RetryConfig.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Retry<wbr/>Config</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/RetryHandler.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Retry<wbr/>Handler</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/RoundingModesMap.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Rounding<wbr/>Modes<wbr/>Map</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/TableDDLOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>TableDDLOpt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/TableLimits.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Table<wbr/>Limits</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/TableResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Table<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/TableUsage.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Table<wbr/>Usage</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/TableUsageOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Table<wbr/>Usage<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/TableUsageResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Table<wbr/>Usage<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/TimeToLive.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Time<wbr/>To<wbr/>Live</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/TimeoutOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Timeout<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/UserInfo.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>User<wbr/>Info</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/WriteMultipleOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Write<wbr/>Multiple<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/WriteMultipleResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Write<wbr/>Multiple<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/WriteOperation.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Write<wbr/>Operation</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/AnyKey.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4194304-path"></rect><path d="M11.31 16V8.224H8.91V7.24H14.79V8.224H12.39V16H11.31Z" fill="var(--color-text)" id="icon-4194304-text"></path></svg>Any<wbr/>Key</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/AnyRow.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Any<wbr/>Row</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/AtomicField.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Atomic<wbr/>Field</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/AuthorizationProvider.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Authorization<wbr/>Provider</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/CustomNumberType.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Custom<wbr/>Number<wbr/>Type</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/DBNumberConfig.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>DBNumber<wbr/>Config</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/DelegationTokenProvider.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Delegation<wbr/>Token<wbr/>Provider</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/FieldValue.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Field<wbr/>Value</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/HttpOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Http<wbr/>Opt</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/IAMCredentialsProvider.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>IAMCredentials<wbr/>Provider</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/IdentityField.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Identity<wbr/>Field</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/KVStoreCredentialsProvider.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>KVStore<wbr/>Credentials<wbr/>Provider</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/KeyField.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Key<wbr/>Field</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/MultiDeleteContinuationKey.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Multi<wbr/>Delete<wbr/>Continuation<wbr/>Key</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/NumberLibPrecision.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Number<wbr/>Lib<wbr/>Precision</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/NumberLibRoundingMode.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Number<wbr/>Lib<wbr/>Rounding<wbr/>Mode</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/QueryContinuationKey.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Query<wbr/>Continuation<wbr/>Key</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/RowKey.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Row<wbr/>Key</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/RowVersion.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Row<wbr/>Version</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/TableETag.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>TableETag</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/getAuthorization.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>get<wbr/>Authorization</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/loadDelegationToken.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>load<wbr/>Delegation<wbr/>Token</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/loadIAMCredentials.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>loadIAMCredentials</a></li>
+<li class="tsd-kind-type-alias"><a href="../types/loadKVStoreCredentials.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>loadKVStore<wbr/>Credentials</a></li></ul></nav></div></div>
+<div class="container tsd-generator">
+<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
+<div class="overlay"></div><script src="../assets/main.js"></script></body></html>

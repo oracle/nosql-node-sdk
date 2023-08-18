@@ -1,0 +1,277 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>DBNumberConfig | Oracle NoSQL Database Node.js SDK - v5.5.0</title><meta name="description" content="Documentation for Oracle NoSQL Database Node.js SDK - v5.5.0"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script><link rel="stylesheet" href="../assets/pages.css"/></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container">
+<div class="table-cell" id="tsd-search" data-base="..">
+<div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<div class="field">
+<div id="tsd-toolbar-links"></div></div>
+<ul class="results">
+<li class="state loading">Preparing search index...</li>
+<li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">Oracle NoSQL Database Node.js SDK - v5.5.0</a></div>
+<div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="container container-main">
+<div class="col-8 col-content">
+<div class="tsd-page-title">
+<ul class="tsd-breadcrumb">
+<li><a href="../modules.html">Oracle NoSQL Database Node.js SDK - v5.5.0</a></li>
+<li><a href="DBNumberConfig.html">DBNumberConfig</a></li></ul>
+<h1>Type alias DBNumberConfig</h1></div>
+<div class="tsd-signature">DBNumber<wbr/>Config<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/DBNumberConstructor.html" class="tsd-signature-type" data-tsd-kind="Interface">DBNumberConstructor</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/NumberLibConfig.html" class="tsd-signature-type" data-tsd-kind="Interface">NumberLibConfig</a></div>
+<div class="tsd-comment tsd-typography"><p>NoSQL database allows you to store arbitrary precision decimal numbers
+in tables by using database type <em>Number</em>, which supports all
+numbers represented by Java BigDecimal class.  By default, the driver
+represents them as Javascript numbers.  However this has some limitations:</p>
+<ul>
+<li>The number of significant digits is limited to what can be represented
+by Javascript number type, which is approximately 15 decimal
+digits, so the values with higher precision cannot be reresented exactly
+and will be rounded.</li>
+<li>The range is limited to what can be represented by Javascript numbers,
+which is upproximately up to +-1e308.</li>
+<li>Javascript numbers are stored in binary and not decimal format, which
+means that some decimal values cannot be represented exactly and are
+subject to rounding errors when performing decimal calculations.</li>
+</ul>
+<p>
+Because Javascript and Node.js do not currently have a standard way to
+represent arbitrary precision decimal numbers, the driver allows you to use
+a 3rd party number library of your choice.  Typically the number libraries
+represent numbers as objects of certain prototype or class and have methods
+to perform arithmetic and other operations.  If you enable this feature,
+the driver will represent the column values of datatype <em>Number</em> as
+objects of this type from the number library.  You can pass these objects
+as record fields for put operations, as key fields for get operations and
+they will also be returned as part of get and query results wherever the
+column value or expression result is of datatype <em>Number</em>.  Then
+your application can use methods from the number library to perform further
+numeric operations on number objects or convert them to suitable display
+representation.
+<p>
+In most cases you only need the following:
+<ol>
+<li>Install the 3rd party number library of your choice (typically from
+NPM) globally or as a dependency of your application (note that the driver
+does not automatically install number libraries)</li>
+<li>In the initial <a href="../interfaces/Config.html">Config</a> used to create <a href="../classes/NoSQLClient.html">NoSQLClient</a>,
+specify <em>dbNumber</em> property as <em>dbNumber: 'module_name'</em>
+where module_name is the module name of the number library</li>
+</ol>
+See examples below.
+<p>
+The above is sufficient for most cases when using default settings and
+for number libraries that provide standard method names for common
+operations.  The driver has been tested with the following number
+libraries:
+<ul>
+<li><a href="https://github.com/MikeMcl/decimal.js">decimal.js</a></li>
+<li><a href="https://github.com/MikeMcl/decimal.js-light">decimal.js-light</a></li>
+<li><a href="https://github.com/MikeMcl/bignumber.js">bignumber.js</a></li>
+<li><a href="https://github.com/MikeMcl/big.js">big.js</a></li>
+</ul>
+<p>
+These libraries should work out of the box with simple steps as described
+above.  However you may use any number library of your choice as long as
+it uses objects to represent arbitrary precision decimal numbers, provides
+constructor function to create these objects and supports some common
+operations.  Below we describe what the driver needs to know from the
+number library and whether it will work out of the box as mentioned
+above or if it may require additional configuration.
+<p>
+The driver needs to know the following:
+<ol>
+<li> Constructor function.  The constructor should be able to create
+the number object from its string representation.  Typically the
+number libraries export the constructor as a sole module export, so that
+the result of <em>require('module_name')</em> is the
+constructor.  In this case no additional configuration is required.
+</li>
+<li> Conversion to string.  Typically this is the instance method
+<em>toString</em> (overriden from <em>Object</em> class), in which case no
+additional configuration is required.</li>
+<li> Operations for comparison, addition, subtraction, multiplication and
+division, as may be needed by the driver for client-side query processing.
+These are typically static (properties of the constructor itself)
+and/or instance methods (properties of constructor's prototype), with the
+static methods taking 2 arguments and instance
+methods taking one argument.  The driver will look for common method names
+(instance or static) such as "add", "plus" for addition, "subtract", "sub",
+"minus" for subtraction, etc.  See <a href="../interfaces/NumberLibMethods.html">NumberLibMethods</a> for complete
+list of names.  If the number library of your choice uses any of the common
+names for each operation listed above, no additional configuration is
+required.</li>
+<li> Precision and rounding mode.  These are optional and if not specified,
+default values will be used.  On the server side, NoSQL database uses Java
+BigDecimal to do calculations for Number datatype during query processing.
+The result of each operation is rounded accoring to Java MathContext
+settings, which consist of precision (number of significant digits) and
+rounding mode (how to round the result to precision), so these settings
+need to be provided to the server for query processing.  You may choose to
+provide them explicitly in configuration (see <a href="../interfaces/NumberLibConfig.html">NumberLibConfig</a>) or
+let the driver figure them out from the number library settings using some
+common property names (see <a href="NumberLibPrecision.html">NumberLibPrecision</a> and
+<a href="NumberLibRoundingMode.html">NumberLibRoundingMode</a>).  If not found, default precision of 20 and
+rounding mode <em>ROUND_HALF_UP</em> will be used.</li>
+</ol>
+<p>
+Note that configuration for this feature is always specified as
+<em>dbNumber</em> property of <a href="../interfaces/Config.html">Config</a> and thus can be provided
+either as part of <a href="../interfaces/Config.html">Config</a> Javascript object or in JSON file
+containing <a href="../interfaces/Config.html">Config</a>.
+<p>
+<em>dbNumber</em> property can be one of the following:
+<ul>
+<li>String specifying number library module name as discussed above.</li>
+<li>Constructor function (not available if using JSON file).  You may
+specify constructor function explicitly.  This is useful when you want to
+set custom settings for the constructor (to customize created number
+instances) before passing it to the driver instead of using default number
+library settings.  Also see <a href="../interfaces/NumberLibConfig.html#Constructor">Constructor</a>.</li>
+<li><a href="../interfaces/NumberLibConfig.html">NumberLibConfig</a> object if more complex configuration is
+desired.
+</li>
+</ul></div></div>
+<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+<div class="tsd-navigation settings">
+<details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility">
+<h4 class="uppercase">Member Visibility</h4><form>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
+<div class="tsd-theme-toggle">
+<h4 class="uppercase">Theme</h4><select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<nav class="tsd-navigation primary">
+<details class="tsd-index-accordion" open><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
+<div class="tsd-accordion-details">
+<ul>
+<li><a href="../modules.html">Oracle <wbr/>NoSQL <wbr/>Database <wbr/>Node.js SDK -<wbr/> v5.5.0</a>
+<ul>
+<li class="pages-entry pages-entry-menu pages-entry-depth-1"><a>Guides</a>
+<ul>
+<li class="pages-entry pages-entry-page pages-entry-depth-2"><a href="../pages/connect-cloud.html">Connecting an <wbr/>Application to <wbr/>Oracle <wbr/>NoSQL <wbr/>Database <wbr/>Cloud <wbr/>Service</a></li>
+<li class="pages-entry pages-entry-page pages-entry-depth-2"><a href="../pages/connect-on-prem.html">Connecting an <wbr/>Application to <wbr/>On-<wbr/>Premise <wbr/>Oracle <wbr/>NoSQL <wbr/>Database</a></li>
+<li class="pages-entry pages-entry-page pages-entry-depth-2"><a href="../pages/tables.html">Working <wbr/>With <wbr/>Tables</a></li></ul></li></ul></li></ul></div></details></nav>
+<nav class="tsd-navigation secondary menu-sticky">
+<ul>
+<li class="tsd-kind-enum"><a href="../enums/AdminState.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-enum)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-8-path"></rect><path d="M9.45 16V7.24H14.49V8.224H10.518V10.936H14.07V11.908H10.518V15.016H14.49V16H9.45Z" fill="var(--color-text)" id="icon-8-text"></path></svg>Admin<wbr/>State</a></li>
+<li class="tsd-kind-enum"><a href="../enums/CapacityMode.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Capacity<wbr/>Mode</a></li>
+<li class="tsd-kind-enum"><a href="../enums/Consistency.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Consistency</a></li>
+<li class="tsd-kind-enum"><a href="../enums/ErrorCode.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Error<wbr/>Code</a></li>
+<li class="tsd-kind-enum"><a href="../enums/ReplicaAckPolicy.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Replica<wbr/>Ack<wbr/>Policy</a></li>
+<li class="tsd-kind-enum"><a href="../enums/ServiceType.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Service<wbr/>Type</a></li>
+<li class="tsd-kind-enum"><a href="../enums/SyncPolicy.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Sync<wbr/>Policy</a></li>
+<li class="tsd-kind-enum"><a href="../enums/TableState.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Table<wbr/>State</a></li>
+<li class="tsd-kind-class"><a href="../classes/Durabilities.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-128-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-128-text"></path></svg>Durabilities</a></li>
+<li class="tsd-kind-class"><a href="../classes/NoSQLArgumentError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>NoSQLArgument<wbr/>Error</a></li>
+<li class="tsd-kind-class"><a href="../classes/NoSQLAuthorizationError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>NoSQLAuthorization<wbr/>Error</a></li>
+<li class="tsd-kind-class"><a href="../classes/NoSQLClient.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>NoSQLClient</a></li>
+<li class="tsd-kind-class"><a href="../classes/NoSQLError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>NoSQLError</a></li>
+<li class="tsd-kind-class"><a href="../classes/NoSQLNetworkError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>NoSQLNetwork<wbr/>Error</a></li>
+<li class="tsd-kind-class"><a href="../classes/NoSQLProtocolError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>NoSQLProtocol<wbr/>Error</a></li>
+<li class="tsd-kind-class"><a href="../classes/NoSQLQueryError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>NoSQLQuery<wbr/>Error</a></li>
+<li class="tsd-kind-class"><a href="../classes/NoSQLServiceError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>NoSQLService<wbr/>Error</a></li>
+<li class="tsd-kind-class"><a href="../classes/NoSQLTimeoutError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>NoSQLTimeout<wbr/>Error</a></li>
+<li class="tsd-kind-class"><a href="../classes/NoSQLUnsupportedProtocolError.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>NoSQLUnsupported<wbr/>Protocol<wbr/>Error</a></li>
+<li class="tsd-kind-class"><a href="../classes/PreparedStatement.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Prepared<wbr/>Statement</a></li>
+<li class="tsd-kind-class"><a href="../classes/Region.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Region</a></li>
+<li class="tsd-kind-class"><a href="../classes/SimpleRateLimiter.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Simple<wbr/>Rate<wbr/>Limiter</a></li>
+<li class="tsd-kind-class"><a href="../classes/TTLUtil.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>TTLUtil</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/AbortOnFailOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg>Abort<wbr/>On<wbr/>Fail<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/AdminDDLOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>AdminDDLOpt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/AdminListOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Admin<wbr/>List<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/AdminResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Admin<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/AdminStatusOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Admin<wbr/>Status<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/AuthConfig.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Auth<wbr/>Config</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/CompartmentOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Compartment<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/CompletionOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Completion<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/Config.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Config</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/ConsistencyOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Consistency<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/ConsumedCapacity.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Consumed<wbr/>Capacity</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/ConsumedCapacityResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Consumed<wbr/>Capacity<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/CustomFieldTypes.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Custom<wbr/>Field<wbr/>Types</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/DBNumberConstructor.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>DBNumber<wbr/>Constructor</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/DefinedTags.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Defined<wbr/>Tags</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/DeleteIfOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Delete<wbr/>If<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/DeleteManyOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Delete<wbr/>Many<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/DeleteOpResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Delete<wbr/>Op<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/DeleteOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Delete<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/DeleteResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Delete<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/Durability.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Durability</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/DurabilityOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Durability<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/FieldRange.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Field<wbr/>Range</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/FreeFormTags.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Free<wbr/>Form<wbr/>Tags</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/GetIndexOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Get<wbr/>Index<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/GetIndexesOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Get<wbr/>Indexes<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/GetOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Get<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/GetResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Get<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/GetTableOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Get<wbr/>Table<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/IAMConfig.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>IAMConfig</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/IAMCredentials.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>IAMCredentials</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/IndexInfo.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Index<wbr/>Info</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/KVStoreAuthConfig.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>KVStore<wbr/>Auth<wbr/>Config</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/KVStoreCredentials.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>KVStore<wbr/>Credentials</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/ListTablesOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>List<wbr/>Tables<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/ListTablesResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>List<wbr/>Tables<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/ModifyTableOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Modify<wbr/>Table<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/MultiDeleteOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Multi<wbr/>Delete<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/MultiDeleteResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Multi<wbr/>Delete<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/NoSQLClientEvents.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>NoSQLClient<wbr/>Events</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/NumberLibConfig.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Number<wbr/>Lib<wbr/>Config</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/NumberLibMethods.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Number<wbr/>Lib<wbr/>Methods</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/Operation.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Operation</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/PrepareOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Prepare<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/PutIfOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Put<wbr/>If<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/PutManyOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Put<wbr/>Many<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/PutOpResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Put<wbr/>Op<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/PutOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Put<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/PutResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Put<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/QueryOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Query<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/QueryResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Query<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/RateLimiter.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Rate<wbr/>Limiter</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/RateLimiterConstructor.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Rate<wbr/>Limiter<wbr/>Constructor</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/RetryConfig.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Retry<wbr/>Config</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/RetryHandler.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Retry<wbr/>Handler</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/RoundingModesMap.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Rounding<wbr/>Modes<wbr/>Map</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/TableDDLOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>TableDDLOpt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/TableLimits.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Table<wbr/>Limits</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/TableResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Table<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/TableUsage.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Table<wbr/>Usage</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/TableUsageOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Table<wbr/>Usage<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/TableUsageResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Table<wbr/>Usage<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/TimeToLive.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Time<wbr/>To<wbr/>Live</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/TimeoutOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Timeout<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/UserInfo.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>User<wbr/>Info</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/WriteMultipleOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Write<wbr/>Multiple<wbr/>Opt</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/WriteMultipleResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Write<wbr/>Multiple<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/WriteOperation.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Write<wbr/>Operation</a></li>
+<li class="tsd-kind-type-alias"><a href="AnyKey.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4194304-path"></rect><path d="M11.31 16V8.224H8.91V7.24H14.79V8.224H12.39V16H11.31Z" fill="var(--color-text)" id="icon-4194304-text"></path></svg>Any<wbr/>Key</a></li>
+<li class="tsd-kind-type-alias"><a href="AnyRow.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Any<wbr/>Row</a></li>
+<li class="tsd-kind-type-alias"><a href="AtomicField.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Atomic<wbr/>Field</a></li>
+<li class="tsd-kind-type-alias"><a href="AuthorizationProvider.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Authorization<wbr/>Provider</a></li>
+<li class="tsd-kind-type-alias"><a href="CustomNumberType.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Custom<wbr/>Number<wbr/>Type</a></li>
+<li class="current tsd-kind-type-alias"><a href="DBNumberConfig.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>DBNumber<wbr/>Config</a></li>
+<li class="tsd-kind-type-alias"><a href="DelegationTokenProvider.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Delegation<wbr/>Token<wbr/>Provider</a></li>
+<li class="tsd-kind-type-alias"><a href="FieldValue.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Field<wbr/>Value</a></li>
+<li class="tsd-kind-type-alias"><a href="HttpOpt.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Http<wbr/>Opt</a></li>
+<li class="tsd-kind-type-alias"><a href="IAMCredentialsProvider.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>IAMCredentials<wbr/>Provider</a></li>
+<li class="tsd-kind-type-alias"><a href="IdentityField.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Identity<wbr/>Field</a></li>
+<li class="tsd-kind-type-alias"><a href="KVStoreCredentialsProvider.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>KVStore<wbr/>Credentials<wbr/>Provider</a></li>
+<li class="tsd-kind-type-alias"><a href="KeyField.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Key<wbr/>Field</a></li>
+<li class="tsd-kind-type-alias"><a href="MultiDeleteContinuationKey.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Multi<wbr/>Delete<wbr/>Continuation<wbr/>Key</a></li>
+<li class="tsd-kind-type-alias"><a href="NumberLibPrecision.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Number<wbr/>Lib<wbr/>Precision</a></li>
+<li class="tsd-kind-type-alias"><a href="NumberLibRoundingMode.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Number<wbr/>Lib<wbr/>Rounding<wbr/>Mode</a></li>
+<li class="tsd-kind-type-alias"><a href="QueryContinuationKey.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Query<wbr/>Continuation<wbr/>Key</a></li>
+<li class="tsd-kind-type-alias"><a href="RowKey.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Row<wbr/>Key</a></li>
+<li class="tsd-kind-type-alias"><a href="RowVersion.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>Row<wbr/>Version</a></li>
+<li class="tsd-kind-type-alias"><a href="TableETag.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>TableETag</a></li>
+<li class="tsd-kind-type-alias"><a href="getAuthorization.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>get<wbr/>Authorization</a></li>
+<li class="tsd-kind-type-alias"><a href="loadDelegationToken.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>load<wbr/>Delegation<wbr/>Token</a></li>
+<li class="tsd-kind-type-alias"><a href="loadIAMCredentials.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>loadIAMCredentials</a></li>
+<li class="tsd-kind-type-alias"><a href="loadKVStoreCredentials.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-4194304-path"></use><use href="#icon-4194304-text"></use></svg>loadKVStore<wbr/>Credentials</a></li></ul></nav></div></div>
+<div class="container tsd-generator">
+<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
+<div class="overlay"></div><script src="../assets/main.js"></script></body></html>

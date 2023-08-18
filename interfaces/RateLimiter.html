@@ -1,0 +1,284 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>RateLimiter | Oracle NoSQL Database Node.js SDK - v5.5.0</title><meta name="description" content="Documentation for Oracle NoSQL Database Node.js SDK - v5.5.0"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script><link rel="stylesheet" href="../assets/pages.css"/></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container">
+<div class="table-cell" id="tsd-search" data-base="..">
+<div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<div class="field">
+<div id="tsd-toolbar-links"></div></div>
+<ul class="results">
+<li class="state loading">Preparing search index...</li>
+<li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">Oracle NoSQL Database Node.js SDK - v5.5.0</a></div>
+<div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="container container-main">
+<div class="col-8 col-content">
+<div class="tsd-page-title">
+<ul class="tsd-breadcrumb">
+<li><a href="../modules.html">Oracle NoSQL Database Node.js SDK - v5.5.0</a></li>
+<li><a href="RateLimiter.html">RateLimiter</a></li></ul>
+<h1>Interface RateLimiter</h1></div>
+<section class="tsd-panel tsd-comment">
+<div class="tsd-comment tsd-typography"><p>Cloud Service or Cloud Simulator only.</p>
+<p>
+Rate limiting is used to provide efficient access to Oracle NoSQL Database
+Cloud Service, maximize throughput and protect from resource starvation.
+The SDK provides built-in rate limiting functionality for data operations
+on tables such as <a href="../classes/NoSQLClient.html#get">get</a>, <a href="../classes/NoSQLClient.html#put">put</a>,
+<a href="../classes/NoSQLClient.html#delete">delete</a>, <a href="../classes/NoSQLClient.html#deleteRange">deleteRange</a>,
+<a href="../classes/NoSQLClient.html#prepare">prepare</a>, <a href="../classes/NoSQLClient.html#query">query</a> and their variants.
+Rate limiting in the driver allows spreading the operations over time thus
+maximizing throughput by avoiding costly throttling errors and the
+associated retry handling (see <a href="../enums/ErrorCode.html#READ_LIMIT_EXCEEDED">READ_LIMIT_EXCEEDED</a> and
+<a href="../enums/ErrorCode.html#WRITE_LIMIT_EXCEEDED">WRITE_LIMIT_EXCEEDED</a>).
+<p>
+For general understanding of rate limiting, see articles such as
+<a href="https://blog.logrocket.com/rate-limiting-node-js/">Understanding and implementing rate limiting in Node.js</a>,
+<a href="https://hechao.li/2018/06/25/Rate-Limiter-Part1/">Rate Limiting Part 1</a>,
+<a href="https://hechao.li/2018/06/27/Rate-Limiter-Part2/">Rate Limiting Part 2</a>,
+and many others.
+<p>
+Each operation listed above does reads and/or writes on a table and
+thus consumes certain number of read and write units (see
+<a href="ConsumedCapacity.html">ConsumedCapacity</a> for more explanation).  Each table in NoSQL
+Database Cloud Service has <a href="TableLimits.html">table limits</a> defining
+maximum number of read and write units that can be consumed by all clients
+accessing the table, per 1 second time.  Thus, the total rate of
+operations on a given table is limited.  If a client tries to perform the
+operations at faster rate, the server will respond with a read or write
+throttling error, in which case the client can retry the operation after
+certain time, see <a href="RetryConfig.html">RetryConfig</a>.  Handling throttling errors and
+their retries is costly both for the server and the client application
+since the application has to wait before an operation can be retried
+(retrying immediately or not waiting enough will only result in another
+throttling error and more needless load on the server).  A much better
+strategy for a client is to spread out the operations over time to an extent
+that the table limits for given table are not exceeded and thus avoiding
+throttling errors and their retries.  Rate limiting built in to the SDK
+provides this functionality.
+<p>
+An instance of <a href="RateLimiter.html">RateLimiter</a> class is used to enforce one table
+limit.  Thus the driver will instantiate two instances of
+<a href="RateLimiter.html">RateLimiter</a> class for each table in use, one for read limit and
+another for write limit.  You have a choice of using a default
+implementation of <a href="RateLimiter.html">RateLimiter</a> provided by the driver or providing
+a custom impelemntation of <a href="RateLimiter.html">RateLimiter</a> class.  See
+<a href="Config.html#rateLimiter">rateLimiter</a>.  For details on the default rate limiter, see
+<a href="../classes/SimpleRateLimiter.html">SimpleRateLimiter</a>. To provide custom <a href="RateLimiter.html">RateLimiter</a> class,
+implement a class with instance methods as described below and set
+<a href="Config.html#rateLimiter">rateLimiter</a> to the constructor function of that class or
+module name exporting this class.  The driver will create each instance
+of this class by using its constructor with no arguments.
+<p>
+In order to create a pair of rate limiters for a table, the driver will
+have to know its table limits.  The table limits are already known if one
+of <a href="../classes/NoSQLClient.html#tableDDL">tableDDL</a>, <a href="../classes/NoSQLClient.html#getTable">getTable</a>,
+<a href="../classes/NoSQLClient.html#forCompletion">forCompletion</a>, <a href="../classes/NoSQLClient.html#forTableState">forTableState</a> has
+been called.  Otherwise, the driver will call <a href="../classes/NoSQLClient.html#getTable">getTable</a>
+in the background to obtain its table limits as soon as any data operation
+is issued for that table.  This means that enabling rate limiting for a
+table may be delayed until its table limits are obtained successfully in
+the background.
+<p>
+The main operation of rate limiting in the driver is to call
+<a href="RateLimiter.html#consumeUnits">consumeUnits</a> to consume a number of (read or write)
+units for a given operation.  Depending on impelementation of
+<a href="RateLimiter.html">RateLimiter</a>, its current state and the number of units to consume,
+this call may asynchoronously block (sleep) for certain amount of time
+(and return <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> of this amount in milliseconds)
+before letting the operation proceed.  This API also needs to correctly
+operate in the presence of timeout set by the caller.  See
+<a href="RateLimiter.html#consumeUnits">consumeUnits</a> for details.  Note that it may be possible
+to consume certain amount of units without blocking (e.g. if there has been
+no or very little recent activity).  In this state the rate limiter is said
+to be under its limit. Conversely, even consuming 0 units may block as a
+result of consuming units for recent past operations.  In this state the
+rate limiter is said to be over its limit.
+<p>
+Rate limiting works best when we know in advance how many units each
+operation will consume, which would allow to know precisely how long to
+wait before issuing each operation.  Unfortunately, we don't know how many
+units an operation requires until we get the result back, with this
+information returned as part of <a href="ConsumedCapacity.html">ConsumedCapacity</a> object.  It may be
+difficult or impossible to estimate number of units required before the
+operation completes.  The driver takes an approach where
+<a href="RateLimiter.html#consumeUnits">consumeUnits</a> is called twice, once before the operation
+passing 0 units to (possibly) wait until the rate limiter is under
+its limit and then after the operation passing the number of units returned
+as part of <a href="ConsumedCapacity.html">ConsumedCapacity</a> of the result.  This will allow to
+delay subsequent operations and stagger subsequent concurrent operations
+over time.
+<p>
+Also, note that by default the rate limiting only works as expected when
+used within one <a href="../classes/NoSQLClient.html">NoSQLClient</a> instance.  When using multiple
+<a href="../classes/NoSQLClient.html">NoSQLClient</a> instances, whether in the same process, different
+process or even running on different machine, rate limiters in one instance
+will not be aware of operations performed by other instances and thus
+will not correctly rate limit the operations.  If multiple concurrent
+<a href="../classes/NoSQLClient.html">NoSQLClient</a> instances are required, you can set
+<a href="Config.html#rateLimiterPercent">rateLimiterPercent</a> to allocate only a percentage of each
+table's limits to each instance.  Although not optimal (not accounting for
+overuse or underuse at a particular instance), this will allow correct
+rate limiting of operations on multiple concurrent instances.
+<p>
+As mentioned above, the driver provides a default rate limiter as
+<a href="../classes/SimpleRateLimiter.html">SimpleRateLimiter</a> class, which you can use by setting
+<a href="Config.html#rateLimiter">rateLimiter</a> to <em>true</em>.  Alternatively, you can
+provide your own custom rate limiter class by setting
+<a href="Config.html#rateLimiter">rateLimiter</a> to its constructor function or module name
+that exports it.
+<p>
+Unfortunately, there is no perfect driver-side rate limiting stategy so
+it is still possible for throttling errors to occur.  <a href="RateLimiter.html">RateLimiter</a>
+interface provides <a href="RateLimiter.html#onThrottle">onThrottle</a> method that the driver
+calls when an operation results in throttling error.  When creating
+custom rate limiter, implementing this method will allow you to adjust
+the rate limiter's state to account for this information.
+<h3>See</h3><ul>
+<li><a href="Config.html">Config</a></li>
+<li><a href="../classes/SimpleRateLimiter.html">SimpleRateLimiter</a></li>
+</ul>
+</div></section>
+<section class="tsd-panel tsd-hierarchy">
+<h4>Hierarchy</h4>
+<ul class="tsd-hierarchy">
+<li><span class="target">RateLimiter</span></li></ul></section>
+<section class="tsd-panel">
+<h4>Implemented by</h4>
+<ul class="tsd-hierarchy">
+<li><a href="../classes/SimpleRateLimiter.html" class="tsd-signature-type" data-tsd-kind="Class">SimpleRateLimiter</a></li></ul></section>
+<section class="tsd-panel-group tsd-index-group">
+<section class="tsd-panel tsd-index-panel">
+<details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
+<h5 class="tsd-index-heading uppercase" role="button" aria-expanded="false" tabIndex=0><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1.5 5.50969L8 11.6609L14.5 5.50969L12.5466 3.66086L8 7.96494L3.45341 3.66086L1.5 5.50969Z" fill="var(--color-text)"></path></svg> Index</h5></summary>
+<div class="tsd-accordion-details">
+<section class="tsd-index-section">
+<h3 class="tsd-index-heading">Methods</h3>
+<div class="tsd-index-list"><a href="RateLimiter.html#consumeUnits" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF4DB8" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-2048-path"></rect><path d="M9.162 16V7.24H10.578L11.514 10.072C11.602 10.328 11.674 10.584 11.73 10.84C11.794 11.088 11.842 11.28 11.874 11.416C11.906 11.28 11.954 11.088 12.018 10.84C12.082 10.584 12.154 10.324 12.234 10.06L13.122 7.24H14.538V16H13.482V12.82C13.482 12.468 13.49 12.068 13.506 11.62C13.53 11.172 13.558 10.716 13.59 10.252C13.622 9.78 13.654 9.332 13.686 8.908C13.726 8.476 13.762 8.1 13.794 7.78L12.366 12.16H11.334L9.894 7.78C9.934 8.092 9.97 8.456 10.002 8.872C10.042 9.28 10.078 9.716 10.11 10.18C10.142 10.636 10.166 11.092 10.182 11.548C10.206 12.004 10.218 12.428 10.218 12.82V16H9.162Z" fill="var(--color-text)" id="icon-2048-text"></path></svg><span>consume<wbr/>Units</span></a>
+<a href="RateLimiter.html#onThrottle" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>on<wbr/>Throttle</span></a>
+<a href="RateLimiter.html#setLimit" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>set<wbr/>Limit</span></a>
+</div></section></div></details></section></section>
+<section class="tsd-panel-group tsd-member-group">
+<h2>Methods</h2>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="consumeUnits" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>consume<wbr/>Units</span><a href="#consumeUnits" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+<li class="tsd-signature tsd-anchor-link" id="consumeUnits.consumeUnits-1">consume<wbr/>Units<span class="tsd-signature-symbol">(</span>units<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, timeout<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, consumeOnTimeout<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><a href="#consumeUnits.consumeUnits-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>This function should consume the number of units provided and if
+needed, block (sleep) asynchronoulsy for the amount of time computed
+from current state and the units provided.</p>
+
+<h3>Async</h3>
+<h3>Returns</h3><p>Promise resolved with the amount of time blocked in
+milliseconds (or 0 if the operation was not blocked) or rejected with
+an error if timeout is reached and <em>consumeOnTimeout</em> is
+<em>false</em></p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>units: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>Number of units to consume</p>
+</div></li>
+<li>
+<h5>timeout: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>Timeout in milliseconds.  The resulting amount
+of time to sleep should not exceed this timeout.  If the sleep time
+exceeds the timeout, the behavior should be according to
+<em>consumeOnTimeout</em> parameter, see below</p>
+</div></li>
+<li>
+<h5>consumeOnTimeout: <span class="tsd-signature-type">boolean</span></h5>
+<div class="tsd-comment tsd-typography"><p>Defines how rate limiter behaves when
+the timeout is reached.  If <em>false</em>, this call should result in
+error (use appropriate error class for your application) and the units
+should not be consumed.  If <em>true</em>, the units should be consumed
+even when timeout is reached and the call completed successfully.  In
+either case, if the computed wait time exceeds timeout, this call
+should still block for the amount of time equal to the timeout before
+either throwing an error or returning successfully (depending on the
+value of <em>consumeOnTimeout</em>).  The driver uses
+<em>consumeOnTimeout</em>=<em>true</em> when
+calling <a href="RateLimiter.html#consumeUnits">consumeUnits</a> after an operation completes
+successfully (see above), in which case the error should not be thrown
+and the result of the operation should be returned to the application</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="onThrottle" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>on<wbr/>Throttle</span><a href="#onThrottle" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+<li class="tsd-signature tsd-anchor-link" id="onThrottle.onThrottle-1">on<wbr/>Throttle<span class="tsd-signature-symbol">(</span>error<span class="tsd-signature-symbol">?: </span><a href="../classes/NoSQLError.html" class="tsd-signature-type" data-tsd-kind="Class">NoSQLError</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#onThrottle.onThrottle-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Defines the behavior of the rate limiter when throttling error occurs.
+If throttling error has occured, this usually means that current rate
+limiter state does not correctly reflect the rate of incoming
+operations and needs to be adjusted.  For example, you may remove any
+unused credits that were previously used to allow operations to
+proceed without waiting.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> error: <a href="../classes/NoSQLError.html" class="tsd-signature-type" data-tsd-kind="Class">NoSQLError</a></h5>
+<div class="tsd-comment tsd-typography"><p>An error indicating either
+<a href="../enums/ErrorCode.html#READ_LIMIT_EXCEEDED">READ_LIMIT_EXCEEDED</a> or
+<a href="../enums/ErrorCode.html#WRITE_LIMIT_EXCEEDED">WRITE_LIMIT_EXCEEDED</a></p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="setLimit" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>set<wbr/>Limit</span><a href="#setLimit" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+<li class="tsd-signature tsd-anchor-link" id="setLimit.setLimit-1">set<wbr/>Limit<span class="tsd-signature-symbol">(</span>limit<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#setLimit.setLimit-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Configures rate limiter by setting its limit in units. Note that this
+method is called both when rate limiter is configured for the first
+time and also if/when table limits change, so it may need to account
+for the current state due to outstanding operations already
+rate-limited by this instance, however there is no need to change
+state or sleep time of these outstanding operations and the new limit
+only needs to apply to the new operations issued.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>limit: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>Limit in units</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></section></section></div>
+<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+<div class="tsd-navigation settings">
+<details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility">
+<h4 class="uppercase">Member Visibility</h4><form>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
+<div class="tsd-theme-toggle">
+<h4 class="uppercase">Theme</h4><select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<nav class="tsd-navigation primary">
+<details class="tsd-index-accordion" open><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
+<div class="tsd-accordion-details">
+<ul>
+<li><a href="../modules.html">Oracle <wbr/>NoSQL <wbr/>Database <wbr/>Node.js SDK -<wbr/> v5.5.0</a>
+<ul>
+<li class="pages-entry pages-entry-menu pages-entry-depth-1"><a>Guides</a>
+<ul>
+<li class="pages-entry pages-entry-page pages-entry-depth-2"><a href="../pages/connect-cloud.html">Connecting an <wbr/>Application to <wbr/>Oracle <wbr/>NoSQL <wbr/>Database <wbr/>Cloud <wbr/>Service</a></li>
+<li class="pages-entry pages-entry-page pages-entry-depth-2"><a href="../pages/connect-on-prem.html">Connecting an <wbr/>Application to <wbr/>On-<wbr/>Premise <wbr/>Oracle <wbr/>NoSQL <wbr/>Database</a></li>
+<li class="pages-entry pages-entry-page pages-entry-depth-2"><a href="../pages/tables.html">Working <wbr/>With <wbr/>Tables</a></li></ul></li></ul></li></ul></div></details></nav>
+<nav class="tsd-navigation secondary menu-sticky">
+<ul>
+<li class="current tsd-kind-interface"><a href="RateLimiter.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg><span>Rate<wbr/>Limiter</span></a>
+<ul>
+<li class="tsd-kind-method tsd-parent-kind-interface"><a href="RateLimiter.html#consumeUnits" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>consume<wbr/>Units</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface"><a href="RateLimiter.html#onThrottle" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>on<wbr/>Throttle</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface"><a href="RateLimiter.html#setLimit" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>set<wbr/>Limit</a></li></ul></li></ul></nav></div></div>
+<div class="container tsd-generator">
+<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
+<div class="overlay"></div><script src="../assets/main.js"></script></body></html>
