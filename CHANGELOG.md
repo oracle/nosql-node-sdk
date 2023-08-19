@@ -4,11 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## Unpublished
+
+* Support for query array_collect and count(distinct) operators.
+
 ## 5.5.0 - 2023-08-17
 
 **Added**
 
-* Support for query array_collect and count(distinct) operators.
 * Cloud only: support for session token-based authentication.
 * TypeScript support.  This includes declarations for all classes and types
 used by the SDK, related tests, new examples and new documentation.
