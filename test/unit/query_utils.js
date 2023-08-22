@@ -58,9 +58,7 @@ function compTypeRank(val) {
     if (Array.isArray(val)) {
         return CompTypeRank.ARRAY;
     }
-    //Note that currently driver uses object for returned Map columns,
-    //so we only consider plain objects.
-    if (isPlainObject(val)) {
+    if (val instanceof Map || isPlainObject(val)) {
         return CompTypeRank.OBJECT;
     }
     assert(false, 'Unexpected type of value for comparison');
@@ -154,6 +152,10 @@ class QueryUtils extends Utils {
         return rows.map(row => QueryUtils.projectRow(row, fields));
     }
 
+    static _chkConvMap(val) {
+        return val instanceof Map ? Utils.map2object(val) : val;
+    }
+
     //This always compares in ascending order.
     //nullRank: nulls last = 1 (default), nulls first = -1
     static compareFieldValues(val1, val2, nullRank = 1) {
@@ -194,6 +196,11 @@ class QueryUtils extends Utils {
             return QueryUtils.compareRows(val1, val2, Object.keys(val1),
                 nullRank);
         case CompTypeRank.OBJECT: {
+            //compareRows() assumes values are objects so we have to convert
+            //maps, if any, to objects.
+            val1 = QueryUtils._chkConvMap(val1);
+            val2 = QueryUtils._chkConvMap(val2);
+
             const keys1 = Object.keys(val1).sort();
             const keys2 = Object.keys(val2).sort();
             const keyRes = QueryUtils.compareFieldValues(keys1, keys2,
@@ -246,12 +253,18 @@ class QueryUtils extends Utils {
         return QueryUtils._sortRows(rows, fields, -1);
     }
 
-    static _isNullOrEmpty(val) {
+    //SQL NULL, JSON NULL or EMPTY
+    static _isAnyNullOrEmpty(val) {
         return val == null || val === EMPTY_VALUE;
     }
 
+    //SQL NULL or EMPTY
+    static _isNullOrEmpty(val) {
+        return val === undefined || val === EMPTY_VALUE;
+    }
+
     static _skipForMinMax(val) {
-        return QueryUtils._isNullOrEmpty(val);
+        return QueryUtils._isAnyNullOrEmpty(val);
     }
 
     static _aggregate(rows, field, skipFunc, aggrFunc, initVal) {
@@ -261,7 +274,9 @@ class QueryUtils extends Utils {
             if (skipFunc(val)) {
                 continue;
             }
-            ret = (ret === initVal) ? val : aggrFunc(ret, val);
+            //Fits our existing aggregate functions, since we never aggregate
+            //with undefined, but may need to be revised.
+            ret = (ret === undefined) ? val : aggrFunc(ret, val);
         }
         return ret;
     }
@@ -269,7 +284,7 @@ class QueryUtils extends Utils {
     //shortcut for use in group by
     static count(rows, field) {
         return field == null ? rows.length :
-            QueryUtils._aggregate(rows, field, QueryUtils._isNullOrEmpty,
+            QueryUtils._aggregate(rows, field, QueryUtils._isAnyNullOrEmpty,
                 v1 => v1 + 1, 0);
     }
 
@@ -293,7 +308,7 @@ class QueryUtils extends Utils {
         const res = QueryUtils._aggregate(rows, field,
             v => !NumberUtils.isNumber(v), (v1, v2) => {
                 if (NumberUtils.isNumber(v1)) {
-                    v1 = { cnt: 1, val: v1};
+                    v1 = { cnt: 1, val: v1 };
                 }
                 return {
                     cnt: v1.cnt + 1,
@@ -303,6 +318,25 @@ class QueryUtils extends Utils {
         //handle cases of only one row or multiple rows
         return res === undefined || NumberUtils.isNumber(res) ?
             res : NumberUtils.div(res.val, res.cnt);
+    }
+
+    static collect(rows, field) {
+        return QueryUtils._aggregate(rows, field, QueryUtils._isNullOrEmpty,
+            (arr, val) => { arr.push(val); return arr; }, []);
+    }
+
+    static collectDistinct(rows, field) {
+        return QueryUtils._aggregate(rows, field, QueryUtils._isNullOrEmpty,
+            (arr, val) => {
+                if (!arr.some(v => !QueryUtils.compareFieldValues(val, v))) {
+                    arr.push(val);    
+                }
+                return arr;
+            }, []);
+    }
+
+    static countDistinct(rows, field) {
+        return QueryUtils.collectDistinct(rows, field).length;
     }
 
     //create array of arrays where each element array contains rows for

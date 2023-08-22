@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 ## Unpublished
 
+* Support for query array_collect and count(distinct) operators.
+
+## 5.5.0 - 2023-08-17
+
 **Added**
 
 * Cloud only: support for session token-based authentication.

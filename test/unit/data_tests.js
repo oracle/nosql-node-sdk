@@ -112,9 +112,9 @@ function getIntValue(i, opt) {
 const LONG_EDGE_CASES = [ 0n, -1n, LONG_MAX, LONG_MIN, INT_MAX, INT_MIN,
     INT_MAX + 1n, INT_MIN - 1n, 0x10000000n + 121n, -0x10000000n - 119n,
     BigInt(Number.MAX_SAFE_INTEGER),
-    BigInt(Number.MAX_SAFE_INTEGER + 1),
+    BigInt(Number.MAX_SAFE_INTEGER) + 2n,
     BigInt(Number.MIN_SAFE_INTEGER),
-    BigInt(Number.MIN_SAFE_INTEGER - 1),
+    BigInt(Number.MIN_SAFE_INTEGER) - 2n,
     BigInt(Math.floor(Number.MAX_SAFE_INTEGER / 0x10000000) * 0x10000000 +
         121),
     BigInt(Math.ceil(Number.MAX_SAFE_INTEGER / 0x10000000) * 0x10000000 +

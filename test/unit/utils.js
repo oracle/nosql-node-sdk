@@ -468,9 +468,19 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
         case 'JSON':
             return this.verifyJSON(val, val0);
         case 'ARRAY':
+        case 'UNORDERED_ARRAY':
             expect(val).to.be.an('array');
             expect(val0).to.be.an('array');
             expect(val.length).to.equal(val0.length);
+            //used to verify results of array_collect
+            if (type.name === 'UNORDERED_ARRAY') {
+                //This type is only possible from query results, we use a
+                //method from QueryUtils as the sort comparator.
+                expect(this.compareFieldValues, 'Must use verify methods \
+from QueryUtils to verify query results').to.exist;
+                val = val.slice().sort(this.compareFieldValues);
+                val0 = val0.slice().sort(this.compareFieldValues);
+            }
             val.forEach((v, i) => {
                 this.verifyFieldValue(v, val0[i], type.elemType);
             });

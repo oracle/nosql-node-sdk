@@ -519,10 +519,16 @@ if (kvVer) {
 }
 
 const writeManyWithChildTablesVer = '22.3.3';
-
 function supportsMultiTableWriteMany(kvVer) {
     return kvVer == null || compareVersions(kvVer,
         writeManyWithChildTablesVer) >= 0;
+}
+
+//Support for query operators array_collect, array_collect(distinct) and
+//count(distinct).
+const arrayCollectVer = '23.3';
+function supportsArrayCollect(kvVer) {
+    return kvVer == null || compareVersions(kvVer, arrayCollectVer) >= 0;
 }
 
 module.exports = {
@@ -576,5 +582,6 @@ module.exports = {
     verifyEndpoint,
     pre20_1,
     pre20_2,
-    supportsMultiTableWriteMany
+    supportsMultiTableWriteMany,
+    supportsArrayCollect
 };
