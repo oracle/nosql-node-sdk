@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 **Added**
 
 * Support for query array_collect and count(distinct) operators.
-* Cloud only: Added OCI region codes: AGA BOG VAP NAP AVZ
+* Cloud only: Added OCI region codes: AGA BOG VAP NAP AVZ OZZ DRS
 
 ## 5.5.0 - 2023-08-17
 
