@@ -27,6 +27,8 @@ function testAdminDDLOpt(res: AdminResult) {
     opt.delay = "1000";
     // @ts-expect-error Invalid extra property in opt.
     opt.compartment = "c";
+    // @ts-expect-error Invalid extra property in opt.
+    opt.namespace = "n";
 }
 
 function testAdminResult(res: AdminResult) {
@@ -86,6 +88,8 @@ function testAdminStatusOpt() {
     opt.timeout = "10000";
     // @ts-expect-error Invalid extra property.
     opt.delay = 1000;
+    // @ts-expect-error Invalid extra property.
+    opt.namespace = "n";
 }
 
 async function testAdminStatus(res: AdminResult) {
@@ -125,6 +129,8 @@ function testAdminListOpt() {
     opt.delay = "1000";
     // @ts-expect-error Invalid extra property in opt.
     opt.complete = true;
+    // @ts-expect-error Invalid extra option.
+    opt.namespace = "n";
 }
 
 async function testListNamespaces() {

@@ -6,7 +6,7 @@
  */
 
 import type { CapacityMode } from "./constants";
-import type { PutOpt, DeleteOpt } from "./opt";
+import type { PutOpt, DeleteOpt, WriteMultipleOpt } from "./opt";
 import type { SyncPolicy, ReplicaAckPolicy } from "./durability";
 import type { AnyRow, KeyField, RowKey, FieldValue } from "./data";
 import type { getAuthorization } from "./auth/config";
@@ -273,12 +273,12 @@ export interface FieldRange {
  * <em>delete</em> key) and may contain additional properties representing
  * options for this sub operation. These options are the same as used for
  * {@link NoSQLClient#put} and {@link NoSQLClient#delete} and they override
- * options specified in <em>opt</em> parameter of
- * {@link NoSQLClient#writeMany}
- * for this sub operation. Exceptions to this are <em>timeout</em>,
- * <em>compartment</em> and <em>durability</em> which cannot be specified per
- * sub-operation, but only for the whole {@link NoSQLClient#writeMany}
- * operation.
+ * options specified in {@link WriteMultipleOpt}.
+ * for this sub operation. Exceptions to this are
+ * {@link WriteMultipleOpt#timeout}, {@link WriteMultipleOpt#compartment},
+ * {@link WriteMultipleOpt#namespace} and {@link WriteMultipleOpt#durability}
+ * which cannot be specified per sub-operation, but only for the whole
+ * {@link NoSQLClient#writeMany} operation.
  * <p>
  * If issuing operations for multiple tables, you must also specify
  * {@link WriteOperation#tableName} for each operation. See

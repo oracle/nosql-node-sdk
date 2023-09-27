@@ -26,10 +26,27 @@ export interface CompartmentOpt {
 }
 
 /**
+ * Op-premises only. Base option to specify namespace.
+ */
+export interface NamespaceOpt {
+    /**
+     * On-premises only.
+     * Namespace to use for this operation.
+     * <p>
+     * Note: if a namespace is specified in the table name for the request
+     * (using the <em>namespace:table_name</em> format), that value will
+     * override this setting.
+     * @defaultValue {@link Config#namespace | Config.namespace}.
+     * @see {@link Config.namespace}
+     */
+     namespace?: string;
+}
+
+/**
  * Options passed to {@link NoSQLClient.tableDDL},
  * {@link NoSQLClient#setTableLimits} and {@link NoSQLClient#setTableTags}.
  */
- export interface ModifyTableOpt extends CompartmentOpt {
+ export interface ModifyTableOpt extends CompartmentOpt, NamespaceOpt {
      /**
       * Timeout for the operation in milliseconds.  Defaults to
       * {@link Config#ddlTimeout} (if {@link complete} is true, separate
@@ -101,13 +118,14 @@ export interface TimeoutOpt {
 /**
  * Options passed to {@link NoSQLClient#getTable}.
  */
-export interface GetTableOpt extends CompartmentOpt, TimeoutOpt {}
+export interface GetTableOpt extends CompartmentOpt, NamespaceOpt,
+    TimeoutOpt {}
 
 /**
  * Options passed to {@link NoSQLClient#forCompletion} and
  * {@link NoSQLClient#forTableState}.
  */
-export interface CompletionOpt extends CompartmentOpt {
+export interface CompletionOpt extends CompartmentOpt, NamespaceOpt {
     /**
      * Timeout in milliseconds, i.e. how long to keep polling for operation
      * completion.  Defaults to {@link Config#tablePollTimeout} for table DDL
@@ -167,7 +185,8 @@ export interface TableUsageOpt extends CompartmentOpt, TimeoutOpt {
 /**
  * Options passed to {@link NoSQLClient#getIndex}.
  */
-export interface GetIndexOpt extends CompartmentOpt, TimeoutOpt {}
+export interface GetIndexOpt extends CompartmentOpt, NamespaceOpt,
+    TimeoutOpt {}
 
 /**
  * Options passed to {@link NoSQLClient#getIndexes}.
@@ -230,7 +249,8 @@ export interface ConsistencyOpt {
 /**
  * Options passed to {@link NoSQLClient#get}.
  */
-export interface GetOpt extends CompartmentOpt, TimeoutOpt, ConsistencyOpt {}
+export interface GetOpt extends CompartmentOpt, NamespaceOpt, TimeoutOpt,
+    ConsistencyOpt {}
 
 /**
  * On-premises only. Base option to specify durability.
@@ -249,7 +269,8 @@ export interface DurabilityOpt {
  * Options passed to {@link NoSQLClient#putIfAbsent},
  * {@link NoSQLClient#putIfPresent} and {@link NoSQLClient#putIfVersion}.
  */
-export interface PutIfOpt extends CompartmentOpt, TimeoutOpt, DurabilityOpt {
+export interface PutIfOpt extends CompartmentOpt, NamespaceOpt, TimeoutOpt,
+    DurabilityOpt {
     /**
      * If set to true, existing row and its version will be returned as part
      * of {@link PutResult} if put operation fails as discussed in
@@ -322,7 +343,7 @@ export interface PutOpt extends PutIfOpt {
 /**
  * Options passed to {@link NoSQLClient#deleteIfVersion}.
  */
-export interface DeleteIfOpt extends CompartmentOpt, TimeoutOpt,
+export interface DeleteIfOpt extends CompartmentOpt, NamespaceOpt, TimeoutOpt,
     DurabilityOpt {
     /**
      * If set to true, existing row and its version will be returned as part
@@ -346,7 +367,7 @@ export interface DeleteOpt extends DeleteIfOpt {
 /**
  * Options passed to {@link NoSQLClient#deleteRange}.
  */
-export interface MultiDeleteOpt extends CompartmentOpt,
+export interface MultiDeleteOpt extends CompartmentOpt, NamespaceOpt,
     TimeoutOpt, DurabilityOpt {
     /**
      * Field range based on columns not provided in partial key.  For more
@@ -415,7 +436,7 @@ export interface DeleteManyOpt extends DeleteOpt, AbortOnFailOpt {}
 /**
  * Options passed to {@link NoSQLClient#prepare}.
  */
-export interface PrepareOpt extends CompartmentOpt, TimeoutOpt {
+export interface PrepareOpt extends CompartmentOpt, NamespaceOpt, TimeoutOpt {
 
     /**
      * If <em>true</em>, requests a printout of query execution plan to be
@@ -436,7 +457,8 @@ export interface PrepareOpt extends CompartmentOpt, TimeoutOpt {
  * Options passed to {@link NoSQLClient#query} and
  * {@link NoSQLClient#queryIterable}.
  */
-export interface QueryOpt extends CompartmentOpt, TimeoutOpt, ConsistencyOpt {
+export interface QueryOpt extends CompartmentOpt, NamespaceOpt, TimeoutOpt,
+    ConsistencyOpt {
     /**
      * On-premises only.
      * {@link Durability} value used for the update query operation.  Defaults

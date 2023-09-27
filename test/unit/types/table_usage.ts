@@ -28,6 +28,8 @@ function testTableUsageOpt() {
 
     // @ts-expect-error Invalid type for compartment.
     opt.compartment = 1;
+    // @ts-expect-error Invalid namespace option for cloud-only API.
+    opt.namespace = "namespace";
     // @ts-expect-error Invalid type for timeout.
     opt.timeout = "10000";
     // @ts-expect-error Invalid type for startTime.

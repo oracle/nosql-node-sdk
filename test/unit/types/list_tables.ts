@@ -23,6 +23,8 @@ function testListTablesOpt() {
 
     // @ts-expect-error Invalid type for compartment.
     opt.compartment = 1;
+    // @ts-expect-error Invalid type for namespace.
+    opt.namespace = 1;
     // @ts-expect-error Invalid type for timeout.
     opt.timeout = "10000";
     // @ts-expect-error Invalid type for startIndex.
