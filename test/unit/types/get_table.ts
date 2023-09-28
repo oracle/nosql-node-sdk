@@ -13,12 +13,15 @@ import { NoSQLClient, TableResult, AdminResult, TableState, CompletionOpt,
 
 const client = new NoSQLClient("nosuchfile.json");
 
-function testTableDDLOpt() {
+function testGetTableOpt() {
     let opt: GetTableOpt = {};
     opt.compartment = "c";
+    opt.namespace = "n";
 
     // @ts-expect-error Invalid type for compartment.
     opt.compartment = 1;
+    // @ts-expect-error Invalid type for namespace.
+    opt.namespace = 1;
 
     opt.timeout = 10000;
 
@@ -35,9 +38,12 @@ function testTableDDLOpt() {
 function testCompletionOpt() {
     let opt: CompletionOpt = {};
     opt.compartment = "c";
+    opt.namespace = "n";
 
     // @ts-expect-error Invalid type for compartment.
     opt.compartment = 1;
+    // @ts-expect-error Invalid type for namespace.
+    opt.namespace = 1;
 
     opt.timeout = 10000;
 

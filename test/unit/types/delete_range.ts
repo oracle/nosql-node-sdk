@@ -59,6 +59,7 @@ function testDeleteRangeOpt(ver: RowVersion, ck: MultiDeleteContinuationKey) {
     let opt: MultiDeleteOpt = {};
 
     opt.compartment = "c";
+    opt.namespace = "n";
     opt.timeout = 10000;
     opt.durability = Durabilities.COMMIT_NO_SYNC;
     opt.fieldRange = { fieldName: "id", startWith: 1, endWith: 20 };
@@ -68,6 +69,8 @@ function testDeleteRangeOpt(ver: RowVersion, ck: MultiDeleteContinuationKey) {
 
     // @ts-expect-error Invalid type for compartment.
     opt.compartment = 1;
+    // @ts-expect-error Invalid type for namespace.
+    opt.namespace = 1;
     // @ts-expect-error Invalid type for timeout.
     opt.timeout = "10000";
     // @ts-expect-error Invalid type for durability.

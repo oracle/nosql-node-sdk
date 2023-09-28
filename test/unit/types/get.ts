@@ -60,11 +60,14 @@ function testGetOpt(ver: RowVersion) {
     let opt: GetOpt = {};
 
     opt.compartment = "c";
+    opt.namespace = "n";
     opt.timeout = 10000;
     opt.consistency = Consistency.ABSOLUTE;
 
     // @ts-expect-error Invalid type for compartment.
     opt.compartment = 1;
+    // @ts-expect-error Invalid type for namespace.
+    opt.namespace = 1;
     // @ts-expect-error Invalid type for timeout.
     opt.timeout = "10000";
     // @ts-expect-error Invalid type for consistency.

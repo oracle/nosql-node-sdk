@@ -23,6 +23,7 @@ const client = new NoSQLClient("nosuchfile.json");
 function testWriteMultipleOpt(ver: RowVersion) {
     let opt: WriteMultipleOpt = {};
     opt.compartment = "c";
+    opt.namespace = "n";
     opt.timeout = 10000;
     opt.durability = Durabilities.COMMIT_NO_SYNC;
     opt.ttl = 1;
@@ -40,6 +41,8 @@ function testWriteMultipleOpt(ver: RowVersion) {
 
     // @ts-expect-error Invalid type for compartment.
     opt.compartment = 1;
+    // @ts-expect-error Invalid type for namespace.
+    opt.namespace = 1;
     // @ts-expect-error Invalid type for timeout.
     opt.timeout = "10000";
     // @ts-expect-error Invalid type for durability.
@@ -194,6 +197,8 @@ function testWriteOperationTyped(ver: RowVersion) {
 
     // @ts-expect-error Cannot specify compartment in WriteOperation.
     op = { put: myRow1, compartment: "c" };
+    // @ts-expect-error Cannot specify namespace in WriteOperation.
+    op = { put: myRow1, namespace: "n" };
     // @ts-expect-error Cannot specify timeout in WriteOperation.
     op = { put: myRow1, timeout: 10000 };
     // @ts-expect-error Cannot specify durability in WriteOperation.
@@ -243,7 +248,7 @@ function testWriteOperationTyped(ver: RowVersion) {
     op = { delete: { col6: 1 } };
 }
 
-function testWriteOperationUnyped(ver: RowVersion) {
+function testWriteOperationUntyped(ver: RowVersion) {
     let op: WriteOperation;
     
     op = { put: myRow1 };
@@ -310,6 +315,8 @@ function testWriteOperationUnyped(ver: RowVersion) {
 
     // @ts-expect-error Cannot specify compartment in WriteOperation.
     op = { put: myRow1, compartment: "c" };
+    // @ts-expect-error Cannot specify namespace in WriteOperation.
+    op = { put: myRow1, namespace: "n" };
     // @ts-expect-error Cannot specify timeout in WriteOperation.
     op = { put: myRow1, timeout: 10000 };
     // @ts-expect-error Cannot specify durability in WriteOperation.

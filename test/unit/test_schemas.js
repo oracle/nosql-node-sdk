@@ -12,34 +12,38 @@ const DEF_TABLE_LIMITS = require('./common').DEF_TABLE_LIMITS;
 const enumColValues = require('./common').enumColValues;
 const _id = require('./common')._id;
 
-const SIMPLE_TABLE = {
-    name: TABLE_NAME_PFX + 'T1',
-    limits: DEF_TABLE_LIMITS,
-    fields: [
-        {
-            name: 'id',
-            type: 'INTEGER'
-        },
-        {
-            name: 'lastName',
-            type: 'STRING'
-        },
-        {
-            name: 'firstName',
-            type: 'STRING'
-        },
-        {
-            name: 'info',
-            type: 'JSON',
-        },
-        {
-            name: 'startDate',
-            type: 'TIMESTAMP',
-            typeSpec: 'TIMESTAMP(3)'
-        }
-    ],
-    primaryKey: [ 'id' ]
-};
+function simpleTableWithName(name) {
+    return {
+        name,
+        limits: DEF_TABLE_LIMITS,
+        fields: [
+            {
+                name: 'id',
+                type: 'INTEGER'
+            },
+            {
+                name: 'lastName',
+                type: 'STRING'
+            },
+            {
+                name: 'firstName',
+                type: 'STRING'
+            },
+            {
+                name: 'info',
+                type: 'JSON',
+            },
+            {
+                name: 'startDate',
+                type: 'TIMESTAMP',
+                typeSpec: 'TIMESTAMP(3)'
+            }
+        ],
+        primaryKey: [ 'id' ]
+    };        
+}
+
+const SIMPLE_TABLE = simpleTableWithName(TABLE_NAME_PFX + 'T1');
 
 const SIMPLE_TABLE_INDEXES = [
     {
@@ -134,17 +138,19 @@ const LIST_TABLES_TESTS = [
     }
 ];
 
+const SIMPLE_TABLE_ROW = {
+    id: 1,
+    lastName: 'Smith',
+    firstName: 'John',
+    info: { blah: 'blah' },
+    startDate: new Date() 
+};
+
 const TABLE_USAGE_TESTS = [
     {
         desc: 'getTableUsage test 1',
         table: SIMPLE_TABLE,
-        row: {
-            id: 1,
-            lastName: 'Smith',
-            firstName: 'John',
-            info: { blah: 'blah' },
-            startDate: new Date() 
-        }
+        row: SIMPLE_TABLE_ROW
     }
 ];
 
@@ -323,7 +329,9 @@ const ALL_TYPES_CHILD_TABLE = {
 module.exports = {
     TABLE_NAME_PFX,
     DEF_TABLE_LIMITS,
+    simpleTableWithName,
     SIMPLE_TABLE,
+    SIMPLE_TABLE_ROW,
     TABLE_DDL_TESTS,
     ADMIN_DDL_TESTS,
     GET_INDEXES_TESTS,

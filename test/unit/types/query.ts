@@ -18,12 +18,15 @@ function testPrepareOpt() {
     let opt: PrepareOpt = {};
 
     opt.compartment = "c";
+    opt.namespace = "n";
     opt.timeout = 10000;
     opt.getQueryPlan = true;
     opt.getResultSchema = true;
 
     // @ts-expect-error Invalid type for compartment.
     opt.compartment = 1;
+    // @ts-expect-error Invalid type for namespace.
+    opt.namespace = 1;
     // @ts-expect-error Invalid type for timeout.
     opt.timeout = "10000";
     // @ts-expect-error Invalid type for getQueryPlan.
@@ -121,6 +124,7 @@ function testQueryOpt(ver: RowVersion, ck: QueryContinuationKey) {
     let opt: QueryOpt = {};
 
     opt.compartment = "c";
+    opt.namespace = "n";
     opt.timeout = 10000;
     opt.consistency = Consistency.ABSOLUTE;
     opt.durability = Durabilities.COMMIT_NO_SYNC;
@@ -133,6 +137,8 @@ function testQueryOpt(ver: RowVersion, ck: QueryContinuationKey) {
 
     // @ts-expect-error Invalid type for compartment.
     opt.compartment = 1;
+    // @ts-expect-error Invalid type for namespace.
+    opt.namespace = 1;
     // @ts-expect-error Invalid type for timeout.
     opt.timeout = "10000";
     // @ts-expect-error Invalid type for consistency.

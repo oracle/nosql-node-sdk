@@ -34,6 +34,7 @@ function testConfig(retryCfg: RetryConfig, numConfig: DBNumberConfig,
     cfg.durability = Durabilities.COMMIT_NO_SYNC;
     cfg.maxMemoryMB = 512;
     cfg.compartment = "compartment";
+    cfg.namespace = "namespace";
     cfg.retry = retryCfg;
     cfg.retry = null;
     cfg.httpOpt = httpOpt;
@@ -79,6 +80,8 @@ function testConfig(retryCfg: RetryConfig, numConfig: DBNumberConfig,
     cfg.maxMemoryMB = "100";
     // @ts-expect-error Invalid compartment.
     cfg.compartment = 1;
+    // @ts-expect-error Invalid namespace.
+    cfg.namespace = 1;
     // @ts-expect-error Invalid retry config.
     cfg.retry = "retry";
     // @ts-expect-error Invalid tablePollDelay.

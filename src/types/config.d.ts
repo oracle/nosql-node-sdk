@@ -226,6 +226,18 @@ export interface Config {
     compartment?: string;
 
     /**
+     * On-premises only. Default namespace for operations with this
+     * {@link NoSQLClient} instance.
+     * Any non-namespace qualified table name in requests and/or SQL
+     * statements will be resolved/qualified to the specified namespace.
+     * <p>
+     * Note: if a namespace is specified in the table name for the request
+     * (using the <em>namespace:table_name</em> format), that value will
+     * override this setting.
+     */
+    namespace?: string;
+
+    /**
      * Configuration for operation retries as specified by {@link RetryConfig}
      * object. If not specified, default retry configuration is used, see
      * {@link RetryConfig}. May be set to <em>null</em> to disable operation

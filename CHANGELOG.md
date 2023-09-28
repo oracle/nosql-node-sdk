@@ -10,6 +10,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 * Support for query array_collect and count(distinct) operators.
 * Cloud only: Added OCI region codes: AGA BOG VAP NAP AVZ OZZ DRS
+* On-prem only: allow to specify namespace as a configuration option or in
+options for each operation.
+
+**Fixed**
+
+* Modified index.js to allow named imports from JavaScript when using ES6
+modules.
 
 ## 5.5.0 - 2023-08-17
 

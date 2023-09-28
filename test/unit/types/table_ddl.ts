@@ -57,9 +57,12 @@ function testTableDDLOpt(res: TableResult) {
     let opt: TableDDLOpt = {};
 
     opt.compartment = "c";
+    opt.namespace = "n";
 
     // @ts-expect-error Invalid type for compartment.
     opt.compartment = 1;
+    // @ts-expect-error Invalid type for namespace.
+    opt.namespace = 1;
 
     opt.timeout = 10000;
 

@@ -72,6 +72,7 @@ function testDurability() {
 function testPutOpt(ver: RowVersion) {
     let opt1: PutIfOpt = {};
     opt1.compartment = "c";
+    opt1.namespace = "n";
     opt1.timeout = 10000;
     opt1.durability = Durabilities.COMMIT_NO_SYNC;
     opt1.ttl = 1;
@@ -85,6 +86,8 @@ function testPutOpt(ver: RowVersion) {
 
     // @ts-expect-error Invalid type for compartment.
     opt1.compartment = 1;
+    // @ts-expect-error Invalid type for namespace.
+    opt1.namespace = 1;
     // @ts-expect-error Invalid type for timeout.
     opt1.timeout = "10000";
     // @ts-expect-error Invalid type for durability.

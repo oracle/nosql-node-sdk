@@ -11,28 +11,27 @@ const con = require('./lib/constants');
 const dur = require('./lib/durability');
 const err = require('./lib/error');
 
-module.exports = {
-    NoSQLClient: require('./lib/nosql_client'),
-    PreparedStatement: require('./lib/stmt').PreparedStatement,
-    ServiceType: con.ServiceType,
-    Region: require('./lib/region'),
-    Consistency: con.Consistency,
-    CapacityMode: con.CapacityMode,
-    ReplicaAckPolicy: dur.ReplicaAckPolicy,
-    Durabilities: dur.Durabilities,
-    SyncPolicy: dur.SyncPolicy,
-    ScanDirection: con.ScanDirection,
-    TableState: con.TableState,
-    AdminState: con.AdminState,
-    ErrorCode: require('./lib/error_code'),
-    NoSQLError: err.NoSQLError,
-    NoSQLArgumentError: err.NoSQLArgumentError,
-    NoSQLProtocolError: err.NoSQLProtocolError,
-    NoSQLUnsupportedProtocolError: err.NoSQLUnsupportedProtocolError,
-    NoSQLNetworkError: err.NoSQLNetworkError,
-    NoSQLServiceError: err.NoSQLServiceError,
-    NoSQLTimeoutError: err.NoSQLTimeoutError,
-    NoSQLAuthorizationError: err.NoSQLAuthorizationError,
-    NoSQLQueryError: err.NoSQLQueryError,
-    TTLUtil: require('./lib/ttl_util')
-};
+exports.NoSQLClient =require('./lib/nosql_client');
+exports.PreparedStatement = require('./lib/stmt').PreparedStatement;
+exports.ServiceType = con.ServiceType;
+exports.Region = require('./lib/region');
+exports.Consistency = con.Consistency;
+exports.CapacityMode = con.CapacityMode;
+exports.ReplicaAckPolicy = dur.ReplicaAckPolicy;
+exports.Durabilities =  dur.Durabilities;
+exports.SyncPolicy = dur.SyncPolicy;
+exports.ScanDirection = con.ScanDirection;
+exports.TableState = con.TableState;
+exports.AdminState = con.AdminState;
+exports.StatsLevel = con.StatsLevel;
+exports.ErrorCode = require('./lib/error_code');
+exports.NoSQLError = err.NoSQLError;
+exports.NoSQLArgumentError = err.NoSQLArgumentError;
+exports.NoSQLProtocolError = err.NoSQLProtocolError;
+exports.NoSQLUnsupportedProtocolError = err.NoSQLUnsupportedProtocolError;
+exports.NoSQLNetworkError = err.NoSQLNetworkError;
+exports.NoSQLServiceError = err.NoSQLServiceError;
+exports.NoSQLTimeoutError = err.NoSQLTimeoutError;
+exports.NoSQLAuthorizationError = err.NoSQLAuthorizationError;
+exports.NoSQLQueryError = err.NoSQLQueryError;
+exports.TTLUtil = require('./lib/ttl_util');
