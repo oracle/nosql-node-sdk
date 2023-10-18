@@ -10,11 +10,11 @@
 const expect = require('chai').expect;
 const util = require('util');
 const mockfs = require('mock-fs');
-const NoSQLClient = require('../../../index').NoSQLClient;
-const NoSQLArgumentError = require('../../../index').NoSQLArgumentError;
+const NoSQLClient = require('../../../../index').NoSQLClient;
+const NoSQLArgumentError = require('../../../../index').NoSQLArgumentError;
 const defaultOCIFileLines = require('./config').defaultOCIFileLines;
-const Utils = require('../utils');
-const verifyEndpoint = require('../common').verifyEndpoint;
+const Utils = require('../../utils');
+const verifyEndpoint = require('../../common').verifyEndpoint;
 const writeFileLines = require('./utils').writeFileLines;
 const DEFAULT_OCI_DIR = require('./constants').DEFAULT_OCI_DIR;
 const DEFAULT_OCI_FILE = require('./constants').DEFAULT_OCI_FILE;
@@ -104,7 +104,7 @@ region`, function() {
 //The driver loads this module after the test has already started, which would
 //not work with mocked file system.  Instead, we pre-cache this module before
 //mockfs is invoked.
-require('../../../lib/auth/iam/auth_provider');
+require('../../../../lib/auth/iam/auth_provider');
 
 if (!Utils.isOnPrem) {
     describe('Test region in OCI config file', function() {

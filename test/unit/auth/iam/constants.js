@@ -10,8 +10,9 @@
 const path = require('path');
 const os = require('os');
 
-const COMPARTMENT_ID = 'test_compartment';
+const COMPARTMENT_ID = 'ocid1.compartment.oc1..compartment';
 const SERVICE_HOST = 'localhost';
+const SERVICE_ENDPOINT = new URL('https://' + SERVICE_HOST);
 const TENANT_ID = 'ocid1.tenancy.oc1..tenancy';
 const USER_ID = 'ocid1.user.oc1..user';
 const FINGERPRINT = 'fingerprint';
@@ -25,11 +26,12 @@ const DELEGATION_TOKEN = 'token-header.token-payload.token-sig';
 const DELEGATION_TOKEN2 = 'token-header2.token-payload2.token-sig2';
 const SESSION_TOKEN_FILE = path.resolve('security_token');
 const SESSION_TOKEN = 'token-header.token-payload.token-sig';
+const RES_COMPARTMENT = 'ocid1.compartment.oc1..resource';
+const RES_TENANT = 'ocid1.tenancy.oc1..resource';
 
 //default OCI config file
 const DEFAULT_OCI_DIR = path.join(os.homedir(), '.oci');
 const DEFAULT_OCI_FILE = path.join(DEFAULT_OCI_DIR, 'config');
-const DEFAULT_OCI_FILE_BACKUP = DEFAULT_OCI_FILE + '.nosqlnodetest.sav';
 
 //instance certificates together with tenantId and fingerprint
 
@@ -97,6 +99,7 @@ JnTJyeO3vhWjdW9RI7+ms4h1
 module.exports = {
     COMPARTMENT_ID,
     SERVICE_HOST,
+    SERVICE_ENDPOINT,
     TENANT_ID,
     USER_ID,
     FINGERPRINT,
@@ -112,6 +115,7 @@ module.exports = {
     SESSION_TOKEN,
     DEFAULT_OCI_DIR,
     DEFAULT_OCI_FILE,
-    DEFAULT_OCI_FILE_BACKUP,
+    RES_COMPARTMENT,
+    RES_TENANT,
     CERT_INFO
 };

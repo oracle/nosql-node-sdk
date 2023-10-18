@@ -14,13 +14,17 @@ const expect = chai.expect;
 const util = require('util');
 const crypto = require('crypto');
 const fs = require('fs');
-const Utils = require('../utils');
-const HttpConstants = require('../../../lib/constants').HttpConstants;
-const AuthConfig = require('../../../lib/auth/config');
+const Utils = require('../../utils');
+const HttpConstants = require('../../../../lib/constants').HttpConstants;
+const IAMAuthorizationProvider =
+    require('../../../../lib/auth/iam/auth_provider');
 const SERVICE_HOST = require('./constants').SERVICE_HOST;
+const SERVICE_ENDPOINT = require('./constants').SERVICE_ENDPOINT;
 const PASSPHRASE = require('./constants').PASSPHRASE;
 const ST_HEADER = require('./constants').ST_HEADER;
 const ST_SIG = require('./constants').ST_SIG;
+const RES_COMPARTMENT = require('./constants').RES_COMPARTMENT;
+const RES_TENANT = require('./constants').RES_TENANT;
 
 const OBO_TOKEN_HEADER = 'opc-obo-token';
 
@@ -72,16 +76,11 @@ function inspect(obj) {
     return util.inspect(obj);
 }
 
-function iam2cfg(cfg, compartment, excludeURL) {
+function iam2cfg(iamCfg, compartment, excludeURL) {
     const res = {
-        endpoint: new URL('https://' + SERVICE_HOST),
+        endpoint: SERVICE_ENDPOINT,
         compartment,
-        auth: {
-            //simulate inheritance from config defaults in source code
-            iam: cfg && typeof cfg === 'object' ? Object.assign({
-                __proto__: Object.assign({}, AuthConfig.defaults.iam)
-            }, cfg) : cfg
-        }
+        auth: { iam: iamCfg }
     };
     //We have to ensure that the provider will use the same service host
     //SERVICE_HOST for auth verification to work in the tests.
@@ -98,9 +97,24 @@ function iam2cfg(cfg, compartment, excludeURL) {
     return res;
 }
 
-function makeReq(cfg) {
+function makeAuthProvider(iamCfg) {
+    return iamCfg && iamCfg._createFunc ?
+        iamCfg._createFunc() :
+        (iamCfg._noArgsCons ?
+            new IAMAuthorizationProvider() :
+            new IAMAuthorizationProvider(iamCfg));
+}
+
+function initAuthProvider(cfg) {
+    const iamCfg = cfg.auth.iam;
+    const provider = makeAuthProvider(iamCfg);
+    provider.onInit(cfg);
+    return provider;
+}
+
+function makeReq(cfg, opt) {
     const req = {
-        opt: {}
+        opt: opt ? opt : {}
     };
     if (cfg != null) {
         req.opt.__proto__ = cfg;
@@ -144,9 +158,9 @@ let stSeqNo = 0;
 function makeSTPayload(ttlMs) {
     return JSON.stringify({
         exp: Math.round((Date.now() + ttlMs)/1000),
-        //these might be useful for resource principal, ignored otherwise
-        res_tenant: 'tenantId',
-        res_compartment: 'compartmentId',
+        //these are used for resource principal, ignored otherwise
+        res_tenant: RES_TENANT,
+        res_compartment: RES_COMPARTMENT,
         _seqNo: stSeqNo++ //this will make the token unique
     });
 }
@@ -256,6 +270,8 @@ function writeFileLines(file, lines) {
 module.exports = {
     inspect,
     iam2cfg,
+    makeAuthProvider,
+    initAuthProvider,
     makeReq,
     writeOrRemove,
     createKeys,

@@ -17,10 +17,10 @@ import type { TableLimits, TableETag, DefinedTags, FreeFormTags,
 import type { TableResult, TableUsageResult, IndexInfo, ListTablesResult,
     GetResult, PutResult, DeleteResult, MultiDeleteResult,
     WriteMultipleResult, QueryResult, AdminResult, UserInfo } from "./result";
-import type { ServiceType, TableState } from "./constants";
+import type { ServiceType, TableState, AdminState } from "./constants";
 import type { RowKey, AnyRow, AnyKey } from "./data";
 import type { PreparedStatement } from "./stmt";
-import type { getAuthorization, AuthorizationProvider } from "./auth/config";
+import type { AuthorizationProvider } from "./auth/config";
 import type { IAMConfig } from "./auth/iam/types";
 import type { KVStoreAuthConfig } from "./auth/kvstore/types";
 import type { NoSQLError } from "./error";
@@ -219,10 +219,11 @@ export class NoSQLClient extends EventEmitter {
      * operations may use existing authorization while the new one is obtained
      * in the background.
      * <p>
-     * Calling this method is equivalient to calling {@link getAuthorization}
-     * which will pre-cache the authorzation in the process, so if using
-     * custom {@link AuthorizationProvider} that does not cache authorzation,
-     * this method will have no effect.
+     * Calling this method is equivalient to calling
+     * {@link AuthorizationProvider#getAuthorization} method of authorization
+     * provider which will pre-cache the authorzation in the process, so if
+     * using custom {@link AuthorizationProvider} that does not cache
+     * authorzation, this method will have no effect.
      * <p>
      * This method does not take explicit timeout, but uses timeouts specified
      * for authorization network requests for given built-in authorization
@@ -377,77 +378,109 @@ export class NoSQLClient extends EventEmitter {
         Promise<TableResult>;
     
     /**
-     * Asynchronously waits for DDL operation completion.
+     * @overload
+     * Asynchronously waits for table DDL operation completion.
      * <p>
-     * DDL operations are operations initiated by {@link NoSQLClient#tableDDL}
-     * and {@link NoSQLClient#adminDDL} (the latter On-premise only).  These
-     * are potentially long-running operations and the results returned by
-     * {@link NoSQLClient#tableDDL} or {@link NoSQLClient#adminDDL} do not
-     * imply operation completion.  {@link NoSQLClient#forCompletion} takes
-     * the result of either operation as an argument and completes (i.e. the
-     * returned {@link !Promise | Promise} resolves) when the corresponding
-     * operation is completed by the service.  This is accomplished by polling
-     * the operation state at specified intervals using
-     * {@link NoSQLClient#getTable} for table DDL operations and
-     * {@link NoSQLClient#adminStatus} for admin DDL operations.
+     * Table DDL operations are operations initiated by {@link tableDDL}.
+     * These are potentially long-running operations and {@link TableResult}
+     * returned by {@link tableDDL} does not imply operation completion.
+     * {@link forCompletion} takes {@link TableResult} as an argument and
+     * completes (i.e. the returned {@link !Promise | Promise} resolves) when
+     * the corresponding operation is completed by the service. This is
+     * accomplished by polling the operation state at specified intervals
+     * using {@link getTable} until the table state becomes
+     * {@link TableState.ACTIVE} for all operations except "DROP TABLE", in
+     * the latter case polling until the table state becomes
+     * {@link TableState.DROPPED}.
      * <p>
-     * For table DDL operations initiated by {@link NoSQLClient#tableDDL} this
-     * method asynchronously waits for state {@link TableState.ACTIVE} for all
-     * operations except "DROP TABLE", in the latter case asynchronously
-     * waiting for {@link TableState.DROPPED}.
+     * The result of this method is {@link TableResult} representing the state
+     * of the operation at the last poll. If the operation fails, this method
+     * will result in error (i.e. the returned {@link !Promise | Promise} will
+     * reject with an error) contaning information about the operation
+     * failure.
      * <p>
-     * The result of this method is {@link TableResult} or {@link AdminResult}
-     * representing the state of the operation at the last poll.  If the
-     * operation fails, this method will result in error (i.e. the returned
-     * <em>Promise</em> will reject with error) contaning information about
-     * the operation failure.
+     * Note that on operation completion, the passed {@link TableResult} is
+     * modified in place (to reflect operation completion) in addition to
+     * being returned.
      * <p>
-     * Note that on operation completion, the passed {@link TableResult} or
-     * {@link AdminResult} is modified in place (to reflect operation
-     * completion) in addition to being returned.
-     * <p>
-     * As a more convenient way to perform DDL operations to completion, you
-     * may pass {@link TableDDLOpt#complete} or {@link AdminDDLOpt#complete}
-     * corresponding operation. In this case, after DDL operation is
-     * initiated, these methods will internally use
-     * {@link NoSQLClient#forCompletion} to await operation completion.
+     * As a more convenient way to perform table DDL operations to completion,
+     * you may pass {@link TableDDLOpt#complete} to {@link tableDDL}. In this
+     * case, after table DDL operation is initiated, {@link tableDDL} will use
+     * {@link forCompletion} to await operation completion.
      * @example
-     * Using forCompletion.
+     * Using forCompletion with table DDL operation.
      * ```ts
      * try {
      *     let res = await client.tableDDL('DROP TABLE.....');
      *     await client.forCompletion(res);
-     *     res = await client.adminDDL('CREATE NAMESPACE.....');
-     *     await client.forCompletion(res);
      * } catch(err) {
-     *     // May be caused by client.forCompletion() if long running DDL
-     *     // operation was unsuccessful.
+     *     // May be caused by client.forCompletion() if long running table
+     *     // DDL operation was unsuccessful.
      * }
      * ```
-     * @overload
      * @async
      * @param {TableResult} res Result of {@link NoSQLClient#tableDDL}. This
      * result is modified by this method on operation completion
      * @param {CompletionOpt} [opt] Options object, see {@link CompletionOpt}
      * @returns {Promise} Promise of {@link TableResult}, which is the object
      * passed as first argument and modified to reflect operation completion
+     * @see {@link NoSQLClient#tableDDL}
+     * @see {@link NoSQLClient#getTable}
+     * @see {@link TableResult}
+     */
+    forCompletion(res: TableResult, opt?: CompletionOpt):
+        Promise<TableResult>;
+
+    /**
      * @overload
+     * On-premises only.
+     * Asynchronously waits for admin DDL operation completion.
+     * <p>
+     * Admin DDL operations are operations initiated by {@link adminDDL}.
+     * These are potentially long-running operations and {@link AdminResult}
+     * returned by {@link adminDDL} does not imply operation completion.
+     * {@link forCompletion} takes {@link AdminResult} as an argument
+     * and completes (i.e. the returned {@link !Promise | Promise} resolves)
+     * when the corresponding operation is completed by the service. This is
+     * accomplished by polling the operation state at specified intervals
+     * using {@link adminStatus} until the state of operation becomes
+     * {@link AdminState.COMPLETE}.
+     * <p>
+     * The result of this method is {@link AdminResult} representing the state
+     * of the operation at the last poll. If the operation fails, this method
+     * will result in error (i.e. the returned {@link !Promise | Promise} will
+     * reject with an error) contaning information about the operation
+     * failure.
+     * <p>
+     * Note that on operation completion, the passed {@link AdminResult} is
+     * modified in place (to reflect operation completion) in addition to
+     * being returned.
+     * <p>
+     * As a more convenient way to perform admin DDL operations to completion,
+     * you may pass {@link AdminDDLOpt#complete} to {@link adminDDL}. In this
+     * case, after DDL operation is initiated, {@link adminDDL} will use
+     * {@link forCompletion} to await operation completion.
+     * @example
+     * Using forCompletion with admin DDL operation.
+     * ```ts
+     * try {
+     *     res = await client.adminDDL('CREATE NAMESPACE.....');
+     *     await client.forCompletion(res);
+     * } catch(err) {
+     *     // May be caused by client.forCompletion() if long running admin
+     *     // DDL operation was unsuccessful.
+     * }
+     * ```
      * @async
      * @param {AdminResult} res Result of {@link NoSQLClient#adminDDL}. This
      * result is modified by this method on operation completion
      * @param {CompletionOpt} [opt] Options object, see {@link CompletionOpt}
      * @returns {Promise} Promise of {@link AdminResult}, which is the object
      * passed as first argument and modified to reflect operation completion
-     * @see {@link NoSQLClient#tableDDL}
-     * @see {@link NoSQLClient#getTable}
-     * @see {@link TableResult}
      * @see {@link NoSQLClient#adminDDL}
      * @see {@link NoSQLClient#adminStatus}
      * @see {@link AdminResult}
      */
-    forCompletion(res: TableResult, opt?: CompletionOpt):
-        Promise<TableResult>;
-
     forCompletion(res: AdminResult, opt?: CompletionOpt):
         Promise<AdminResult>;
 
@@ -921,6 +954,12 @@ export class NoSQLClient extends EventEmitter {
      * @param {WriteMultipleOpt} [opt] Options object, see
      * {@link WriteMultipleOpt}
      * @returns {Promise} Promise of {@link WriteMultipleResult}
+     */
+    writeMany<TRow extends AnyRow>(tableName: string,
+        operations: WriteOperation<TRow>[], opt?: WriteMultipleOpt):
+        Promise<WriteMultipleResult<TRow>>;
+
+    /**
      * @overload
      * @async
      * @typeParam TRow Type of table row instance. Must include primary key
@@ -933,6 +972,11 @@ export class NoSQLClient extends EventEmitter {
      * @returns {Promise} Promise of {@link WriteMultipleResult}
      * @see {@link WriteOperation}
      * @see {@link WriteMultipleResult}
+     */
+    writeMany<TRow extends AnyRow>(operations: WriteOperation<TRow>[],
+        opt?: WriteMultipleOpt): Promise<WriteMultipleResult<TRow>>;
+
+    /**
      * @overload
      * @async
      * @param {WriteOperation} operations Array of {@link WriteOperation}
@@ -944,13 +988,6 @@ export class NoSQLClient extends EventEmitter {
      * @see {@link WriteOperation}
      * @see {@link WriteMultipleResult}
      */
-    writeMany<TRow extends AnyRow>(tableName: string,
-        operations: WriteOperation<TRow>[], opt?: WriteMultipleOpt):
-        Promise<WriteMultipleResult<TRow>>;
-
-    writeMany<TRow extends AnyRow>(operations: WriteOperation<TRow>[],
-        opt?: WriteMultipleOpt): Promise<WriteMultipleResult<TRow>>;
-
     writeMany(operations: WriteOperation[], opt?: WriteMultipleOpt):
         Promise<WriteMultipleResult>;
 

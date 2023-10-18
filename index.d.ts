@@ -22,6 +22,8 @@ export * from "./src/types/param";
 export * from "./src/types/result";
 export * from "./src/types/auth/config";
 export * from "./src/types/auth/iam/types";
+export * from "./src/types/auth/iam/auth_provider";
 export * from "./src/types/auth/kvstore/types";
+export * from "./src/types/auth/kvstore/auth_provider";
 export * from "./src/types/rate_limiter/rate_limiter";
 export * from "./src/types/rate_limiter/simple_rate_limiter";

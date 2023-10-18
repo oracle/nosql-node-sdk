@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 **Added**
 
+* Added public classes for Cloud and On-prem authorization providers.
+IAMAuthorizationProvider includes API to get Resource Principal claims.
+* Cloud only: added configuration option useResourcePrincipalCompartment to
+enable using the resource compartment when using Resource Principal.
+* On-prem only: new unit tests for on-prem authentication.
 * Support for query array_collect and count(distinct) operators.
 * Cloud only: Added OCI region codes: AGA BOG VAP NAP AVZ OZZ DRS
 * On-prem only: allow to specify namespace as a configuration option or in

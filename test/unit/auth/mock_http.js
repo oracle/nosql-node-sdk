@@ -256,13 +256,13 @@ class MockHttp {
             req.on('data', (chunk) => {
                 chunks.push(chunk);
             });
-            req.on('end', () => {
+            req.on('end', async () => {
                 const payload = Buffer.concat(chunks);
                 let res = new PassThrough();
                 callback(res);
                 try {
                     this._chkHostHeader(opt, url);
-                    const data = handler(opt, payload, url.search);
+                    const data = await handler(opt, payload, url.search);
                     this._sendOKResponse(res, data);
                 } catch(err) {
                     if (err instanceof NoSQLServiceError) {

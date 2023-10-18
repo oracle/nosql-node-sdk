@@ -252,10 +252,11 @@ let client = new NoSQLClient({
 
 ##### <a name="config_obj"></a>Creating Your Own IAMCredentialsProvider
 
-{@link IAMCredentialsProvider} may be any object (class instance or otherwise)
-implementing *loadCredentials* function.  This function returns a *Promise* of
-{@link IAMCredentials} (and thus can be implemented as an *async* function).
-See {@link loadIAMCredentials}.
+You may implement your own credentials provider for secure storage and
+retrieval of {@link IAMCredentials} as an instance of
+{@link IAMCredentialsProvider} interface.
+{@link IAMCredentialsProvider#loadCredentials} returns a *Promise* of
+{@link IAMCredentials} and thus can be implemented as an *async* function.
 
 ```js
 import { NoSQLClient } from 'oracle-nosqldb';
@@ -288,12 +289,12 @@ let client = new NoSQLClient({
 ```
 
 It is advised that properties such as *privateKey* and *passphrase* returned
-by {@link IAMCredentialsProvider} be instances of *Buffer* rather than strings
-in which case that the driver will clear them right after they are used.
+by {@link IAMCredentialsProvider} be instances of {@link !Buffer | Buffer}
+rather than strings in which case that the driver will clear them right after
+they are used.
 
-If your {@link IAMCredentialsProvider} does not need to store any state
-information you may provide *loadCredentials* function itself as
-value of *credentialsProvider* property:
+You may also set {@link IAMConfig#credentialsProvider} property to a function
+with the signature of {@link IAMCredentialsProvider#loadCredentials}:
 
 ```js
 import { NoSQLClient } from 'oracle-nosqldb';

@@ -6,7 +6,7 @@
  */
 
 /**
- * This configuration is required to authenticate against secure On-Premise
+ * This configuration is required to authenticate against secure On-Premises
  * Oracle NoSQL Database.  It should be set as {@link AuthConfig#kvstore}.
  * To authenticate against secure kvstore the driver needs user name and
  * password of existing store user that has required permissions to perform
@@ -58,7 +58,7 @@ export interface KVStoreAuthConfig {
     user?: string;
 
     /**
-     * User's password. May only be* specified if {@link user} property is
+     * User's password. May only be specified if {@link user} property is
      * also specified. If password is represented as {@link !Buffer | Buffer},
      * it must be UTF8-encoded.
      */
@@ -70,7 +70,8 @@ export interface KVStoreAuthConfig {
      * credentials provider. May not be specified together with {@link user}
      * or {@link password} properties.
      */
-    credentials?: string|KVStoreCredentialsProvider;
+    credentials?: string | KVStoreCredentialsProvider |
+        KVStoreCredentialsProvider["loadCredentials"];
     
     /**
      * Timeout used for login and renew-token requests, in milliseconds.
@@ -107,25 +108,23 @@ export interface KVStoreCredentials {
 }
 
 /**
- * Interface to asynchronously load credentials needed to login to secure
- * on-premise NoSQL database.
- */
-export type loadKVStoreCredentials = () => Promise<KVStoreCredentials>;
-
-/**
  * This interface may be implemented by applications to allow obtaining
  * {@link KVStoreCredentials} required to login to on-premise store in a
- * more secure manner than built-in mechanisms (supplying user/password
- * directly or storing them in JSON file) allow, by storing credentials in
- * encrypted form, in a keystore, etc.  This provider may be specified in
- * {@link KVStoreAuthConfig#credentials} property as either a function
- * {@link loadKVStoreCredentials} or an object (class instance or otherwise)
- * with method <em>loadCredentials</em> imlementing
- * {@link loadKVStoreCredentials}.
- * <p>
- * It is advisable that the implementation does not keep sensitive information
- * (such as password) in memory in plain text in between calls to this
- * provider.
+ * secure manner. {@link KVStoreCredentialsProvider} is set as
+ * {@link KVStoreAuthConfig#credentials} property of
+ * {@link KVStoreAuthConfig}. Instead of a class implementing this interface,
+ * you may also set {@link KVStoreAuthConfig#credentials} to a function with
+ * the signature of {@link loadCredentials}.
  */
-type KVStoreCredentialsProvider = loadKVStoreCredentials |
-    { loadCredentials: loadKVStoreCredentials };
+export interface KVStoreCredentialsProvider {
+    /**
+     * Asynchronously load credentials required to login to secure on-premise
+     * NoSQL database.
+     * @async
+     * @returns {Promise} Promise resolved with {@link KVStoreCredentials} or
+     * rejected with an error. Properties of type {@link !Buffer | Buffer}
+     * such as {@link KVStoreCredentials#password} will be erased once the
+     * store login is performed.
+     */
+    loadCredentials(): Promise<KVStoreCredentials>;
+}

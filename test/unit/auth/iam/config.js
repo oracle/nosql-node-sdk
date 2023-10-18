@@ -9,12 +9,17 @@
 
 const path = require('path');
 
-const badStrings = require('../common').badStrings;
-const badStringsOrFunctions = require('../common').badStringsOrFunctions;
-const badStringsOrBinaries = require('../common').badStringsOrBinaries;
-const badPosInt32NotNull = require('../common').badPosInt32NotNull;
-const badMillisWithOverride = require('../common').badMillisWithOverride;
-const Utils = require('../utils');
+const badStrings = require('../../common').badStrings;
+const badStringsOrFunctions = require('../../common').badStringsOrFunctions;
+const badStringsOrBinaries = require('../../common').badStringsOrBinaries;
+const badFilePaths = require('../../common').badFilePaths;
+const badPosInt32NotNull = require('../../common').badPosInt32NotNull;
+const badMillisWithOverride = require('../../common').badMillisWithOverride;
+const Utils = require('../../utils');
+const IAMAuthorizationProvider =
+    require('../../../../lib/auth/iam/auth_provider');
+const DELEGATION_TOKEN = require('./constants').DELEGATION_TOKEN;
+const DELEGATION_TOKEN_FILE = require('./constants').DELEGATION_TOKEN_FILE;
 const TENANT_ID = require('./constants').TENANT_ID;
 const USER_ID = require('./constants').USER_ID;
 const FINGERPRINT = require('./constants').FINGERPRINT;
@@ -29,8 +34,6 @@ const keys = createKeys();
 
 const badOCIDs = badStrings.concat(undefined, null, 'abcde');
 const badFingerprints = badStrings.concat(undefined, null);
-const badFilePaths = badStringsOrBinaries.concat(undefined, null,
-    'nosuchfile');
 
 const badPrivateKeyPEMs = [
     '', '.....',
@@ -89,6 +92,17 @@ const credsProviderProps = {
         ...keyIdObj,
         privateKeyFile: PRIVATE_KEY_FILE,
     })
+};
+
+const ipExtras = {
+    federationEndpoint: 'https://auth.ap-tokyo-1.oraclecloud.com',
+    delegationToken: DELEGATION_TOKEN,
+    delegationTokenProvider: async() => DELEGATION_TOKEN,
+    delegationTokenFile: DELEGATION_TOKEN_FILE,
+};
+
+const rpExtras = {
+    useResourcePrincipalCompartment: true
 };
 
 //Configs that have multiple properties that cannot be used together.
@@ -150,6 +164,17 @@ const badExclPropsConfigsCons = [
     }).map(ent => ({
         ...ociConfigProps,
         [ent[0]]: ent[1]
+    })),
+    //Instance principal extra properties without useInstancePrincipal set.
+    ...Object.entries(ipExtras).map(ent => ({
+        ...keyIdObj,
+        privateKeyFile: PRIVATE_KEY_FILE,
+        [ent[0]]: ent[1]
+    })),
+    //Resource principal extra properties without useResourcePrincipal set.
+    ...Object.entries(rpExtras).map(ent => ({
+        useInstancePrincipal: true,
+        [ent[0]]: ent[1]
     }))
 ];
 
@@ -159,8 +184,6 @@ const badExclPropsConfigsCons = [
 //for inclusion in ../config.js test, not all included for simplicity
 //(some are still part of badDirectConfigs)
 const badDirectConfigsCons = [
-    undefined,
-    null,
     10, //must be object
     'abc', //must be object
     function() { return ''; }, //must be object
@@ -376,6 +399,21 @@ const badOCIConfigs = [
 
 const goodOCIConfigs = [
     {
+        data: [ '[DEFAULT]', ...credsLines ],
+        useDefaultOCIFile: true
+    },
+    {
+        data: [ '[DEFAULT]', ...credsLinesEncKey ],
+        useDefaultOCIFile: true,
+        noArgsCons: true,
+        pkData: keys.privateEncPEM
+    },
+    {
+        data: [ '[test_profile]', ...credsLines, '# comment comment' ],
+        useDefaultOCIFile: true,
+        profile: 'test_profile'
+    },
+    {
         data: [ '[test_profile]', ...credsLines, '# comment comment' ],
         profile: 'test_profile'
     },
@@ -397,6 +435,12 @@ const goodOCIConfigs = [
         useSessToken: true
     },
     {
+        data: [ '[DEFAULT]', ...credsLinesSessToken ],
+        useSessToken: true,
+        createFunc: () => IAMAuthorizationProvider.withSessionToken(
+            OCI_CONFIG_FILE, 'DEFAULT')
+    },
+    {
         data: [ '[test_profile]', ...credsLinesSessToken,
             //extra properties not needed for sess token auth
             'user=' + creds.userId, 'fingerprint=' + creds.fingerprint ],
@@ -407,7 +451,22 @@ const goodOCIConfigs = [
         data: [ '[DEFAULT]', ...credsLinesEncKeySessToken ],
         pkData: keys.privateEncPEM,
         useSessToken: true
-    }
+    },
+    {
+        data: [ '[DEFAULT]', ...credsLinesEncKeySessToken ],
+        pkData: keys.privateEncPEM,
+        useSessToken: true,
+        useDefaultOCIFile: true,
+        createFunc: () => IAMAuthorizationProvider.withSessionToken()
+    },
+    {
+        data: [ '[test_profile]', ...credsLinesSessToken ],
+        profile: 'test_profile',
+        useSessToken: true,
+        useDefaultOCIFile: true,
+        createFunc: () => IAMAuthorizationProvider.withSessionToken(
+            'test_profile')
+    },
 ];
 
 const badFileConfigs = [
@@ -417,21 +476,26 @@ const badFileConfigs = [
         profileName
     })),
     ...badOCIConfigs.map(cfg => ({
-        configFile: OCI_CONFIG_FILE,
+        _useDefaultOCIFile: cfg.useDefaultOCIFile,
+        configFile: cfg.useDefaultOCIFile ? undefined : OCI_CONFIG_FILE,
         profileName: cfg.profile != null ? cfg.profile : undefined,
         useSessionToken: cfg.useSessToken,
         _ociConfigData: cfg.data.join('\n'),
         _privateKeyData: cfg.pkData != null ? cfg.pkData : keys.privatePEM,
-        _sessTokenData: cfg.sessToken
+        _sessTokenData: cfg.sessToken,
+        _createFunc: cfg.createFunc
     }))
 ];
 
 const goodFileConfigs = goodOCIConfigs.map(cfg => Object.assign({
-    configFile: OCI_CONFIG_FILE,
+    _useDefaultOCIFile: cfg.useDefaultOCIFile,
     _ociConfigData: cfg.data.join('\n'),
     _privateKeyData: cfg.pkData != null ? cfg.pkData : keys.privatePEM,
-    _sessTokenData: cfg.sessToken
+    _sessTokenData: cfg.sessToken,
+    _createFunc: cfg.createFunc,
+    _noArgsCons: cfg.noArgsCons
 },
+cfg.useDefaultOCIFile ? {} : { configFile: OCI_CONFIG_FILE },
 cfg.profile != null ? { profileName: cfg.profile } : {},
 cfg.useSessToken ? { useSessionToken: true } : {}));
 
