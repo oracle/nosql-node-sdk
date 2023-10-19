@@ -12,6 +12,7 @@
 
 import type { Config } from "../../config";
 import type { AuthConfig } from "../config";
+import type { IAMAuthorizationProvider } from "./auth_provider";
 
 /**
  * This type encapsulates credentials required for generating OCI request
@@ -227,6 +228,7 @@ export interface IAMCredentials {
  * details.
  *
  * @see {@link AuthConfig}
+ * @see {@link IAMAuthorizationProvider}
  * @see {@link IAMCredentials}
  * @see {@link IAMCredentialsProvider}
  * @see {@page connect-cloud.md}
