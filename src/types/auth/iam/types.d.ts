@@ -15,17 +15,17 @@ import type { AuthConfig } from "../config";
 
 /**
  * This type encapsulates credentials required for generating OCI request
- * signature. It is used as a return type for {@link loadIAMCredentials} in
+ * signature. It is used as a return type for
+ * {@link IAMCredentialsProvider#loadCredentials} in
  * {@link IAMCredentialsProvider}.  The properties of this type are the same
  * as in {@link IAMConfig} when credentials are provided directly.  See
  * {@link IAMConfig} for more information.
  * <p>
  * When returning this object, you have choices to return <em>privateKey</em>
- * or <em>privateKeyFile</em> and to return <em>Buffer</em> or <em>string</em>
- * for fields indicated as such.
+ * or <em>privateKeyFile</em> and to return {@link !Buffer | Buffer} or
+ * <em>string</em> for fields indicated as such.
  *
  * @see {@link IAMConfig}
- * @see {@link loadIAMCredentials}
  * @see {@link IAMCredentialsProvider}
  */
 export interface IAMCredentials {
@@ -100,15 +100,23 @@ export interface IAMCredentials {
  * {@link IAMConfig#useResourcePrincipal} property to true.</li>
  * </ol>
  * <p>
- * Note that when using Instance Principal or Resource Principal you must
- * specify compartiment id (OCID), either as
- * {@link Config#compartment} property of the initial configuration or as
- * <em>opt.compartment</em> for each {@link NoSQLClient} method call.  Note
- * that you must use compartment id (OCID) and not compartment name.  This
- * also means that you may not prefix table name with compartment name when
- * calling methods of {@link NoSQLClient}.  These restrictions do not apply
- * when using specific user identity, which is best when naming flexibility is
- * desired.
+ * When using specific user's identity, if you don't specify compartment,
+ * a default compartment will be used, which is a a root compartment of the
+ * user's tenancy.  You can also specify compartment, either as
+ * {@link Config#compartment} property of initial configuration or as part of
+ * options for each request. You may specify either compartment OCID or
+ * compartment name. If using compartment name, you can also provide it as a
+ * prefix to the table name as in <em>compartmentName.tableName</em>.
+ * <p>
+ * When using Instance Principal or Resource Principal, there is no default
+ * compartment, so you must specify compartiment id (OCID), either as
+ * {@link Config#compartment} property of the initial configuration or as part
+ * of options for each request. Note that you must use compartment id (OCID)
+ * and not compartment name. This also means that you may not prefix table
+ * name with compartment name when calling methods of {@link NoSQLClient}.
+ * The only exception to this is when using Resource Principal together with
+ * {@link useResourcePrincipalCompartment} property, in which case the
+ * resource compartment itself will be used.
  * <p>
  * To use specific user's identity, you must provide the following credentials:
  * <ul>
@@ -151,27 +159,25 @@ export interface IAMCredentials {
  * {@link configFile} and/or {@link profileName}.  If not set,
  * appropriate default values will be used, see property descriptions.</li>
  * <li>Specify your own credentials provider in the form of
- * {@link IAMCredentialsProvider} that implements {@link loadIAMCredentials}
- * function.  This allows you to store and retrieve credentials in a secure
- * manner.  In this case, specify {@link credentialsProvider} property.</li>
+ * {@link IAMCredentialsProvider}.  This allows you to store and retrieve
+ * credentials in a secure manner.  In this case, specify
+ * {@link credentialsProvider} property.</li>
  * </ul>
  * Note that the private key must be in PEM format.  You may provide a path
  * to the PEM key file.  Alternatively, except when using OCI configuration
- * file, you may provide PEM encoded private key directly as <em>Buffer</em>
- * or <em>string</em>.  Note that the {@link passphrase} must be provided if
- * the private key is encrypted.
+ * file, you may provide PEM encoded private key directly as
+ * {@link !Buffer | Buffer} or <em>string</em>. Note that the
+ * {@link passphrase} must be provided if the private key is encrypted.
  * <p>
  * <p>
  * The driver will determine the method of authorization as follows:
  * <ol>
  * <li>If {@link IAMConfig#useResourcePrincipal} is set to <em>true</em>, then
- * Resource Principal authentication will be used.  No other properties listed
- * below are allowed for Resource Prinicpal authorization.</li>
+ * Resource Principal authentication will be used.</li>
  * <li>If {@link IAMConfig#useInstancePrincipal} is set to <em>true</em>, then
  * Instance Principal authentication will be used.  You may also set
  * {@link IAMConfig#federationEndpoint}, although it is not requred and in
- * most cases federation endpoint will be auto-detected.  No other properties
- * listed below are allowed for Instance Principal authorization.</li>
+ * most cases federation endpoint will be auto-detected.</li>
  * <li>If {@link useSessionToken} is set to <em>true</em>, then session
  * token-based authentication will be used. Note that this method uses OCI
  * config file, so settings to properties {@link configFile} and
@@ -297,13 +303,26 @@ export interface IAMCredentials {
  * ```
  * 
  * @example
- * JSON {@link Config} object using Resource Principal.
- * ```json
+ * Javascript {@link Config} object when using Resource Principal
+ * ```js
  * {
- *     "compartment": "ocid1.compartment.oc1.............................",
- *     "auth": {
- *         "iam": {
- *             "useResourcePrincipal": "true"
+ *     compartment: "ocid1.compartment.oc1.............................",
+ *     auth: {
+ *         iam: {
+ *             useResourcePrincipal: true
+ *         }
+ *     }
+ * }
+ * ```
+ * @example
+ * Javascript {@link Config} object when using Resource Principal with
+ * {@link useResourcePrincipalCompartment} property. 
+ * ```js
+ * {
+ *     auth: {
+ *         iam: {
+ *             useResourcePrincipal: true,
+ *             useResourcePrincipalCompartment: true
  *         }
  *     }
  * }
@@ -334,24 +353,37 @@ export interface IAMConfig extends Partial<IAMCredentials> {
      * the user for which the token was created and act on behalf of that
      * user. Use this property to specify the value of the delegation token
      * directly. Otherwise, to use a provider interface or obtain a token
-     * from a file, use {@link delegationTokenProvider} property. This
-     * property is exclusive with {@link delegationTokenProvider}.
+     * from a file, use {@link delegationTokenProvider} and
+     * {@link delegationTokenFile} properties. This property is exclusive with
+     * {@link delegationTokenProvider} and {@link delegationTokenFile}.
      */
     delegationToken?: string;
     
     /**
-     * Used only with instance principal (see <em>useInstancePrincipal</em>).
+     * Used only with instance principal (see {@link useInstancePrincipal}).
      * The delegation token allows the instance to assume the privileges of
      * the user for which the token was created and act on behalf of that
-     * user. Use this property to specify how delegation token is to be
-     * obtained. If set as a string, it will be interpreted as file path
-     * (absolute or relative) to load the delegation token from. Otherwise,
-     * specify {@link DelegationTokenProvider} as a custom provider used to
-     * load the delegation token.  In either case, the delegation token will
-     * be reloaded each time the authorization signature is refreshed. This
-     * property is exclusive with {@link delegationToken}.
+     * user. This propertiy specifies {@link DelegationTokenProvider} as a
+     * custom provider used to load the delegation token. The delegation
+     * token will be reloaded each time the authorization signature is
+     * refreshed. If specified as a string, this property is equivalent to
+     * {@link delegationTokenFile}. This property is exclusive with
+     * {@link delegationToken} and {@link delegationTokenFile}.
      */
-    delegationTokenProvider?: string|DelegationTokenProvider;
+    delegationTokenProvider?: DelegationTokenProvider |
+        DelegationTokenProvider["loadDelegationToken"] | string;
+
+    /**
+     * Used only with instance principal (see {@link useInstancePrincipal}).
+     * The delegation token allows the instance to assume the privileges of
+     * the user for which the token was created and act on behalf of that
+     * user. This property specifies a file path (absolute or relative) to
+     * load the delegation token from. The delegation token will be reloaded
+     * from the file each time the authorization signature is refreshed. This
+     * property is exclusive with {@link delegationToken} and
+     * {@link delegationTokenFile}.
+     */
+    delegationTokenFile?: string;
     
     /**
      * If set to true, Resource Principal authorization will be used. May not
@@ -359,6 +391,17 @@ export interface IAMConfig extends Partial<IAMCredentials> {
      * for specific user's identity.
      */
     useResourcePrincipal?: boolean;
+
+    /**
+     * Only valid when using Resource Principal. If set to true, and
+     * compartment id is not specified in the configuration or as a part of
+     * operation options, the driver will use the compartment of the resource,
+     * obtained from the resource principal session token, as the default
+     * compartment for NoSQL database operations. This property is useful,
+     * e.g. if you want your NoSQL database tables to reside in the same
+     * compartment as your OCI function.
+     */
+    useResourcePrincipalCompartment?: boolean;
 
     /**
      * If set to true,
@@ -411,8 +454,10 @@ export interface IAMConfig extends Partial<IAMCredentials> {
      * Custom credentials provider to use to obtain credentials in the form of
      * {@link IAMCredentials}. You may also specify string for a module name
      * or path that exports {@link IAMCredentialsProvider}.
+     * @see {@link IAMCredentialsProvider}
      */
-    credentialsProvider?: IAMCredentialsProvider|string;
+    credentialsProvider?: IAMCredentialsProvider |
+        IAMCredentialsProvider["loadCredentials"] | string;
 
     /**
      * Cache duration of the signature in seconds. Specifies how long cached
@@ -443,55 +488,48 @@ export interface IAMConfig extends Partial<IAMCredentials> {
 }
 
 /**
- * Interface to asynchronously load credentials required for generating OCI
- * request signature.  Used in {@link IAMCredentialsProvider}.
- * @see {@link IAMCredentialsProvider}
- * @see {@link IAMCredentials}
- * @async
- * @returns {Promise} Promise resolved with {@link IAMCredentials} or
- * rejected with an error.  Properties of type {@link !Buffer | Buffer} in
- * such as {@link IAMCredentials#privateKey} or
- * {@link IAMCredentials#passphrase} will be erased once the signature is
- * generated.
- */
-export type loadIAMCredentials = () => Promise<IAMCredentials>;
-
-/**
  * You may implement {@link IAMCredentialsProvider} interface to securely
- * obtain credentials required for generation of an OCI request signature, as
- * described in {@link IAMConfig}.  {@link IAMCredentialsProvider} is
- * set as {@link IAMConfig#credentialsProvider} property and may be specified
- * either as {@link loadIAMCredentials} function or as an object
- * implementing <em>loadCredentials</em> function.
- *
- * @see {@link loadIAMCredentials}
+ * obtain credentials required for generation of OCI request signature, as
+ * described in {@link IAMConfig}. {@link IAMCredentialsProvider} is
+ * set as {@link IAMConfig#credentialsProvider} property of {@link IAMConfig}.
+ * Instead of a class implementing this interface, you may also set
+ * {@link IAMConfig#credentialsProvider} to function with the signature of
+ * {@link loadCredentials}.
  * @see {@link IAMCredentials}
  * @see {@link IAMConfig}
  * @see {@page connect-cloud.md}
  */
-export type IAMCredentialsProvider = loadIAMCredentials |
-    { loadCredentials: loadIAMCredentials };
-
-/**
- * Interface to load delegation token, as used in
- * {@link DelegationTokenProvider}.
- * @see {@link DelegationTokenProvider}
- * @async
- * @returns {Promise} Promise resolved with a <em>string</em> delegation token
- * or rejected with an error
- */
-export type loadDelegationToken = () => Promise<string>;
+export interface IAMCredentialsProvider {
+    /**
+     * Asynchronously load credentials required for generating OCI request
+     * signature. 
+     * @async
+     * @returns {Promise} Promise resolved with {@link IAMCredentials} or
+     * rejected with an error. Properties of type {@link !Buffer | Buffer}
+     * such as {@link IAMCredentials#privateKey} or
+     * {@link IAMCredentials#passphrase} will be erased once the signature is
+     * generated.
+     */
+    loadCredentials(): Promise<IAMCredentials>;
+}
 
 /**
  * You may implement {@link DelegationTokenProvider} interface to securely
  * obtain delegation token when using instance principal.
  * {@link DelegationTokenProvider} may be set as
- * {@link IAMConfig#delegationToken} and may be specified as
- * either a {@link loadDelegationToken} function or as an object implelenting
- * {@link loadDelegationToken} function.
- *
+ * {@link IAMConfig#delegationTokenProvider} of {@link IAMConfig}. Instead of
+ * a class implementing this interface, you may also set
+ * {@link IAMConfig#delegationTokenProvider} to a function with the signature
+ * of {@link loadDelegationToken}.
  * @see {@link loadDelegationToken}
  * @see {@link IAMConfig#delegationToken}
  */
-export type DelegationTokenProvider = loadDelegationToken |
-    { loadDelegationToken: loadDelegationToken };
+export interface DelegationTokenProvider {
+    /**
+     * Asynchronously load delegation token.
+     * @async
+     * @returns {Promise} Promise resolved with a <em>string</em> delegation
+     * token or rejected with an error
+     */
+    loadDelegationToken(): Promise<string>;
+}

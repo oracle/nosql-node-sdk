@@ -16,9 +16,10 @@
         "test/unit/query.js",
         "test/unit/rate_limiter.js",
         "test/unit/nson.js",
-        "test/unit/iam/auth_provider.js",
-        "test/unit/iam/oci_region.js",
-        "test/unit/iam/instance_principal.js",
-        "test/unit/iam/resource_principal.js"
+        "test/unit/auth/iam/auth_provider.js",
+        "test/unit/auth/iam/oci_region.js",
+        "test/unit/auth/iam/instance_principal.js",
+        "test/unit/auth/iam/resource_principal.js",
+        "test/unit/auth/kvstore/auth_provider.js"
     ]
 }

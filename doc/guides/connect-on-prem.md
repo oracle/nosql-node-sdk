@@ -330,10 +330,8 @@ const client = new NoSQLClient('/path/to/config.json');
 
 You may implement your own credentials provider for secure storage and
 retrieval of driver credentials as an instance of
-{@link KVStoreCredentialsProvider} interface.  This instance may be any object
-implementing {@link loadKVStoreCredentials} method interface as
-*loadCredentials* method.  It may be a class instance, but does not need
-to be so.  Note that *loadCredentials* returns a Promise and thus can
+{@link KVStoreCredentialsProvider} interface. Note that
+{@link KVStoreCredentialsProvider#loadCredentials} returns a Promise and can
 be implemented as an *async* function:
 
 ```js
@@ -363,13 +361,13 @@ let client = new NoSQLClient({
 });
 ```
 
-*loadCredentials* method should return credentials in the format
-described by {@link KVStoreCredentials}.  You may return *password* as
-either *Buffer* (UTF8-encoded) or *string*, but it is advisable to use
-*Buffer*, because the driver will erase its contents once login is performed.
+You may return {@link KVStoreCredentials#password} as either
+{@link !Buffer | Buffer} (UTF8-encoded) or *string*, but it is advisable to
+use {@link !Buffer | Buffer}, because the driver will erase its contents once
+login is performed.
 
-If you don't need to store any state information, the provider can
-be just a function conforming to {@link loadKVStoreCredentials} interface:
+You may also set {@link KVStoreAuthConfig#credentials} property to a function
+with the signature of {@link KVStoreCredentialsProvider#loadCredentials}:
 
 ```js
 import { NoSQLClient } from 'oracle-nosqldb';

@@ -9,17 +9,21 @@ import { expectTypeOf } from "expect-type";
 
 import { AuthConfig, IAMConfig, KVStoreAuthConfig, AuthorizationProvider,
     ServiceType, Region, Operation, NoSQLError, DelegationTokenProvider,
-    IAMCredentialsProvider, loadDelegationToken, loadIAMCredentials,
-    IAMCredentials, KVStoreCredentialsProvider, KVStoreCredentials,
-    loadKVStoreCredentials } from "../../../";
+    IAMCredentialsProvider, IAMCredentials, KVStoreCredentialsProvider,
+    KVStoreCredentials, IAMAuthorizationProvider,
+    KVStoreAuthorizationProvider, Config, AuthResult,
+    ResourcePrincipalClaims } from "../../../";
 
 function testAuthConfig(iamCfg: IAMConfig, kvCfg: KVStoreAuthConfig,
-    provider: AuthorizationProvider) {
+    provider: AuthorizationProvider, iamProvider: IAMAuthorizationProvider,
+    kvStoreProvider: KVStoreAuthorizationProvider) {
     let cfg: AuthConfig;
     
     cfg = { iam: iamCfg };
     cfg = { kvstore: kvCfg };
     cfg = { provider };
+    cfg = { provider: iamProvider };
+    cfg = { provider: kvStoreProvider };
 
     // @ts-expect-error Invalid type for iam.
     cfg = { iam: true };
@@ -69,6 +73,8 @@ function testIAMConfig(dtp: DelegationTokenProvider,
     cfg = { useInstancePrincipal: true };
     cfg.federationEndpoint = "endpoint";
     cfg.delegationToken = "dt";
+    cfg.delegationTokenFile = "file";
+    cfg.delegationTokenProvider = async () => { return "dt "};
     cfg = {
         useInstancePrincipal: true,
         delegationTokenProvider: dtp
@@ -318,43 +324,63 @@ function testIAMConfigCompatProps(cp: IAMCredentialsProvider,
     }
 }
 
-function testDelegationTokenProvider() {
-    expectTypeOf<loadDelegationToken>().toBeFunction();
-    expectTypeOf<loadDelegationToken>().parameters.toEqualTypeOf<[]>();
-    expectTypeOf<loadDelegationToken>().returns.not.toEqualTypeOf<string>();
-    expectTypeOf<loadDelegationToken>().returns.resolves
-        .toEqualTypeOf<string>();
-    expectTypeOf<DelegationTokenProvider>()
-        .toEqualTypeOf<loadDelegationToken |
-        { loadDelegationToken: loadDelegationToken }>();
+function testAuthorizationProvider(provider: AuthorizationProvider,
+    iam: IAMAuthorizationProvider, kv: KVStoreAuthorizationProvider) {
+    expectTypeOf<string>().toMatchTypeOf<AuthResult>();
+    expectTypeOf<Record<string,string>>().toMatchTypeOf<AuthResult>();
+    expectTypeOf(provider.getAuthorization)
+        .toEqualTypeOf<(op: Operation) => Promise<AuthResult>>();
+    expectTypeOf(provider.close)
+        .toEqualTypeOf<(() => void|Promise<void>)|undefined>();
+    expectTypeOf(provider.onInit)
+        .toEqualTypeOf<((cfg: Config) => void)|undefined>();
     
-    let dtp: DelegationTokenProvider;
-    dtp = async () => "a";
-    // @ts-expect-error Invalid return type, must be promise.
-    dtp = () => "a";
-    dtp = { loadDelegationToken: () => Promise.resolve("a") };
-    // @ts-expect-error No parameters expected.
-    dtp = { loadDelegationToken: (opt: any) => Promise.resolve("a") };
+    expectTypeOf(iam).toMatchTypeOf(provider);
+    expectTypeOf(kv).toMatchTypeOf(provider);
+
+    const claims: ResourcePrincipalClaims = {} as ResourcePrincipalClaims;
+    expectTypeOf(claims.tenantId).toEqualTypeOf<string|undefined>();
+    expectTypeOf(claims.compartmentId).toEqualTypeOf<string|undefined>();
+
+    expectTypeOf(iam.getResourcePrincipalClaims)
+        .toEqualTypeOf<() => Promise<ResourcePrincipalClaims|undefined>>();
 }
 
-function testIAMCredentialsProvider(creds: IAMCredentials) {
-    expectTypeOf<loadIAMCredentials>().toBeFunction();
-    expectTypeOf<loadIAMCredentials>().parameters.toEqualTypeOf<[]>();
-    expectTypeOf<loadIAMCredentials>().returns.not
-        .toEqualTypeOf<IAMCredentials>();
-    expectTypeOf<loadIAMCredentials>().returns.resolves
-        .toEqualTypeOf<IAMCredentials>();
-    expectTypeOf<IAMCredentialsProvider>()
-        .toEqualTypeOf<loadIAMCredentials |
-        { loadCredentials: loadIAMCredentials }>();
+function testDelegationToken(cfg: IAMConfig) {
+    expectTypeOf(cfg.delegationToken).toEqualTypeOf<string|undefined>();
+    expectTypeOf(cfg.delegationTokenFile).toEqualTypeOf<string|undefined>();
+    expectTypeOf(cfg.delegationTokenProvider)
+        .toEqualTypeOf<(() => Promise<string>)
+        |DelegationTokenProvider|string|undefined>();
+
+    let dtp: DelegationTokenProvider;
+    dtp = { async loadDelegationToken() { return "a"; }};
+    // @ts-expect-error No parameters expected.
+    dtp = { async loadDelegationToken(opt: any) { return "a"; }};
+    // @ts-expect-error Invalid return type, must be promise.
+    dtp = { loadDelegationToken() { return "a"; }};
+
+    expectTypeOf(dtp.loadDelegationToken).toBeFunction();
+    expectTypeOf(dtp.loadDelegationToken).parameters.toEqualTypeOf<[]>();
+    expectTypeOf(dtp.loadDelegationToken).returns.resolves.toBeString();
+}
+
+function testIAMCredentialsProvider(cfg: IAMConfig, creds: IAMCredentials) {
+    expectTypeOf(cfg.credentialsProvider).toEqualTypeOf<
+    (() => Promise<IAMCredentials>)|IAMCredentialsProvider|string
+    |undefined>();
     
     let cp: IAMCredentialsProvider;
-    cp = async () => creds;
-    // @ts-expect-error Invalid return type, must be promise.
-    cp = () => creds;
-    cp = { loadCredentials: () => Promise.resolve(creds) };
+    cp = { async loadCredentials() { return creds; }};
     // @ts-expect-error No parameters expected.
-    cp = { loadCredentials: (opt: any) => Promise.resolve(creds) };
+    cp = { async loadCredentials(opt: any) { return creds; }};
+    // @ts-expect-error Invalid return type, must be promise.
+    cp = { loadCredentials() { return creds; }};
+
+    expectTypeOf(cp.loadCredentials).toBeFunction();
+    expectTypeOf(cp.loadCredentials).parameters.toEqualTypeOf<[]>();
+    expectTypeOf(cp.loadCredentials).returns.resolves
+        .toEqualTypeOf<IAMCredentials>();
 }
 
 function testIAMCredentials(creds: IAMCredentials) {
@@ -362,7 +388,6 @@ function testIAMCredentials(creds: IAMCredentials) {
     expectTypeOf(creds.userId).toBeString();
     expectTypeOf(creds.privateKey).toEqualTypeOf<Buffer|string|undefined>();
     expectTypeOf(creds.privateKeyFile)
-        .toEqualTypeOf<Buffer|string|undefined>();
     expectTypeOf(creds.fingerprint).toBeString();
     expectTypeOf(creds.passphrase).toEqualTypeOf<Buffer|string|undefined>();
 
@@ -412,24 +437,23 @@ function testKVStoreAuthConfig(cp: KVStoreCredentialsProvider) {
     };
 }
 
-function testKVStoreCredentialsProvider(creds: KVStoreCredentials) {
-    expectTypeOf<loadKVStoreCredentials>().toBeFunction();
-    expectTypeOf<loadKVStoreCredentials>().parameters.toEqualTypeOf<[]>();
-    expectTypeOf<loadKVStoreCredentials>().returns.not
-        .toEqualTypeOf<KVStoreCredentials>();
-    expectTypeOf<loadKVStoreCredentials>().returns.resolves
-        .toEqualTypeOf<KVStoreCredentials>();
-    expectTypeOf<KVStoreCredentialsProvider>()
-        .toEqualTypeOf<loadKVStoreCredentials |
-        { loadCredentials: loadKVStoreCredentials }>();
+function testKVStoreCredentialsProvider(cfg: KVStoreAuthConfig,
+    creds: KVStoreCredentials) {
+    expectTypeOf(cfg.credentials).toEqualTypeOf<
+    (() => Promise<KVStoreCredentials>)|KVStoreCredentialsProvider|string
+    |undefined>();
     
     let cp: KVStoreCredentialsProvider;
-    cp = async () => creds;
-    // @ts-expect-error Invalid return type, must be promise.
-    cp = () => creds;
-    cp = { loadCredentials: () => Promise.resolve(creds) };
+    cp = { async loadCredentials() { return creds; }};
     // @ts-expect-error No parameters expected.
-    cp = { loadCredentials: (opt: any) => Promise.resolve(creds) };   
+    cp = { async loadCredentials(opt: any) { return creds; }};
+    // @ts-expect-error Invalid return type, must be promise.
+    cp = { loadCredentials() { return creds; }};
+
+    expectTypeOf(cp.loadCredentials).toBeFunction();
+    expectTypeOf(cp.loadCredentials).parameters.toEqualTypeOf<[]>();
+    expectTypeOf(cp.loadCredentials).returns.resolves
+        .toEqualTypeOf<KVStoreCredentials>();
 }
 
 function testKVStoreCredentials(creds: KVStoreCredentials) {

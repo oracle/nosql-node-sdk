@@ -14,20 +14,22 @@ const expect =  chai.expect;
 const crypto = require('crypto');
 const mockfs = require('mock-fs');
 
-const NoSQLClient = require('../../../index').NoSQLClient;
-const Region = require('../../../index').Region;
-const ErrorCode = require('../../../index').ErrorCode;
-const NoSQLError = require('../../../index').NoSQLError;
-const NoSQLServiceError = require('../../../index').NoSQLServiceError;
+const NoSQLClient = require('../../../../index').NoSQLClient;
+const Region = require('../../../../index').Region;
+const ErrorCode = require('../../../../index').ErrorCode;
+const NoSQLError = require('../../../../index').NoSQLError;
+const NoSQLServiceError = require('../../../../index').NoSQLServiceError;
 const IAMAuthorizationProvider =
-    require('../../../lib/auth/iam/auth_provider');
-const HttpConstants = require('../../../lib/constants').HttpConstants;
-const Utils = require('../utils');
-const badMillis = require('../common').badMillis;
-const badStrings = require('../common').badStrings;
-const badStringsOrFunctions = require('../common').badStringsOrFunctions;
-const MockHttp = require('./mock_http').MockHttp;
-const MockHttps = require('./mock_http').MockHttps;
+    require('../../../../lib/auth/iam/auth_provider');
+const HttpConstants = require('../../../../lib/constants').HttpConstants;
+const Utils = require('../../utils');
+const badMillis = require('../../common').badMillis;
+const badStrings = require('../../common').badStrings;
+const badStringsOrFunctions = require('../../common').badStringsOrFunctions;
+const badFilePathsNotNull = require('../../common').badFilePathsNotNull;
+const MockHttp = require('../mock_http').MockHttp;
+const MockHttps = require('../mock_http').MockHttps;
+const initAuthProvider = require('./utils').initAuthProvider;
 const makeST = require('./utils').makeST;
 const iam2cfg = require('./utils').iam2cfg;
 const makeReq = require('./utils').makeReq;
@@ -198,15 +200,17 @@ function prepConfig(cfg) {
     }
 
     //delegation token file
-    if ('_delegationTokenData' in cfg &&
-        typeof cfg.delegationTokenProvider === 'string') {
-        writeOrRemove(cfg.delegationTokenProvider, cfg._delegationTokenData);
+    const dtf = typeof cfg.delegationTokenProvider === 'string' ?
+        cfg.delegationTokenProvider : cfg.delegationTokenFile;
+    if ('_delegationTokenData' in cfg && dtf != null) {
+        writeOrRemove(dtf, cfg._delegationTokenData);
     }
 }
 
 function ipCfg(cfg, excludeURL) {
     const iamCfg = {
-        useInstancePrincipal: true
+        useInstancePrincipal: true,
+        _createFunc: cfg.createFunc
     };
     if ('durationSeconds' in cfg) {
         iamCfg.durationSeconds = cfg.durationSeconds;
@@ -223,6 +227,9 @@ function ipCfg(cfg, excludeURL) {
     if ('delegationTokenProvider' in cfg) {
         iamCfg.delegationTokenProvider = cfg.delegationTokenProvider;
     }
+    if ('delegationTokenFile' in cfg) {
+        iamCfg.delegationTokenFile = cfg.delegationTokenFile;
+    }
     iamCfg.securityTokenRefreshAheadMs =
         ('securityTokenRefreshAheadMs' in cfg) ?
             cfg.securityTokenRefreshAheadMs : 0;
@@ -235,7 +242,7 @@ function ipCfg(cfg, excludeURL) {
 async function testConfig(cfg) {
     prepConfig(cfg);
     const noSqlCfg = ipCfg(cfg);
-    const provider = new IAMAuthorizationProvider(noSqlCfg);
+    const provider = initAuthProvider(noSqlCfg);
     try {
         return await provider.getAuthorization(makeReq(noSqlCfg));
     } finally {
@@ -255,12 +262,30 @@ const goodConfigs = [
         __proto__: CERT_INFO[0],
         region
     })),
+    {
+        __proto__: CERT_INFO[0],
+        region: Region.AP_HYDERABAD_1,
+        createFunc: () => IAMAuthorizationProvider.withInstancePrincipal()
+    },
     {   //user's provided valid federationEndpoint
         __proto__: CERT_INFO[0],
         fedEP: 'https://auth.ap-hyderabad-1.oraclecloud.com'
     },
+    {   //user's provided valid federationEndpoint
+        __proto__: CERT_INFO[0],
+        createFunc: () => IAMAuthorizationProvider.withInstancePrincipal(
+            'https://auth.ap-hyderabad-1.oraclecloud.com'),
+        fedEP: 'https://auth.ap-hyderabad-1.oraclecloud.com'
+
+    },
     {   //user's provided valid federationEndpoint as URL
         __proto__: CERT_INFO[0],
+        fedEP: new URL('https://auth.ap-tokyo-1.oraclecloud.com')
+    },
+    {   //user's provided valid federationEndpoint as URL
+        __proto__: CERT_INFO[0],
+        createFunc: () => IAMAuthorizationProvider.withInstancePrincipal(
+            new URL('https://auth.ap-tokyo-1.oraclecloud.com')),
         fedEP: new URL('https://auth.ap-tokyo-1.oraclecloud.com')
     },
     {
@@ -283,8 +308,22 @@ const goodConfigs = [
     },
     {
         __proto__: CERT_INFO[0],
+        region: Region.EU_AMSTERDAM_1,
+        createFunc: () => IAMAuthorizationProvider
+            .withInstancePrincipalForDelegation(DELEGATION_TOKEN),
+        _delegationTokenData: DELEGATION_TOKEN
+    },
+    {
+        __proto__: CERT_INFO[0],
         region: Region.EU_FRANKFURT_1,
         delegationTokenProvider: new GoodDTP(),
+        _delegationTokenData: DELEGATION_TOKEN
+    },
+    {
+        __proto__: CERT_INFO[0],
+        region: Region.EU_AMSTERDAM_1,
+        createFunc: () => IAMAuthorizationProvider
+            .withInstancePrincipalForDelegation(new GoodDTP()),
         _delegationTokenData: DELEGATION_TOKEN
     },
     {
@@ -307,6 +346,20 @@ const goodConfigs = [
         __proto__: CERT_INFO[0],
         region: Region.ME_JEDDAH_1,
         delegationTokenProvider: DELEGATION_TOKEN_FILE,
+        _delegationTokenData: DELEGATION_TOKEN
+    },
+    {
+        __proto__: CERT_INFO[0],
+        region: Region.ME_JEDDAH_1,
+        delegationTokenFile: DELEGATION_TOKEN_FILE,
+        _delegationTokenData: DELEGATION_TOKEN
+    },
+    {
+        __proto__: CERT_INFO[0],
+        region: Region.AP_TOKYO_1,
+        createFunc: () => IAMAuthorizationProvider
+            .withInstancePrincipalForDelegationFromFile(
+                DELEGATION_TOKEN_FILE),
         _delegationTokenData: DELEGATION_TOKEN
     }
 ];
@@ -447,10 +500,17 @@ const badConfigs = [
         delegationTokenProvider,
         errCode: ErrorCode.ILLEGAL_ARGUMENT
     })),
+    ...badFilePathsNotNull.map(delegationTokenFile => ({
+        __proto__: CERT_INFO[0],
+        region: Region.AP_CHUNCHEON_1,
+        //invalid delegation token file
+        delegationTokenFile,
+        errCode: ErrorCode.ILLEGAL_ARGUMENT
+    })),
     {
         __proto__: CERT_INFO[0],
         region: Region.AP_MELBOURNE_1,
-        delegationTokenProvider: DELEGATION_TOKEN_FILE,
+        delegationTokenFile: DELEGATION_TOKEN_FILE,
         // empty delegation token in file
         _delegationTokenData: '',
         errCode: ErrorCode.ILLEGAL_ARGUMENT
@@ -462,6 +522,23 @@ const badConfigs = [
         //delegationToken
         delegationToken: DELEGATION_TOKEN,
         delegationTokenProvider: async () => DELEGATION_TOKEN,
+        errCode: ErrorCode.ILLEGAL_ARGUMENT
+    },
+    {
+        __proto__: CERT_INFO[0],
+        region: Region.US_PHOENIX_1,
+        //cannot specify delegationTokenFile together with delegationToken
+        delegationToken: DELEGATION_TOKEN,
+        delegationTokenFile: DELEGATION_TOKEN_FILE,
+        errCode: ErrorCode.ILLEGAL_ARGUMENT
+    },
+    {
+        __proto__: CERT_INFO[0],
+        region: Region.US_PHOENIX_1,
+        //cannot specify delegationTokenProvider together with
+        //delegationTokenFile
+        delegationTokenProvider: async () => DELEGATION_TOKEN,
+        delegationTokenFile: DELEGATION_TOKEN_FILE,
         errCode: ErrorCode.ILLEGAL_ARGUMENT
     }
 ];
@@ -488,7 +565,7 @@ function testTokenCache() {
     const ipReq = makeReq(noSqlCfg);
     it('Token cache test', async function() {
         prepConfig(cfg);
-        const provider = new IAMAuthorizationProvider(noSqlCfg);
+        const provider = initAuthProvider(noSqlCfg);
         try {
             const auth0 = await provider.getAuthorization(ipReq);
             let profile0 = authProfile();
@@ -519,7 +596,7 @@ function testTokenCache() {
     });
     it('Token invalidate on invalid auth test', async function() {
         prepConfig(cfg);
-        const provider = new IAMAuthorizationProvider(noSqlCfg);
+        const provider = initAuthProvider(noSqlCfg);
         try {
             const auth0 = await provider.getAuthorization(ipReq);
             let profile0 = authProfile();
@@ -554,7 +631,7 @@ function testTokenAutoRefresh() {
     const ipReq = makeReq(noSqlCfg);
     it('Token auto-refresh test', async function() {
         prepConfig(cfg);
-        const provider = new IAMAuthorizationProvider(noSqlCfg);
+        const provider = initAuthProvider(noSqlCfg);
         try {
             const auth0 = await provider.getAuthorization(ipReq);
             let profile0 = authProfile();
@@ -655,11 +732,11 @@ function testDelegationTokenRefresh() {
     it('Delegation token file refresh on signature refresh',
         async function() {
             const cfg = Object.assign({
-                delegationTokenProvider: DELEGATION_TOKEN_FILE,
+                delegationTokenFile: DELEGATION_TOKEN_FILE,
                 durationSeconds: 1
             }, cfg0);
             const noSqlCfg = ipCfg(cfg);
-            const provider = new IAMAuthorizationProvider(noSqlCfg);
+            const provider = initAuthProvider(noSqlCfg);
             try {
                 writeOrRemove(DELEGATION_TOKEN_FILE, DELEGATION_TOKEN);
                 const ipReq = makeReq(noSqlCfg);
@@ -684,7 +761,7 @@ function testDelegationTokenRefresh() {
                 durationSeconds: 1
             }, cfg0);
             const noSqlCfg = ipCfg(cfg);
-            const provider = new IAMAuthorizationProvider(noSqlCfg);
+            const provider = initAuthProvider(noSqlCfg);
             try {
                 dtContainer.token = DELEGATION_TOKEN;
                 const ipReq = makeReq(noSqlCfg);
@@ -703,10 +780,10 @@ function testDelegationTokenRefresh() {
         });
     it('Delegation token file refresh on invalid auth', async function() {
         const cfg = Object.assign({
-            delegationTokenProvider: DELEGATION_TOKEN_FILE
+            delegationTokenFile: DELEGATION_TOKEN_FILE
         }, cfg0);
         const noSqlCfg = ipCfg(cfg);
-        const provider = new IAMAuthorizationProvider(noSqlCfg);
+        const provider = initAuthProvider(noSqlCfg);
         try {
             writeOrRemove(DELEGATION_TOKEN_FILE, DELEGATION_TOKEN);
             const ipReq = makeReq(noSqlCfg);
@@ -731,7 +808,7 @@ function testDelegationTokenRefresh() {
             delegationTokenProvider: dtProvider
         }, cfg0);
         const noSqlCfg = ipCfg(cfg);
-        const provider = new IAMAuthorizationProvider(noSqlCfg);
+        const provider = initAuthProvider(noSqlCfg);
         try {
             dtContainer.token = DELEGATION_TOKEN;
             const ipReq = makeReq(noSqlCfg);

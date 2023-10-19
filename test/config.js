@@ -26,7 +26,7 @@ class TestConfig {
             return;
         }
         AuthConfig._chkInitProvider(cfg);
-        AuthConfig._initServiceType(cfg);
+        AuthConfig._chkInitServiceType(cfg);
     }
 
     static getConfigObj(cfg) {

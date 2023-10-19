@@ -11,6 +11,9 @@
 
 import type { Config } from "./config";
 import type { AuthConfig } from "./auth/config";
+import type { IAMAuthorizationProvider } from "./auth/iam/auth_provider";
+import type { KVStoreAuthorizationProvider } from
+    "./auth/kvstore/auth_provider";
 
 /**
  * Service type is specified in the initial configuration used to create
@@ -32,23 +35,24 @@ import type { AuthConfig } from "./auth/config";
  * <li>If {@link Config#auth} contains {@link AuthConfig#iam} property, the
  * service type is assumed to be {@link ServiceType.CLOUD}.</li>
  * <li>If {@link Config#auth} constains {@link AuthConfig#kvstore} property,
- * the service type is assumed to be {@link ServiceType.KVSTORE}.  Note that
- * unless {@link Config#serviceType} is explicitly specified, you may not
- * specify both {@link AuthConfig#iam} and {@link AuthConfig#kvstore}
- * properties at the same time.  You may specify value <em>\{\}</em> (empty
- * object) for {@link AuthConfig#kvstore} property to connect to non-secure
- * kvstore, although it is advisable to specify the service type explicitly in
- * this case. See {@link ServiceType.KVSTORE}.</li>
- * <li>If {@link Config#auth} does not contain either of the above properties,
- * the driver will check if it contains user-specified
- * {@link AuthorizationProvider} (see {@link AuthConfig#provider}).  In this
- * case the service type will remain undefined and user-specified provider
- * will be used to control access to the service.  If there is no
- * user-specified {@link AuthorizationProvider} in {@link Config#auth}, this
- * is equivalent to {@link Config#auth} not defined and the service type will
- * default to {@link ServiceType.CLOUD} or {@link ServiceType.CLOUDSIM} as
- * described above.</li>
+ * the service type is assumed to be {@link ServiceType.KVSTORE}. You may
+ * specify value <em>\{\}</em> (empty object) for {@link AuthConfig#kvstore}
+ * property to connect to non-secure kvstore, although it is advisable to
+ * specify the service type explicitly in this case.
+ * See {@link ServiceType.KVSTORE}.</li>
+ * <li>If {@link Config#auth} contains {@link AuthConfig#provider} property,
+ * the service type depends on the type of the provider:
+ * {@link ServiceType.CLOUD} if the provider is
+ * {@link IAMAuthorizationProvider} and {@link ServiceType.KVSTORE} if the
+ * provider is {@link KVStoreAuthorizationProvider}. If using user-specified
+ * provider type, the service type will remain undefined.</li>
  * </ul>
+ * Note that only one of properties {@link AuthConfig#iam},
+ * {@link AuthConfig#kvstore} or {@link AuthConfig#provider} may be specified.
+ * If none is specified, this is equivalent to {@link Config#auth} not defined
+ * and the service type will default to {@link ServiceType.CLOUD} or
+ * {@link ServiceType.CLOUDSIM} as described above.
+ * 
  * @see {@link AuthConfig}
  * @see {@link AuthorizationProvider}
  */

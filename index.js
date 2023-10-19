@@ -35,3 +35,6 @@ exports.NoSQLTimeoutError = err.NoSQLTimeoutError;
 exports.NoSQLAuthorizationError = err.NoSQLAuthorizationError;
 exports.NoSQLQueryError = err.NoSQLQueryError;
 exports.TTLUtil = require('./lib/ttl_util');
+exports.IAMAuthorizationProvider = require('./lib/auth/iam/auth_provider');
+exports.KVStoreAuthorizationProvider =
+    require('./lib/auth/kvstore/auth_provider');

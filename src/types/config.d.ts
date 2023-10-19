@@ -211,17 +211,24 @@ export interface Config {
     maxMemoryMB?: number;
    
     /**
-     * Cloud service only.  Compartment id (OCID) or compartment name to use
-     * for operations with this {@link NoSQLClient} instance. If the name is
-     * used it can be either the name of a top-level compartment or a path to
+     * Cloud service only.  Compartment to use for operations with this
+     * {@link NoSQLClient} instance.
+     * <p>
+     * If using specific user's identity, this can be specified either as
+     * compartment OCID or compartment name. If compartment name is used it
+     * can be either the name of a top-level compartment or a path to
      * a nested compartment, e.g.
      * <em>compartmentA.compartmentB.compartmentC</em>. The path should not
-     * include the root compartment name (tenant).  If this property is not
+     * include the root compartment name (tenant). If this property is not
      * specified either here or for an individual operation the tenant OCID is
      * used as the compartment id for the operation, which is the id of the
      * root compartment for the tenancy. See
      * {@link https://docs.cloud.oracle.com/iaas/Content/GSG/Concepts/settinguptenancy.htm | Setting Up Your Tenancy}
      * for more information.
+     * <p>
+     * If using Instance Principal or Resource Principal, compartment OCID
+     * must be used and there is no default.
+     * @see {@link IAMConfig}
      */
     compartment?: string;
 

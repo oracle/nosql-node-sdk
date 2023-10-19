@@ -9,8 +9,8 @@ import type { CapacityMode } from "./constants";
 import type { PutOpt, DeleteOpt, WriteMultipleOpt } from "./opt";
 import type { SyncPolicy, ReplicaAckPolicy } from "./durability";
 import type { AnyRow, KeyField, RowKey, FieldValue } from "./data";
-import type { getAuthorization } from "./auth/config";
 import type { OpaqueType } from "./type_utils";
+import type { AuthorizationProvider } from "./auth/config";
 
 /**
  * Cloud service only.
@@ -383,7 +383,7 @@ export interface WriteOperation<TRow = AnyRow> {
  * If the application is using custom retry handler, it can customize the
  * retry logic based on what operation has caused the retryable error.</li>
  * <li>It is available as parameter to
- * {@link getAuthorization} method of authorization
+ * {@link AuthorizationProvider#getAuthorization} method of authorization
  * provider. If the application is using custom authorization mechanism, it
  * can customize its behavior based on what operation requires authorization.
  * </li>

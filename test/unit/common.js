@@ -46,6 +46,9 @@ const badStringsOrBinaries = [
     '' //cannot be empty string
 ];
 
+const badFilePathsNotNull = badStringsOrBinaries.concat('nosuchfile');
+const badFilePaths = badFilePathsNotNull.concat(undefined, null);
+
 const badStringsNoEmpty = [
     ...badStringsOrBinariesNoEmpty,
     Buffer.alloc(16),
@@ -540,6 +543,8 @@ module.exports = {
     badMillis,
     badMillisWithOverride,
     badStringsOrBinaries,
+    badFilePathsNotNull,
+    badFilePaths,
     badStringsNoEmpty,
     badStrings,
     badStringsOrFunctions,

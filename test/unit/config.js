@@ -15,6 +15,15 @@ const ServiceType = require('../../index').ServiceType;
 const Region = require('../../index').Region;
 const Utils = require('./utils');
 
+const goodIAMConfigs = require('./auth/iam/config').goodDirectConfigs;
+
+const URL = require('url').URL;
+const defCfg = require('../../lib/config').defaults;
+const Consistency = require('../../lib/constants').Consistency;
+const IAMAuthorizationProvider = require('../../lib/auth/iam/auth_provider');
+const KVStoreAuthorizationProvider = require(
+    '../../lib/auth/kvstore/auth_provider');
+
 //Data for negative testing
 
 const badStrings = require('./common').badStrings;
@@ -94,7 +103,7 @@ const badCredsProviders = [
 ];
 
 //only configs that will throw in the constructor of IAMAuthorizationProvider
-const badIAMConfigs = require('./iam/config').badConfigsCons;
+const badIAMConfigs = require('./auth/iam/config').badConfigsCons;
 
 const badKVStoreAuthConfigs = [
     0, //must be object
@@ -144,12 +153,31 @@ const badAuthProviders = [
     }
 ];
 
+const goodIAMConfig = Utils.deepCopy(goodIAMConfigs[0]);
+const goodKVStoreConfig = {
+    user: 'John',
+    password: '123'
+};
+
 const badAuthConfigs = [
     1, //must be string or object
     function() { return ''; }, //must be string or object
     ...badIAMConfigs.map(iam => ({ iam })),
     ...badKVStoreAuthConfigs.map(kvstore => ({ kvstore })),
-    ...badAuthProviders.map(provider => ({ provider }))
+    ...badAuthProviders.map(provider => ({ provider })),
+    //Must specify only one of iam, kvstore or provider
+    {
+        iam: goodIAMConfig,
+        kvstore: goodKVStoreConfig
+    },
+    {
+        iam: goodIAMConfig,
+        provider: new IAMAuthorizationProvider(goodIAMConfig)
+    },
+    {
+        kvstore: goodKVStoreConfig,
+        provider: new KVStoreAuthorizationProvider(goodKVStoreConfig)
+    }
 ];
 
 const badServiceTypes = [
@@ -283,16 +311,32 @@ const badConfigs = [
             }
         }
     },
-    {   //Service type CLOUD, iam info not present, auth=null
-        endpoint: 'nosql.us-phoenix-1.oci.oraclecloud.com',
-        serviceType: ServiceType.CLOUD,
-        auth: null
-    },
-    {   //Service type CLOUD, auth.iam is null
+    {   //Service type CLOUD, but specified auth.kvstore
         endpoint: 'nosql.us-phoenix-1.oci.oraclecloud.com',
         serviceType: ServiceType.CLOUD,
         auth: {
-            iam: null
+            kvstore: goodKVStoreConfig
+        }
+    },
+    {   //Service type CLOUD, but specified KVStore auth provider
+        endpoint: 'nosql.us-phoenix-1.oci.oraclecloud.com',
+        serviceType: ServiceType.CLOUD,
+        auth: {
+            kvstore: new KVStoreAuthorizationProvider(goodKVStoreConfig)
+        }
+    },
+    {   //Service type KVSTORE, but specified auth.iam
+        endpoint: 'localhost:443',
+        serviceType: ServiceType.KVSTORE,
+        auth: {
+            iam: goodIAMConfig
+        }
+    },
+    {   //Service type KVSTORE, but specified IAM auth provider
+        endpoint: 'localhost:443',
+        serviceType: ServiceType.KVSTORE,
+        auth: {
+            provider: new IAMAuthorizationProvider(goodIAMConfig)
         }
     },
     badRateLimiterConfigs.map(rateLimiter => ({
@@ -307,13 +351,6 @@ const badConfigs = [
 ];
 
 //Functions for positive tests
-
-const URL = require('url').URL;
-const defCfg = require('../../lib/config').defaults;
-const Consistency = require('../../lib/constants').Consistency;
-const IAMAuthorizationProvider = require('../../lib/auth/iam/auth_provider');
-const KVStoreAuthorizationProvider = require(
-    '../../lib/auth/kvstore/auth_provider');
 
 function verifyProps(cfg, req, def, props) {
     expect(cfg).to.exist;
@@ -350,13 +387,13 @@ function getServiceType(cfg) {
 
 function verifyIAM(cfg, reqCfg) {
     expect(cfg.auth.provider).to.be.instanceof(IAMAuthorizationProvider);
-    expect(cfg.auth.iam).to.be.an('object');
-    verifyProps(cfg.auth.iam, reqCfg.auth.iam, defCfg.auth.iam, [
-        'timeout', 'refreshAheadMs']);
+    if (cfg.auth.iam != null) {
+        verifyProps(cfg.auth.iam, reqCfg.auth.iam, defCfg.auth.iam, [
+            'timeout', 'refreshAheadMs']);
+    }
 }
 
 function verifyKVStoreAuth(cfg, reqCfg) {
-    expect(cfg.auth.kvstore).to.be.an('object');
     if (reqCfg.auth.kvstore) {
         verifyProps(cfg.auth.kvstore, reqCfg.auth.kvstore,
             defCfg.auth.kvstore, [ 'timeout' ]);
@@ -440,8 +477,6 @@ const goodEndpoints = [
     'hTTps://hostname:8181',
     'HtTpS://hostname'
 ];
-
-const goodIAMConfigs = require('./iam/config').goodDirectConfigs;
 
 const goodKVStoreCreds = [
     'mycredentials.json',
@@ -560,23 +595,6 @@ const goodConfigs = [
         endpoint: 'nosql.us-phoenix-1.oci.oraclecloud.com',
         serviceType: ServiceType.CLOUD
     },
-    {   //Service type CLOUD, auth.iam not present
-        //(using default OCI config file)
-        endpoint: 'nosql.us-phoenix-1.oci.oraclecloud.com',
-        serviceType: ServiceType.CLOUD,
-        auth: {
-            kvstore: { credentials: 'blahblah' }
-        }
-    },
-    {   //Service type CLOUD, auth.iam is empty
-        //(using default OCI config file)
-        endpoint: 'nosql.us-phoenix-1.oci.oraclecloud.com',
-        serviceType: ServiceType.CLOUD,
-        auth: {
-            kvstore: { credentials: 'blahblah' },
-            iam: {}
-        }
-    },
     {   //auth.iam is empty, serviceType should default to CLOUD
         //(and using default OCI config file)
         endpoint: 'nosql.us-phoenix-1.oci.oraclecloud.com',
@@ -640,6 +658,19 @@ const goodConfigs = [
         endpoint: 'http://localhost:8080',
         rateLimiter: true,
         rateLimiterPercent: 50
+    },
+    {   //Service type CLOUD, auth=null (using default OCI config file)
+
+        endpoint: 'nosql.us-phoenix-1.oci.oraclecloud.com',
+        serviceType: ServiceType.CLOUD,
+        auth: null
+    },
+    {   //Service type CLOUD, auth.iam is null (using default OCI config file)
+        endpoint: 'nosql.us-phoenix-1.oci.oraclecloud.com',
+        serviceType: ServiceType.CLOUD,
+        auth: {
+            iam: null
+        }
     }
 ];
 
@@ -694,10 +725,10 @@ function testGoodConfigs() {
 //We create this default file while backing up and restoring original if
 //exists.
 
-const DEFAULT_OCI_FILE = require('./iam/constants').DEFAULT_OCI_FILE;
-const DEFAULT_OCI_DIR = require('./iam/constants').DEFAULT_OCI_DIR;
-const defaultOCIFileLines = require('./iam/config').defaultOCIFileLines;
-const writeFileLines = require('./iam/utils').writeFileLines;
+const DEFAULT_OCI_FILE = require('./auth/iam/constants').DEFAULT_OCI_FILE;
+const DEFAULT_OCI_DIR = require('./auth/iam/constants').DEFAULT_OCI_DIR;
+const defaultOCIFileLines = require('./auth/iam/config').defaultOCIFileLines;
+const writeFileLines = require('./auth/iam/utils').writeFileLines;
 const mockfs = require('mock-fs');
 
 //The driver loads this module after the test has already started, which would

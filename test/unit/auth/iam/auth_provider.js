@@ -12,15 +12,17 @@ chai.use(require('chai-as-promised'));
 const expect = chai.expect;
 const mockfs = require('mock-fs');
 
-const IAMAuthorizationProvider =
-    require('../../../lib/auth/iam/auth_provider');
-const ErrorCode = require('../../../lib/error_code');
-const NoSQLError = require('../../../lib/error').NoSQLError;
-const Utils = require('../utils');
+const ErrorCode = require('../../../../lib/error_code');
+const NoSQLError = require('../../../../lib/error').NoSQLError;
+const Utils = require('../../utils');
+const { NoSQLClient } = require('../../../..');
+const SERVICE_ENDPOINT = require('./constants').SERVICE_ENDPOINT;
 const COMPARTMENT_ID = require('./constants').COMPARTMENT_ID;
 const PRIVATE_KEY_FILE = require('./constants').PRIVATE_KEY_FILE;
 const SESSION_TOKEN_FILE = require('./constants').SESSION_TOKEN_FILE;
 const SESSION_TOKEN = require('./constants').SESSION_TOKEN;
+const DEFAULT_OCI_DIR = require('./constants').DEFAULT_OCI_DIR;
+const DEFAULT_OCI_FILE = require('./constants').DEFAULT_OCI_FILE;
 const creds = require('./config').creds;
 const sessTokenCreds = require('./config').sessTokenCreds;
 const badDirectConfigs = require('./config').badDirectConfigs;
@@ -31,6 +33,8 @@ const badUserConfigs = require('./config').badUserConfigs;
 const goodUserConfigs = require('./config').goodUserConfigs;
 const badExclPropsConfigsCons = require('./config').badExclPropsConfigsCons;
 const iam2cfg = require('./utils').iam2cfg;
+const makeAuthProvider = require('./utils').makeAuthProvider;
+const initAuthProvider = require('./utils').initAuthProvider;
 const makeReq = require('./utils').makeReq;
 const writeOrRemove = require('./utils').writeOrRemove;
 const verifyAuth = require('./utils').verifyAuth;
@@ -47,7 +51,8 @@ function prepConfig(cfg) {
             pkFile = PRIVATE_KEY_FILE;
         }
         writeOrRemove(pkFile, cfg._privateKeyData);
-        writeOrRemove(cfg.configFile, cfg._ociConfigData);
+        writeOrRemove(cfg._useDefaultOCIFile ?
+            DEFAULT_OCI_FILE : cfg.configFile, cfg._ociConfigData);
 
         if (cfg.useSessionToken) {
             writeOrRemove(SESSION_TOKEN_FILE, cfg._sessTokenData != null ?
@@ -59,7 +64,7 @@ function prepConfig(cfg) {
 async function testConfig(iamCfg, compartment) {
     prepConfig(iamCfg);
     const cfg = iam2cfg(iamCfg, compartment);
-    const provider = new IAMAuthorizationProvider(cfg);
+    const provider = initAuthProvider(cfg);
     try {
         return await provider.getAuthorization(makeReq(cfg));
     } finally {
@@ -67,10 +72,30 @@ async function testConfig(iamCfg, compartment) {
     }
 }
 
+async function testConfigWithNoSQLClient(iamCfg, compartment) {
+    prepConfig(iamCfg);
+    let provider = makeAuthProvider(iamCfg);
+    const noSqlCfg = {
+        endpoint: SERVICE_ENDPOINT,
+        compartment,
+        auth: { provider }
+    };
+    const client = new NoSQLClient(noSqlCfg);
+    expect(client._config).to.exist;
+    expect(client._config.auth).to.exist;
+    provider = client._config.auth.provider;
+    expect(provider).to.exist;
+    try {
+        return await provider.getAuthorization(makeReq(noSqlCfg));
+    } finally {
+        client.close();
+    }
+}
+
 function testCacheAndRefresh(iamCfg) {
     it(`Cache test with iam config: ${inspect(iamCfg)}`, async function() {
         prepConfig(iamCfg);
-        const provider = new IAMAuthorizationProvider(iam2cfg(Object.assign({
+        const provider = initAuthProvider(iam2cfg(Object.assign({
             durationSeconds: 2,
             refreshAheadMs: null //disable refresh
         }, iamCfg)));
@@ -88,7 +113,7 @@ function testCacheAndRefresh(iamCfg) {
     });
     it(`Refresh test with iam config: ${inspect(iamCfg)}`, async function() {
         prepConfig(iamCfg);
-        const provider = new IAMAuthorizationProvider(iam2cfg(Object.assign({
+        const provider = initAuthProvider(iam2cfg(Object.assign({
             durationSeconds: 3,
             refreshAheadMs: 1000
         }, iamCfg)));
@@ -134,6 +159,8 @@ function doTest() {
             verifyAuth(auth, creds);
             auth = await testConfig(cfg, COMPARTMENT_ID);
             verifyAuth(auth, creds, COMPARTMENT_ID);
+            auth = await testConfigWithNoSQLClient(cfg, COMPARTMENT_ID);
+            verifyAuth(auth, creds, COMPARTMENT_ID);
         });
     }
     for(let cfg of badFileConfigs) {
@@ -145,7 +172,9 @@ function doTest() {
     }
     for(let cfg of goodFileConfigs) {
         it(`Valid file config: ${inspect(cfg)}`, async function() {
-            const auth = await testConfig(cfg);
+            let auth = await testConfig(cfg);
+            verifyAuth(auth, cfg.useSessionToken ? sessTokenCreds : creds);
+            auth = await testConfigWithNoSQLClient(cfg);
             verifyAuth(auth, cfg.useSessionToken ? sessTokenCreds : creds);
         });
     }
@@ -159,7 +188,9 @@ testCaseId=${testCaseId}`, async function() {
     }
     for(let cfg of goodUserConfigs) {
         it(`Valid user's provider config: ${inspect(cfg)}`, async function() {
-            const auth = await testConfig(cfg);
+            let auth = await testConfig(cfg);
+            verifyAuth(auth, creds);
+            auth = await testConfigWithNoSQLClient(cfg);
             verifyAuth(auth, creds);
         });
     }
@@ -182,7 +213,9 @@ testCaseId=${testCaseId}`, async function() {
 if (!Utils.isOnPrem) {
     describe('IAMAuthorizationProvider test', function() {
         this.timeout(60000);
-        before(() => mockfs());
+        before(() => mockfs({
+            [DEFAULT_OCI_DIR] : {}
+        }));
         after(() => mockfs.restore());
         doTest();
         it('', () => {});
