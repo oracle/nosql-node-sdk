@@ -9,7 +9,8 @@ import type { NoSQLClient } from "../../nosql_client";
 import type { Config } from "../../config";
 import type { Operation } from "../../param";
 import type { NoSQLArgumentError } from "../../error";
-import type { AuthConfig, AuthorizationProvider } from "../config";
+import type { AuthConfig, AuthorizationProvider, AuthResult }
+    from "../config";
 import type { KVStoreAuthConfig, KVStoreCredentialsProvider } from "./types";
 
 /**
@@ -115,8 +116,7 @@ export class KVStoreAuthorizationProvider implements AuthorizationProvider {
      * @returns {Promise} Promise resolved with authorization information or
      * rejected with an error
      */
-    getAuthorization(op: Operation):
-        Promise<string | { [name: string]: string }>;
+    getAuthorization(op: Operation): Promise<AuthResult>;
 
     /**
      * Initialization callback.
@@ -128,7 +128,7 @@ export class KVStoreAuthorizationProvider implements AuthorizationProvider {
 
     /**
      * Releases resources associated with this provider.
-     * @see {@link AuthorizationProvider#onClose}
+     * @see {@link AuthorizationProvider#close}
      */
     onClose(): void | Promise<void>;
 }

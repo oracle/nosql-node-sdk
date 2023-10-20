@@ -5,6 +5,8 @@
  *  https://oss.oracle.com/licenses/upl/
  */
 
+import type { KVStoreAuthorizationProvider } from "./auth_provider";
+
 /**
  * This configuration is required to authenticate against secure On-Premises
  * Oracle NoSQL Database.  It should be set as {@link AuthConfig#kvstore}.
@@ -49,6 +51,9 @@
  * token and does not require user credentials.  If renew request fails, the
  * token will eventually expire and the driver will perform another login
  * (errors due to token expiration are automatically retried by the driver).
+ * @see {@link KVStoreAuthorizationProvider}
+ * @see {@link KVStoreCredentials}
+ * @see {@link KVStoreCredentialsProvider}
  */
 export interface KVStoreAuthConfig {
     /**

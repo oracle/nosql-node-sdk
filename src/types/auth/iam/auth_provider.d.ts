@@ -9,7 +9,8 @@ import type { NoSQLClient } from "../../nosql_client";
 import type { Config } from "../../config";
 import type { Operation } from "../../param";
 import type { NoSQLArgumentError } from "../../error";
-import type { AuthConfig, AuthorizationProvider } from "../config";
+import type { AuthConfig, AuthorizationProvider, AuthResult }
+    from "../config";
 import type { IAMConfig, DelegationTokenProvider } from "./types";
 
 /**
@@ -216,8 +217,7 @@ export class IAMAuthorizationProvider implements AuthorizationProvider {
      * @returns {Promise} Promise resolved with authorization information or
      * rejected with an error
      */
-    getAuthorization(op: Operation):
-        Promise<string | { [name: string]: string }>;
+    getAuthorization(op: Operation): Promise<AuthResult>;
 
     /**
      * If using Resource Principal, gets the claims information in the
@@ -241,7 +241,7 @@ export class IAMAuthorizationProvider implements AuthorizationProvider {
 
     /**
      * Releases resources held by this provider.
-     * @see {@link AuthorizationProvider#onClose}
+     * @see {@link AuthorizationProvider#close}
      */
     close(): void | Promise<void>;
 }

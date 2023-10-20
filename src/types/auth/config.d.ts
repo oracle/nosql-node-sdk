@@ -97,7 +97,7 @@ export type AuthResult = string | { [name: string]: string };
  * and/or presense of service-specific configurations such as
  * {@link IAMConfig} and {@link KVStoreAuthConfig} as properties
  * {@link AuthConfig#iam} and {@link AuthConfig#kvstore} of
- * {@link AuthConfig}. Alternatively, the application may choose to
+ * {@link AuthConfig}. Alternatively, an application may choose to
  * use custom authorization provider that implements
  * {@link AuthorizationProvider} interface and set it as
  * {@link AuthConfig#provider} property of {@link AuthConfig}. Instead of a
