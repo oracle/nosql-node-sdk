@@ -14,7 +14,7 @@ IAMAuthorizationProvider includes API to get Resource Principal claims.
 enable using the resource compartment when using Resource Principal.
 * On-prem only: new unit tests for on-prem authentication.
 * Support for query array_collect and count(distinct) operators.
-* Cloud only: Added OCI region codes: AGA BOG VAP NAP AVZ OZZ DRS TYO AHU
+* Cloud only: Added OCI region codes: AGA BOG VAP NAP AVZ OZZ DRS TYO AHU DAC DOH
 * On-prem only: allow to specify namespace as a configuration option or in
 options for each operation.
 
