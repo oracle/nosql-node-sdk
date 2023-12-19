@@ -326,10 +326,12 @@ class QueryUtils extends Utils {
     }
 
     static collectDistinct(rows, field) {
+        rows = QueryUtils._sortRows(rows, [ field ]);
         return QueryUtils._aggregate(rows, field, QueryUtils._isNullOrEmpty,
             (arr, val) => {
-                if (!arr.some(v => !QueryUtils.compareFieldValues(val, v))) {
-                    arr.push(val);    
+                if (arr.length === 0 || QueryUtils.compareFieldValues(
+                    val, arr[arr.length - 1])) {
+                    arr.push(val);
                 }
                 return arr;
             }, []);
@@ -436,6 +438,42 @@ class QueryUtils extends Utils {
         };
     }
 
+    //LOJ of 2 tables
+    static loj(alias1, rows1, alias2, rows2, fields) {
+        //It seems that using O(n^2) algorithm is too slow for large sets of
+        //rows (~10000), so we sort them first so that we can compute the
+        //result in O(n).
+        rows1 = QueryUtils._sortRows(rows1, fields);
+        rows2 = QueryUtils._sortRows(rows2, fields);
+
+        const res = [];
+        let j = 0;
+        for (const row1 of rows1) {
+            let found = false;
+            for(; j < rows2.length; j++) {
+                const row2 = rows2[j];
+                if (QueryUtils.compareRows(row1, row2, fields) === 0) {
+                    found = true;
+                    res.push({
+                        [alias1]: row1,
+                        [alias2]: row2
+                    });
+                } else if (found) {
+                    //No more rows from rows2 match with row1's key, for next
+                    //key we can start with the current value of j.
+                    break;
+                }
+            }
+            if (!found) {
+                res.push({
+                    [alias1]: row1,
+                    [alias2]: undefined
+                });
+            }
+        }
+
+        return res;
+    }
 }
 
 module.exports = QueryUtils;

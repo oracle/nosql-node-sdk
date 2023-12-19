@@ -18,6 +18,11 @@ enable using the resource compartment when using Resource Principal.
 * On-prem only: allow to specify namespace as a configuration option or in
 options for each operation.
 
+**Changed**
+
+* Allow internal query protocol version negotiation.
+* Modified internal query processing to support elasticity operations.
+
 **Fixed**
 
 * Modified index.js to allow named imports from JavaScript when using ES6

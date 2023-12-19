@@ -44,7 +44,7 @@ function makeObjectForJSON(i) {
                     (i % 10) < 5 : new Date(currentTimeMillis))),
         z: new Date(currentTimeMillis + (i % 6) * 123456),
         location: (i % 5) ? Utils.geoDestination(DEFAULT_LOCATION,
-            ((i + 1) % 8) * 12000 + i * 10.987, i * 2) : null
+            ((i + 1) % 8) * 12000 + i * 10, i * 2) : null
     };
     if (i % 3) {
         ret.b = (i % 3 === 2);
@@ -186,7 +186,7 @@ function makeRowAllTypes(i, rowsPerShard = ROWS_PER_SHARD, opt = null) {
         colBoolean: (i & 1) ? undefined: !(i & 3),
         colInteger: getIntValue(i, opt),
         colLong: getLongValue(i, opt),
-        colFloat: (i & 1) ? (1 + 0.0001 * i) * 1e38 : undefined,
+        colFloat: (i & 1) ? (1 + 0.0001 * (i % 9999)) * 1e38 : undefined,
         //It looks like Float doesn't handle these now on the server side:
         //NUM_SPECIAL[i % NUM_SPECIAL.length]
         colDouble: (i % rowsPerShard > (rowsPerShard / 2)) ?
@@ -353,10 +353,11 @@ class AllTypesChildTableTest extends DataTest {
 }
 
 class AllTypesWithChildTableTest extends AllTypesTest {
-    constructor(cnt, rowsPerShard = ROWS_PER_SHARD, start = 0, opt = null) {
+    constructor(cnt, rowsPerShard = ROWS_PER_SHARD, start = 0, opt = null,
+        childRowsPerParent = CHILD_ROWS_PER_PARENT) {
         super(cnt, rowsPerShard, start, opt);
-        this.child = new AllTypesChildTableTest(cnt * CHILD_ROWS_PER_PARENT,
-            rowsPerShard, start * CHILD_ROWS_PER_PARENT);
+        this.child = new AllTypesChildTableTest(cnt * childRowsPerParent,
+            rowsPerShard, start * childRowsPerParent);
     }
 
     getTest(tableName) {

@@ -162,11 +162,22 @@ export enum ErrorCode {
     ETAG_MISMATCH = "ETAG_MISMATCH",
 
     /**
-     * Indicates the client protocol version is not supported by the
-     * server, i.e. the client is newer than the server. The client should
-     * decrement its protocol version and try again.
+     * Indicates the client protocol version is not supported by the server,
+     * i.e. the client is newer than the server. The driver will try to
+     * decrement the protocol version, if possible, and try again. This error
+     * will result if the protocol version cannot be further decremented.
      */
     UNSUPPORTED_PROTOCOL = "UNSUPPORTED_PROTOCOL",
+
+    /**
+     * Indicates that the server does not support the current query protocol
+     * version, i.e. the client is using newer query version than the server.
+     * The driver will try to decrement the query version, if possible, and
+     * try again. This error will result if the query version cannot be
+     * further decremented.
+     * @type {ErrorCode}
+     */
+    UNSUPPORTED_QUERY_VERSION = "UNSUPPORTED_QUERY_VERSION",
 
     /**
      * Indicates that the provisioned read throughput has been exceeded.
