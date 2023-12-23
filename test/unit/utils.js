@@ -418,12 +418,14 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
         expect(val.toString()).to.equal(val0.toString());
     }
 
-    static verifyFloat(val, val0) {
-        this.verifyFP(val, val0, FLOAT_DELTA);
+    static verifyFloat(val, val0, info) {
+        this.verifyFP(val, val0, info && info.roundingDelta > 1 ?
+            FLOAT_DELTA * info.roundingDelta : FLOAT_DELTA);
     }
 
-    static verifyDouble(val, val0) {
-        this.verifyFP(val, val0, DOUBLE_DELTA);
+    static verifyDouble(val, val0, info) {
+        this.verifyFP(val, val0, info && info.roundingDelta > 1 ?
+            DOUBLE_DELTA * info.roundingDelta : DOUBLE_DELTA);
     }
 
     static verifyNumber(val, val0, info) {
@@ -460,9 +462,9 @@ ${fld.typeSpec ? fld.typeSpec : fld.type})`;
         case 'LONG':
             return this.verifyLong(val, val0);
         case 'FLOAT':
-            return this.verifyFloat(val, val0);
+            return this.verifyFloat(val, val0, type);
         case 'DOUBLE':
-            return this.verifyDouble(val, val0);
+            return this.verifyDouble(val, val0, type);
         case 'NUMBER':
             return this.verifyNumber(val, val0, type);
         case 'JSON':
@@ -514,7 +516,7 @@ from QueryUtils to verify query results').to.exist;
     //in the table; the query test needs to specify result fields if
     //using aliases or expressions
     static verifyRow(row, row0, tbl, fields) {
-        if (tbl.idFld) {
+        if (tbl.idFld && !(tbl.idFld.name in row0)) {
             //Skip verification of id column since its expected value is not
             //known here.  It will be verified in verifyPut().
             row = Object.assign({}, row);
