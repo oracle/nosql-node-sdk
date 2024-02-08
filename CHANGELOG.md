@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 **Added**
 
+* Cloud only: added support for replica (multi-region) tables:
+  - added new methods to NoSQLClient: addReplica, dropReplica,
+getReplicaStats, forLocalReplicaInit
+  - added new properties to TableResult: isSchemaFrozen, isReplicated,
+isLocalReplicaInitialized, replicas
 * Added public classes for Cloud and On-prem authorization providers.
 IAMAuthorizationProvider includes API to get Resource Principal claims.
 * Cloud only: added configuration option useResourcePrincipalCompartment to

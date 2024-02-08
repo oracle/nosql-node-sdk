@@ -17,10 +17,12 @@ const compareVersions = require('compare-versions').compareVersions;
 const util = require('util');
 const fs = require('fs');
 const Path = require('path');
+const { CapacityMode } = require('../../lib/constants');
 const ServiceType = require('../../index').ServiceType;
 const TableState = require('../../index').TableState;
 const EMPTY_VALUE = require('../../lib/constants').EMPTY_VALUE;
 const isPosInt32OrZero = require('../../lib/utils').isPosInt32OrZero;
+const isPosInt32 = require('../../lib/utils').isPosInt32;
 const isPosInt = require('../../lib/utils').isPosInt;
 const Consistency = require('../../index').Consistency;
 const TTLUtil = require('../../index').TTLUtil;
@@ -277,7 +279,7 @@ class Utils {
         ifNotExists = ifNotExists ? 'IF NOT EXISTS ' : '';
         return `CREATE TABLE ${ifNotExists}${tbl.name}(${flds}, \
 PRIMARY KEY(${pk}))` + (tbl.ttl ? ' USING TTL ' + this.ttl2string(tbl.ttl) :
-            '');
+            '') + (tbl.isSchemaFrozen ? ' WITH SCHEMA FROZEN' : '');
     }
 
     static makeDropTable(tbl, ifExists) {
@@ -542,8 +544,14 @@ from QueryUtils to verify query results').to.exist;
                 if (limits.mode != null) {
                     expect(rlimits.mode).to.equal(limits.mode);
                 }
-                expect(rlimits.readUnits).to.equal(limits.readUnits);
-                expect(rlimits.writeUnits).to.equal(limits.writeUnits);
+                if (limits.mode !== CapacityMode.ON_DEMAND) {
+                    expect(rlimits.readUnits).to.equal(limits.readUnits);
+                    expect(rlimits.writeUnits).to.equal(limits.writeUnits);
+                } else {
+                    //For on-demand mode, don't verify exact read/write units.
+                    expect(rlimits.readUnits).to.satisfy(isPosInt32);
+                    expect(rlimits.writeUnits).to.satisfy(isPosInt32);
+                }
                 expect(rlimits.storageGB).to.equal(limits.storageGB);
             }
         }

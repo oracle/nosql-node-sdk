@@ -11,12 +11,14 @@ import type { TableDDLOpt, ModifyTableOpt, CompletionOpt, GetTableOpt,
     TableUsageOpt, GetIndexOpt, GetIndexesOpt, ListTablesOpt, GetOpt, PutOpt,
     PutIfOpt, DeleteOpt, DeleteIfOpt, MultiDeleteOpt, WriteMultipleOpt,
     PutManyOpt, DeleteManyOpt, PrepareOpt, QueryOpt, AdminDDLOpt,
-    AdminStatusOpt, AdminListOpt } from "./opt";
+    AdminStatusOpt, AdminListOpt, AddReplicaOpt, ReplicaStatsOpt }
+    from "./opt";
 import type { TableLimits, TableETag, DefinedTags, FreeFormTags,
     WriteOperation, RowVersion, Operation } from "./param";
 import type { TableResult, TableUsageResult, IndexInfo, ListTablesResult,
     GetResult, PutResult, DeleteResult, MultiDeleteResult,
-    WriteMultipleResult, QueryResult, AdminResult, UserInfo } from "./result";
+    WriteMultipleResult, QueryResult, AdminResult, UserInfo,
+    ReplicaStats, ReplicaStatsResult } from "./result";
 import type { ServiceType, TableState, AdminState } from "./constants";
 import type { RowKey, AnyRow, AnyKey } from "./data";
 import type { PreparedStatement } from "./stmt";
@@ -25,6 +27,7 @@ import type { IAMConfig } from "./auth/iam/types";
 import type { KVStoreAuthConfig } from "./auth/kvstore/types";
 import type { NoSQLError } from "./error";
 import type { NoSQLClientEvents } from "./events";
+import type { Region } from "./region";
 
 /**
  * Defines NoSQLClient, which is the point of access to the
@@ -1281,6 +1284,153 @@ export class NoSQLClient extends EventEmitter {
      */
     listRoles(opt?: AdminListOpt): Promise<string[]>;
 
+    /**
+     * Cloud Service only.
+     * <p>
+     * Adds replica to a table.
+     * <p>
+     * This operation adds replica to a Global Active table. If performed on
+     * a regular table (singleton), it will be converted to Global Active
+     * table, provided that the sigleton table schema conforms to certain
+     * restrictions. For more information, see
+     * {@link https://docs.oracle.com/en/cloud/paas/nosql-cloud/gasnd | Global Active Tables in NDCS}.
+     * <p>
+     * Note that {@link TableLimits} for the replica table will default to
+     * the table limits for the existing table, however you can override
+     * the values of {@link TableLimits#readUnits} and
+     * {@link TableLimits#writeUnits} for the replica by using
+     * {@link AddReplicaOpt#readUnits} and {@link AddReplicaOpt#writeUnits}.
+     * The storage capacity of the replica will always be the same as that of
+     * the existing table.
+     * <p>
+     * As with {@link tableDDL}, the result returned from this API does not
+     * imply operation completion. Same considerations as described in
+     * {@link tableDDL} about long-running operations apply here, including
+     * using {@link forCompletion} and options
+     * {@link ModifyTableOpt#complete} and {@link ModifyTableOpt#delay}. See
+     * {@link NoSQLClient#tableDDL}.
+     * <p>
+     * Note that even after this operation is completed (as described above),
+     * the replica table in the receiver region may still be in the process of
+     * being initialized with the data from the sender region, during which
+     * time the data operations on the replica table will fail with
+     * {@link ErrorCode.TABLE_NOT_READY}.
+     * @async
+     * @param tableName Table name
+     * @param region Region where to add the replica
+     * @param opt Options object, see {@link AddReplicaOpt}
+     * @returns {Promise} Promise of {@link TableResult}
+     * @see {@link AddReplicaOpt}
+     * @see {@link TableResult}
+     */
+    addReplica(tableName: string, region: Region|string,
+        opt?: AddReplicaOpt) : Promise<TableResult>;
+
+    /**
+     * Cloud Service only.
+     * <p>
+     * Drops replica from a table.
+     * <p>
+     * This operation drops replica from a Global Active table. For more
+     * information, see
+     * {@link https://docs.oracle.com/en/cloud/paas/nosql-cloud/gasnd | Global Active Tables in NDCS}.
+     * <p>
+     * As with {@link tableDDL}, the result returned from this API does not
+     * imply operation completion. Same considerations as described in
+     * {@link tableDDL} about long-running operations apply here, including
+     * using {@link forCompletion} and options
+     * {@link ModifyTableOpt#complete} and {@link ModifyTableOpt#delay}. See
+     * {@link NoSQLClient#tableDDL}.
+     * @async
+     * @param tableName Table name
+     * @param region Region from where to drop the replica
+     * @param opt Options object, see {@link ModifyTableOpt}
+     * @returns {Promise} Promise of {@link TableResult}
+     * @see {@link ModifyTableOpt}
+     * @see {@link TableResult}
+     */
+    dropReplica(tableName: string, region: Region|string,
+        opt?: ModifyTableOpt) : Promise<TableResult>;
+
+    /**
+     * Cloud Service only.
+     * <p>
+     * This method waits asynchronously for local table replica to complete
+     * its initialization.
+     * <p>
+     * After table replica is created, it needs to be initialized by copying
+     * the data (if any) from the sender region. During this initialization
+     * process, even though the table state of the replica table is
+     * {@link TableState.ACTIVE}, data operations cannot be performed on the
+     * replica table.
+     * <p>
+     * This method is used to ensure that the replica table is ready for data
+     * operations by asynchronously waiting for the initialization process to
+     * complete. It works similar to {@link forCompletion} by polling the
+     * table state at regular intervals until
+     * {@link TableResult#isLocalReplicaInitialized} is <em>true</em>.
+     * <p>
+     * Note that this operation must be performed in the receiver region
+     * where the table replica resides (not in the sender region from where
+     * the replica was created), meaning that this {@link NoSQLClient}
+     * instance must be configured with the receiver region (see
+     * {@link Config#region}).
+     * @async
+     * @param tableName Table name
+     * @param opt Options object, see {@link CompletionOpt}
+     * @returns {Promise} Promise of {@link TableResult}
+     * @see {@link https://docs.oracle.com/en/cloud/paas/nosql-cloud/gasnd | Global Active Tables in NDCS}.
+     * @see {@link addReplica}
+     * @see {@link TableResult#isLocalReplicaInitialized}
+     * @see {@link forCompletion}
+     * @see {@link forTableState}
+     */
+    forLocalReplicaInit(tableName: string, opt?: CompletionOpt):
+        Promise<TableResult>;
+    
+    /**
+     * Cloud Service only.
+     * <p>
+     * Gets replica statistics information.
+     * <p>
+     * This operation retrieves stats information for the replicas of a Global
+     * Active table. This information includes a time series of replica stats,
+     * as found in {@link ReplicaStats}. For more information on Global Active
+     * tables, see
+     * {@link https://docs.oracle.com/en/cloud/paas/nosql-cloud/gasnd | Global Active Tables in NDCS}.
+     * <p>
+     * It is possible to return a range of stats records or, by default, only
+     * the most recent stats records (up to the limit) for each replica if
+     * {@link ReplicaStatsOpt#startTime} is not specified. Replica stats
+     * records are created on a regular basis and maintained for a period of
+     * time. Only records for time periods that have completed are returned
+     * so that a user never sees changing data for a specific range.
+     * <p>
+     * By default, this operation returns stats for all replicas as an object
+     * keyed by region id of each replica and values being an array of
+     * {@link ReplicaStats} per replica (see
+     * {@link ReplicaStatsResult#statsRecords}). You may limit the result to
+     * the stats of only one replica by providing its
+     * {@link ReplicaStatsOpt#region}.
+     * <p>
+     * Because the number of replica stats records can be very large, each
+     * call to {@link getReplicaStats} returns a limited number of records
+     * (the default limit is 1000). You can customize this limit via
+     * {@link ReplicaStatsOpt#limit} option. You can retrive large number of
+     * replica stats records over multiple calls to {@link getReplicaStats} by
+     * setting {@link ReplicaStatsOpt#startTime} on each subsequent call to
+     * the value of {@link ReplicaStatsResult#nextStartTime} returned by a
+     * previous call.
+     * @async
+     * @param tableName Table name
+     * @param opt Options object, see {@link ReplicaStatsOpt}.
+     * @returns {Promise} Promise of {@link ReplicaStatsResult}
+     * @see {@link ReplicaStatsOpt}
+     * @see {@link ReplicaStatsResult}
+     */
+    getReplicaStats(tableName: string, opt?: ReplicaStatsOpt) :
+        Promise<ReplicaStatsResult>;
+    
     on<EvName extends keyof NoSQLClientEvents>(event: EvName,
         listener: NoSQLClientEvents[EvName]): this;
 

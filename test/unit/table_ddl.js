@@ -116,9 +116,7 @@ function testOnDemandTable(client, tbl) {
                 timeout: 10000,
                 tableLimits: {
                     mode: CapacityMode.ON_DEMAND,
-                    storageGB: 100,
-                    readUnits: 0,
-                    writeUnits: 0
+                    storageGB: 100
                 }
             });
             Utils.verifyTableResult(res, tbl, { _ignoreTableLimits: true });

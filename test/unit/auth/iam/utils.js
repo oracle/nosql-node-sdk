@@ -18,6 +18,7 @@ const Utils = require('../../utils');
 const HttpConstants = require('../../../../lib/constants').HttpConstants;
 const IAMAuthorizationProvider =
     require('../../../../lib/auth/iam/auth_provider');
+const GetTableOp = require('../../../../lib/ops').GetTableOp;
 const SERVICE_HOST = require('./constants').SERVICE_HOST;
 const SERVICE_ENDPOINT = require('./constants').SERVICE_ENDPOINT;
 const PASSPHRASE = require('./constants').PASSPHRASE;
@@ -114,7 +115,8 @@ function initAuthProvider(cfg) {
 
 function makeReq(cfg, opt) {
     const req = {
-        opt: opt ? opt : {}
+        opt: opt ? opt : {},
+        _op: GetTableOp
     };
     if (cfg != null) {
         req.opt.__proto__ = cfg;

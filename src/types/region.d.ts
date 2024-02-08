@@ -54,16 +54,16 @@ export class Region {
     /**
      * Get region by region id.
      * @param {string} regionId Region id, e.g. ap-mumbai-1
-     * @return {Region} The region, or undefined if given region id is not
-     * found.
+     * @return {Region} The region, or <em>undefined</em> if given region id
+     * is not found.
      */
     static fromRegionId(regionId: string): Region|undefined;
 
     /**
      * Get region by region code or id.
      * @param {string} regionId Region id, e.g. bom or ap-mumbai-1
-     * @return {Region} The region, or undefined if given region code or id is
-     * not found.
+     * @return {Region} The region, or <em>undefined</em> if given region code
+     * or id is not found.
      */
     static fromRegionCodeOrId(regionCodeOrId: string): Region|undefined;
     
@@ -86,6 +86,12 @@ export class Region {
      * Second-level domain for the region, e.g. <em>oraclecloud.com</em>.
      */
     readonly secondLevelDomain: string;
+
+    /**
+     * Returns string representing this region.
+     * @returns String representation, which is {@link regionId}
+     */
+    toString(): string;
 
     /**
      * Realm: OC1, South Africa (Johannesburg)

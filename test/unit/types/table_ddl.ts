@@ -8,8 +8,8 @@
 import { expectTypeOf } from "expect-type";
 
 import { NoSQLClient, TableDDLOpt, TableResult, TableLimits, CapacityMode,
-    TableState, TableETag, DefinedTags, FreeFormTags, ModifyTableOpt }
-    from "../../../";
+    TableState, TableETag, DefinedTags, FreeFormTags, ModifyTableOpt,
+    ReplicaInfo } from "../../../";
 
 const client = new NoSQLClient("nosuchfile.json");
 
@@ -17,13 +17,14 @@ function testTableLimits() {
     let limits: TableLimits;
 
     limits = { readUnits: 1, writeUnits: 1, storageGB: 1 };
+    
+    // @ts-expect-error Missing all properties.
+    limits = {};
 
     // TODO: enable when have exclusive properties
-    // ts-expect-error Missing all properties.
-    limits = {};
     // ts-expect-error Missing writeUnits.
     limits = { readUnits: 1, storageGB: 1 };
-    // ts-expect-error Missing storageGB.
+    // @ts-expect-error Missing storageGB.
     limits = { readUnits: 1, writeUnits: 1 };
 
     // @ts-expect-error Invalid type for readUnits.
@@ -44,7 +45,8 @@ function testTableLimits() {
         storageGB: 10 };
     // ts-expect-error readUnits not allowed for ON_DEMAND.
     limits = { mode: CapacityMode.ON_DEMAND, readUnits: 10, storageGB: 10 };
-    // ts-expect-error Missing storageGB for ON_DEMAND.
+
+    // @ts-expect-error Missing storageGB for ON_DEMAND.
     limits = { mode: CapacityMode.ON_DEMAND };
 
     // @ts-expect-error Invalid type for storageGB.
@@ -53,8 +55,8 @@ function testTableLimits() {
     limits = { mode: CapacityMode.ON_DEMAND, other: 1 };
 }
 
-function testTableDDLOpt(res: TableResult) {
-    let opt: TableDDLOpt = {};
+function testModifyTableOpt(res: TableResult) {
+    let opt: ModifyTableOpt = {};
 
     opt.compartment = "c";
     opt.namespace = "n";
@@ -69,13 +71,6 @@ function testTableDDLOpt(res: TableResult) {
     // @ts-expect-error Invalid type for timeout.
     opt.timeout = "10000";
     
-    // @ts-expect-error Invalid type for table limits.
-    opt.tableLimits = 10;
-    // @ts-expect-error Typo in readUnits.
-    opt.tableLimits = { readUnts: 1, writeUnits: 1, storageGB: 1 };
-
-    opt.tableLimits = { readUnits: 1, writeUnits: 1, storageGB: 1 };
-
     opt.matchETag = res.etag;
     
     // @ts-expect-error Invalid type for matchETag.
@@ -84,6 +79,38 @@ function testTableDDLOpt(res: TableResult) {
     opt.matchETag = {};
     // @ts-expect-error Invalid type for matchETag, must be TableETag.
     opt.matchETag = "etag";
+
+    opt.complete = true;
+    opt.complete = undefined;
+
+    // @ts-expect-error Invalid type for complete.
+    opt.complete = 1;
+
+    opt.delay = 1000;
+
+    // @ts-expect-error Invalid type for delay.
+    opt.delay = "1000";
+
+    // @ts-expect-error Invalid extra property in opt.
+    opt.other = 1;
+}
+
+function testTableDDLOpt() {
+    // Assignability test will disregard optional properties so we have to
+    // test types with required properties.
+    expectTypeOf<Required<TableDDLOpt>>()
+        .toMatchTypeOf<Required<ModifyTableOpt>>();
+    expectTypeOf<Required<ModifyTableOpt>>()
+        .not.toMatchTypeOf<Required<TableDDLOpt>>();
+
+    let opt: TableDDLOpt = {};
+    
+    // @ts-expect-error Invalid type for table limits.
+    opt.tableLimits = 10;
+    // @ts-expect-error Typo in readUnits.
+    opt.tableLimits = { readUnts: 1, writeUnits: 1, storageGB: 1 };
+
+    opt.tableLimits = { readUnits: 1, writeUnits: 1, storageGB: 1 };
 
     opt.definedTags = { "ns1": { "key1": "val1" }, "ns2": {} };
     
@@ -102,17 +129,6 @@ function testTableDDLOpt(res: TableResult) {
     opt.freeFormTags = { "ns1": { "key1": "val1" } };
     // @ts-expect-error Invalid value type for key.
     opt.freeFormTags = { "key1": 1 };
-
-    opt.complete = true;
-    opt.complete = undefined;
-
-    // @ts-expect-error Invalid type for complete.
-    opt.complete = 1;
-
-    opt.delay = 1000;
-
-    // @ts-expect-error Invalid type for delay.
-    opt.delay = "1000";
 
     // @ts-expect-error Invalid extra property in opt.
     opt.other = 1;
@@ -136,7 +152,12 @@ function testTableResult(res: TableResult) {
         .toEqualTypeOf<{[key: string]: string}|undefined>();
     expectTypeOf(res.freeFormTags).toEqualTypeOf<FreeFormTags|undefined>();
     expectTypeOf(res.operationId).toEqualTypeOf<string|undefined>();
-    
+    expectTypeOf(res.isSchemaFrozen).toEqualTypeOf<boolean|undefined>();
+    expectTypeOf(res.isReplicated).toEqualTypeOf<boolean|undefined>();
+    expectTypeOf(res.isLocalReplicaInitialized)
+        .toEqualTypeOf<boolean|undefined>();
+    expectTypeOf(res.replicas).toEqualTypeOf<ReplicaInfo[]|undefined>();
+
     // all properties of TableResult must be read-only
     expectTypeOf<Readonly<TableResult>>().toEqualTypeOf<TableResult>();
 }

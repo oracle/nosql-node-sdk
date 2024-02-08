@@ -67,7 +67,7 @@ export interface TableLimits {
      * The maximum storage to be consumed by the table, in gigabytes, as
      * positive integer.
      */
-    storageGB?: number;
+    storageGB: number;
 
     /**
      * Capacity mode of the table, {@link CapacityMode.PROVISIONED} or
