@@ -6,12 +6,79 @@
  */
 
 import type { NoSQLClient } from "./nosql_client";
-import type { TableState, AdminState } from "./constants";
+import type { TableState, AdminState, CapacityMode } from "./constants";
 import type { TableLimits, TableETag, DefinedTags, FreeFormTags, RowVersion,
     MultiDeleteContinuationKey, QueryContinuationKey } from "./param";
 import type { AnyRow, IdentityField } from "./data";
-import type { PutOpt, DeleteOpt, QueryOpt, ListTablesOpt } from "./opt";
+import type { PutOpt, DeleteOpt, QueryOpt, ListTablesOpt, ReplicaStatsOpt }
+    from "./opt";
 import type { PreparedStatement } from "./stmt";
+import type { Region } from "./region";
+
+/**
+ * Cloud Service only.
+ * ReplicaInfo represents information about a single remote replica of a
+ * Global Active table. For more information, see
+ * {@link https://docs.oracle.com/en/cloud/paas/nosql-cloud/gasnd | Global Active Tables in NDCS}.
+ * You can retrieve information about table replicas from any method that
+ * returns {@link TableResult} (such as {@link NoSQLClient#getTable},
+ * {@link NoSQLClient#addReplica}, etc.) via {@link TableResult#replicas}.
+ * @see {@link TableResult#replicas}
+ */
+export interface ReplicaInfo {
+    /**
+     * Name of the replica. This is the same as a region id (see
+     * {@link Region#regionId}) of the replica's region.
+     */
+    readonly replicaName: string;
+
+    /**
+     * Region of the replica, if given {@link Region} constant is defined in
+     * the SDK.
+     * @see {@link Region}
+     */
+    readonly region?: Region;
+    
+    /**
+     * OCID of the replica table.
+     */
+    readonly replicaOCID: string;
+
+    /**
+     * Capacity mode of the replica table.
+     * <p>
+     * Capacity mode may be set separately for each replica.
+     * @see {@link CapacityMode}
+     */
+    readonly capacityMode: CapacityMode;
+
+    /**
+     * Write units of the replica table.
+     * <p>
+     * From the standpoint of the local table, write units of the replica
+     * table define the maximum throughput used for replicating writes from
+     * the replica to the local table. This throughput adds to the total
+     * write througput of the local table. If the replica has capacity mode
+     * {@link CapacityMode.ON_DEMAND}, system-configured limits will be used.
+     * <p>
+     * Note that reads are done locally so the read units of the replica table
+     * do not affect the read throughput of the local table.
+     * <p>
+     * Both write and read units can be set separately for each replica.
+     * @see {@link TableLimits#writeUnits}
+     */
+    readonly writeUnits: number;
+
+    /**
+     * Operational state of the replica table.
+     * <p>
+     * Note that replica initialization process (see
+     * {@link TableResult#isLocalReplicaInitialized}) does not affect the
+     * replica table state (it will still be {@link TableState.ACTIVE}).
+     * @see {@link TableState}
+     */
+    readonly state: TableState;
+}
 
 /**
  * TableResult object is the result of {@link NoSQLClient#tableDDL},
@@ -106,6 +173,46 @@ export interface TableResult {
      * operation.
      */
     readonly operationId?: string;
+
+    /**
+     * Cloud Service only.
+     * Indicates whether or not the table's schema is frozen. Frozen schema is
+     * required for Global Active tables. For more information, see
+     * {@link https://docs.oracle.com/en/cloud/paas/nosql-cloud/gasnd | Global Active Tables in NDCS}.
+     */
+    readonly isSchemaFrozen?: boolean;
+
+    /**
+     * Cloud Service only.
+     * Indicates whether the table has replicas, that is whether it is a
+     * Global Active table. For more information, see
+     * {@link https://docs.oracle.com/en/cloud/paas/nosql-cloud/gasnd | Global Active Tables in NDCS}.
+     */
+    readonly isReplicated?: boolean;
+
+    /**
+     * Cloud Service only.
+     * If this table is a replica, indicates whether its initialization
+     * process has been completed. The initialization process starts after the
+     * replica table is created and involves copying of the table data from
+     * the sender region to the receiver region. For more information, see
+     * {@link https://docs.oracle.com/en/cloud/paas/nosql-cloud/gasnd | Global Active Tables in NDCS}.
+     * This value is <em>true</em> if the table is a replica and its
+     * initialization process has been completed, otherwise it is
+     * <em>false</em>.
+     * @see {@link NoSQLClient#addReplica}
+     */
+    readonly isLocalReplicaInitialized?: boolean;
+
+    /**
+     * Cloud Service only.
+     * An array containing information for each replica, if this table is
+     * replicated (Global Active Table), otherwise <em>undefined</em>.
+     * For more information, see
+     * {@link https://docs.oracle.com/en/cloud/paas/nosql-cloud/gasnd | Global Active Tables in NDCS}.
+     * @see {@link ReplicaInfo}
+     */
+    readonly replicas?: ReplicaInfo[];
 }
 
 /**
@@ -670,4 +777,86 @@ export interface UserInfo {
      * User name.
      */
     readonly name: string;
+}
+
+/**
+ * Cloud Service only.
+ * <p>
+ * ReplicaStats contains information about replica lag for a specific replica.
+ * <p>
+ * Replica lag is a measure of how current this table is relative to the
+ * remote replica and indicates that this table has not yet received updates
+ * that happened within the lag period.
+ * <p>
+ * For example, if the replica lag is 5,000 milliseconds(5 seconds), then this
+ * table will have all updates that occurred at the remote replica that are
+ * more than 5 seconds old.
+ * <p>
+ * Replica lag is calculated based on how long it took for the latest
+ * operation from the table at the remote replica to be replayed at this
+ * table. If there have been no application writes for the table at the remote
+ * replica, the service uses other mechanisms to calculate an approximation of
+ * the lag, and the lag statistic will still be available.
+ */
+export interface ReplicaStats {
+    /**
+     * The time the replica stats collection was performed.
+     */
+    readonly collectionTime: Date;
+
+    /**
+     * The replica lag collected at the specified time in milliseconds. In
+     * rare cases where the replica lag could not be determined, this value is
+     * <em>undefined</em>.
+     */
+    readonly replicaLag?: number;
+}
+
+/**
+ * Cloud Service only.
+ * <p>
+ * Result returned by {@link NoSQLClient#getReplicaStats}. It contains replica
+ * statistics for the requested table.
+ * @see {@link NoSQLClient#getReplicaStats}
+ */
+export interface ReplicaStatsResult {
+    /**
+     * Table name.
+     */
+    readonly tableName: string;
+
+    /**
+     * Next start time. This can be used when retrieving large number of
+     * replica stats records over multiple calls to
+     * {@link NoSQLClient#getReplicaStats}. Pass this value as
+     * {@link ReplicaStatsOpt#startTime} on the subsequent call to
+     * {@link NoSQLClient#getReplicaStats}.
+     */
+    readonly nextStartTime: Date;
+
+    /**
+     * Replica statistics information. Represented as an object with keys
+     * being region id (see {@link Region#regionId}) of a replica and values
+     * being an array of {@link ReplicaStats} for that replica. If
+     * {@link ReplicaStatsOpt#region} option is set, this object will contain
+     * only one key-value pair for the given region.
+     * <p>
+     * Note that in either case this object will contain only keys for which
+     * there is at least one {@link ReplicaStats} record returned (it will not
+     * contain keys for regions for which no stats records were found
+     * according to values specified in {@link ReplicaStatsOpt} or applicable
+     * defaults).
+     * @see {@link ReplicaStatsOpt}
+     * 
+     * @example
+     * Print replica lag info for EU_ZURICH_1 region.
+     * ```ts
+     * for(const rec of statsResult.statsRecords['eu-zurich-1']) {
+     *     console.log(rec.replicaLag);
+     * }
+     * ```
+     */
+    readonly statsRecords: {
+        readonly [regionId: string]: ReplicaStats[]
+    };
 }

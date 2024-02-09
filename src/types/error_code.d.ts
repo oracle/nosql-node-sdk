@@ -5,9 +5,15 @@
  *  https://oss.oracle.com/licenses/upl/
  */
 
-/**
- * Defines errors and related classes used by the driver.
- */
+import type { NoSQLError, NoSQLArgumentError, NoSQLTimeoutError,
+    NoSQLNetworkError, NoSQLServiceError, NoSQLAuthorizationError,
+    NoSQLQueryError } from "./error";
+import type { NoSQLClient } from "./nosql_client";
+import type { Config, RetryConfig, RetryHandler } from "./config";
+import type { AuthorizationProvider } from "./auth/config";
+import type { ServiceType } from "./constants";
+import type { TableResult } from "./result";
+import type { QueryOpt } from "./opt";
 
 /**
  * This enumeration lists error codes for different errors raised by the
@@ -150,9 +156,9 @@ export enum ErrorCode {
     TENANT_DEPLOYMENT_LIMIT_EXCEEDED = "TENANT_DEPLOYMENT_LIMIT_EXCEEDED",
 
     /**
-     * Indicates that the requested operation is not supported.  Some operations
-     * are supported for Cloud Service but not for On-Premise NoSQL Database
-     * (see {@link ServiceType}) and vice versa.
+     * Indicates that the requested operation is not supported.  Some
+     * operations are supported for Cloud Service but not for On-Premise NoSQL
+     * Database (see {@link ServiceType}) and vice versa.
      */
     OPERATION_NOT_SUPPORTED = "OPERATION_NOT_SUPPORTED",
 
@@ -168,6 +174,15 @@ export enum ErrorCode {
      * will result if the protocol version cannot be further decremented.
      */
     UNSUPPORTED_PROTOCOL = "UNSUPPORTED_PROTOCOL",
+
+    /**
+     * Cloud service only.
+     * Indicates that an operation is attempted on a replicated table that
+     * is not yet fully initialized.
+     * @see {@link TableResult#isLocalReplicaInitialized}
+     * @see {@link NoSQLClient#addReplica}
+     */
+    TABLE_NOT_READY = "TABLE_NOT_READY",
 
     /**
      * Indicates that the server does not support the current query protocol

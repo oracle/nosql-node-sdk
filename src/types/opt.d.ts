@@ -11,6 +11,7 @@ import type { TableLimits, TableETag, DefinedTags, FreeFormTags, Durability,
 import type { Config } from "./config";
 import type { NoSQLClient } from "./nosql_client";
 import type { Consistency } from "./constants";
+import type { Region } from "./region";
 
 /**
  * Cloud service only. Base option to specify compartment.
@@ -572,4 +573,57 @@ export interface AdminListOpt {
      * completion. Defaults to {@link Config#adminPollDelay}.
      */
     delay?: number;
+}
+
+/**
+ * Cloud Service only. Options passed to {@link NoSQLClient#addReplica}.
+ * @see {@link NoSQLClient#addReplica}
+ */
+export interface AddReplicaOpt extends ModifyTableOpt {
+    /**
+     * Read units for the replica table.
+     * @defaultValue Read units for the existing table
+     */
+    readUnits?: number;
+
+    /**
+     * Write units for the replica table.
+     * @defaultValue Write units for the existing table
+     */
+    writeUnits?: number;
+}
+
+/**
+ * Cloud Service only. Options passed to {@link NoSQLClient#getReplicaStats}.
+ * @see {@link NoSQLClient#getReplicaStats}
+ */
+export interface ReplicaStatsOpt extends CompartmentOpt, TimeoutOpt {
+    /**
+     * Region from which to query replica statats stats information. If not
+     * set, stats from all replicas (regions) will be returned.
+     */
+    region?: Region|string;
+
+    /**
+     * Start time from which to retrieve replica stats records. Can be
+     * {@link !Date | Date}, string representing date and time or number of
+     * milliseconds since epoch (January 1, 1970, 00:00:00 UTC). For string
+     * representation see {@link !Date.parse | Date.parse()}.
+     * <p>
+     * If start time is not set, the number of most recent complete stats
+     * records are returned, up to {@link limit}, per replica.
+     */
+    startTime?: Date|string|number;
+
+    /**
+     * Limit to the number of replica stats record returned by one call to
+     * {@link NoSQLClient#getReplicaStats}.
+     * <p>
+     * Note that this limit is for the number of stats records for each
+     * replica. E.g. if you have 3 replicas and the limit is 1000, then up
+     * to 1000 stats records for each replica can be returned, up to 3000
+     * stats records total.
+     * @defaultValue 1000
+     */
+    limit?: number;
 }

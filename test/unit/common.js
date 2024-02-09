@@ -206,8 +206,19 @@ const badDDLPollOpts = [
     }
 ];
 
+const badModifyTableOptsNoComplete = [
+    ...badOptions,
+    ...badMillis.map(timeout => ({ timeout })),
+    ...badStrings.map(matchETag => ({ matchETag }))
+];
+
 const badDDLCompleteOpts = badDDLPollOpts.map(opt =>
     Object.assign( { complete: true }, opt));
+
+const badModifyTableOpts = [
+    ...badModifyTableOptsNoComplete,
+    ...badDDLCompleteOpts
+];
 
 const badDDLForCompletionOpts = [
     ...badDDLStatusOpts.filter(opt => opt.timeout !== Infinity),
@@ -558,7 +569,9 @@ module.exports = {
     badTblNames,
     badDDLStatusOpts,
     badDDLPollOpts,
+    badModifyTableOptsNoComplete,
     badDDLCompleteOpts,
+    badModifyTableOpts,
     badDDLForCompletionOpts,
     badDateTimes,
     badBinaries,
