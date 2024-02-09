@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 **Added**
 
-* Cloud only: added support for replica (multi-region) tables:
+* Cloud only: added support for Global Active tables:
   - added new methods to NoSQLClient: addReplica, dropReplica,
 getReplicaStats, forLocalReplicaInit
   - added new properties to TableResult: isSchemaFrozen, isReplicated,
