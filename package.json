@@ -21,7 +21,7 @@
     "examples/**"
   ],
   "scripts": {
-    "test": "tsc --project test/unit/types && mocha",
+    "test": "mocha && tsc --project test/unit/types",
     "docs": "typedoc"
   },
   "keywords": [
@@ -48,7 +48,7 @@
     "mock-fs": "^5.2.0",
     "sinon": "^15.0.0",
     "typedoc": "^0.23.28",
-    "typescript": "^5.0.4"
+    "typescript": "~5.0.4"
   },
   "overrides": {
     "@babel/parser": "7.14.7"
