@@ -21,7 +21,9 @@
     "examples/**"
   ],
   "scripts": {
-    "test": "mocha && tsc --project test/unit/types",
+    "test:mocha": "mocha",
+    "test:tsc": "tsc --project test/unit/types",
+    "test": "npm-run-all -nsc \"test:mocha -- {@}\" test:tsc --",
     "docs": "typedoc"
   },
   "keywords": [
@@ -46,6 +48,7 @@
     "lodash": "^4.17.21",
     "mocha": "^9.2.2",
     "mock-fs": "^5.2.0",
+    "npm-run-all": "^4.1.5",
     "sinon": "^15.0.0",
     "typedoc": "^0.23.28",
     "typescript": "~5.0.4"
