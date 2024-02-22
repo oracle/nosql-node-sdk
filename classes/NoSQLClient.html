@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>NoSQLClient | Oracle NoSQL Database Node.js SDK - v5.5.0</title><meta name="description" content="Documentation for Oracle NoSQL Database Node.js SDK - v5.5.0"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script><link rel="stylesheet" href="../assets/pages.css"/></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>NoSQLClient | Oracle NoSQL Database Node.js SDK - v5.5.1</title><meta name="description" content="Documentation for Oracle NoSQL Database Node.js SDK - v5.5.1"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script><link rel="stylesheet" href="../assets/pages.css"/></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
 <div class="tsd-toolbar-contents container">
 <div class="table-cell" id="tsd-search" data-base="..">
 <div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
@@ -6,13 +6,13 @@
 <div id="tsd-toolbar-links"></div></div>
 <ul class="results">
 <li class="state loading">Preparing search index...</li>
-<li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">Oracle NoSQL Database Node.js SDK - v5.5.0</a></div>
+<li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">Oracle NoSQL Database Node.js SDK - v5.5.1</a></div>
 <div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
 <div class="container container-main">
 <div class="col-8 col-content">
 <div class="tsd-page-title">
 <ul class="tsd-breadcrumb">
-<li><a href="../modules.html">Oracle NoSQL Database Node.js SDK - v5.5.0</a></li>
+<li><a href="../modules.html">Oracle NoSQL Database Node.js SDK - v5.5.1</a></li>
 <li><a href="NoSQLClient.html">NoSQLClient</a></li></ul>
 <h1>Class NoSQLClient</h1></div>
 <section class="tsd-panel tsd-comment">
@@ -89,7 +89,7 @@ For events emitted by <a href="NoSQLClient.html">NoSQLClient</a>, see <a href=".
 </ul>
 
 <h3>Example</h3><p>Using <a href="NoSQLClient.html">NoSQLClient</a> with async-await.</p>
-<pre><code class="language-ts"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">NoSQLClient</span><span class="hl-1"> = </span><span class="hl-3">require</span><span class="hl-1">(</span><span class="hl-4">&#39;oracle-nosqldb&#39;</span><span class="hl-1">).</span><span class="hl-5">NoSQLClient</span><span class="hl-1">;</span><br/><br/><span class="hl-0">async</span><span class="hl-1"> </span><span class="hl-0">function</span><span class="hl-1"> </span><span class="hl-3">test</span><span class="hl-1">() {</span><br/><span class="hl-1">     </span><span class="hl-0">let</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1">;</span><br/><span class="hl-1">     </span><span class="hl-6">try</span><span class="hl-1"> {</span><br/><span class="hl-1">         </span><span class="hl-5">client</span><span class="hl-1"> = </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">NoSQLClient</span><span class="hl-1">(</span><span class="hl-4">&#39;config.json&#39;</span><span class="hl-1">);</span><br/><span class="hl-1">         </span><span class="hl-0">let</span><span class="hl-1"> </span><span class="hl-5">res</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1">.</span><span class="hl-3">tableDDL</span><span class="hl-1">(</span><br/><span class="hl-1">             </span><span class="hl-4">&#39;CREATE TABLE foo(id INTEGER, name STRING, PRIMARY KEY(id))&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">             {</span><br/><span class="hl-1">                 </span><span class="hl-5">tableLimits:</span><span class="hl-1"> {</span><br/><span class="hl-1">                     </span><span class="hl-5">readUnits:</span><span class="hl-1"> </span><span class="hl-7">100</span><span class="hl-1">,</span><br/><span class="hl-1">                     </span><span class="hl-5">writeUnits:</span><span class="hl-1"> </span><span class="hl-7">100</span><span class="hl-1">,</span><br/><span class="hl-1">                     </span><span class="hl-5">storageGB:</span><span class="hl-1"> </span><span class="hl-7">50</span><br/><span class="hl-1">                 }</span><br/><span class="hl-1">             }</span><br/><span class="hl-1">         );</span><br/><span class="hl-1">         </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-3">log</span><span class="hl-1">(</span><span class="hl-4">&#39;Table: %s, state: %s&#39;</span><span class="hl-1">, </span><span class="hl-5">res</span><span class="hl-1">.</span><span class="hl-5">tableName</span><span class="hl-1">,</span><br/><span class="hl-1">             </span><span class="hl-5">res</span><span class="hl-1">.</span><span class="hl-5">tableState</span><span class="hl-1">);</span><br/><span class="hl-1">         </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1">.</span><span class="hl-3">forCompletion</span><span class="hl-1">(</span><span class="hl-5">res</span><span class="hl-1">);</span><br/><span class="hl-1">         </span><span class="hl-5">res</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1">.</span><span class="hl-3">put</span><span class="hl-1">(</span><span class="hl-4">&#39;foo&#39;</span><span class="hl-1">, { </span><span class="hl-5">id:</span><span class="hl-1"> </span><span class="hl-7">1</span><span class="hl-1">, </span><span class="hl-5">name:</span><span class="hl-1"> </span><span class="hl-4">&#39;test&#39;</span><span class="hl-1"> });</span><br/><span class="hl-1">         </span><span class="hl-5">res</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1">.</span><span class="hl-3">get</span><span class="hl-1">(</span><span class="hl-4">&#39;foo&#39;</span><span class="hl-1">, { </span><span class="hl-5">id:</span><span class="hl-1"> </span><span class="hl-7">1</span><span class="hl-1"> });</span><br/><span class="hl-1">         </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-3">log</span><span class="hl-1">(</span><span class="hl-5">res</span><span class="hl-1">.</span><span class="hl-5">row</span><span class="hl-1">);</span><br/><span class="hl-1">         </span><span class="hl-8">//..........</span><br/><span class="hl-1">     } </span><span class="hl-6">catch</span><span class="hl-1">(</span><span class="hl-5">err</span><span class="hl-1">) {</span><br/><span class="hl-1">         </span><span class="hl-8">//handle errors</span><br/><span class="hl-1">     } </span><span class="hl-6">finally</span><span class="hl-1"> {</span><br/><span class="hl-1">         </span><span class="hl-6">if</span><span class="hl-1"> (</span><span class="hl-5">client</span><span class="hl-1">) {</span><br/><span class="hl-1">             </span><span class="hl-5">client</span><span class="hl-1">.</span><span class="hl-3">close</span><span class="hl-1">();</span><br/><span class="hl-1">         }</span><br/><span class="hl-1">     }</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">NoSQLClient</span><span class="hl-1"> = </span><span class="hl-4">require</span><span class="hl-1">(</span><span class="hl-5">&#39;oracle-nosqldb&#39;</span><span class="hl-1">).</span><span class="hl-0">NoSQLClient</span><span class="hl-1">;</span><br/><br/><span class="hl-2">async</span><span class="hl-1"> </span><span class="hl-2">function</span><span class="hl-1"> </span><span class="hl-4">test</span><span class="hl-1">() {</span><br/><span class="hl-1">     </span><span class="hl-2">let</span><span class="hl-1"> </span><span class="hl-0">client</span><span class="hl-1">;</span><br/><span class="hl-1">     </span><span class="hl-6">try</span><span class="hl-1"> {</span><br/><span class="hl-1">         </span><span class="hl-0">client</span><span class="hl-1"> = </span><span class="hl-2">new</span><span class="hl-1"> </span><span class="hl-4">NoSQLClient</span><span class="hl-1">(</span><span class="hl-5">&#39;config.json&#39;</span><span class="hl-1">);</span><br/><span class="hl-1">         </span><span class="hl-2">let</span><span class="hl-1"> </span><span class="hl-0">res</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-0">client</span><span class="hl-1">.</span><span class="hl-4">tableDDL</span><span class="hl-1">(</span><br/><span class="hl-1">             </span><span class="hl-5">&#39;CREATE TABLE foo(id INTEGER, name STRING, PRIMARY KEY(id))&#39;</span><span class="hl-1">,</span><br/><span class="hl-1">             {</span><br/><span class="hl-1">                 </span><span class="hl-0">tableLimits:</span><span class="hl-1"> {</span><br/><span class="hl-1">                     </span><span class="hl-0">readUnits:</span><span class="hl-1"> </span><span class="hl-7">100</span><span class="hl-1">,</span><br/><span class="hl-1">                     </span><span class="hl-0">writeUnits:</span><span class="hl-1"> </span><span class="hl-7">100</span><span class="hl-1">,</span><br/><span class="hl-1">                     </span><span class="hl-0">storageGB:</span><span class="hl-1"> </span><span class="hl-7">50</span><br/><span class="hl-1">                 }</span><br/><span class="hl-1">             }</span><br/><span class="hl-1">         );</span><br/><span class="hl-1">         </span><span class="hl-0">console</span><span class="hl-1">.</span><span class="hl-4">log</span><span class="hl-1">(</span><span class="hl-5">&#39;Table: %s, state: %s&#39;</span><span class="hl-1">, </span><span class="hl-0">res</span><span class="hl-1">.</span><span class="hl-0">tableName</span><span class="hl-1">,</span><br/><span class="hl-1">             </span><span class="hl-0">res</span><span class="hl-1">.</span><span class="hl-0">tableState</span><span class="hl-1">);</span><br/><span class="hl-1">         </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-0">client</span><span class="hl-1">.</span><span class="hl-4">forCompletion</span><span class="hl-1">(</span><span class="hl-0">res</span><span class="hl-1">);</span><br/><span class="hl-1">         </span><span class="hl-0">res</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-0">client</span><span class="hl-1">.</span><span class="hl-4">put</span><span class="hl-1">(</span><span class="hl-5">&#39;foo&#39;</span><span class="hl-1">, { </span><span class="hl-0">id:</span><span class="hl-1"> </span><span class="hl-7">1</span><span class="hl-1">, </span><span class="hl-0">name:</span><span class="hl-1"> </span><span class="hl-5">&#39;test&#39;</span><span class="hl-1"> });</span><br/><span class="hl-1">         </span><span class="hl-0">res</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-0">client</span><span class="hl-1">.</span><span class="hl-4">get</span><span class="hl-1">(</span><span class="hl-5">&#39;foo&#39;</span><span class="hl-1">, { </span><span class="hl-0">id:</span><span class="hl-1"> </span><span class="hl-7">1</span><span class="hl-1"> });</span><br/><span class="hl-1">         </span><span class="hl-0">console</span><span class="hl-1">.</span><span class="hl-4">log</span><span class="hl-1">(</span><span class="hl-0">res</span><span class="hl-1">.</span><span class="hl-0">row</span><span class="hl-1">);</span><br/><span class="hl-1">         </span><span class="hl-8">//..........</span><br/><span class="hl-1">     } </span><span class="hl-6">catch</span><span class="hl-1">(</span><span class="hl-0">err</span><span class="hl-1">) {</span><br/><span class="hl-1">         </span><span class="hl-8">//handle errors</span><br/><span class="hl-1">     } </span><span class="hl-6">finally</span><span class="hl-1"> {</span><br/><span class="hl-1">         </span><span class="hl-6">if</span><span class="hl-1"> (</span><span class="hl-0">client</span><span class="hl-1">) {</span><br/><span class="hl-1">             </span><span class="hl-0">client</span><span class="hl-1">.</span><span class="hl-4">close</span><span class="hl-1">();</span><br/><span class="hl-1">         }</span><br/><span class="hl-1">     }</span><br/><span class="hl-1">}</span>
 </code></pre>
 </div></section>
 <section class="tsd-panel tsd-hierarchy">
@@ -119,6 +119,7 @@ For events emitted by <a href="NoSQLClient.html">NoSQLClient</a>, see <a href=".
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Methods</h3>
 <div class="tsd-index-list"><a href="NoSQLClient.html#addListener" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF4DB8" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-2048-path"></rect><path d="M9.162 16V7.24H10.578L11.514 10.072C11.602 10.328 11.674 10.584 11.73 10.84C11.794 11.088 11.842 11.28 11.874 11.416C11.906 11.28 11.954 11.088 12.018 10.84C12.082 10.584 12.154 10.324 12.234 10.06L13.122 7.24H14.538V16H13.482V12.82C13.482 12.468 13.49 12.068 13.506 11.62C13.53 11.172 13.558 10.716 13.59 10.252C13.622 9.78 13.654 9.332 13.686 8.908C13.726 8.476 13.762 8.1 13.794 7.78L12.366 12.16H11.334L9.894 7.78C9.934 8.092 9.97 8.456 10.002 8.872C10.042 9.28 10.078 9.716 10.11 10.18C10.142 10.636 10.166 11.092 10.182 11.548C10.206 12.004 10.218 12.428 10.218 12.82V16H9.162Z" fill="var(--color-text)" id="icon-2048-text"></path></svg><span>add<wbr/>Listener</span></a>
+<a href="NoSQLClient.html#addReplica" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>add<wbr/>Replica</span></a>
 <a href="NoSQLClient.html#adminDDL" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>adminDDL</span></a>
 <a href="NoSQLClient.html#adminStatus" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>admin<wbr/>Status</span></a>
 <a href="NoSQLClient.html#close" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>close</span></a>
@@ -126,14 +127,17 @@ For events emitted by <a href="NoSQLClient.html">NoSQLClient</a>, see <a href=".
 <a href="NoSQLClient.html#deleteIfVersion" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>delete<wbr/>If<wbr/>Version</span></a>
 <a href="NoSQLClient.html#deleteMany" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>delete<wbr/>Many</span></a>
 <a href="NoSQLClient.html#deleteRange" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>delete<wbr/>Range</span></a>
+<a href="NoSQLClient.html#dropReplica" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>drop<wbr/>Replica</span></a>
 <a href="NoSQLClient.html#emit" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>emit</span></a>
 <a href="NoSQLClient.html#eventNames" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>event<wbr/>Names</span></a>
 <a href="NoSQLClient.html#forCompletion" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>for<wbr/>Completion</span></a>
+<a href="NoSQLClient.html#forLocalReplicaInit" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>for<wbr/>Local<wbr/>Replica<wbr/>Init</span></a>
 <a href="NoSQLClient.html#forTableState" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>for<wbr/>Table<wbr/>State</span></a>
 <a href="NoSQLClient.html#get" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get</span></a>
 <a href="NoSQLClient.html#getIndex" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Index</span></a>
 <a href="NoSQLClient.html#getIndexes" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Indexes</span></a>
 <a href="NoSQLClient.html#getMaxListeners" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Max<wbr/>Listeners</span></a>
+<a href="NoSQLClient.html#getReplicaStats" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Replica<wbr/>Stats</span></a>
 <a href="NoSQLClient.html#getTable" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Table</span></a>
 <a href="NoSQLClient.html#getTableUsage" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Table<wbr/>Usage</span></a>
 <a href="NoSQLClient.html#listNamespaces" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>list<wbr/>Namespaces</span></a>
@@ -262,6 +266,65 @@ regular <code>&#39;error&#39;</code> listener is installed.</p>
 <h5>listener: <a href="../interfaces/NoSQLClientEvents.html" class="tsd-signature-type" data-tsd-kind="Interface">NoSQLClientEvents</a><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">EvName</span><span class="tsd-signature-symbol">]</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="NoSQLClient.html" class="tsd-signature-type" data-tsd-kind="Class">NoSQLClient</a></h4><aside class="tsd-sources">
 <p>Overrides EventEmitter.addListener</p></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="addReplica" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>add<wbr/>Replica</span><a href="#addReplica" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="addReplica.addReplica-1">add<wbr/>Replica<span class="tsd-signature-symbol">(</span>tableName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, region<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="Region.html" class="tsd-signature-type" data-tsd-kind="Class">Region</a>, opt<span class="tsd-signature-symbol">?: </span><a href="../interfaces/AddReplicaOpt.html" class="tsd-signature-type" data-tsd-kind="Interface">AddReplicaOpt</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/TableResult.html" class="tsd-signature-type" data-tsd-kind="Interface">TableResult</a><span class="tsd-signature-symbol">&gt;</span><a href="#addReplica.addReplica-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Cloud Service only.</p>
+<p>
+Adds replica to a table.
+<p>
+This operation adds replica to a Global Active table. If performed on
+a regular table (singleton), it will be converted to Global Active
+table, provided that the sigleton table schema conforms to certain
+restrictions. For more information, see
+<a href="https://docs.oracle.com/en/cloud/paas/nosql-cloud/gasnd">Global Active Tables in NDCS</a>.
+<p>
+Note that <a href="../interfaces/TableLimits.html">TableLimits</a> for the replica table will default to
+the table limits for the existing table, however you can override
+the values of <a href="../interfaces/TableLimits.html#readUnits">readUnits</a> and
+<a href="../interfaces/TableLimits.html#writeUnits">writeUnits</a> for the replica by using
+<a href="../interfaces/AddReplicaOpt.html#readUnits">readUnits</a> and <a href="../interfaces/AddReplicaOpt.html#writeUnits">writeUnits</a>.
+The storage capacity of the replica will always be the same as that of
+the existing table.
+<p>
+As with <a href="NoSQLClient.html#tableDDL">tableDDL</a>, the result returned from this API does not
+imply operation completion. Same considerations as described in
+<a href="NoSQLClient.html#tableDDL">tableDDL</a> about long-running operations apply here, including
+using <a href="NoSQLClient.html#forCompletion">forCompletion</a> and options
+<a href="../interfaces/ModifyTableOpt.html#complete">complete</a> and <a href="../interfaces/ModifyTableOpt.html#delay">delay</a>. See
+<a href="NoSQLClient.html#tableDDL">tableDDL</a>.
+<p>
+Note that even after this operation is completed (as described above),
+the replica table in the receiver region may still be in the process of
+being initialized with the data from the sender region, during which
+time the data operations on the replica table will fail with
+<a href="../enums/ErrorCode.html#TABLE_NOT_READY">TABLE_NOT_READY</a>.
+<h3>Async</h3>
+<h3>Returns</h3><p>Promise of <a href="../interfaces/TableResult.html">TableResult</a></p>
+
+<h3>See</h3><ul>
+<li><a href="../interfaces/AddReplicaOpt.html">AddReplicaOpt</a></li>
+<li><a href="../interfaces/TableResult.html">TableResult</a></li>
+</ul>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>tableName: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>Table name</p>
+</div></li>
+<li>
+<h5>region: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="Region.html" class="tsd-signature-type" data-tsd-kind="Class">Region</a></h5>
+<div class="tsd-comment tsd-typography"><p>Region where to add the replica</p>
+</div></li>
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> opt: <a href="../interfaces/AddReplicaOpt.html" class="tsd-signature-type" data-tsd-kind="Interface">AddReplicaOpt</a></h5>
+<div class="tsd-comment tsd-typography"><p>Options object, see <a href="../interfaces/AddReplicaOpt.html">AddReplicaOpt</a></p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/TableResult.html" class="tsd-signature-type" data-tsd-kind="Interface">TableResult</a><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="adminDDL" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>adminDDL</span><a href="#adminDDL" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -593,6 +656,49 @@ fields. Defaults to <a href="../types/AnyRow.html">AnyRow</a>.</p>
 <div class="tsd-comment tsd-typography"><p>Options object, <a href="../interfaces/MultiDeleteOpt.html">MultiDeleteOpt</a></p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/MultiDeleteResult.html" class="tsd-signature-type" data-tsd-kind="Interface">MultiDeleteResult</a><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="dropReplica" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>drop<wbr/>Replica</span><a href="#dropReplica" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="dropReplica.dropReplica-1">drop<wbr/>Replica<span class="tsd-signature-symbol">(</span>tableName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, region<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="Region.html" class="tsd-signature-type" data-tsd-kind="Class">Region</a>, opt<span class="tsd-signature-symbol">?: </span><a href="../interfaces/ModifyTableOpt.html" class="tsd-signature-type" data-tsd-kind="Interface">ModifyTableOpt</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/TableResult.html" class="tsd-signature-type" data-tsd-kind="Interface">TableResult</a><span class="tsd-signature-symbol">&gt;</span><a href="#dropReplica.dropReplica-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Cloud Service only.</p>
+<p>
+Drops replica from a table.
+<p>
+This operation drops replica from a Global Active table. For more
+information, see
+<a href="https://docs.oracle.com/en/cloud/paas/nosql-cloud/gasnd">Global Active Tables in NDCS</a>.
+<p>
+As with <a href="NoSQLClient.html#tableDDL">tableDDL</a>, the result returned from this API does not
+imply operation completion. Same considerations as described in
+<a href="NoSQLClient.html#tableDDL">tableDDL</a> about long-running operations apply here, including
+using <a href="NoSQLClient.html#forCompletion">forCompletion</a> and options
+<a href="../interfaces/ModifyTableOpt.html#complete">complete</a> and <a href="../interfaces/ModifyTableOpt.html#delay">delay</a>. See
+<a href="NoSQLClient.html#tableDDL">tableDDL</a>.
+<h3>Async</h3>
+<h3>Returns</h3><p>Promise of <a href="../interfaces/TableResult.html">TableResult</a></p>
+
+<h3>See</h3><ul>
+<li><a href="../interfaces/ModifyTableOpt.html">ModifyTableOpt</a></li>
+<li><a href="../interfaces/TableResult.html">TableResult</a></li>
+</ul>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>tableName: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>Table name</p>
+</div></li>
+<li>
+<h5>region: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="Region.html" class="tsd-signature-type" data-tsd-kind="Class">Region</a></h5>
+<div class="tsd-comment tsd-typography"><p>Region from where to drop the replica</p>
+</div></li>
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> opt: <a href="../interfaces/ModifyTableOpt.html" class="tsd-signature-type" data-tsd-kind="Interface">ModifyTableOpt</a></h5>
+<div class="tsd-comment tsd-typography"><p>Options object, see <a href="../interfaces/ModifyTableOpt.html">ModifyTableOpt</a></p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/TableResult.html" class="tsd-signature-type" data-tsd-kind="Interface">TableResult</a><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="emit" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>emit</span><a href="#emit" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
@@ -619,59 +725,46 @@ fields. Defaults to <a href="../types/AnyRow.html">AnyRow</a>.</p>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="forCompletion.forCompletion-1">for<wbr/>Completion<span class="tsd-signature-symbol">(</span>res<span class="tsd-signature-symbol">: </span><a href="../interfaces/TableResult.html" class="tsd-signature-type" data-tsd-kind="Interface">TableResult</a>, opt<span class="tsd-signature-symbol">?: </span><a href="../interfaces/CompletionOpt.html" class="tsd-signature-type" data-tsd-kind="Interface">CompletionOpt</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/TableResult.html" class="tsd-signature-type" data-tsd-kind="Interface">TableResult</a><span class="tsd-signature-symbol">&gt;</span><a href="#forCompletion.forCompletion-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description"><code class="tsd-tag ts-flagOverload">Overload</code> 
-<div class="tsd-comment tsd-typography"><p>Asynchronously waits for DDL operation completion.</p>
+<div class="tsd-comment tsd-typography"><p>Asynchronously waits for table DDL operation completion.</p>
 <p>
-DDL operations are operations initiated by <a href="NoSQLClient.html#tableDDL">tableDDL</a>
-and <a href="NoSQLClient.html#adminDDL">adminDDL</a> (the latter On-premise only).  These
-are potentially long-running operations and the results returned by
-<a href="NoSQLClient.html#tableDDL">tableDDL</a> or <a href="NoSQLClient.html#adminDDL">adminDDL</a> do not
-imply operation completion.  <a href="NoSQLClient.html#forCompletion">forCompletion</a> takes
-the result of either operation as an argument and completes (i.e. the
-returned <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> resolves) when the corresponding
-operation is completed by the service.  This is accomplished by polling
-the operation state at specified intervals using
-<a href="NoSQLClient.html#getTable">getTable</a> for table DDL operations and
-<a href="NoSQLClient.html#adminStatus">adminStatus</a> for admin DDL operations.
+Table DDL operations are operations initiated by <a href="NoSQLClient.html#tableDDL">tableDDL</a>.
+These are potentially long-running operations and <a href="../interfaces/TableResult.html">TableResult</a>
+returned by <a href="NoSQLClient.html#tableDDL">tableDDL</a> does not imply operation completion.
+<a href="NoSQLClient.html#forCompletion">forCompletion</a> takes <a href="../interfaces/TableResult.html">TableResult</a> as an argument and
+completes (i.e. the returned <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> resolves) when
+the corresponding operation is completed by the service. This is
+accomplished by polling the operation state at specified intervals
+using <a href="NoSQLClient.html#getTable">getTable</a> until the table state becomes
+<a href="../enums/TableState.html#ACTIVE">ACTIVE</a> for all operations except "DROP TABLE", in
+the latter case polling until the table state becomes
+<a href="../enums/TableState.html#DROPPED">DROPPED</a>.
 <p>
-For table DDL operations initiated by <a href="NoSQLClient.html#tableDDL">tableDDL</a> this
-method asynchronously waits for state <a href="../enums/TableState.html#ACTIVE">ACTIVE</a> for all
-operations except "DROP TABLE", in the latter case asynchronously
-waiting for <a href="../enums/TableState.html#DROPPED">DROPPED</a>.
+The result of this method is <a href="../interfaces/TableResult.html">TableResult</a> representing the state
+of the operation at the last poll. If the operation fails, this method
+will result in error (i.e. the returned <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> will
+reject with an error) contaning information about the operation
+failure.
 <p>
-The result of this method is <a href="../interfaces/TableResult.html">TableResult</a> or <a href="../interfaces/AdminResult.html">AdminResult</a>
-representing the state of the operation at the last poll.  If the
-operation fails, this method will result in error (i.e. the returned
-<em>Promise</em> will reject with error) contaning information about
-the operation failure.
+Note that on operation completion, the passed <a href="../interfaces/TableResult.html">TableResult</a> is
+modified in place (to reflect operation completion) in addition to
+being returned.
 <p>
-Note that on operation completion, the passed <a href="../interfaces/TableResult.html">TableResult</a> or
-<a href="../interfaces/AdminResult.html">AdminResult</a> is modified in place (to reflect operation
-completion) in addition to being returned.
-<p>
-As a more convenient way to perform DDL operations to completion, you
-may pass <a href="../interfaces/TableDDLOpt.html#complete">complete</a> or <a href="../interfaces/AdminDDLOpt.html#complete">complete</a>
-corresponding operation. In this case, after DDL operation is
-initiated, these methods will internally use
+As a more convenient way to perform table DDL operations to completion,
+you may pass <a href="../interfaces/TableDDLOpt.html#complete">complete</a> to <a href="NoSQLClient.html#tableDDL">tableDDL</a>. In this
+case, after table DDL operation is initiated, <a href="NoSQLClient.html#tableDDL">tableDDL</a> will use
 <a href="NoSQLClient.html#forCompletion">forCompletion</a> to await operation completion.
-<h3>Example</h3><p>Using forCompletion.</p>
-<pre><code class="language-ts"><span class="hl-6">try</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-0">let</span><span class="hl-1"> </span><span class="hl-5">res</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1">.</span><span class="hl-3">tableDDL</span><span class="hl-1">(</span><span class="hl-4">&#39;DROP TABLE.....&#39;</span><span class="hl-1">);</span><br/><span class="hl-1">    </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1">.</span><span class="hl-3">forCompletion</span><span class="hl-1">(</span><span class="hl-5">res</span><span class="hl-1">);</span><br/><span class="hl-1">    </span><span class="hl-5">res</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1">.</span><span class="hl-3">adminDDL</span><span class="hl-1">(</span><span class="hl-4">&#39;CREATE NAMESPACE.....&#39;</span><span class="hl-1">);</span><br/><span class="hl-1">    </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1">.</span><span class="hl-3">forCompletion</span><span class="hl-1">(</span><span class="hl-5">res</span><span class="hl-1">);</span><br/><span class="hl-1">} </span><span class="hl-6">catch</span><span class="hl-1">(</span><span class="hl-5">err</span><span class="hl-1">) {</span><br/><span class="hl-1">    </span><span class="hl-8">// May be caused by client.forCompletion() if long running DDL</span><br/><span class="hl-1">    </span><span class="hl-8">// operation was unsuccessful.</span><br/><span class="hl-1">}</span>
+<h3>Example</h3><p>Using forCompletion with table DDL operation.</p>
+<pre><code class="language-ts"><span class="hl-6">try</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-2">let</span><span class="hl-1"> </span><span class="hl-0">res</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-0">client</span><span class="hl-1">.</span><span class="hl-4">tableDDL</span><span class="hl-1">(</span><span class="hl-5">&#39;DROP TABLE.....&#39;</span><span class="hl-1">);</span><br/><span class="hl-1">    </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-0">client</span><span class="hl-1">.</span><span class="hl-4">forCompletion</span><span class="hl-1">(</span><span class="hl-0">res</span><span class="hl-1">);</span><br/><span class="hl-1">} </span><span class="hl-6">catch</span><span class="hl-1">(</span><span class="hl-0">err</span><span class="hl-1">) {</span><br/><span class="hl-1">    </span><span class="hl-8">// May be caused by client.forCompletion() if long running table</span><br/><span class="hl-1">    </span><span class="hl-8">// DDL operation was unsuccessful.</span><br/><span class="hl-1">}</span>
 </code></pre>
 
 <h3>Async</h3>
 <h3>Returns</h3><p>Promise of <a href="../interfaces/TableResult.html">TableResult</a>, which is the object
 passed as first argument and modified to reflect operation completion</p>
 
-<h3>Async</h3>
-<h3>Returns</h3><p>Promise of <a href="../interfaces/AdminResult.html">AdminResult</a>, which is the object
-passed as first argument and modified to reflect operation completion</p>
-
 <h3>See</h3><ul>
 <li><a href="NoSQLClient.html#tableDDL">tableDDL</a></li>
 <li><a href="NoSQLClient.html#getTable">getTable</a></li>
 <li><a href="../interfaces/TableResult.html">TableResult</a></li>
-<li><a href="NoSQLClient.html#adminDDL">adminDDL</a></li>
-<li><a href="NoSQLClient.html#adminStatus">adminStatus</a></li>
-<li><a href="../interfaces/AdminResult.html">AdminResult</a></li>
 </ul>
 </div>
 <div class="tsd-parameters">
@@ -688,15 +781,111 @@ result is modified by this method on operation completion</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/TableResult.html" class="tsd-signature-type" data-tsd-kind="Interface">TableResult</a><span class="tsd-signature-symbol">&gt;</span></h4></li>
 <li class="tsd-signature tsd-anchor-link" id="forCompletion.forCompletion-2">for<wbr/>Completion<span class="tsd-signature-symbol">(</span>res<span class="tsd-signature-symbol">: </span><a href="../interfaces/AdminResult.html" class="tsd-signature-type" data-tsd-kind="Interface">AdminResult</a>, opt<span class="tsd-signature-symbol">?: </span><a href="../interfaces/CompletionOpt.html" class="tsd-signature-type" data-tsd-kind="Interface">CompletionOpt</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/AdminResult.html" class="tsd-signature-type" data-tsd-kind="Interface">AdminResult</a><span class="tsd-signature-symbol">&gt;</span><a href="#forCompletion.forCompletion-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
+<li class="tsd-description"><code class="tsd-tag ts-flagOverload">Overload</code> 
+<div class="tsd-comment tsd-typography"><p>On-premises only.
+Asynchronously waits for admin DDL operation completion.</p>
+<p>
+Admin DDL operations are operations initiated by <a href="NoSQLClient.html#adminDDL">adminDDL</a>.
+These are potentially long-running operations and <a href="../interfaces/AdminResult.html">AdminResult</a>
+returned by <a href="NoSQLClient.html#adminDDL">adminDDL</a> does not imply operation completion.
+<a href="NoSQLClient.html#forCompletion">forCompletion</a> takes <a href="../interfaces/AdminResult.html">AdminResult</a> as an argument
+and completes (i.e. the returned <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> resolves)
+when the corresponding operation is completed by the service. This is
+accomplished by polling the operation state at specified intervals
+using <a href="NoSQLClient.html#adminStatus">adminStatus</a> until the state of operation becomes
+<a href="../enums/AdminState.html#COMPLETE">COMPLETE</a>.
+<p>
+The result of this method is <a href="../interfaces/AdminResult.html">AdminResult</a> representing the state
+of the operation at the last poll. If the operation fails, this method
+will result in error (i.e. the returned <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a> will
+reject with an error) contaning information about the operation
+failure.
+<p>
+Note that on operation completion, the passed <a href="../interfaces/AdminResult.html">AdminResult</a> is
+modified in place (to reflect operation completion) in addition to
+being returned.
+<p>
+As a more convenient way to perform admin DDL operations to completion,
+you may pass <a href="../interfaces/AdminDDLOpt.html#complete">complete</a> to <a href="NoSQLClient.html#adminDDL">adminDDL</a>. In this
+case, after DDL operation is initiated, <a href="NoSQLClient.html#adminDDL">adminDDL</a> will use
+<a href="NoSQLClient.html#forCompletion">forCompletion</a> to await operation completion.
+<h3>Example</h3><p>Using forCompletion with admin DDL operation.</p>
+<pre><code class="language-ts"><span class="hl-6">try</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-0">res</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-0">client</span><span class="hl-1">.</span><span class="hl-4">adminDDL</span><span class="hl-1">(</span><span class="hl-5">&#39;CREATE NAMESPACE.....&#39;</span><span class="hl-1">);</span><br/><span class="hl-1">    </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-0">client</span><span class="hl-1">.</span><span class="hl-4">forCompletion</span><span class="hl-1">(</span><span class="hl-0">res</span><span class="hl-1">);</span><br/><span class="hl-1">} </span><span class="hl-6">catch</span><span class="hl-1">(</span><span class="hl-0">err</span><span class="hl-1">) {</span><br/><span class="hl-1">    </span><span class="hl-8">// May be caused by client.forCompletion() if long running admin</span><br/><span class="hl-1">    </span><span class="hl-8">// DDL operation was unsuccessful.</span><br/><span class="hl-1">}</span>
+</code></pre>
+
+<h3>Async</h3>
+<h3>Returns</h3><p>Promise of <a href="../interfaces/AdminResult.html">AdminResult</a>, which is the object
+passed as first argument and modified to reflect operation completion</p>
+
+<h3>See</h3><ul>
+<li><a href="NoSQLClient.html#adminDDL">adminDDL</a></li>
+<li><a href="NoSQLClient.html#adminStatus">adminStatus</a></li>
+<li><a href="../interfaces/AdminResult.html">AdminResult</a></li>
+</ul>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>res: <a href="../interfaces/AdminResult.html" class="tsd-signature-type" data-tsd-kind="Interface">AdminResult</a></h5></li>
+<h5>res: <a href="../interfaces/AdminResult.html" class="tsd-signature-type" data-tsd-kind="Interface">AdminResult</a></h5>
+<div class="tsd-comment tsd-typography"><p>Result of <a href="NoSQLClient.html#adminDDL">adminDDL</a>. This
+result is modified by this method on operation completion</p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> opt: <a href="../interfaces/CompletionOpt.html" class="tsd-signature-type" data-tsd-kind="Interface">CompletionOpt</a></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> opt: <a href="../interfaces/CompletionOpt.html" class="tsd-signature-type" data-tsd-kind="Interface">CompletionOpt</a></h5>
+<div class="tsd-comment tsd-typography"><p>Options object, see <a href="../interfaces/CompletionOpt.html">CompletionOpt</a></p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/AdminResult.html" class="tsd-signature-type" data-tsd-kind="Interface">AdminResult</a><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="forLocalReplicaInit" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>for<wbr/>Local<wbr/>Replica<wbr/>Init</span><a href="#forLocalReplicaInit" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="forLocalReplicaInit.forLocalReplicaInit-1">for<wbr/>Local<wbr/>Replica<wbr/>Init<span class="tsd-signature-symbol">(</span>tableName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, opt<span class="tsd-signature-symbol">?: </span><a href="../interfaces/CompletionOpt.html" class="tsd-signature-type" data-tsd-kind="Interface">CompletionOpt</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/TableResult.html" class="tsd-signature-type" data-tsd-kind="Interface">TableResult</a><span class="tsd-signature-symbol">&gt;</span><a href="#forLocalReplicaInit.forLocalReplicaInit-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Cloud Service only.</p>
+<p>
+This method waits asynchronously for local table replica to complete
+its initialization.
+<p>
+After table replica is created, it needs to be initialized by copying
+the data (if any) from the sender region. During this initialization
+process, even though the table state of the replica table is
+<a href="../enums/TableState.html#ACTIVE">ACTIVE</a>, data operations cannot be performed on the
+replica table.
+<p>
+This method is used to ensure that the replica table is ready for data
+operations by asynchronously waiting for the initialization process to
+complete. It works similar to <a href="NoSQLClient.html#forCompletion">forCompletion</a> by polling the
+table state at regular intervals until
+<a href="../interfaces/TableResult.html#isLocalReplicaInitialized">isLocalReplicaInitialized</a> is <em>true</em>.
+<p>
+Note that this operation must be performed in the receiver region
+where the table replica resides (not in the sender region from where
+the replica was created), meaning that this <a href="NoSQLClient.html">NoSQLClient</a>
+instance must be configured with the receiver region (see
+<a href="../interfaces/Config.html#region">region</a>).
+<h3>Async</h3>
+<h3>Returns</h3><p>Promise of <a href="../interfaces/TableResult.html">TableResult</a></p>
+
+<h3>See</h3><ul>
+<li><a href="https://docs.oracle.com/en/cloud/paas/nosql-cloud/gasnd">Global Active Tables in NDCS</a>.</li>
+<li><a href="NoSQLClient.html#addReplica">addReplica</a></li>
+<li><a href="../interfaces/TableResult.html#isLocalReplicaInitialized">isLocalReplicaInitialized</a></li>
+<li><a href="NoSQLClient.html#forCompletion">forCompletion</a></li>
+<li><a href="NoSQLClient.html#forTableState">forTableState</a></li>
+</ul>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>tableName: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>Table name</p>
+</div></li>
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> opt: <a href="../interfaces/CompletionOpt.html" class="tsd-signature-type" data-tsd-kind="Interface">CompletionOpt</a></h5>
+<div class="tsd-comment tsd-typography"><p>Options object, see <a href="../interfaces/CompletionOpt.html">CompletionOpt</a></p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/TableResult.html" class="tsd-signature-type" data-tsd-kind="Interface">TableResult</a><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="forTableState" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>for<wbr/>Table<wbr/>State</span><a href="#forTableState" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -853,6 +1042,63 @@ fields. Defaults to <a href="../types/AnyRow.html">AnyRow</a>.</p>
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <p>Inherited from EventEmitter.getMaxListeners</p></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getReplicaStats" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>get<wbr/>Replica<wbr/>Stats</span><a href="#getReplicaStats" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="getReplicaStats.getReplicaStats-1">get<wbr/>Replica<wbr/>Stats<span class="tsd-signature-symbol">(</span>tableName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, opt<span class="tsd-signature-symbol">?: </span><a href="../interfaces/ReplicaStatsOpt.html" class="tsd-signature-type" data-tsd-kind="Interface">ReplicaStatsOpt</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/ReplicaStatsResult.html" class="tsd-signature-type" data-tsd-kind="Interface">ReplicaStatsResult</a><span class="tsd-signature-symbol">&gt;</span><a href="#getReplicaStats.getReplicaStats-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Cloud Service only.</p>
+<p>
+Gets replica statistics information.
+<p>
+This operation retrieves stats information for the replicas of a Global
+Active table. This information includes a time series of replica stats,
+as found in <a href="../interfaces/ReplicaStats.html">ReplicaStats</a>. For more information on Global Active
+tables, see
+<a href="https://docs.oracle.com/en/cloud/paas/nosql-cloud/gasnd">Global Active Tables in NDCS</a>.
+<p>
+It is possible to return a range of stats records or, by default, only
+the most recent stats records (up to the limit) for each replica if
+<a href="../interfaces/ReplicaStatsOpt.html#startTime">startTime</a> is not specified. Replica stats
+records are created on a regular basis and maintained for a period of
+time. Only records for time periods that have completed are returned
+so that a user never sees changing data for a specific range.
+<p>
+By default, this operation returns stats for all replicas as an object
+keyed by region id of each replica and values being an array of
+<a href="../interfaces/ReplicaStats.html">ReplicaStats</a> per replica (see
+<a href="../interfaces/ReplicaStatsResult.html#statsRecords">statsRecords</a>). You may limit the result to
+the stats of only one replica by providing its
+<a href="../interfaces/ReplicaStatsOpt.html#region">region</a>.
+<p>
+Because the number of replica stats records can be very large, each
+call to <a href="NoSQLClient.html#getReplicaStats">getReplicaStats</a> returns a limited number of records
+(the default limit is 1000). You can customize this limit via
+<a href="../interfaces/ReplicaStatsOpt.html#limit">limit</a> option. You can retrive large number of
+replica stats records over multiple calls to <a href="NoSQLClient.html#getReplicaStats">getReplicaStats</a> by
+setting <a href="../interfaces/ReplicaStatsOpt.html#startTime">startTime</a> on each subsequent call to
+the value of <a href="../interfaces/ReplicaStatsResult.html#nextStartTime">nextStartTime</a> returned by a
+previous call.
+<h3>Async</h3>
+<h3>Returns</h3><p>Promise of <a href="../interfaces/ReplicaStatsResult.html">ReplicaStatsResult</a></p>
+
+<h3>See</h3><ul>
+<li><a href="../interfaces/ReplicaStatsOpt.html">ReplicaStatsOpt</a></li>
+<li><a href="../interfaces/ReplicaStatsResult.html">ReplicaStatsResult</a></li>
+</ul>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>tableName: <span class="tsd-signature-type">string</span></h5>
+<div class="tsd-comment tsd-typography"><p>Table name</p>
+</div></li>
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> opt: <a href="../interfaces/ReplicaStatsOpt.html" class="tsd-signature-type" data-tsd-kind="Interface">ReplicaStatsOpt</a></h5>
+<div class="tsd-comment tsd-typography"><p>Options object, see <a href="../interfaces/ReplicaStatsOpt.html">ReplicaStatsOpt</a>.</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/ReplicaStatsResult.html" class="tsd-signature-type" data-tsd-kind="Interface">ReplicaStatsResult</a><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="getTable" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Table</span><a href="#getTable" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -922,7 +1168,7 @@ less than the limit (and possibly 0), which means that the last
 partial result has been received.
 </p>
 
-<pre><code class="language-ts"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">now</span><span class="hl-1"> = </span><span class="hl-5">Date</span><span class="hl-1">.</span><span class="hl-3">now</span><span class="hl-1">();</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">opt</span><span class="hl-1"> = {</span><br/><span class="hl-1">    </span><span class="hl-5">startTime:</span><span class="hl-1"> </span><span class="hl-5">now</span><span class="hl-1"> - </span><span class="hl-7">3600</span><span class="hl-1"> * </span><span class="hl-7">1000</span><span class="hl-1">, </span><span class="hl-8">// last 1 hour</span><br/><span class="hl-1">    </span><span class="hl-5">endTime:</span><span class="hl-1"> </span><span class="hl-5">now</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">limit:</span><span class="hl-1"> </span><span class="hl-7">100</span><br/><span class="hl-1">};</span><br/><span class="hl-6">do</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">res</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1">.</span><span class="hl-3">getTableUsage</span><span class="hl-1">(</span><span class="hl-4">&#39;MyTable&#39;</span><span class="hl-1">, </span><span class="hl-5">opt</span><span class="hl-1">);</span><br/><span class="hl-1">    </span><span class="hl-6">for</span><span class="hl-1">(</span><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">rec</span><span class="hl-1"> </span><span class="hl-0">of</span><span class="hl-1"> </span><span class="hl-5">res</span><span class="hl-1">.</span><span class="hl-5">usageRecords</span><span class="hl-1">) {</span><br/><span class="hl-1">        </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-3">log</span><span class="hl-1">(</span><span class="hl-5">rec</span><span class="hl-1">);</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">    </span><span class="hl-5">opt</span><span class="hl-1">.</span><span class="hl-5">startIndex</span><span class="hl-1"> = </span><span class="hl-5">res</span><span class="hl-1">.</span><span class="hl-5">nextIndex</span><span class="hl-1">;</span><br/><span class="hl-1">} </span><span class="hl-6">while</span><span class="hl-1">(</span><span class="hl-5">res</span><span class="hl-1">.</span><span class="hl-5">usageRecords</span><span class="hl-1">.</span><span class="hl-5">length</span><span class="hl-1"> === </span><span class="hl-5">opt</span><span class="hl-1">.</span><span class="hl-5">limit</span><span class="hl-1">);</span>
+<pre><code class="language-ts"><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">now</span><span class="hl-1"> = </span><span class="hl-0">Date</span><span class="hl-1">.</span><span class="hl-4">now</span><span class="hl-1">();</span><br/><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">opt</span><span class="hl-1"> = {</span><br/><span class="hl-1">    </span><span class="hl-0">startTime:</span><span class="hl-1"> </span><span class="hl-0">now</span><span class="hl-1"> - </span><span class="hl-7">3600</span><span class="hl-1"> * </span><span class="hl-7">1000</span><span class="hl-1">, </span><span class="hl-8">// last 1 hour</span><br/><span class="hl-1">    </span><span class="hl-0">endTime:</span><span class="hl-1"> </span><span class="hl-0">now</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-0">limit:</span><span class="hl-1"> </span><span class="hl-7">100</span><br/><span class="hl-1">};</span><br/><span class="hl-6">do</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">res</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-0">client</span><span class="hl-1">.</span><span class="hl-4">getTableUsage</span><span class="hl-1">(</span><span class="hl-5">&#39;MyTable&#39;</span><span class="hl-1">, </span><span class="hl-0">opt</span><span class="hl-1">);</span><br/><span class="hl-1">    </span><span class="hl-6">for</span><span class="hl-1">(</span><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">rec</span><span class="hl-1"> </span><span class="hl-2">of</span><span class="hl-1"> </span><span class="hl-0">res</span><span class="hl-1">.</span><span class="hl-0">usageRecords</span><span class="hl-1">) {</span><br/><span class="hl-1">        </span><span class="hl-0">console</span><span class="hl-1">.</span><span class="hl-4">log</span><span class="hl-1">(</span><span class="hl-0">rec</span><span class="hl-1">);</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">    </span><span class="hl-0">opt</span><span class="hl-1">.</span><span class="hl-0">startIndex</span><span class="hl-1"> = </span><span class="hl-0">res</span><span class="hl-1">.</span><span class="hl-0">nextIndex</span><span class="hl-1">;</span><br/><span class="hl-1">} </span><span class="hl-6">while</span><span class="hl-1">(</span><span class="hl-0">res</span><span class="hl-1">.</span><span class="hl-0">usageRecords</span><span class="hl-1">.</span><span class="hl-0">length</span><span class="hl-1"> === </span><span class="hl-0">opt</span><span class="hl-1">.</span><span class="hl-0">limit</span><span class="hl-1">);</span>
 </code></pre>
 
 <h3>Async</h3>
@@ -1174,17 +1420,18 @@ authorization in background ahead of its expiration so that database
 operations may use existing authorization while the new one is obtained
 in the background.
 <p>
-Calling this method is equivalient to calling <a href="../types/getAuthorization.html">getAuthorization</a>
-which will pre-cache the authorzation in the process, so if using
-custom <a href="../types/AuthorizationProvider.html">AuthorizationProvider</a> that does not cache authorzation,
-this method will have no effect.
+Calling this method is equivalient to calling
+<a href="../interfaces/AuthorizationProvider.html#getAuthorization">getAuthorization</a> method of authorization
+provider which will pre-cache the authorzation in the process, so if
+using custom <a href="../interfaces/AuthorizationProvider.html">AuthorizationProvider</a> that does not cache
+authorzation, this method will have no effect.
 <p>
 This method does not take explicit timeout, but uses timeouts specified
 for authorization network requests for given built-in authorization
 provider.  See properties <a href="../interfaces/IAMConfig.html#timeout">timeout</a> and
 <a href="../interfaces/KVStoreAuthConfig.html#timeout">timeout</a>.
 <h3>Example</h3><p>Using precacheAuth on new NoSQLClient instance.</p>
-<pre><code class="language-ts"><span class="hl-0">let</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1">;</span><br/><span class="hl-6">try</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-5">client</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-3">NoSQLClient</span><span class="hl-1">(</span><span class="hl-5">config</span><span class="hl-1">).</span><span class="hl-3">precacheAuth</span><span class="hl-1">();</span><br/><span class="hl-1">    .....</span><br/><span class="hl-1">} </span><span class="hl-6">finally</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-5">client</span><span class="hl-1">?.</span><span class="hl-3">close</span><span class="hl-1">();</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-2">let</span><span class="hl-1"> </span><span class="hl-0">client</span><span class="hl-1">;</span><br/><span class="hl-6">try</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-0">client</span><span class="hl-1"> = </span><span class="hl-6">await</span><span class="hl-1"> </span><span class="hl-2">new</span><span class="hl-1"> </span><span class="hl-4">NoSQLClient</span><span class="hl-1">(</span><span class="hl-0">config</span><span class="hl-1">).</span><span class="hl-4">precacheAuth</span><span class="hl-1">();</span><br/><span class="hl-1">    .....</span><br/><span class="hl-1">} </span><span class="hl-6">finally</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-0">client</span><span class="hl-1">?.</span><span class="hl-4">close</span><span class="hl-1">();</span><br/><span class="hl-1">}</span>
 </code></pre>
 
 <h3>Async</h3>
@@ -1193,7 +1440,7 @@ provider.  See properties <a href="../interfaces/IAMConfig.html#timeout">timeout
 <h3>See</h3><ul>
 <li><a href="../interfaces/IAMConfig.html">IAMConfig</a></li>
 <li><a href="../interfaces/KVStoreAuthConfig.html">KVStoreAuthConfig</a></li>
-<li><a href="../types/AuthorizationProvider.html">AuthorizationProvider</a></li>
+<li><a href="../interfaces/AuthorizationProvider.html">AuthorizationProvider</a></li>
 </ul>
 </div>
 <h4 class="tsd-returns-title">Returns <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="NoSQLClient.html" class="tsd-signature-type" data-tsd-kind="Class">NoSQLClient</a><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></section>
@@ -1624,7 +1871,7 @@ to create a new iterable.
 All other considerations described in <a href="NoSQLClient.html#query">query</a> apply
 when using this API.
 <h3>Example</h3><p>Using <a href="NoSQLClient.html#queryIterable">queryIterable</a>.</p>
-<pre><code class="language-ts"><span class="hl-6">try</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">stmt</span><span class="hl-1"> = </span><span class="hl-4">&#39;SELECT * from orders&#39;</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-6">for</span><span class="hl-1"> </span><span class="hl-6">await</span><span class="hl-1">(</span><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">res</span><span class="hl-1"> </span><span class="hl-0">of</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1">.</span><span class="hl-3">queryIterable</span><span class="hl-1">(</span><span class="hl-5">stmt</span><span class="hl-1">)) {</span><br/><span class="hl-1">        </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-3">log</span><span class="hl-1">(</span><span class="hl-4">`Retrieved </span><span class="hl-0">${</span><span class="hl-5">res</span><span class="hl-9">.</span><span class="hl-5">rows</span><span class="hl-9">.</span><span class="hl-5">length</span><span class="hl-0">}</span><span class="hl-4"> rows`</span><span class="hl-1">);</span><br/><span class="hl-1">        </span><span class="hl-8">// Do something with res.rows</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">} </span><span class="hl-6">catch</span><span class="hl-1">(</span><span class="hl-5">err</span><span class="hl-1">) {</span><br/><span class="hl-1">    </span><span class="hl-8">// handle errors</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-6">try</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">stmt</span><span class="hl-1"> = </span><span class="hl-5">&#39;SELECT * from orders&#39;</span><span class="hl-1">;</span><br/><span class="hl-1">    </span><span class="hl-6">for</span><span class="hl-1"> </span><span class="hl-6">await</span><span class="hl-1">(</span><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">res</span><span class="hl-1"> </span><span class="hl-2">of</span><span class="hl-1"> </span><span class="hl-0">client</span><span class="hl-1">.</span><span class="hl-4">queryIterable</span><span class="hl-1">(</span><span class="hl-0">stmt</span><span class="hl-1">)) {</span><br/><span class="hl-1">        </span><span class="hl-0">console</span><span class="hl-1">.</span><span class="hl-4">log</span><span class="hl-1">(</span><span class="hl-5">`Retrieved </span><span class="hl-2">${</span><span class="hl-0">res</span><span class="hl-9">.</span><span class="hl-0">rows</span><span class="hl-9">.</span><span class="hl-0">length</span><span class="hl-2">}</span><span class="hl-5"> rows`</span><span class="hl-1">);</span><br/><span class="hl-1">        </span><span class="hl-8">// Do something with res.rows</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">} </span><span class="hl-6">catch</span><span class="hl-1">(</span><span class="hl-0">err</span><span class="hl-1">) {</span><br/><span class="hl-1">    </span><span class="hl-8">// handle errors</span><br/><span class="hl-1">}</span>
 </code></pre>
 
 <h3>Returns</h3><p>Async iterable of <a href="../interfaces/QueryResult.html">QueryResult</a></p>
@@ -1906,7 +2153,7 @@ You may optionally specify a limit on the number of table usage records
 returned in each partial result using <a href="../interfaces/TableUsageOpt.html#limit">limit</a>. If
 not specified, a default system limit will be used.
 <h3>Example</h3><p>Paging table usage records.</p>
-<pre><code class="language-ts"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">now</span><span class="hl-1"> = </span><span class="hl-5">Date</span><span class="hl-1">.</span><span class="hl-3">now</span><span class="hl-1">();</span><br/><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">opt</span><span class="hl-1"> = {</span><br/><span class="hl-1">    </span><span class="hl-5">startTime:</span><span class="hl-1"> </span><span class="hl-5">now</span><span class="hl-1"> - </span><span class="hl-7">3600</span><span class="hl-1"> * </span><span class="hl-7">1000</span><span class="hl-1">, </span><span class="hl-8">// last 1 hour</span><br/><span class="hl-1">    </span><span class="hl-5">endTime:</span><span class="hl-1"> </span><span class="hl-5">now</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">limit:</span><span class="hl-1"> </span><span class="hl-7">100</span><br/><span class="hl-1">};</span><br/><br/><span class="hl-6">for</span><span class="hl-1"> </span><span class="hl-6">await</span><span class="hl-1">(</span><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">res</span><span class="hl-1"> </span><span class="hl-0">of</span><span class="hl-1"> </span><span class="hl-5">client</span><span class="hl-1">.</span><span class="hl-3">tableUsageIterable</span><span class="hl-1">(</span><span class="hl-4">&#39;MyTable&#39;</span><span class="hl-1">, </span><span class="hl-5">opt</span><span class="hl-1">)) {</span><br/><span class="hl-1">    </span><span class="hl-6">for</span><span class="hl-1">(</span><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">rec</span><span class="hl-1"> </span><span class="hl-0">of</span><span class="hl-1"> </span><span class="hl-5">res</span><span class="hl-1">.</span><span class="hl-5">usageRecords</span><span class="hl-1">) {</span><br/><span class="hl-1">        </span><span class="hl-5">console</span><span class="hl-1">.</span><span class="hl-3">log</span><span class="hl-1">(</span><span class="hl-5">rec</span><span class="hl-1">);</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">}</span>
+<pre><code class="language-ts"><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">now</span><span class="hl-1"> = </span><span class="hl-0">Date</span><span class="hl-1">.</span><span class="hl-4">now</span><span class="hl-1">();</span><br/><br/><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">opt</span><span class="hl-1"> = {</span><br/><span class="hl-1">    </span><span class="hl-0">startTime:</span><span class="hl-1"> </span><span class="hl-0">now</span><span class="hl-1"> - </span><span class="hl-7">3600</span><span class="hl-1"> * </span><span class="hl-7">1000</span><span class="hl-1">, </span><span class="hl-8">// last 1 hour</span><br/><span class="hl-1">    </span><span class="hl-0">endTime:</span><span class="hl-1"> </span><span class="hl-0">now</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-0">limit:</span><span class="hl-1"> </span><span class="hl-7">100</span><br/><span class="hl-1">};</span><br/><br/><span class="hl-6">for</span><span class="hl-1"> </span><span class="hl-6">await</span><span class="hl-1">(</span><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">res</span><span class="hl-1"> </span><span class="hl-2">of</span><span class="hl-1"> </span><span class="hl-0">client</span><span class="hl-1">.</span><span class="hl-4">tableUsageIterable</span><span class="hl-1">(</span><span class="hl-5">&#39;MyTable&#39;</span><span class="hl-1">, </span><span class="hl-0">opt</span><span class="hl-1">)) {</span><br/><span class="hl-1">    </span><span class="hl-6">for</span><span class="hl-1">(</span><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">rec</span><span class="hl-1"> </span><span class="hl-2">of</span><span class="hl-1"> </span><span class="hl-0">res</span><span class="hl-1">.</span><span class="hl-0">usageRecords</span><span class="hl-1">) {</span><br/><span class="hl-1">        </span><span class="hl-0">console</span><span class="hl-1">.</span><span class="hl-4">log</span><span class="hl-1">(</span><span class="hl-0">rec</span><span class="hl-1">);</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">}</span>
 </code></pre>
 
 <h3>Returns</h3><p>Async iterable of <a href="../interfaces/TableUsageResult.html">TableUsageResult</a></p>
@@ -1971,19 +2218,6 @@ the <em>tableName</em> and specify table per operation as
 <a href="../interfaces/WriteOperation.html#tableName">tableName</a>.
 <h3>Async</h3>
 <h3>Returns</h3><p>Promise of <a href="../interfaces/WriteMultipleResult.html">WriteMultipleResult</a></p>
-
-<h3>Async</h3>
-<h3>Returns</h3><p>Promise of <a href="../interfaces/WriteMultipleResult.html">WriteMultipleResult</a></p>
-
-<h3>See</h3><ul>
-<li><a href="../interfaces/WriteOperation.html">WriteOperation</a></li>
-<li><a href="../interfaces/WriteMultipleResult.html">WriteMultipleResult</a></li>
-<li><a href="../interfaces/WriteOperation.html">WriteOperation</a></li>
-<li><a href="../interfaces/WriteMultipleResult.html">WriteMultipleResult</a></li>
-</ul>
-
-<h3>Async</h3>
-<h3>Returns</h3><p>Promise of <a href="../interfaces/WriteMultipleResult.html">WriteMultipleResult</a></p>
 </div>
 <section class="tsd-panel tsd-type-parameters">
 <h4>Type Parameters</h4>
@@ -2017,29 +2251,64 @@ operation, see <a href="../interfaces/WriteOperation.html">WriteOperation</a></p
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/WriteMultipleResult.html" class="tsd-signature-type" data-tsd-kind="Interface">WriteMultipleResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TRow</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4></li>
 <li class="tsd-signature tsd-anchor-link" id="writeMany.writeMany-2">write<wbr/>Many<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TRow</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>operations<span class="tsd-signature-symbol">: </span><a href="../interfaces/WriteOperation.html" class="tsd-signature-type" data-tsd-kind="Interface">WriteOperation</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TRow</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span>, opt<span class="tsd-signature-symbol">?: </span><a href="../interfaces/WriteMultipleOpt.html" class="tsd-signature-type" data-tsd-kind="Interface">WriteMultipleOpt</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/WriteMultipleResult.html" class="tsd-signature-type" data-tsd-kind="Interface">WriteMultipleResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TRow</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#writeMany.writeMany-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
+<li class="tsd-description"><code class="tsd-tag ts-flagOverload">Overload</code> 
+<div class="tsd-comment tsd-typography">
+<h3>Async</h3>
+<h3>Returns</h3><p>Promise of <a href="../interfaces/WriteMultipleResult.html">WriteMultipleResult</a></p>
+
+<h3>See</h3><ul>
+<li><a href="../interfaces/WriteOperation.html">WriteOperation</a></li>
+<li><a href="../interfaces/WriteMultipleResult.html">WriteMultipleResult</a></li>
+</ul>
+</div>
 <section class="tsd-panel tsd-type-parameters">
 <h4>Type Parameters</h4>
 <ul class="tsd-type-parameters">
 <li>
-<h4>TRow<span class="tsd-signature-symbol"> extends </span><a href="../types/AnyRow.html" class="tsd-signature-type" data-tsd-kind="Type alias">AnyRow</a></h4></li></ul></section>
+<h4>TRow<span class="tsd-signature-symbol"> extends </span><a href="../types/AnyRow.html" class="tsd-signature-type" data-tsd-kind="Type alias">AnyRow</a></h4>
+<div class="tsd-comment tsd-typography"><p>Type of table row instance. Must include primary key
+fields. Defaults to <a href="../types/AnyRow.html">AnyRow</a>.</p>
+</div></li></ul></section>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>operations: <a href="../interfaces/WriteOperation.html" class="tsd-signature-type" data-tsd-kind="Interface">WriteOperation</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TRow</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h5></li>
+<h5>operations: <a href="../interfaces/WriteOperation.html" class="tsd-signature-type" data-tsd-kind="Interface">WriteOperation</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TRow</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h5>
+<div class="tsd-comment tsd-typography"><p>Array of
+<a href="../interfaces/WriteOperation.html">WriteOperation</a> objects each representing single put or delete
+operation, see <a href="../interfaces/WriteOperation.html">WriteOperation</a></p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> opt: <a href="../interfaces/WriteMultipleOpt.html" class="tsd-signature-type" data-tsd-kind="Interface">WriteMultipleOpt</a></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> opt: <a href="../interfaces/WriteMultipleOpt.html" class="tsd-signature-type" data-tsd-kind="Interface">WriteMultipleOpt</a></h5>
+<div class="tsd-comment tsd-typography"><p>Options object, see
+<a href="../interfaces/WriteMultipleOpt.html">WriteMultipleOpt</a></p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/WriteMultipleResult.html" class="tsd-signature-type" data-tsd-kind="Interface">WriteMultipleResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">TRow</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4></li>
 <li class="tsd-signature tsd-anchor-link" id="writeMany.writeMany-3">write<wbr/>Many<span class="tsd-signature-symbol">(</span>operations<span class="tsd-signature-symbol">: </span><a href="../interfaces/WriteOperation.html" class="tsd-signature-type" data-tsd-kind="Interface">WriteOperation</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/AnyRow.html" class="tsd-signature-type" data-tsd-kind="Type alias">AnyRow</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span>, opt<span class="tsd-signature-symbol">?: </span><a href="../interfaces/WriteMultipleOpt.html" class="tsd-signature-type" data-tsd-kind="Interface">WriteMultipleOpt</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/WriteMultipleResult.html" class="tsd-signature-type" data-tsd-kind="Interface">WriteMultipleResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/AnyRow.html" class="tsd-signature-type" data-tsd-kind="Type alias">AnyRow</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><a href="#writeMany.writeMany-3" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
+<li class="tsd-description"><code class="tsd-tag ts-flagOverload">Overload</code> 
+<div class="tsd-comment tsd-typography">
+<h3>Async</h3>
+<h3>Returns</h3><p>Promise of <a href="../interfaces/WriteMultipleResult.html">WriteMultipleResult</a></p>
+
+<h3>See</h3><ul>
+<li><a href="../interfaces/WriteOperation.html">WriteOperation</a></li>
+<li><a href="../interfaces/WriteMultipleResult.html">WriteMultipleResult</a></li>
+</ul>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>operations: <a href="../interfaces/WriteOperation.html" class="tsd-signature-type" data-tsd-kind="Interface">WriteOperation</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/AnyRow.html" class="tsd-signature-type" data-tsd-kind="Type alias">AnyRow</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h5></li>
+<h5>operations: <a href="../interfaces/WriteOperation.html" class="tsd-signature-type" data-tsd-kind="Interface">WriteOperation</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/AnyRow.html" class="tsd-signature-type" data-tsd-kind="Type alias">AnyRow</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h5>
+<div class="tsd-comment tsd-typography"><p>Array of <a href="../interfaces/WriteOperation.html">WriteOperation</a>
+objects each representing single put or delete operation, see
+<a href="../interfaces/WriteOperation.html">WriteOperation</a></p>
+</div></li>
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> opt: <a href="../interfaces/WriteMultipleOpt.html" class="tsd-signature-type" data-tsd-kind="Interface">WriteMultipleOpt</a></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> opt: <a href="../interfaces/WriteMultipleOpt.html" class="tsd-signature-type" data-tsd-kind="Interface">WriteMultipleOpt</a></h5>
+<div class="tsd-comment tsd-typography"><p>Options object, see
+<a href="../interfaces/WriteMultipleOpt.html">WriteMultipleOpt</a></p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/WriteMultipleResult.html" class="tsd-signature-type" data-tsd-kind="Interface">WriteMultipleResult</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/AnyRow.html" class="tsd-signature-type" data-tsd-kind="Type alias">AnyRow</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="listenerCount-2" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>listener<wbr/>Count</span><a href="#listenerCount-2" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
@@ -2116,7 +2385,7 @@ operation, see <a href="../interfaces/WriteOperation.html">WriteOperation</a></p
 <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
 <div class="tsd-accordion-details">
 <ul>
-<li><a href="../modules.html">Oracle <wbr/>NoSQL <wbr/>Database <wbr/>Node.js SDK -<wbr/> v5.5.0</a>
+<li><a href="../modules.html">Oracle <wbr/>NoSQL <wbr/>Database <wbr/>Node.js SDK -<wbr/> v5.5.1</a>
 <ul>
 <li class="pages-entry pages-entry-menu pages-entry-depth-1"><a>Guides</a>
 <ul>
@@ -2135,6 +2404,7 @@ operation, see <a href="../interfaces/WriteOperation.html">WriteOperation</a></p
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="NoSQLClient.html#errorMonitor" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>error<wbr/>Monitor</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class"><a href="NoSQLClient.html#version" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>version</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="NoSQLClient.html#addListener" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>add<wbr/>Listener</a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="NoSQLClient.html#addReplica" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>add<wbr/>Replica</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="NoSQLClient.html#adminDDL" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>adminDDL</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="NoSQLClient.html#adminStatus" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>admin<wbr/>Status</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="NoSQLClient.html#close" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>close</a></li>
@@ -2142,14 +2412,17 @@ operation, see <a href="../interfaces/WriteOperation.html">WriteOperation</a></p
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="NoSQLClient.html#deleteIfVersion" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>delete<wbr/>If<wbr/>Version</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="NoSQLClient.html#deleteMany" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>delete<wbr/>Many</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="NoSQLClient.html#deleteRange" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>delete<wbr/>Range</a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="NoSQLClient.html#dropReplica" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>drop<wbr/>Replica</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="NoSQLClient.html#emit" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>emit</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="NoSQLClient.html#eventNames" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>event<wbr/>Names</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="NoSQLClient.html#forCompletion" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>for<wbr/>Completion</a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="NoSQLClient.html#forLocalReplicaInit" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>for<wbr/>Local<wbr/>Replica<wbr/>Init</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="NoSQLClient.html#forTableState" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>for<wbr/>Table<wbr/>State</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="NoSQLClient.html#get" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>get</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="NoSQLClient.html#getIndex" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>get<wbr/>Index</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="NoSQLClient.html#getIndexes" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>get<wbr/>Indexes</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="NoSQLClient.html#getMaxListeners" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>get<wbr/>Max<wbr/>Listeners</a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="NoSQLClient.html#getReplicaStats" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>get<wbr/>Replica<wbr/>Stats</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="NoSQLClient.html#getTable" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>get<wbr/>Table</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="NoSQLClient.html#getTableUsage" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>get<wbr/>Table<wbr/>Usage</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="NoSQLClient.html#listNamespaces" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>list<wbr/>Namespaces</a></li>
