@@ -1,6 +1,6 @@
 {
   "name": "oracle-nosqldb",
-  "version": "5.5.0",
+  "version": "5.5.1",
   "description": "Node.js driver for Oracle NoSQL Database",
   "main": "index.js",
   "types": "index.d.ts",
