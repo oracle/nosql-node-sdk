@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## Unpublished
+
+**Fixed**
+
+* Cloud only: fixed a bug where read/write units in AddReplicaOpt were not
+sent to the server during addReplica operation.
+
 ## 5.5.1 - 2024-02-21
 
 **Added**
