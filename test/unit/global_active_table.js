@@ -675,7 +675,9 @@ async function dropAllReplicas(client, tbl) {
             repClient = new NoSQLClient(configForRegion(repInfo.replicaName));
             await repClient.forLocalReplicaInit(tbl.name);
         } finally {
-            repClient.close();
+            if (repClient) {
+                repClient.close();
+            }
         }
     }
 
