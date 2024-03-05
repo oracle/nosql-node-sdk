@@ -109,6 +109,17 @@ function configForRegion(region) {
     return Object.assign({}, Utils.config, { region });
 }
 
+function replicaTableLimits(tbl, addOpt, isOnDemand) {
+    return {
+        readUnits: addOpt && addOpt.readUnits ?
+            addOpt.readUnits : tbl.limits.readUnits,
+        writeUnits: addOpt && addOpt.writeUnits ?
+            addOpt.writeUnits : tbl.limits.writeUnits,
+        storageGB: tbl.limits.storageGB,
+        mode: isOnDemand ? CapacityMode.ON_DEMAND : CapacityMode.PROVISIONED
+    };
+}
+
 function testAddReplicaNegative(client, tbl) {
     for(let badTblName of badTblNames) {
         it(`addReplica with invalid table name: ${util.inspect(badTblName)}`,
@@ -249,8 +260,9 @@ function verifyRepInfo(repInfo, tbl, rep, isOnDemand) {
         expect(repInfo.writeUnits).to.satisfy(isPosInt32);
     } else {
         //whether specified different read/write units when creating replica
-        expect(repInfo.writeUnits).to.equal(rep.writeUnits ?
-            rep.writeUnits : tbl.limits.writeUnits);
+        expect(repInfo.writeUnits).to.equal(
+            rep.createOpt && rep.createOpt.writeUnits ?
+                rep.createOpt.writeUnits : tbl.limits.writeUnits);
     }
 
     expect(repInfo.state).to.equal(TableState.ACTIVE);
@@ -364,7 +376,10 @@ function testAddReplica(clients, tbl, rep, resCnt) {
             //Make sure the replica is initialized before we proceed with
             //other testcases.
             res = await repClient.forLocalReplicaInit(tbl.name);
-            verifyActiveRepTable(res, tbl);
+            //We haven't done onDemand conversion yet, so rep.toOnDemand is
+            //not passed to replicaTableLimits.
+            opt.tableLimits = replicaTableLimits(tbl, rep.createOpt);
+            verifyActiveRepTable(res, tbl, opt);
 
             //Verify that can read data after replica table is initialized.
             res = await repClient.get(tbl.name, { id: NUM_ROWS - 1 });
@@ -437,15 +452,8 @@ function testReplicaInfo(clients, tbl) {
                     tbl.name);
                 
                 verifyActiveRepTable(res, tbl, {
-                    tableLimits: {
-                        readUnits: rep.readUnits ?
-                            rep.readUnits : tbl.limits.readUnits,
-                        writeUnits: rep.writeUnits ?
-                            rep.writeUnits : tbl.limits.writeUnits,
-                        storageGB: tbl.limits.storageGB,
-                        mode: rep.toOnDemand ? CapacityMode.ON_DEMAND :
-                            CapacityMode.PROVISIONED
-                    },
+                    tableLimits: replicaTableLimits(tbl, rep.createOpt,
+                        rep.toOnDemand),
                     _repCnt: REPLICAS.length,
                     _tableOCID: repInfo.replicaOCID
                 });
@@ -656,6 +664,23 @@ async function dropAllReplicas(client, tbl) {
     }
 
     expect(res.replicas).to.be.an('array');
+
+    //Dropping any replicas is not allowed if initialization for one of the
+    //replicas is not complete. Here we ensure initialization process is
+    //complete for all replicas before dropping them. Note that this is
+    //executed only if some replicas are leftover from previous run.
+    for(const repInfo of res.replicas) {
+        let repClient;
+        try {
+            repClient = new NoSQLClient(configForRegion(repInfo.replicaName));
+            await repClient.forLocalReplicaInit(tbl.name);
+        } finally {
+            if (repClient) {
+                repClient.close();
+            }
+        }
+    }
+
     for(const repInfo of res.replicas) {
         await client.dropReplica(tbl.name, repInfo.replicaName,
             { complete: true });
