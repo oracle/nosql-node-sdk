@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 * Cloud only: fixed a bug where read/write units in AddReplicaOpt were not
 sent to the server during addReplica operation.
 
+**Added**
+
+* Cloud only: Added OCI region codes: IZQ
+
 ## 5.5.1 - 2024-02-21
 
 **Added**
