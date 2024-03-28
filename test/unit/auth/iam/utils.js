@@ -13,6 +13,7 @@ const expect = chai.expect;
 
 const util = require('util');
 const crypto = require('crypto');
+const path = require('path');
 const fs = require('fs');
 const Utils = require('../../utils');
 const HttpConstants = require('../../../../lib/constants').HttpConstants;
@@ -129,6 +130,10 @@ function makeReq(cfg, opt) {
 function writeOrRemove(file, data) {
     if (data != null) {
         expect(file).to.exist; //test self-check
+        const dir = path.dirname(file.toString());
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
         fs.writeFileSync(file, data);
     } else if (data === null && file != null && fs.existsSync(file)) {
         fs.unlinkSync(file);
@@ -269,6 +274,14 @@ function writeFileLines(file, lines) {
     fs.writeFileSync(file, lines.join('\n'));
 }
 
+function setOrUnsetEnv(key, val) {
+    if (val != null) {
+        process.env[key] = val;
+    } else {
+        delete process.env[key];
+    }
+}
+
 module.exports = {
     inspect,
     iam2cfg,
@@ -283,5 +296,6 @@ module.exports = {
     verifyAuth,
     verifyAuthEqual,
     verifyAuthLaterDate,
-    writeFileLines
+    writeFileLines,
+    setOrUnsetEnv
 };
