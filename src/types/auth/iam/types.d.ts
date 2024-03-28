@@ -99,6 +99,20 @@ export interface IAMCredentials {
  * {@link https://docs.cloud.oracle.com/en-us/iaas/Content/Functions/Tasks/functionsaccessingociresources.htm | Accessing Other Oracle Cloud Infrastructure Resources from Running Functions}
  * for more information.  Use Resouce Principal by setting
  * {@link IAMConfig#useResourcePrincipal} property to true.</li>
+ * <li>Using Oracle Container Engine for Kubernetes (OKE) workload identity.
+ * You may use OKE workload identity when running an application inside
+ * Kubernetes cluster. For more information, see
+ * {@link https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengoverview.htm | Overview of Container Engine for Kubernetes}
+ * and
+ * {@link https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contenggrantingworkloadaccesstoresources.htm | Granting Workloads Access to OCI Resources}.
+ * </li>
+ * <li>Using session-token based authentication.  This method uses temporary
+ * session token read from a token file.  The path to the token file and other
+ * required credentials are stored in OCI configuration file. For more
+ * information see
+ * {@link https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdkconfig.htm | SDK Configuration File}
+ * and
+ * {@link https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/clitoken.htm" | Token-based Authentication for the CLI}.
  * </ol>
  * <p>
  * When using specific user's identity, if you don't specify compartment,
@@ -109,12 +123,13 @@ export interface IAMCredentials {
  * compartment name. If using compartment name, you can also provide it as a
  * prefix to the table name as in <em>compartmentName.tableName</em>.
  * <p>
- * When using Instance Principal or Resource Principal, there is no default
- * compartment, so you must specify compartiment id (OCID), either as
- * {@link Config#compartment} property of the initial configuration or as part
- * of options for each request. Note that you must use compartment id (OCID)
- * and not compartment name. This also means that you may not prefix table
- * name with compartment name when calling methods of {@link NoSQLClient}.
+ * When using Instance Principal, Resource Principal or OKE workload identity,
+ * there is no default compartment, so you must specify compartiment id
+ * (OCID), either as {@link Config#compartment} property of the initial
+ * configuration or as part of options for each request. Note that you must
+ * use compartment id (OCID) and not compartment name. This also means that
+ * you may not prefix table name with compartment name when calling methods of
+ * {@link NoSQLClient}.
  * The only exception to this is when using Resource Principal together with
  * {@link useResourcePrincipalCompartment} property, in which case the
  * resource compartment itself will be used.
@@ -179,6 +194,11 @@ export interface IAMCredentials {
  * Instance Principal authentication will be used.  You may also set
  * {@link IAMConfig#federationEndpoint}, although it is not requred and in
  * most cases federation endpoint will be auto-detected.</li>
+ * <li>If {@link IAMConfig#useOKEWorkloadIdentity} is set to <em>true</em>,
+ * then Container Engine for Kubernetes (OKE) authentication will be used.
+ * Optionally, you may also provide service account token by setting one of 3
+ * properties {@link serviceAccountToken}, {@link serviceAccountTokenFile} or
+ * {@link serviceAccountTokenProvider}.</li>
  * <li>If {@link useSessionToken} is set to <em>true</em>, then session
  * token-based authentication will be used. Note that this method uses OCI
  * config file, so settings to properties {@link configFile} and
@@ -316,6 +336,7 @@ export interface IAMCredentials {
  *     }
  * }
  * ```
+ * 
  * @example
  * Javascript {@link Config} object when using Resource Principal with
  * {@link useResourcePrincipalCompartment} property. 
@@ -325,6 +346,50 @@ export interface IAMCredentials {
  *         iam: {
  *             useResourcePrincipal: true,
  *             useResourcePrincipalCompartment: true
+ *         }
+ *     }
+ * }
+ * ```
+ * 
+ * @example
+ * Javascript {@link Config} object when using OKE workload identity. 
+ * ```js
+ * {
+ *     compartment: "ocid1.compartment.oc1.............................",
+ *     auth: {
+ *         iam: {
+ *             useOKEWorkloadIdentity: true
+ *         }
+ *     }
+ * }
+ * ```
+ * 
+ * @example
+ * JSON {@link Config} object when using OKE workload identity and supplying
+ * the location of service account token.
+ * ```js
+ * {
+ *     "compartment": "ocid1.compartment.oc1.............................",
+ *     "auth": {
+ *         "iam": {
+ *             "useOKEWorkloadIdentity": true,
+ *             "serviceAccountTokenFile": "~/myapp/serviceaccount/token"
+ *         }
+ *     }
+ * }
+ * ```
+ * 
+ * @example
+ * JSON {@link Config} object when using session token-based authentication.
+ * ```json
+ * {
+ *     "region": "us-phoenix-1",
+ *     "compartment": "ocid1.compartment.oc1.............................",
+ *     "auth": {
+ *         "iam": {
+ *             "useSessionToken": true,
+ *             "configFile": "~/myapp/.oci/config",
+ *             "profileName": "John"
  *         }
  *     }
  * }
@@ -406,6 +471,70 @@ export interface IAMConfig extends Partial<IAMCredentials> {
     useResourcePrincipalCompartment?: boolean;
 
     /**
+     * If set to true, will use authorization for Oracle Container Engine for
+     * Kubernetes (OKE) workload identity. This authorization scheme can only
+     * be used inside Kubernetes pods.
+     * <p>
+     * For information on Container Engine for Kubernetes, see
+     * {@link https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengoverview.htm | Overview of Container Engine for Kubernetes}.
+     * Also see
+     * {@link https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contenggrantingworkloadaccesstoresources.htm | Granting Workloads Access to OCI Resources}
+     * for more details on OKE workload identity.
+     * <p>
+     * This property may not be combined with {@link useInstancePrincipal},
+     * {@link useResourcePrincipal}, {@link useSessionToken} or any properties
+     * used for specific user's identity.
+     * <p>
+     * Using OKE workload identity requires service account token. By default,
+     * the provider will load service account token from the default file path
+     * <em>/var/run/secrets/kubernetes.io/serviceaccount/token</em>. You may
+     * override this and provide your own service account token by specifying
+     * one of 3 properties:
+     * <ul>
+     * <li>{@link serviceAccountToken} to provide service account token
+     * string.</li>
+     * <li>{@link serviceAccountTokenFile} to provide a path to service
+     * account token file.</li>
+     * <li>{@link serviceAccountTokenProvider} to provide a custom provider to
+     * load service account token.</li>
+     * </ul>
+     */
+    useOKEWorkloadIdentity?: boolean;
+    
+    /**
+     * Used only with OKE workload identity
+     * (see {@link useOKEWorkloadIdentity}). Use this property to provide
+     * service account token string. This property is exclusive with
+     * {@link serviceAccountTokenFile} and
+     * {@link serviceAccountTokenProvider}.
+     * @see {@link useOKEWorkloadIdentity}
+     */
+    serviceAccountToken?: string;
+
+    /**
+     * Used only with OKE workload identity
+     * (see {@link useOKEWorkloadIdentity}). Use this property to provide
+     * a path to service account token file. Service account token will be
+     * reloaded from this file when refreshing OKE security token. This
+     * property is exclusive with {@link serviceAccountToken} and
+     * {@link serviceAccountTokenProvider}.
+     * @see {@link useOKEWorkloadIdentity}
+     */
+    serviceAccountTokenFile?: string;
+
+    /**
+     * Used only with OKE workload identity
+     * (see {@link useOKEWorkloadIdentity}). This propertiy specifies
+     * {@link ServiceAccountTokenProvider} as a custom provider used to load
+     * the service account token. Service account token will be
+     * reloaded when refreshing OKE security token. This property is exclusive
+     * with {@link serviceAccountToken} and {@link serviceAccountTokenFile}.
+     * @see {@link useOKEWorkloadIdentity}
+     */
+    serviceAccountTokenProvider?: ServiceAccountTokenProvider |
+        ServiceAccountTokenProvider["loadServiceAccountToken"];
+
+    /**
      * If set to true,
      * {@link https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdk_authentication_methods.htm#sdk_authentication_methods_session_token | Session Token-Based Authentication}
      * will be used. This method uses temporary session token read from a
@@ -483,7 +612,8 @@ export interface IAMConfig extends Partial<IAMCredentials> {
 
     /**
      * Timeout in milliseconds used for requests to the authorization server.
-     * Currently this is only used with Instance Principal.
+     * Currently this is only used with Instance Principal and OKE workload
+     * identity.
      * @defaultValue 120000 (2 minutes)
      */
     timeout?: number;
@@ -534,4 +664,25 @@ export interface DelegationTokenProvider {
      * token or rejected with an error
      */
     loadDelegationToken(): Promise<string>;
+}
+
+/**
+ * You may implement {@link ServiceAccountTokenProvider} interface to securely
+ * obtain service account token when using OKE workload identity.
+ * {@link ServiceAccountTokenProvider} may be set as
+ * {@link IAMConfig#serviceAccountTokenProvider} of {@link IAMConfig}. Instead
+ * of a class implementing this interface, you may also set
+ * {@link IAMConfig#serviceAccountTokenProvider} to a function with the
+ * signature of {@link loadServiceAccountToken}.
+ * @see {@link IAMConfig#useOKEWorkloadIdentity}
+ * @see {@link IAMConfig#serviceAccountTokenProvider}
+ */
+export interface ServiceAccountTokenProvider {
+    /**
+     * Asynchronously load service account token.
+     * @async
+     * @returns {Promise} Promise resolved with a <em>string</em> service
+     * account token or rejected with an error
+     */
+    loadServiceAccountToken(): Promise<string>;
 }

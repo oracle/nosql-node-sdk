@@ -9,9 +9,11 @@ import type { NoSQLClient } from "../../nosql_client";
 import type { Config } from "../../config";
 import type { Operation } from "../../param";
 import type { NoSQLArgumentError } from "../../error";
+import type { Region } from "../../region";
 import type { AuthConfig, AuthorizationProvider, AuthResult }
     from "../config";
-import type { IAMConfig, DelegationTokenProvider } from "./types";
+import type { IAMConfig, DelegationTokenProvider,
+    ServiceAccountTokenProvider } from "./types";
 
 /**
  * Claims available in resource principal session token (RPST), which can be
@@ -131,7 +133,8 @@ export class IAMAuthorizationProvider implements AuthorizationProvider {
      * @see {@link IAMConfig#delegationTokenProvider}
      */
     static withInstancePrincipalForDelegation(
-        delegationTokenProvider: DelegationTokenProvider,
+        delegationTokenProvider: DelegationTokenProvider |
+            DelegationTokenProvider["loadDelegationToken"],
         federationEndpoint?: string): IAMAuthorizationProvider;
 
     /**
@@ -169,6 +172,43 @@ export class IAMAuthorizationProvider implements AuthorizationProvider {
      */
     static withResourcePrincipal(useResourcePrincipalCompartment?: boolean):
         IAMAuthorizationProvider;
+
+    /**
+     * A convenience method to create new instance of
+     * {@link IAMAuthorizationProvider} using Oracle Engine for Kubernetes
+     * (OKE) workload identity.
+     * <p>
+     * Other applicable properties are initialized to their defaults as
+     * described in {@link IAMConfig}.
+     * @param serviceAccountToken Optional service Account Token string or
+     * {@link ServiceAccountTokenProvider}
+     * @returns New instance of {@link IAMAuthorizationProvider} using
+     * OKE workload identity
+     * @see {@link IAMConfig#useOKEWorkloadIdentity}
+     * @see {@link IAMConfig#serviceAccountToken}
+     * @see {@link IAMConfig#serviceAccountTokenProvider}
+     */
+    static withOKEWorkloadIdentity(serviceAccountToken?: string |
+        ServiceAccountTokenProvider |
+        ServiceAccountTokenProvider["loadServiceAccountToken"]):
+        IAMAuthorizationProvider;
+
+    /**
+     * A convenience method to create new instance of
+     * {@link IAMAuthorizationProvider} using Oracle Engine for Kubernetes
+     * (OKE) workload identity. This method takes parameter to specify a path
+     * to the service account token file.
+     * <p>
+     * Other applicable properties are initialized to their defaults as
+     * described in {@link IAMConfig}.
+     * @param serviceAccountTokenFile Path to the service account token file
+     * @returns New instance of {@link IAMAuthorizationProvider} using
+     * OKE workload identity
+     * @see {@link IAMConfig#useOKEWorkloadIdentity}
+     * @see {@link IAMConfig#serviceAccountTokenFile}
+     */
+    static withOKEWorkloadIdentityAndTokenFile(
+        serviceAccountTokenFile: string): IAMAuthorizationProvider;
 
     /**
      * @overload
@@ -230,6 +270,32 @@ export class IAMAuthorizationProvider implements AuthorizationProvider {
      */
     getResourcePrincipalClaims():
         Promise<ResourcePrincipalClaims | undefined>;
+
+    /**
+     * Gets the region as determined by the provider. It may be provided in
+     * {@link Config} as {@link Config#region} when creating
+     * {@link NoSQLClient} instance to connect to this region.
+     * <p>
+     * The meaning of the returned region is determined by the authentication
+     * method used by this provider:
+     * <ul>
+     * <li>When using instance principal
+     * (see {@link IAMConfig#useInstancePrincipal}) or OKE workload identity
+     * (see {@link IAMConfig#useOKEWorkloadIdentity}), this method
+     * will return the region of the running OCI instance obtained via
+     * instance metadata service.</li>
+     * <li>When using resource principal
+     * (see {@link IAMConfig#useResourcePrincipal}), this method will return
+     * the region in which the OCI function is deployed.</li>
+     * <li>When using OCI configuration file (see {@link IAMConfig#configFile}
+     * and {@link IAMConfig#profileName}), this method will return the
+     * region as specified in OCI configuration file, if available.</li>
+     * <li>Otherwise, this method will return <em>undefined</em>.
+     * </ul>
+     * @returns {Promise} Promise of {@link Region}. If the region cannot be
+     * determined, the promise resolves with <em>undefined</em>.
+     */
+    getRegion(): Promise<Region | undefined>;
 
     /**
      * Initialization callback.

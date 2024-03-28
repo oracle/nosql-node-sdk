@@ -184,7 +184,8 @@ class MockHttp {
             } else { //assume JSON
                 res.headers[HttpConstants.CONTENT_TYPE] =
                     HttpConstants.APPLICATION_JSON;
-                data = Buffer.from(JSON.stringify(data));
+                //send empty response if null/undefined
+                data = Buffer.from(data != null ? JSON.stringify(data) : '');
             }
             res.headers[HttpConstants.CONTENT_LENGTH] = data.length;
             this._writeChunks(res, data);

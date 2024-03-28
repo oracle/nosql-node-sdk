@@ -11,7 +11,6 @@ const chai = require('chai');
 chai.use(require('chai-as-promised'));
 const expect = chai.expect;
 
-const process = require('process');
 const path = require('path');
 const mockfs = require('mock-fs');
 
@@ -41,6 +40,7 @@ const makeST = require('./utils').makeST;
 const verifyAuthEqual = require('./utils').verifyAuthEqual;
 const verifyAuthLaterDate = require('./utils').verifyAuthLaterDate;
 const inspect = require('./utils').inspect;
+const setOrUnsetEnv = require('./utils').setOrUnsetEnv;
 
 const RP_VERSION_2_2 = '2.2';
 
@@ -48,14 +48,6 @@ const rpst = makeST(100000000);
 
 const passFile = path.resolve('key_private_pass');
 const rpstFile = path.resolve('rpst');
-
-function setOrUnsetEnv(key, val) {
-    if (val != null) {
-        process.env[key] = val;
-    } else {
-        delete process.env[key];
-    }
-}
 
 function prepEnv(env) {
     setOrUnsetEnv('OCI_RESOURCE_PRINCIPAL_VERSION', env.ver);
