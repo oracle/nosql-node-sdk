@@ -13,6 +13,13 @@ sent to the server during addReplica operation.
 
 **Added**
 
+* Cloud only: added OKE workload identity authentication support
+ - added support for new configuration properties:
+auth.iam.useOKEWorkloadIdentity, auth.iam.serviceAccountToken,
+auth.iam.serviceAccountTokenFile, auth.iam.serviceAccountTokenProvider
+ - added new methods: IAMAuthorizationProvider.withOKEWorkloadIdentity,
+IAMAuthorizationProvider.withOKEWorkloadIdentityAndTokenFile,
+IAMAuthorizationProvider.getRegion
 * Cloud only: Added OCI region codes: IZQ
 
 ## 5.5.1 - 2024-02-21
