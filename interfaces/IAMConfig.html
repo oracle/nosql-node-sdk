@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>IAMConfig | Oracle NoSQL Database Node.js SDK - v5.5.1</title><meta name="description" content="Documentation for Oracle NoSQL Database Node.js SDK - v5.5.1"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script><link rel="stylesheet" href="../assets/pages.css"/></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>IAMConfig | Oracle NoSQL Database Node.js SDK - v5.5.2</title><meta name="description" content="Documentation for Oracle NoSQL Database Node.js SDK - v5.5.2"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script><link rel="stylesheet" href="../assets/pages.css"/></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
 <div class="tsd-toolbar-contents container">
 <div class="table-cell" id="tsd-search" data-base="..">
 <div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
@@ -6,13 +6,13 @@
 <div id="tsd-toolbar-links"></div></div>
 <ul class="results">
 <li class="state loading">Preparing search index...</li>
-<li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">Oracle NoSQL Database Node.js SDK - v5.5.1</a></div>
+<li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">Oracle NoSQL Database Node.js SDK - v5.5.2</a></div>
 <div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
 <div class="container container-main">
 <div class="col-8 col-content">
 <div class="tsd-page-title">
 <ul class="tsd-breadcrumb">
-<li><a href="../modules.html">Oracle NoSQL Database Node.js SDK - v5.5.1</a></li>
+<li><a href="../modules.html">Oracle NoSQL Database Node.js SDK - v5.5.2</a></li>
 <li><a href="IAMConfig.html">IAMConfig</a></li></ul>
 <h1>Interface IAMConfig</h1></div>
 <section class="tsd-panel tsd-comment">
@@ -45,6 +45,20 @@ See
 <a href="https://docs.cloud.oracle.com/en-us/iaas/Content/Functions/Tasks/functionsaccessingociresources.htm">Accessing Other Oracle Cloud Infrastructure Resources from Running Functions</a>
 for more information.  Use Resouce Principal by setting
 <a href="IAMConfig.html#useResourcePrincipal">useResourcePrincipal</a> property to true.</li>
+<li>Using Oracle Container Engine for Kubernetes (OKE) workload identity.
+You may use OKE workload identity when running an application inside
+Kubernetes cluster. For more information, see
+<a href="https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengoverview.htm">Overview of Container Engine for Kubernetes</a>
+and
+<a href="https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contenggrantingworkloadaccesstoresources.htm">Granting Workloads Access to OCI Resources</a>.
+</li>
+<li>Using session-token based authentication.  This method uses temporary
+session token read from a token file.  The path to the token file and other
+required credentials are stored in OCI configuration file. For more
+information see
+<a href="https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdkconfig.htm">SDK Configuration File</a>
+and
+<a href="https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/clitoken.htm"">Token-based Authentication for the CLI</a>.
 </ol>
 <p>
 When using specific user's identity, if you don't specify compartment,
@@ -55,12 +69,13 @@ options for each request. You may specify either compartment OCID or
 compartment name. If using compartment name, you can also provide it as a
 prefix to the table name as in <em>compartmentName.tableName</em>.
 <p>
-When using Instance Principal or Resource Principal, there is no default
-compartment, so you must specify compartiment id (OCID), either as
-<a href="Config.html#compartment">compartment</a> property of the initial configuration or as part
-of options for each request. Note that you must use compartment id (OCID)
-and not compartment name. This also means that you may not prefix table
-name with compartment name when calling methods of <a href="../classes/NoSQLClient.html">NoSQLClient</a>.
+When using Instance Principal, Resource Principal or OKE workload identity,
+there is no default compartment, so you must specify compartiment id
+(OCID), either as <a href="Config.html#compartment">compartment</a> property of the initial
+configuration or as part of options for each request. Note that you must
+use compartment id (OCID) and not compartment name. This also means that
+you may not prefix table name with compartment name when calling methods of
+<a href="../classes/NoSQLClient.html">NoSQLClient</a>.
 The only exception to this is when using Resource Principal together with
 <a href="IAMConfig.html#useResourcePrincipalCompartment">useResourcePrincipalCompartment</a> property, in which case the
 resource compartment itself will be used.
@@ -125,6 +140,11 @@ Resource Principal authentication will be used.</li>
 Instance Principal authentication will be used.  You may also set
 <a href="IAMConfig.html#federationEndpoint">federationEndpoint</a>, although it is not requred and in
 most cases federation endpoint will be auto-detected.</li>
+<li>If <a href="IAMConfig.html#useOKEWorkloadIdentity">useOKEWorkloadIdentity</a> is set to <em>true</em>,
+then Container Engine for Kubernetes (OKE) authentication will be used.
+Optionally, you may also provide service account token by setting one of 3
+properties <a href="IAMConfig.html#serviceAccountToken">serviceAccountToken</a>, <a href="IAMConfig.html#serviceAccountTokenFile">serviceAccountTokenFile</a> or
+<a href="IAMConfig.html#serviceAccountTokenProvider">serviceAccountTokenProvider</a>.</li>
 <li>If <a href="IAMConfig.html#useSessionToken">useSessionToken</a> is set to <em>true</em>, then session
 token-based authentication will be used. Note that this method uses OCI
 config file, so settings to properties <a href="IAMConfig.html#configFile">configFile</a> and
@@ -207,6 +227,19 @@ credentials provider.</p>
 <a href="IAMConfig.html#useResourcePrincipalCompartment">useResourcePrincipalCompartment</a> property. </p>
 <pre><code class="language-js"><span class="hl-1">{</span><br/><span class="hl-1">    </span><span class="hl-12">auth</span><span class="hl-1">: {</span><br/><span class="hl-1">        </span><span class="hl-12">iam</span><span class="hl-1">: {</span><br/><span class="hl-1">            </span><span class="hl-12">useResourcePrincipal</span><span class="hl-1">: </span><span class="hl-2">true</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-12">useResourcePrincipalCompartment</span><span class="hl-1">: </span><span class="hl-2">true</span><br/><span class="hl-1">        }</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">}</span>
 </code></pre>
+
+<h3>Example</h3><p>Javascript <a href="Config.html">Config</a> object when using OKE workload identity. </p>
+<pre><code class="language-js"><span class="hl-1">{</span><br/><span class="hl-1">    </span><span class="hl-12">compartment</span><span class="hl-1">: </span><span class="hl-5">&quot;ocid1.compartment.oc1.............................&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-12">auth</span><span class="hl-1">: {</span><br/><span class="hl-1">        </span><span class="hl-12">iam</span><span class="hl-1">: {</span><br/><span class="hl-1">            </span><span class="hl-12">useOKEWorkloadIdentity</span><span class="hl-1">: </span><span class="hl-2">true</span><br/><span class="hl-1">        }</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">}</span>
+</code></pre>
+
+<h3>Example</h3><p>JSON <a href="Config.html">Config</a> object when using OKE workload identity and supplying
+the location of service account token.</p>
+<pre><code class="language-js"><span class="hl-1">{</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;compartment&quot;</span><span class="hl-1">: </span><span class="hl-5">&quot;ocid1.compartment.oc1.............................&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;auth&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">        </span><span class="hl-5">&quot;iam&quot;</span><span class="hl-0">:</span><span class="hl-1"> {</span><br/><span class="hl-1">            </span><span class="hl-5">&quot;useOKEWorkloadIdentity&quot;</span><span class="hl-0">:</span><span class="hl-1"> </span><span class="hl-2">true</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-5">&quot;serviceAccountTokenFile&quot;</span><span class="hl-0">:</span><span class="hl-1"> </span><span class="hl-5">&quot;~/myapp/serviceaccount/token&quot;</span><br/><span class="hl-1">        }</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">}</span>
+</code></pre>
+
+<h3>Example</h3><p>JSON <a href="Config.html">Config</a> object when using session token-based authentication.</p>
+<pre><code class="language-json"><span class="hl-1">{</span><br/><span class="hl-1">    </span><span class="hl-11">&quot;region&quot;</span><span class="hl-1">: </span><span class="hl-5">&quot;us-phoenix-1&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-11">&quot;compartment&quot;</span><span class="hl-1">: </span><span class="hl-5">&quot;ocid1.compartment.oc1.............................&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-11">&quot;auth&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">        </span><span class="hl-11">&quot;iam&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">            </span><span class="hl-11">&quot;useSessionToken&quot;</span><span class="hl-1">: </span><span class="hl-2">true</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-11">&quot;configFile&quot;</span><span class="hl-1">: </span><span class="hl-5">&quot;~/myapp/.oci/config&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">            </span><span class="hl-11">&quot;profileName&quot;</span><span class="hl-1">: </span><span class="hl-5">&quot;John&quot;</span><br/><span class="hl-1">        }</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">}</span>
+</code></pre>
 </div></section>
 <section class="tsd-panel tsd-hierarchy">
 <h4>Hierarchy</h4>
@@ -234,9 +267,13 @@ credentials provider.</p>
 <a href="IAMConfig.html#privateKeyFile" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>private<wbr/>Key<wbr/>File?</span></a>
 <a href="IAMConfig.html#profileName" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>profile<wbr/>Name?</span></a>
 <a href="IAMConfig.html#refreshAheadMs" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>refresh<wbr/>Ahead<wbr/>Ms?</span></a>
+<a href="IAMConfig.html#serviceAccountToken" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>service<wbr/>Account<wbr/>Token?</span></a>
+<a href="IAMConfig.html#serviceAccountTokenFile" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>service<wbr/>Account<wbr/>Token<wbr/>File?</span></a>
+<a href="IAMConfig.html#serviceAccountTokenProvider" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>service<wbr/>Account<wbr/>Token<wbr/>Provider?</span></a>
 <a href="IAMConfig.html#tenantId" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>tenant<wbr/>Id?</span></a>
 <a href="IAMConfig.html#timeout" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>timeout?</span></a>
 <a href="IAMConfig.html#useInstancePrincipal" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>use<wbr/>Instance<wbr/>Principal?</span></a>
+<a href="IAMConfig.html#useOKEWorkloadIdentity" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>useOKEWorkload<wbr/>Identity?</span></a>
 <a href="IAMConfig.html#useResourcePrincipal" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>use<wbr/>Resource<wbr/>Principal?</span></a>
 <a href="IAMConfig.html#useResourcePrincipalCompartment" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>use<wbr/>Resource<wbr/>Principal<wbr/>Compartment?</span></a>
 <a href="IAMConfig.html#useSessionToken" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>use<wbr/>Session<wbr/>Token?</span></a>
@@ -374,6 +411,41 @@ to disable automatic refresh.</p>
 
 <h3>Default Value</h3><p>10000 (10 seconds)</p>
 </div></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="serviceAccountToken" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>service<wbr/>Account<wbr/>Token</span><a href="#serviceAccountToken" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">service<wbr/>Account<wbr/>Token<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
+<div class="tsd-comment tsd-typography"><p>Used only with OKE workload identity
+(see <a href="IAMConfig.html#useOKEWorkloadIdentity">useOKEWorkloadIdentity</a>). Use this property to provide
+service account token string. This property is exclusive with
+<a href="IAMConfig.html#serviceAccountTokenFile">serviceAccountTokenFile</a> and
+<a href="IAMConfig.html#serviceAccountTokenProvider">serviceAccountTokenProvider</a>.</p>
+
+<h3>See</h3><p><a href="IAMConfig.html#useOKEWorkloadIdentity">useOKEWorkloadIdentity</a></p>
+</div></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="serviceAccountTokenFile" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>service<wbr/>Account<wbr/>Token<wbr/>File</span><a href="#serviceAccountTokenFile" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">service<wbr/>Account<wbr/>Token<wbr/>File<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
+<div class="tsd-comment tsd-typography"><p>Used only with OKE workload identity
+(see <a href="IAMConfig.html#useOKEWorkloadIdentity">useOKEWorkloadIdentity</a>). Use this property to provide
+a path to service account token file. Service account token will be
+reloaded from this file when refreshing OKE security token. This
+property is exclusive with <a href="IAMConfig.html#serviceAccountToken">serviceAccountToken</a> and
+<a href="IAMConfig.html#serviceAccountTokenProvider">serviceAccountTokenProvider</a>.</p>
+
+<h3>See</h3><p><a href="IAMConfig.html#useOKEWorkloadIdentity">useOKEWorkloadIdentity</a></p>
+</div></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="serviceAccountTokenProvider" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>service<wbr/>Account<wbr/>Token<wbr/>Provider</span><a href="#serviceAccountTokenProvider" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">service<wbr/>Account<wbr/>Token<wbr/>Provider<span class="tsd-signature-symbol">?:</span> <a href="ServiceAccountTokenProvider.html" class="tsd-signature-type" data-tsd-kind="Interface">ServiceAccountTokenProvider</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" class="tsd-signature-type external" target="_blank">Promise</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span></div>
+<div class="tsd-comment tsd-typography"><p>Used only with OKE workload identity
+(see <a href="IAMConfig.html#useOKEWorkloadIdentity">useOKEWorkloadIdentity</a>). This propertiy specifies
+<a href="ServiceAccountTokenProvider.html">ServiceAccountTokenProvider</a> as a custom provider used to load
+the service account token. Service account token will be
+reloaded when refreshing OKE security token. This property is exclusive
+with <a href="IAMConfig.html#serviceAccountToken">serviceAccountToken</a> and <a href="IAMConfig.html#serviceAccountTokenFile">serviceAccountTokenFile</a>.</p>
+
+<h3>See</h3><p><a href="IAMConfig.html#useOKEWorkloadIdentity">useOKEWorkloadIdentity</a></p>
+</div></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a id="tenantId" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>tenant<wbr/>Id</span><a href="#tenantId" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">tenant<wbr/>Id<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -384,7 +456,8 @@ to disable automatic refresh.</p>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>timeout</span><a href="#timeout" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">timeout<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Timeout in milliseconds used for requests to the authorization server.
-Currently this is only used with Instance Principal.</p>
+Currently this is only used with Instance Principal and OKE workload
+identity.</p>
 
 <h3>Default Value</h3><p>120000 (2 minutes)</p>
 </div></section>
@@ -395,6 +468,36 @@ Currently this is only used with Instance Principal.</p>
 be combined with <a href="IAMConfig.html#useResourcePrincipal">useResourcePrincipal</a> or any properties used
 for specific user&#39;s identity.</p>
 </div></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="useOKEWorkloadIdentity" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>useOKEWorkload<wbr/>Identity</span><a href="#useOKEWorkloadIdentity" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">useOKEWorkload<wbr/>Identity<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
+<div class="tsd-comment tsd-typography"><p>If set to true, will use authorization for Oracle Container Engine for
+Kubernetes (OKE) workload identity. This authorization scheme can only
+be used inside Kubernetes pods.</p>
+<p>
+For information on Container Engine for Kubernetes, see
+<a href="https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengoverview.htm">Overview of Container Engine for Kubernetes</a>.
+Also see
+<a href="https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contenggrantingworkloadaccesstoresources.htm">Granting Workloads Access to OCI Resources</a>
+for more details on OKE workload identity.
+<p>
+This property may not be combined with <a href="IAMConfig.html#useInstancePrincipal">useInstancePrincipal</a>,
+<a href="IAMConfig.html#useResourcePrincipal">useResourcePrincipal</a>, <a href="IAMConfig.html#useSessionToken">useSessionToken</a> or any properties
+used for specific user's identity.
+<p>
+Using OKE workload identity requires service account token. By default,
+the provider will load service account token from the default file path
+<em>/var/run/secrets/kubernetes.io/serviceaccount/token</em>. You may
+override this and provide your own service account token by specifying
+one of 3 properties:
+<ul>
+<li><a href="IAMConfig.html#serviceAccountToken">serviceAccountToken</a> to provide service account token
+string.</li>
+<li><a href="IAMConfig.html#serviceAccountTokenFile">serviceAccountTokenFile</a> to provide a path to service
+account token file.</li>
+<li><a href="IAMConfig.html#serviceAccountTokenProvider">serviceAccountTokenProvider</a> to provide a custom provider to
+load service account token.</li>
+</ul></div></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="useResourcePrincipal" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>use<wbr/>Resource<wbr/>Principal</span><a href="#useResourcePrincipal" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">use<wbr/>Resource<wbr/>Principal<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -467,7 +570,7 @@ You can use the OCI CLI to authenticate and create a token, see
 <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
 <div class="tsd-accordion-details">
 <ul>
-<li><a href="../modules.html">Oracle <wbr/>NoSQL <wbr/>Database <wbr/>Node.js SDK -<wbr/> v5.5.1</a>
+<li><a href="../modules.html">Oracle <wbr/>NoSQL <wbr/>Database <wbr/>Node.js SDK -<wbr/> v5.5.2</a>
 <ul>
 <li class="pages-entry pages-entry-menu pages-entry-depth-1"><a>Guides</a>
 <ul>
@@ -491,9 +594,13 @@ You can use the OCI CLI to authenticate and create a token, see
 <li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="IAMConfig.html#privateKeyFile" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>private<wbr/>Key<wbr/>File?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="IAMConfig.html#profileName" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>profile<wbr/>Name?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="IAMConfig.html#refreshAheadMs" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>refresh<wbr/>Ahead<wbr/>Ms?</a></li>
+<li class="tsd-kind-property tsd-parent-kind-interface"><a href="IAMConfig.html#serviceAccountToken" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>service<wbr/>Account<wbr/>Token?</a></li>
+<li class="tsd-kind-property tsd-parent-kind-interface"><a href="IAMConfig.html#serviceAccountTokenFile" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>service<wbr/>Account<wbr/>Token<wbr/>File?</a></li>
+<li class="tsd-kind-property tsd-parent-kind-interface"><a href="IAMConfig.html#serviceAccountTokenProvider" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>service<wbr/>Account<wbr/>Token<wbr/>Provider?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="IAMConfig.html#tenantId" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>tenant<wbr/>Id?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="IAMConfig.html#timeout" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>timeout?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="IAMConfig.html#useInstancePrincipal" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>use<wbr/>Instance<wbr/>Principal?</a></li>
+<li class="tsd-kind-property tsd-parent-kind-interface"><a href="IAMConfig.html#useOKEWorkloadIdentity" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>useOKEWorkload<wbr/>Identity?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="IAMConfig.html#useResourcePrincipal" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>use<wbr/>Resource<wbr/>Principal?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="IAMConfig.html#useResourcePrincipalCompartment" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>use<wbr/>Resource<wbr/>Principal<wbr/>Compartment?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="IAMConfig.html#useSessionToken" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>use<wbr/>Session<wbr/>Token?</a></li>
