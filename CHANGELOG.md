@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## Unpublished
+
+**Changed**
+
+* Option "returnExisting" for put and delete operations will now take affect
+on success of the operation as well as on failure. If returnExisting is set to
+true in options and the operation was successful, the information about the
+existing row if any, including its value, version and modification time, will
+be returned. This information represents the row as it was before the
+operation took place: the row before having been modified by put operation or
+the row before having been deleted by delete operation.
+
+- Put and Put if-present can return the existing row when setReturnRow is 
+  set to true and row already exists.
+- Delete can return the deleted row when setReturnRow is set to true.
+
 ## 5.5.2 - 2024-06-11
 
 **Fixed**

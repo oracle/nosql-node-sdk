@@ -29,13 +29,40 @@ const WRITE_MANY_TESTS = [
                 success: true
             },
             {
+                desc: 'put even, delete odd, returnExisting: true, success',
+                ops: Utils.range(20).map((v, fromStart) =>
+                    !(fromStart & 1) ? { put: { fromStart } } :
+                        { delete: { fromStart } }),
+                opt: {
+                    returnExisting: true
+                },
+                success: true
+            },
+            {
                 desc: 'one put, new row, success',
                 ops: [ { put: { fromStart: 1 }, exactMatch: true } ],
                 success: true
             },
             {
+                desc: 'one put, new row, returnExisting: true, success',
+                ops: [ { put: { fromStart: 1 }, exactMatch: true } ],
+                opt: {
+                    returnExisting: true // should have no effect here
+                },
+                success: true
+            },
+            {
                 desc: 'one delete, existing row, success',
                 ops: [ { delete: { fromStart: 1 } } ],
+                success: true
+            },
+            {
+                desc: 'one delete, existing row, returnExisting: true, \
+success',
+                ops: [ { delete: { fromStart: 1 } } ],
+                opt: {
+                    returnExisting: true
+                },
                 success: true
             },
             {
@@ -51,6 +78,24 @@ const WRITE_MANY_TESTS = [
                         put: { fromEnd: 0 }
                     }
                 ],
+                success: false
+            },
+            {
+                desc: 'two puts, one ifAbsent, returnExisting: true, fail',
+                ops: [
+                    {
+                        put: { fromStart: 0 }
+                    },
+                    {
+                        put: { fromStart: 1 },
+                        ifAbsent: true,
+                        abortOnFail: true,
+                        _shouldFail: true
+                    }
+                ],
+                opt: {
+                    returnExisting: true
+                },
                 success: false
             },
             {
@@ -82,10 +127,22 @@ const WRITE_MANY_TESTS = [
                 success: false
             },
             {
+                desc: 'delete 10 past the end, returnExisting: true, \
+abortOnFail in opt, fail',
+                keys: Utils.range(-4, 6).map(fromEnd => ({ fromEnd })),
+                opt: {
+                    compartment,
+                    returnExisting: true,
+                    abortOnFail: true
+                },
+                success: false
+            },
+            {
                 desc: 'delete 10 past the end, abortOnFail not set, success',
                 keys: Utils.range(-4, 6).map(fromEnd => ({
                     fromEnd,
-                    [Utils._shouldFail]: fromEnd >= 0
+                    [Utils._shouldFail]: fromEnd >= 0,
+                    returnExisting: true
                 })),
                 opt: {
                     timeout: 15000
@@ -101,7 +158,20 @@ true',
                     _shouldFail: true
                 })),
                 opt: {
-                    //returnExisting: true - pending proxy bugfix
+                    returnExisting: true
+                },
+                success: true
+            },
+            {
+                desc: 'ifPresent: true, 5 updates, success, returnExisting: \
+true',
+                ops: Utils.range(5).map(fromStart => ({
+                    put: { fromStart },
+                    ifPresent: true,
+                    returnExisting: true,
+                })),
+                opt: {
+                    returnExisting: true
                 },
                 success: true
             },
@@ -155,6 +225,7 @@ boundary, some updates, success',
                 opt: {
                     ifPresent: true,
                     exactMatch: false,
+                    returnExisting: true
                 },
                 success: true
             },
@@ -167,7 +238,7 @@ opt, over rowIdEnd boundary, some updates, success',
                 })),
                 opt: {
                     ifAbsent: true,
-                    //returnExisting: true - pending proxy bugfix
+                    returnExisting: true
                 },
                 success: true
             },
@@ -186,13 +257,14 @@ success',
             },
             {
                 desc: 'putMany with incorrect matchVersion of row 5 in opt, \
-1 update, success',
+returnExisting: true, 1 update, success',
                 rows: Utils.range(0, 8).map(fromStart => ({
                     fromStart,
                     [Utils._shouldFail]: fromStart != 5
                 })),
                 opt: {
-                    matchVersion: { fromStart: 5 }
+                    matchVersion: { fromStart: 5 },
+                    returnExisting: true
                 },
                 success: true
             },
@@ -205,7 +277,7 @@ returnExisting in opt, no updates, success',
                 })),
                 opt: {
                     matchVersion: { fromStart: 0 },
-                    //returnExisting: true - pending proxy bugfix
+                    returnExisting: true
                 },
                 success: true
             },
@@ -260,11 +332,35 @@ if (supportsMultiTableWriteMany(Utils.kvVersion)) {
                 success: true
             },
             {
+                desc: 'put even, delete odd from child table, \
+returnExisting = true, success',
+                ops: Utils.range(20).map(fromStart =>
+                    !(fromStart & 1) && fromStart < 10 ?
+                        { put: { fromStart } } :
+                        { delete: { fromStart }, isChild: true }),
+                opt: {
+                    returnExisting: true
+                },
+                success: true
+            },
+            {
                 desc: 'put odd for child table, delete even, success',
                 ops: Utils.range(15).map(fromStart =>
                     (fromStart & 1) || fromStart >= 10 ?
                         { put: { fromStart }, isChild: true } :
                         { delete: { fromStart } }),
+                success: true
+            },
+            {
+                desc: 'put odd for child table, delete even, \
+returnExisting = true, success',
+                ops: Utils.range(15).map(fromStart =>
+                    (fromStart & 1) || fromStart >= 10 ?
+                        { put: { fromStart }, isChild: true } :
+                        { delete: { fromStart } }),
+                opt: {
+                    returnExisting: true
+                },
                 success: true
             },
             {
@@ -325,6 +421,25 @@ overrides opt, fail',
                     put: { fromEnd },
                     isChild: true,
                     abortOnFail: fromEnd >= 3
+                }))),
+                opt: {
+                    abortOnFail: false,
+                    timeout: 30000
+                },
+                success: false
+            },
+            {
+                desc: 'ifAbsent: true, returnExisting: true for child table, \
+abortOnFail for child table overrides opt, fail',
+                ops: Utils.range(5).map(fromStart => ({
+                    ifAbsent: true,
+                    put: { fromStart },
+                })).concat(Utils.range(5).map(fromStart => ({
+                    ifAbsent: true,
+                    returnExisting: true,
+                    put: { fromStart },
+                    isChild: true,
+                    abortOnFail: fromStart >= 3
                 }))),
                 opt: {
                     abortOnFail: false,

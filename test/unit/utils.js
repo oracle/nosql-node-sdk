@@ -55,6 +55,8 @@ const DEFAULT_TIMEOUT = 120000;
 
 const USE_LATEST_PROTO = Number.MAX_SAFE_INTEGER;
 
+const SERVER_SERIAL_V5 = 5;
+
 let NumberUtils;
 
 class Utils {
@@ -697,8 +699,34 @@ from QueryUtils to verify query results').to.exist;
         this.verifyRow(res.row, row, tbl);
     }
 
-    //existingRow argument is to verify returned existing row when
-    //putIfAbsent or putIfVersion fails
+    //We assume that existingRow is always passed to verifyPut and
+    //verifyDelete when opt.returnExisting is specified and there is an
+    //existing row.
+    static async verifyExistingRow(res, client, tbl, opt, success = true,
+        existingRow, checkExistingModTime = true)
+    {
+        const hasExisting = opt.returnExisting && existingRow &&
+            (success ?
+                (client._serverSerialVersion >= SERVER_SERIAL_V5 &&
+                    opt.matchVersion == null) :
+                (opt.ifPresent || opt.matchVersion != null));
+
+        if (hasExisting) {
+            this.verifyRow(res.existingRow, existingRow, tbl);
+            expect(res.existingVersion).to.be.instanceOf(Buffer);
+            expect(res.existingVersion).to.deep.equal(
+                existingRow[_version]);
+            if (checkExistingModTime && this.serialVersion > 2) {
+                this.verifyExistingModificationTime(res, existingRow);
+            }
+        } else {
+            expect(res.existingRow).to.not.exist;
+            expect(res.existingVersion).to.not.exist;
+            expect(res.existingModificationTime).to.not.exist;
+        }
+    }
+
+    //existingRow argument is to verify returned existing row
     //isSub - whether this is a sub-operation of writeMany
     static async verifyPut(res, client, tbl, row, opt, success = true,
         existingRow, isSub, checkExistingModTime = true) {
@@ -718,7 +746,9 @@ from QueryUtils to verify query results').to.exist;
                     expect(res.consumedCapacity.writeKB).to.equal(0);
                     expect(res.consumedCapacity.writeUnits).equal(0);
                 }
-                if (opt.ifAbsent || opt.ifPresent || opt.matchVersion) {
+                if (opt.ifAbsent || opt.ifPresent || opt.matchVersion ||
+                    (client._serverSerialVersion >= SERVER_SERIAL_V5 &&
+                    opt.returnExisting)) {
                     expect(res.consumedCapacity.readKB).to.be.at.least(1);
                     expect(res.consumedCapacity.readUnits).to.be.at.least(1);
                 } else {
@@ -732,9 +762,7 @@ from QueryUtils to verify query results').to.exist;
         if (res.success) {
             expect(res.version).to.be.instanceOf(Buffer);
             expect(res.version).to.not.deep.equal(row[_version]);
-            expect(res.existingRow).to.not.exist;
-            expect(res.existingVersion).to.not.exist;
-            expect(res.existingModificationTime).to.not.exist;
+
             /*
             if (tbl.idFld) {
                 //We expect id value only for new rows (_version is null).
@@ -758,20 +786,10 @@ from QueryUtils to verify query results').to.exist;
         } else {
             expect(res.version).to.not.exist;
             //expect(res.generatedValue).to.not.exist;
-            if (opt.returnExisting && existingRow) {
-                this.verifyRow(res.existingRow, existingRow, tbl);
-                expect(res.existingVersion).to.be.instanceOf(Buffer);
-                expect(res.existingVersion).to.deep.equal(
-                    existingRow[_version]);
-                if (checkExistingModTime && this.serialVersion > 2) {
-                    this.verifyExistingModificationTime(res, existingRow);
-                }
-            } else {
-                expect(res.existingRow).to.not.exist;
-                expect(res.existingVersion).to.not.exist;
-                expect(res.existingModificationTime).to.not.exist;
-            }
         }
+
+        this.verifyExistingRow(res, client, tbl, opt, success, existingRow,
+            checkExistingModTime);
 
         //This will verify that we get the same row as we put, including its
         //version and expiration time
@@ -812,17 +830,8 @@ from QueryUtils to verify query results').to.exist;
         }
 
         expect(res.success).to.equal(success);
-        if (!res.success && opt.matchVersion && opt.returnExisting &&
-            existingRow) {
-            this.verifyRow(res.existingRow, existingRow, tbl);
-            expect(res.existingVersion).to.deep.equal(existingRow[_version]);
-            if (checkExistingModTime && this.serialVersion > 2) {
-                this.verifyExistingModificationTime(res, existingRow);
-            }
-        } else {
-            expect(res.existingRow).to.not.exist;
-            expect(res.existingVersion).to.not.exist;
-        }
+        this.verifyExistingRow(res, client, tbl, opt, success, existingRow,
+            checkExistingModTime);
 
         //This will verify that row does not exist after successful delete
         //or delete on non-existent row, or that the row is the same as

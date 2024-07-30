@@ -173,7 +173,7 @@ option, rowId: ${existingRow[_id]}`, async function() {
     }
 
     //Update the row to never expire, also test returnExisting which
-    //should have no effect
+    //should return the same row.
     it(`put existing row on table ${tbl.name}, update TTL to never expire, \
 rowId: ${existingRow[_id]}`, async function() {
         const opt = {
@@ -181,7 +181,8 @@ rowId: ${existingRow[_id]}`, async function() {
             returnExisting: true
         };
         const res = await client.put(tbl.name, existingRow, opt);
-        await Utils.verifyPut(res, client, tbl, existingRow, opt);
+        await Utils.verifyPut(res, client, tbl, existingRow, opt, true,
+            existingRow);
     });
 }
 
@@ -281,14 +282,13 @@ ${existingRow[_id]}`, async function() {
     it(`putIfPresent on table ${tbl.name} with existing row, rowId: \
 ${existingRow[_id]} with updateTTLToDefault: true and returnExisting: \
 true`, async function() {
-        //returnExisting should have no effect here, TTL does not change
         const opt = {
             updateTTLToDefault: true,
             returnExisting: true
         };
         const res = await client.putIfPresent(tbl.name, existingRow, opt);
         await Utils.verifyPut(res, client, tbl, existingRow, Object.assign(
-            opt, { ifPresent: true }));
+            opt, { ifPresent: true }), true, existingRow);
     });
 
     it(`put with ifPresent: true on new row, rowId: ${newRow[_id]}`,
@@ -332,6 +332,8 @@ of modified row, rowId: ${existingRow[_id]}`, async function() {
             returnExisting: true,
             compartment
         };
+        //existing row will not be returned for matchVersion even with
+        //returnExisting = true
         let res = await client.put(tbl.name, existingRow, opt);
         await Utils.verifyPut(res, client, tbl, existingRow, opt);
         //modify the row again

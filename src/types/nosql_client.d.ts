@@ -721,18 +721,32 @@ export class NoSQLClient extends EventEmitter {
      * or {@link PutOpt#matchVersion} options may be specified for given put
      * operation.
      * <p>
-     * It is also possible, on failure, to return information about the
-     * existing row. The row, including its {@link RowVersion} can be
-     * optionally returned if a put operation fails because of a Version
-     * mismatch or if the operation fails because the row already exists. The
-     * existing row information will only be returned if
+     * It is also possible to return information about the existing row.
+     * The row, including its {@link RowVersion} and modification time can be
+     * optionally returned as part of {@link PutResult} via properties
+     * {@link PutResult#existingRow}, {@link PutResult#existingVersion} and
+     * {@link PutResult#existingModificationTime}.
+     * The existing row information will only be returned if
      * {@link PutOpt#returnExisting} is true and one of the following occurs:
      * <ul>
      * <li>{@link PutOpt#ifAbsent} is true and the operation fails because
      * the row already exists.</li>
      * <li>{@link PutOpt#matchVersion} is used and the operation fails because
      * the row exists and its {@link RowVersion} does not match.</li>
+     * <li>The {@link PutOpt#ifPresent} is true and the operation succeeds
+     * or the put operation is unconditional (none of {@link PutOpt#ifAbsent},
+     * {@link PutOpt#ifPresent}, {@link PutOpt#matchVersion} are specified)
+     * and the operation replaces existing row. In these cases, the row,
+     * its version and modification time will be returned as they were before
+     * the put operation took place. Note that this information might not be
+     * available with older servers. Also note that if
+     * {@link PutOpt#matchVersion} is specified and the operation succeeds,
+     * the existing row information will not be returned.
+     * </li>
      * </ul>
+     * Use of {@link PutOpt#returnExisting} may result in additional consumed
+     * read capacity.
+     * <p>
      * The information about the result of the put operation is returned as
      * {@link PutResult}. Note that the failure cases discussed above that
      * resulted from inability to satisfy {@link PutOpt#ifAbsent},
@@ -814,19 +828,29 @@ export class NoSQLClient extends EventEmitter {
      * <p>
      * By default a delete operation is unconditional and will succeed if the
      * specified row exists. Delete operations can be made conditional based
-     * on whether the {@link RowVersion} of an existing row matches that supplied
-     * {@link DeleteOpt#matchVersion}.
+     * on whether the {@link RowVersion} of an existing row matches that
+     * supplied {@link DeleteOpt#matchVersion}.
      * <p>
-     * It is also possible, on failure, to return information about the
-     * existing row.  The row and its version can be optionally returned as
-     * part of {@link DeleteResult} if a delete operation fails because of
-     * a version mismatch. The existing row information will only be returned
-     * if {@link DeleteOpt#returnExisting} is true and
-     * {@link DeleteOpt#matchVersion} is set and the operation fails because
-     * the row exists and its version does not match.  Use of
-     * {@link DeleteOpt#returnExisting} may result in additional consumed read
-     * capacity. If the operation is successful there will be no information
-     * returned about the previous row.
+     * It is also possible to return information about the existing row. The
+     * row, its version and modification time can be optionally returned as
+     * part of {@link DeleteResult} via properties
+     * {@link DeleteResult#existingRow}, {@link DeleteResult#existingVersion}
+     * and {@link DeleteResult#existingModificationTime}. The existing row
+     * information will only be returned if {@link DeleteOpt#returnExisting}
+     * is true and one of the following occurs:
+     * <ul>
+     * <li>{@link DeleteOpt#matchVersion} is specified and the operation fails
+     * because the row exists and its {@link RowVersion} does not match the
+     * specified version.</li>
+     * <li>{@link DeleteOpt#matchVersion} is not specified and the delete
+     * operation succeeds, in which case the row, its version and modification
+     * time will be returned as they were before the deletion. Note that this
+     * information might not be available with older servers. Also note that
+     * if {@link DeleteOpt#matchVersion} is specified and the operation
+     * succeeds, the existing row information will not be returned.
+     * </ul>
+     * Use of {@link DeleteOpt#returnExisting} may result in additional
+     * consumed read capacity.
      * <p>
      * The information about the result of the delete operation is returned as
      * {@link DeleteResult}.  Note that the failures to delete if the row
