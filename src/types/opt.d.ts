@@ -273,8 +273,8 @@ export interface DurabilityOpt {
 export interface PutIfOpt extends CompartmentOpt, NamespaceOpt, TimeoutOpt,
     DurabilityOpt {
     /**
-     * If set to true, existing row and its version will be returned as part
-     * of {@link PutResult} if put operation fails as discussed in
+     * If set to true, existing row, its version and modification time will be
+     * returned as part of {@link PutResult} under conditions described in
      * {@link NoSQLClient#put}.
      */
     returnExisting?: boolean;
@@ -347,9 +347,9 @@ export interface PutOpt extends PutIfOpt {
 export interface DeleteIfOpt extends CompartmentOpt, NamespaceOpt, TimeoutOpt,
     DurabilityOpt {
     /**
-     * If set to true, existing row and its version will be returned as part
-     * of {@link DeleteResult} if delete operation fails because of version
-     * mismatch as discussed in {@link NoSQLClient#delete}.
+     * If set to true, existing row, its version and modification time will be
+     * returned as part of {@link DeleteResult} under conditions described in
+     * {@link NoSQLClient#delete}.
      */
     returnExisting?: boolean;
 }

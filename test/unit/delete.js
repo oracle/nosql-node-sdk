@@ -106,7 +106,9 @@ function testDeleteNegative(client, tbl, key) {
     testDeleteFuncNegative(client.delete.bind(client), tbl, key, badOptsDur);
 }
 
-function testDelete(client, tbl, existingKey, absentKey) {
+function testDelete(client, tbl, existingRow, absentKey) {
+    const existingKey = Utils.makePrimaryKey(tbl, existingRow);
+
     it(`delete on table ${tbl.name} with existing key: \
 ${util.inspect(existingKey)}`, async function() {
         const res = await client.delete(tbl.name, existingKey);
@@ -119,10 +121,11 @@ ${util.inspect(existingKey)} with timeout and returnExisting: true`,
         const opt = {
             compartment,
             timeout: 12000,
-            returnExisting: true //should have no effect here
+            returnExisting: true //should return row as it was before deletion
         };
         const res = await client.delete(tbl.name, existingKey, opt);
-        await Utils.verifyDelete(res, client, tbl, existingKey, opt);
+        await Utils.verifyDelete(res, client, tbl, existingKey, opt, true,
+            existingRow);
     });
 
     it(`delete on table ${tbl.name} with existing key: \
@@ -181,6 +184,7 @@ with existing key: ${util.inspect(existingKey)} and with deleted key`,
             returnExisting: true,
             compartment
         };
+        //existing row not returned if matchVersion is specified
         let res = await client.delete(tbl.name, existingKey, opt);
         await Utils.verifyDelete(res, client, tbl, existingKey, opt);
 

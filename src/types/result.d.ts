@@ -515,24 +515,26 @@ export interface PutOpResult<TRow = AnyRow> {
     readonly version?: RowVersion;
      
     /**
-     * Existing modification time if available, otherwise undefined.  This
-     * value will only be available if the conditional put operation failed
-     * and {@link PutOpt#returnExisting} was set to true.
+     * Existing modification time if available, otherwise undefined. This
+     * value will be available only if {@link PutOpt#returnExisting} was set
+     * to true and under one of the conditions described in
+     * {@link NoSQLClient#put}.
      * @since 5.3.0
      */
     readonly existingModificationTime?: Date;
 
     /**
-     * Existing row value if available, otherwise undefined. This
-     * value will only be available if the conditional put operation failed
-     * and {@link PutOpt#returnExisting} was set to true.
+     * Existing row value if available, otherwise undefined. This value will
+     * be available only if {@link PutOpt#returnExisting} was set to true and
+     * under one of the conditions described in {@link NoSQLClient#put}.
      */
     readonly existingRow?: TRow;
 
     /**
      * Existing {@link RowVersion} if available, otherwise undefined. This
-     * value will only be available if the conditional put operation failed
-     * and {@link PutOpt#returnExisting} was set to true.
+     * value will be available only if {@link PutOpt#returnExisting} was set
+     * to true and under one of the conditions described in
+     * {@link NoSQLClient#put}.
      */
     readonly existingVersion?: RowVersion;
 
@@ -568,24 +570,27 @@ export interface DeleteOpResult<TRow = AnyRow> {
     readonly success: boolean;
 
     /**
-     * Existing modification time if available, otherwise undefined.  This
-     * value will only be available if the conditional put operation failed
-     * and {@link DeleteOpt#returnExisting} was set to true.
+     * Existing modification time if available, otherwise undefined. This
+     * value will be available only if {@link DeleteOpt#returnExisting} was
+     * set to true and under one of the conditions described in
+     * {@link NoSQLClient#delete}.
      * @since 5.3.0
      */
     readonly existingModificationTime?: Date;
 
      /**
       * Existing row value if available, otherwise undefined. This
-      * value will only be available if the conditional put operation failed
-      * and {@link DeleteOpt#returnExisting} was set to true.
+      * value will be available only if {@link DeleteOpt#returnExisting} was
+      * set to true and under one of the conditions described in
+     * {@link NoSQLClient#delete}.
       */
     readonly existingRow?: TRow;
  
      /**
       * Existing {@link RowVersion} if available, otherwise undefined. This
-      * value will only be available if the conditional put operation failed
-      * and {@link DeleteOpt#returnExisting} was set to true.
+      * value will be available only if {@link DeleteOpt#returnExisting} was
+      * set to true and under one of the conditions described in
+      * {@link NoSQLClient#delete}.
       */
     readonly existingVersion?: RowVersion;
 }
