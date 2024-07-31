@@ -702,14 +702,14 @@ from QueryUtils to verify query results').to.exist;
     //We assume that existingRow is always passed to verifyPut and
     //verifyDelete when opt.returnExisting is specified and there is an
     //existing row.
-    static async verifyExistingRow(res, client, tbl, opt, success = true,
+    static verifyExistingRow(res, client, tbl, opt, success = true,
         existingRow, checkExistingModTime = true)
     {
         const hasExisting = opt.returnExisting && existingRow &&
             (success ?
                 (client._serverSerialVersion >= SERVER_SERIAL_V5 &&
                     opt.matchVersion == null) :
-                (opt.ifPresent || opt.matchVersion != null));
+                (opt.ifAbsent || opt.matchVersion != null));
 
         if (hasExisting) {
             this.verifyRow(res.existingRow, existingRow, tbl);
@@ -759,6 +759,13 @@ from QueryUtils to verify query results').to.exist;
         }
 
         expect(res.success).to.equal(success);
+
+        //Some tests pass the same instance for row and existingRow. Because
+        //the code below will change row[_version] and row[_modTime], we have
+        //check for existing row info first.
+        this.verifyExistingRow(res, client, tbl, opt, success, existingRow,
+            checkExistingModTime);
+
         if (res.success) {
             expect(res.version).to.be.instanceOf(Buffer);
             expect(res.version).to.not.deep.equal(row[_version]);
@@ -787,9 +794,6 @@ from QueryUtils to verify query results').to.exist;
             expect(res.version).to.not.exist;
             //expect(res.generatedValue).to.not.exist;
         }
-
-        this.verifyExistingRow(res, client, tbl, opt, success, existingRow,
-            checkExistingModTime);
 
         //This will verify that we get the same row as we put, including its
         //version and expiration time

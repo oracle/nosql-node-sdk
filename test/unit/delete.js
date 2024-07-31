@@ -278,7 +278,6 @@ function doTest(client, test) {
         test.rows.forEach(existingRow => {
             //Out of range of test.rowIdStart - test.rowIdEnd-1
             const newRow = test.makeRow(existingRow[_id] + test.rowIdEnd);
-            const existingKey = Utils.makePrimaryKey(test.table, existingRow);
             const absentKey = Utils.makePrimaryKey(test.table, newRow);
             describe(`Delete tests on table ${test.table} for existing key \
 for rowId: ${existingRow[_id]} and absent key for rowId: ${newRow[_id]}`,
@@ -287,8 +286,9 @@ for rowId: ${existingRow[_id]} and absent key for rowId: ${newRow[_id]}`,
                 beforeEach(async function() {
                     await Utils.putRow(client, test.table, existingRow);
                 });
-                testDelete(client, test.table, existingKey, absentKey);
-                testDeleteIfVersion(client, test.table, existingRow, absentKey);
+                testDelete(client, test.table, existingRow, absentKey);
+                testDeleteIfVersion(client, test.table, existingRow,
+                    absentKey);
             });
         });
         it('', () => {});
