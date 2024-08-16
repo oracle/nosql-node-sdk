@@ -24,7 +24,7 @@ installed with Node.js
   * [Oracle NoSQL Database](https://www.oracle.com/database/technologies/related/nosql.html).
 See [Oracle NoSQL Database Downloads](https://www.oracle.com/database/technologies/nosql-database-server-downloads.html) to download Oracle NoSQL Database.  See
 [Oracle NoSQL Database Documentation](https://docs.oracle.com/en/database/other-databases/nosql-database/index.html) to get started with Oracle NoSQL Database.
-In particular, see the [Administrator Guide](https://docs.oracle.com/en/database/other-databases/nosql-database/22.3/admin/index.html) on how to install, configure and run Oracle
+In particular, see the [Administrator Guide](https://docs.oracle.com/en/database/other-databases/nosql-database/24.1/admin/index.html) on how to install, configure and run Oracle
 NoSQL Database Service.
 * If using TypeScript, [TypeScript](https://www.npmjs.com/package/typescript)
 version 5.0.x or higher.
@@ -241,14 +241,13 @@ quickstart();
 #### Run Against the Oracle NoSQL Database Cloud Service
 
 Running against the Cloud Service requires an Oracle Cloud account. See
-[Configuring for the Cloud Service](https://oracle.github.io/nosql-node-sdk/tutorial-connect-cloud.html#configure_cloud) for information on getting an account and
-acquiring required credentials.
+[Configuring for the Cloud Service](https://oracle.github.io/nosql-node-sdk/pages/connect-cloud.html) for information on getting an account and acquiring required credentials.
 
 1. Collect the following information:
 
 * Tenancy ID
 * User ID
-* API signing key (private key file in PEM format
+* API signing key (private key file in PEM format)
 * Fingerprint for the public key uploaded to the user's account
 * Private key pass phrase, needed only if the private key is encrypted
 
@@ -265,7 +264,7 @@ node quickstart.js cloud
 ```
 If you would prefer to create a configuration file for credentials instead of
 modifying the program put credentials in a file (see
-[Using a Configuration File](https://oracle.github.io/nosql-node-sdk/tutorial-connect-cloud.html#config_file)). Then modify quickstart.js to use the file:
+[Using a Configuration File](https://oracle.github.io/nosql-node-sdk/pages/connect-cloud.html#config_file)). Then modify quickstart.js to use the file:
 
 Replace
 
@@ -290,7 +289,7 @@ iam: {
 #### Run Against the Oracle NoSQL Cloud Simulator
 
 Running against the Oracle NoSQL Cloud Simulator requires a running Cloud
-Simulator instance. See [Using the Cloud Simulator](https://oracle.github.io/nosql-node-sdk/tutorial-connect-cloud.html#cloudsim) for information on how to download
+Simulator instance. See [Using the Cloud Simulator](https://oracle.github.io/nosql-node-sdk/pages/connect-cloud.html#cloudsim) for information on how to download
 and start the Cloud Simulator.
 
 1. Start the Cloud Simulator based on instructions above. Note the HTTP port
@@ -311,7 +310,7 @@ Running against the Oracle NoSQL Database on-premise requires a running
 Oracle NoSQL Database instance as well as a running NoSQL Proxy server instance.
 The program will connect to the proxy server.
 
-See [Connecting to an On-Premise Oracle NoSQL Database](https://oracle.github.io/nosql-node-sdk/tutorial-connect-on-prem.html) for information on how to download
+See [Connecting to an On-Premise Oracle NoSQL Database](https://oracle.github.io/nosql-node-sdk/pages/connect-on-prem.html) for information on how to download
 and start the database instance and proxy server. The database and proxy should
 be started without security enabled for this quickstart program to operate
 correctly. A secure configuration requires a secure proxy and more complex
@@ -347,22 +346,21 @@ run the examples:
 
 * **cloud\_template.json** is used to access a cloud service instance and
 allows you to customize configuration. See
-[Supply Credentials to the Application](https://oracle.github.io/nosql-node-sdk/tutorial-connect-cloud.html#supply). Unused properties must be removed from
-the template.
+[Supply Credentials to the Application](https://oracle.github.io/nosql-node-sdk/pages/connect-cloud.html#supply). Unused properties must be removed from the template.
 * **cloudsim.json** is used if you are running against the cloud simulator.
 You may use this file directly as config file if you are running the cloud
 simulator on localhost on port 8080. If the cloud simulator has been started on
 a different host or port, change the endpoint.
 * **kvstore_template.json** is used to access on-premise NoSQL Database via
 the proxy.  Copy that file and fill in appropriate values as described in
-[Configuring the SDK](https://oracle.github.io/nosql-node-sdk/tutorial-connect-on-prem.html#config).
+[Configuring the SDK](https://oracle.github.io/nosql-node-sdk/pages/connect-on-prem.html#config).
 If configuring for a not secure store the *auth* section should be removed.
 
 Alternatively, when using cloud service with default configuration as
 described in
-[Configuring the SDK](https://oracle.github.io/nosql-node-sdk/tutorial-connect-cloud.html#configure_cloud), you may examples without providing JSON configuration
-file.  This assumes that your credentials and your region identifier are
-present in an OCI config file *~/.oci/config*.
+[Configuring the SDK](https://oracle.github.io/nosql-node-sdk/pages/connect-cloud.html#configure_cloud), you may run examples without providing JSON
+configuration file.  This assumes that your credentials and your region
+identifier are present in an OCI config file *~/.oci/config*.
 
 ### JavaScript Examples
 
