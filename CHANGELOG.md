@@ -36,7 +36,9 @@ auth.iam.serviceAccountTokenFile, auth.iam.serviceAccountTokenProvider
  - added new methods: IAMAuthorizationProvider.withOKEWorkloadIdentity,
 IAMAuthorizationProvider.withOKEWorkloadIdentityAndTokenFile,
 IAMAuthorizationProvider.getRegion
-* Cloud only: Added OCI region codes: IZQ, XSP, UKY
+* Cloud only: Added OCI region codes: IZQ, XSP, UKY, DLN, AVF, RKT, SHJ, RBA,
+  RUH, EBB, EBL
+
 
 ## 5.5.1 - 2024-02-21
 
