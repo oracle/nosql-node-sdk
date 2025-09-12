@@ -699,9 +699,9 @@ function testGoodConfigs() {
             function() {
                 let client;
                 const goodConfig0 = Utils.deepCopy(goodConfig);
-                // eslint-disable-next-line no-useless-catch
+                /* eslint-disable-next-line no-useless-catch */
                 try {
-                    client = new NoSQLClient(goodConfig); 
+                    client = new NoSQLClient(goodConfig);
                 } catch(err) {
                     throw err; //to put breakpoint
                 }

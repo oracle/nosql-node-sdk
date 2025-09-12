@@ -198,7 +198,7 @@ function testQueryNegative(client) {
     testQueryFuncNegative(client, queryFunc, badQueryOpts);
 
     const iterableFunc = async (client, stmt, opt) => {
-        //eslint-disable-next-line no-unused-vars
+        /* eslint-disable-next-line no-unused-vars */
         for await(const res of client.queryIterable(stmt, opt)) {
             break;
         }

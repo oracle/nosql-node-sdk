@@ -211,7 +211,7 @@ class Utils {
         try {
             require.resolve(path);
             return true;
-        } catch(err) {
+        } catch {
             return false;
         }
     }
