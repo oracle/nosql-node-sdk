@@ -14,7 +14,7 @@ function initTestConfig() {
     let cfg;
     try {
         cfg = require('../../test/config'); // eslint-disable-line
-    } catch(err) {
+    } catch {
         return;
     }
     if (typeof cfg === 'function' &&

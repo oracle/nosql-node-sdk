@@ -555,7 +555,7 @@ function doTest(test) {
         });
 }
 
-if (!Utils.isOnPrem) {
+if (!Utils.isOnPrem && !Utils.getArgVal('--skip-rl-tests')) {
     describe('SimpleRateLimiter standalone test', function() {
         this.timeout(0);
         for(let tc of simpleTCs) {

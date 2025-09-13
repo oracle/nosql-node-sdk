@@ -4,15 +4,16 @@
 
 This document is for developers of the Node.js SDK for the Oracle NoSQL
 Database.  The target audience are those who want to modify
-source code, run and modify tests and examples and build documentation.
+source code and run and modify tests and examples.
 
 ## Getting Started
 
 1. Make sure you have [Node.js](https://nodejs.org) and
 [NPM](https://www.npmjs.com/get-npm) package manager installed on your
-system.  The driver requires Node.js version 12.0.0 or later.  It is
-recommended to install LTS version. NPM package manager is installed
-with Node.js but could be updated if needed.
+system.  The driver requires Node.js version 12.0.0 or later. However,
+Node.js version 18.18.0 or later is required to install and use development
+dependencies. It is recommended to install LTS version. NPM package manager
+is installed with Node.js but could be updated if needed.
 
 TypeScript support is provided for TypeScript versions 5.0.x and higher. 
 
@@ -107,7 +108,7 @@ on-premise NoSQL Database and not against the Cloud Service as the latter
 will consume cloud resources and may incur significant cost.__
 
 The unit tests are run with [Mocha](https://mochajs.org/) and also use some
-additional libraries, such as chai, chai-as-promised, etc.  These are installed
+additional libraries, such as chai, chai-as-promised, etc. These are installed
 locally as development dependencies (see *Getting Started*).
 
 To run all unit tests with Cloud Simulator and default NoSQLClient
@@ -132,14 +133,10 @@ npm test -- --nosql-config /path/to/config.json
 You may also invoke mocha directly:
 
 ```bash
-node_modules/.bin/mocha --nosql-config /path/to/config.json
+npx mocha --nosql-config /path/to/config.json
 ```
 
 #### Mocha Options
-
-Mocha command is available in node_modules/.bin directory after development
-dependencies are installed locally, or if you installed mocha globally, mocha
-command will be available to use without specifying its path.
 
 The options used to run the tests and the list of test files are configured in
 __.mocharc.json__ Mocha configuration file in the repository root directory.
@@ -156,8 +153,8 @@ This can be used to run individual testcases instead of the whole suite:
 
 ```bash
 cd test/unit
-../../node_modules/.bin/mocha --no-config table_ddl.js
-../../node_modules/.bin/mocha --no-config get.js --nosql-config config.json
+npx mocha --no-config table_ddl.js
+npx mocha --no-config get.js --nosql-config config.json
 .....
 ```
 
@@ -175,7 +172,17 @@ npm test -- --basic-query-only true
 
 ```bash
 cd test/unit
-../../node_modules/.bin/mocha --no-config query.js --basic-query-only true
+npx mocha --no-config query.js --basic-query-only true
+```
+
+#### Optionally Skipping Rate Limiter Tests
+
+Rate limiter tests, which are part of unit tests, may take quite a long time
+to run. You can optinally skip them by using __--skip-rl-tests__ option with
+value _true_. This option may also be combined with other options. E.g.:
+
+```bash
+npm test -- --nosql-config config.json --skip-rl-tests true
 ```
 
 #### Running Against Specific KVStore Version
@@ -190,7 +197,7 @@ npm test -- --kv 20.1
 
 ```bash
 cd test/unit
-../../node_modules/.bin/mocha --no-config query.js --kv 20.1
+npx mocha --no-config query.js --kv 20.1
 ```
 
 This option allows you to run unit tests against older releases and thus skip
@@ -221,21 +228,17 @@ npx tsc
 
 ### Linting
 
-[ESLint](https://eslint.org/) and
-[eslint-plugin-require-path-exists](https://github.com/BohdanTkachenko/eslint-plugin-require-path-exists) plugin are installed as part
-of development dependencies.  __.eslintrc.js__ configuration file is also present
-in the repository root directory.
+[ESLint](https://eslint.org/) is installed as part of development
+dependencies.  __eslint.config.js__ configuration file is also present in the
+repository root directory.
 
 You may lint directories or files by just running eslint from the repository
 root directory:
 
 ```bash
-node_modules/.bin/eslint lib
-node_modules/.bin/eslint test
+npx eslint lib
+npx eslint test
 ```
-
-(If you installed eslint globally you can use eslint command without
-specifying its path)
 
 If you are using [Visual Studio Code](https://code.visualstudio.com/) as your
 IDE, you may install _VS Code ESLint extension_ from the marketplace.  This
@@ -310,96 +313,3 @@ code of the SDK.
 The *preLaunchTask* property enables building the application before running,
 with compiled JavaScript code going into *dist* directory (see *outFiles*
 property).
-
-## Building Documentation
-
-API documentation is built with [TypeDoc](https://typedoc.org/) using:
-
-* Documentation comments in the TypeScript declaration files in *src/types*
-directory.
-* Tutorials in *doc/guides* directory.
-
-To build API documentation, in the repository root directory do:
-
-```bash
-npm run docs
-```
-
-or use typedoc directly:
-
-```
-npx typedoc
-```
-
-The resulting API documentation is generated in *doc/site* directory. You can
-start browsing from __doc/site/index.html__ file.
-
-The build is controled by *typedoc.json* configuration file. For more
-information see [TypeDoc Options](https://typedoc.org/options/).
-
-### Publishing Documentation
-
-The generated documentation is published on
-[GitHub](https://oracle.github.io/nosql-node-sdk/). Publication is automatic
-based on changes pushed to the gh-pages branch of the
-[Oracle NoSQL Database Node.js SDK](https://github.com/oracle/nosql-node-sdk)
-repository.
-
-To publish:
-
-In these instructions <nosql-node-sdk> is the path to a current clone from
-which to publish the documentation and <nosql-node-doc> is the path to
-a fresh clone of the gh-pages branch (see instructions below).
-
-1. clone the gh-pages branch of the SDK repository into <nosql-node-doc>:
-
-        git clone --single-branch --branch gh-pages https://github.com/oracle/nosql-node-sdk.git nosql-node-doc
-
-2. generate documentation in the master (or other designated) branch of the
-repository:
-
-        $ cd <nosql-node-sdk>
-        $ rm -rf doc/site
-        $ npm run docs
-
-3. copy generated doc to the gh-pages repo
-
-        $ cp -r <nosql-node-sdk>/doc/site/* <nosql-node-doc>
-
-4. commit and push after double-checking the diff in the nosql-node-doc
-repository
-
-        $ cd <nosql-node-doc>
-        $ git commit
-        $ git push
-
-The new documentation will automatically be published.
-
-## Packaging and Release
-
-The release package includes
-
-* the library runtime
-* typescript declaration files
-* examples
-
-### Intallable Archive
-
-To build a local tarball that can be installed using npm:
-
-```
-npm pack
-```
-This creates oracle-nosqldb-x.y.z.tgz which can be installed by using:
-
-```
-npm install oracle-nosqldb-x.y.z.tgz
-```
-
-### Smoke Test for Validity
-
-See *smoke.js* in section **Running Tests**.
-
-### Upload to npmjs.com
-
-TBD
