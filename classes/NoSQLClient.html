@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>NoSQLClient | Oracle NoSQL Database Node.js SDK - v5.5.2</title><meta name="description" content="Documentation for Oracle NoSQL Database Node.js SDK - v5.5.2"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script><link rel="stylesheet" href="../assets/pages.css"/></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>NoSQLClient | Oracle NoSQL Database Node.js SDK - v5.5.3</title><meta name="description" content="Documentation for Oracle NoSQL Database Node.js SDK - v5.5.3"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script><link rel="stylesheet" href="../assets/pages.css"/></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
 <div class="tsd-toolbar-contents container">
 <div class="table-cell" id="tsd-search" data-base="..">
 <div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
@@ -6,13 +6,13 @@
 <div id="tsd-toolbar-links"></div></div>
 <ul class="results">
 <li class="state loading">Preparing search index...</li>
-<li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">Oracle NoSQL Database Node.js SDK - v5.5.2</a></div>
+<li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">Oracle NoSQL Database Node.js SDK - v5.5.3</a></div>
 <div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
 <div class="container container-main">
 <div class="col-8 col-content">
 <div class="tsd-page-title">
 <ul class="tsd-breadcrumb">
-<li><a href="../modules.html">Oracle NoSQL Database Node.js SDK - v5.5.2</a></li>
+<li><a href="../modules.html">Oracle NoSQL Database Node.js SDK - v5.5.3</a></li>
 <li><a href="NoSQLClient.html">NoSQLClient</a></li></ul>
 <h1>Class NoSQLClient</h1></div>
 <section class="tsd-panel tsd-comment">
@@ -453,19 +453,29 @@ value.</p>
 <p>
 By default a delete operation is unconditional and will succeed if the
 specified row exists. Delete operations can be made conditional based
-on whether the <a href="../types/RowVersion.html">RowVersion</a> of an existing row matches that supplied
-<a href="../interfaces/DeleteOpt.html#matchVersion">matchVersion</a>.
+on whether the <a href="../types/RowVersion.html">RowVersion</a> of an existing row matches that
+supplied <a href="../interfaces/DeleteOpt.html#matchVersion">matchVersion</a>.
 <p>
-It is also possible, on failure, to return information about the
-existing row.  The row and its version can be optionally returned as
-part of <a href="../interfaces/DeleteResult.html">DeleteResult</a> if a delete operation fails because of
-a version mismatch. The existing row information will only be returned
-if <a href="../interfaces/DeleteOpt.html#returnExisting">returnExisting</a> is true and
-<a href="../interfaces/DeleteOpt.html#matchVersion">matchVersion</a> is set and the operation fails because
-the row exists and its version does not match.  Use of
-<a href="../interfaces/DeleteOpt.html#returnExisting">returnExisting</a> may result in additional consumed read
-capacity. If the operation is successful there will be no information
-returned about the previous row.
+It is also possible to return information about the existing row. The
+row, its version and modification time can be optionally returned as
+part of <a href="../interfaces/DeleteResult.html">DeleteResult</a> via properties
+<a href="../interfaces/DeleteResult.html#existingRow">existingRow</a>, <a href="../interfaces/DeleteResult.html#existingVersion">existingVersion</a>
+and <a href="../interfaces/DeleteResult.html#existingModificationTime">existingModificationTime</a>. The existing row
+information will only be returned if <a href="../interfaces/DeleteOpt.html#returnExisting">returnExisting</a>
+is true and one of the following occurs:
+<ul>
+<li><a href="../interfaces/DeleteOpt.html#matchVersion">matchVersion</a> is specified and the operation fails
+because the row exists and its <a href="../types/RowVersion.html">RowVersion</a> does not match the
+specified version.</li>
+<li><a href="../interfaces/DeleteOpt.html#matchVersion">matchVersion</a> is not specified and the delete
+operation succeeds, in which case the row, its version and modification
+time will be returned as they were before the deletion. Note that this
+information might not be available with older servers. Also note that
+if <a href="../interfaces/DeleteOpt.html#matchVersion">matchVersion</a> is specified and the operation
+succeeds, the existing row information will not be returned.
+</ul>
+Use of <a href="../interfaces/DeleteOpt.html#returnExisting">returnExisting</a> may result in additional
+consumed read capacity.
 <p>
 The information about the result of the delete operation is returned as
 <a href="../interfaces/DeleteResult.html">DeleteResult</a>.  Note that the failures to delete if the row
@@ -1556,18 +1566,32 @@ Note that only one of <a href="../interfaces/PutOpt.html#ifAbsent">ifAbsent</a>,
 or <a href="../interfaces/PutOpt.html#matchVersion">matchVersion</a> options may be specified for given put
 operation.
 <p>
-It is also possible, on failure, to return information about the
-existing row. The row, including its <a href="../types/RowVersion.html">RowVersion</a> can be
-optionally returned if a put operation fails because of a Version
-mismatch or if the operation fails because the row already exists. The
-existing row information will only be returned if
+It is also possible to return information about the existing row.
+The row, including its <a href="../types/RowVersion.html">RowVersion</a> and modification time can be
+optionally returned as part of <a href="../interfaces/PutResult.html">PutResult</a> via properties
+<a href="../interfaces/PutResult.html#existingRow">existingRow</a>, <a href="../interfaces/PutResult.html#existingVersion">existingVersion</a> and
+<a href="../interfaces/PutResult.html#existingModificationTime">existingModificationTime</a>.
+The existing row information will only be returned if
 <a href="../interfaces/PutOpt.html#returnExisting">returnExisting</a> is true and one of the following occurs:
 <ul>
 <li><a href="../interfaces/PutOpt.html#ifAbsent">ifAbsent</a> is true and the operation fails because
 the row already exists.</li>
 <li><a href="../interfaces/PutOpt.html#matchVersion">matchVersion</a> is used and the operation fails because
 the row exists and its <a href="../types/RowVersion.html">RowVersion</a> does not match.</li>
+<li>The <a href="../interfaces/PutOpt.html#ifPresent">ifPresent</a> is true and the operation succeeds
+or the put operation is unconditional (none of <a href="../interfaces/PutOpt.html#ifAbsent">ifAbsent</a>,
+<a href="../interfaces/PutOpt.html#ifPresent">ifPresent</a>, <a href="../interfaces/PutOpt.html#matchVersion">matchVersion</a> are specified)
+and the operation replaces existing row. In these cases, the row,
+its version and modification time will be returned as they were before
+the put operation took place. Note that this information might not be
+available with older servers. Also note that if
+<a href="../interfaces/PutOpt.html#matchVersion">matchVersion</a> is specified and the operation succeeds,
+the existing row information will not be returned.
+</li>
 </ul>
+Use of <a href="../interfaces/PutOpt.html#returnExisting">returnExisting</a> may result in additional consumed
+read capacity.
+<p>
 The information about the result of the put operation is returned as
 <a href="../interfaces/PutResult.html">PutResult</a>. Note that the failure cases discussed above that
 resulted from inability to satisfy <a href="../interfaces/PutOpt.html#ifAbsent">ifAbsent</a>,
@@ -2385,7 +2409,7 @@ objects each representing single put or delete operation, see
 <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
 <div class="tsd-accordion-details">
 <ul>
-<li><a href="../modules.html">Oracle <wbr/>NoSQL <wbr/>Database <wbr/>Node.js SDK -<wbr/> v5.5.2</a>
+<li><a href="../modules.html">Oracle <wbr/>NoSQL <wbr/>Database <wbr/>Node.js SDK -<wbr/> v5.5.3</a>
 <ul>
 <li class="pages-entry pages-entry-menu pages-entry-depth-1"><a>Guides</a>
 <ul>
