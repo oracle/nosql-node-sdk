@@ -255,7 +255,9 @@ ${util.inspect(badOpt)}`, async function() {
         Utils.verifyActiveTable(res, tbl);
         res = await client.setTableLimits(tbl.name, limits,
             { compartment, timeout: 10000 });
-        Utils.verifyTableResult(res, tbl);
+        //At this point we don't know for sure if table result has old or new
+        //table limits, so we only check them after forCompletion().
+        Utils.verifyTableResult(res, tbl, { _ignoreTableLimits: true });
         tbl.limits = limits;
         await client.forCompletion(res);
         Utils.verifyActiveTable(res, tbl);
@@ -265,7 +267,8 @@ ${util.inspect(badOpt)}`, async function() {
 function testDropTable(client, tbl) {
     it(`Drop table ${tbl.name}`, async function() {
         let res = await client.getTable(tbl.name);
-        Utils.verifyActiveTable(res, tbl);
+        // not checking table limits here in case setTabelLimits test failed
+        Utils.verifyActiveTable(res, tbl, { _ignoreTableLimits: true });
         res = await client.tableDDL(Utils.makeDropTable(tbl));
         Utils.verifyTableResult(res, tbl, { _ignoreTableLimits: true });
         await client.forCompletion(res);
