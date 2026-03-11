@@ -100,6 +100,16 @@ export class Region {
     static readonly AF_JOHANNESBURG_1: Region;
 
     /**
+     * Realm: OC1, Indonesia North (Batam)
+     */
+    static readonly AP_BATAM_1: Region;
+
+    /**
+     * India South (Chennai)
+     */
+    static readonly AP_CHENNAI_1: Region;
+
+    /**
      * Realm: OC1, South Korea North (Chuncheon)
      */
     static readonly AP_CHUNCHEON_1: Region;
@@ -108,6 +118,11 @@ export class Region {
      * Realm: OC1, India South (Hyderabad)
      */
     static readonly AP_HYDERABAD_1: Region;
+
+    /**
+     * Malaysia West (Kulai)
+     */
+    static readonly AP_KULAI_1: Region;
 
     /**
      * Realm: OC1, Australia Southeast (Melbourne)
@@ -165,6 +180,11 @@ export class Region {
     static readonly EU_AMSTERDAM_1: Region;
 
     /**
+     * Ireland East (Dublin)
+     */
+    static readonly EU_DUBLIN_3: Region;
+
+    /**
      * Realm: OC1, Germany Central (Frankfurt)
      */
     static readonly EU_FRANKFURT_1: Region;
@@ -173,6 +193,11 @@ export class Region {
      * Realm: OC1, Spain (Madrid)
      */
     static readonly EU_MADRID_1: Region;
+
+    /**
+     * Spain Central (Madrid 3)
+     */
+    static readonly EU_MADRID_3: Region;
 
     /**
      * Realm: OC1, France (Marseille)
@@ -193,6 +218,11 @@ export class Region {
      * Realm: OC1, Sweden (Stockholm)
      */
     static readonly EU_STOCKHOLM_1: Region;
+
+    /**
+     * Italy North (Turin)
+     */
+    static readonly EU_TURIN_1: Region;
 
     /**
      * Realm: OC1, Switzerland North (Zurich)
@@ -270,6 +300,36 @@ export class Region {
     static readonly UK_CARDIFF_1: Region;
 
     /**
+     * Realm: OC1, US South Central (Abilene)
+     */
+    static readonly US_ABILENE_1: Region;
+
+    /**
+     * US Central (Columbus)
+     */
+    static readonly US_COLUMBUS_1: Region;
+
+    /**
+     * US West (Quincy)
+     */
+    static readonly US_QUINCY_1: Region;
+
+    /**
+     * US West (Boardman)
+     */
+    static readonly US_BOARDMAN_1: Region;
+
+    /**
+     * Realm: OC1, US South (Dallas)
+     */
+    static readonly US_DALLAS_1: Region;
+
+    /**
+     * US Midwest (Des Moines)
+     */
+    static readonly US_DESMOINES_1: Region;
+
+    /**
      * Realm: OC1, US West (Phoenix)
      */
     static readonly US_PHOENIX_1: Region;
@@ -290,9 +350,24 @@ export class Region {
     static readonly US_SANJOSE_1: Region;
 
     /**
+     * US Mid West (Shawnee)
+     */
+    static readonly US_SHAWNEE_1: Region;
+
+    /**
      * Realm: OC1, US Central (Chicago)
      */
     static readonly US_CHICAGO_1: Region;
+
+    /**
+     * Realm: OC1, Kulai 2
+     */
+    static readonly AP_KULAI_2: Region;
+
+    /**
+     * Realm: OC1, Delhi 1
+     */
+    static readonly AP_DELHI_1: Region;
 
     /**
      * Realm: OC2, US Gov East (Ashburn)
@@ -348,6 +423,11 @@ export class Region {
      * Realm: OC9, Muscat (Dedicated DataCenter)
      */
     static readonly ME_DCC_MUSCAT_1: Region;
+
+    /**
+     * Realm: OC9, Ibri 1
+     */
+    static readonly ME_IBRI_1: Region;
 
     /**
      * Realm: OC10, Canberra (Dedicated DataCenter)
@@ -430,9 +510,14 @@ export class Region {
     static readonly ME_DCC_DOHA_1: Region;
 
     /**
-     * Realm: OC22, Italy dedicated (Rome)
+     * Realm: OC22, PSN Region Rome
      */
     static readonly EU_DCC_ROME_1: Region;
+
+    /**
+     * Realm: OC22, PSN Region Milan
+     */
+    static readonly EU_MILAN_2: Region;
 
     /**
      * Realm: OC23, RegionID: us-somerset-1, RegionKey: EBB
@@ -500,9 +585,104 @@ export class Region {
     static readonly AP_HOBSONVILLE_1: Region;
 
     /**
-     * Realm: OC35, RegionID: ap-suwon-1, RegionKey: DLN
+     * Realm: OC31, Silverdale dedicated (New Zealand)
+     */
+    static readonly AP_SILVERDALE_1: Region;
+
+    /**
+     * Realm: OC35, South Korea North (Suwon)
      */
     static readonly AP_SUWON_1: Region;
+
+    /**
+     * Realm: OC35, South Korea North (Seoul)
+     */
+    static readonly AP_SEOUL_2: Region;
+
+    /**
+     * Realm: OC35, South Korea North (Chuncheon)
+     */
+    static readonly AP_CHUNCHEON_2: Region;
+
+    /**
+     * Riyadh 2 Alloy
+     */
+    static readonly ME_RIYADH_2: Region;
+
+    /**
+     * Realm: OC39, Butterfly Stable
+     */
+    static readonly US_TUKWILA_3: Region;
+
+    /**
+     * Realm: OC40, Sovereign Cloud (Japan West)
+     */
+    static readonly AP_OSAKA_2: Region;
+
+    /**
+     * Realm: OC40, Sovereign Cloud
+     */
+    static readonly AP_TATEBAYASHI_1: Region;
+
+    /**
+     * Realm: OC41, UAE North 1
+     */
+    static readonly ME_DUBAI_3: Region;
+
+    /**
+     * Newark 1 DRCC
+     */
+    static readonly US_NEWARK_1: Region;
+
+    /**
+     * Realm: OC43, Thailand 1 (AIS)
+     */
+    static readonly AP_PATHUMTHANI_1: Region;
+
+    /**
+     * Thailand 2 (AIS)
+     */
+    static readonly AP_SAMUTPRAKAN_1: Region;
+
+    /**
+     * Realm: OC46, Butterfly Lab 1
+     */
+    static readonly UK_LONDON_2: Region;
+
+    /**
+     * Realm: OC47, Butterfly Lab 2
+     */
+    static readonly UK_LONDON_3: Region;
+
+    /**
+     * Realm: OC47, London 4
+     */
+    static readonly UK_LONDON_4: Region;
+
+    /**
+     * Realm: OC51, Budapest
+     */
+    static readonly EU_BUDAPEST_1: Region;
+
+    /**
+     * Realm: OC52, Rio De Janeiro
+     */
+    static readonly SA_RIODEJANEIRO_1: Region;
+
+    /**
+     * WestTokyo 1 Alloy
+     */
+    static readonly AP_WESTTOKYO_1: Region;
+
+    /**
+     * Realm: OC57, Abu Dhabi 5
+     */
+    static readonly ME_ABUDHABI_5: Region;
+
+    /**
+     * Realm: OC57, Dubai 4
+     */
+    static readonly ME_DUBAI_4: Region;
 
     /* === End autogenerated realms and regions === */
 }

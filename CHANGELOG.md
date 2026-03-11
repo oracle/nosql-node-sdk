@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## Unreleased
+
+**Added**
+
+* Cloud only: Added new OCI region codes
+
 ## 5.5.3 - 2025-12-23
 
 **Changed**
