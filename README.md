@@ -327,6 +327,113 @@ using a different host or port edit the settings accordingly.
 ```js
 node quickstart.js kvstore
 ```
+
+## StatsControl
+
+The SDK can collect client-side request statistics using a StatsControl API
+modeled after the Java SDK StatsControl output. Stats collection is disabled by
+default.
+
+Enable it in the client configuration:
+
+```js
+const client = new NoSQLClient({
+    serviceType: ServiceType.CLOUDSIM,
+    endpoint: 'localhost:8080',
+    statsProfile: 'ALL',
+    statsInterval: 5,
+    statsPrettyPrint: true,
+    statsEnableLog: true
+});
+```
+
+The supported profiles are:
+
+* **NONE**: statistics collection is disabled. This is the default.
+* **REGULAR**: collect request counts, errors, retry totals, rate-limit delay,
+  latency min/avg/max, request size, result size and connection statistics.
+* **MORE**: includes the REGULAR metrics and adds 95th and 99th percentile
+  latency.
+* **ALL**: includes MORE metrics and adds per-query statistics, including
+  query text and query plan information when available.
+
+Important: the **ALL** profile may include SQL text and query plans in stats
+output. This matches the Java SDK behavior, but applications should avoid
+enabling ALL profile logging in environments where query text may contain
+sensitive values.
+
+Stats can be accessed manually:
+
+```js
+const stats = client.getStats();
+console.log(JSON.stringify(stats, null, 2));
+```
+
+The StatsControl object can also be used to change runtime behavior:
+
+```js
+const statsControl = client.getStatsControl();
+statsControl.setProfile('MORE');
+statsControl.setStatsInterval(5);
+statsControl.setPrettyPrint(true);
+statsControl.setStatsEnableLog(true);
+statsControl.start();
+statsControl.stop();
+```
+
+When `statsEnableLog` is true, interval snapshots are logged with the prefix
+`Client stats|`. `statsHandler` may also be configured to receive each generated
+snapshot object. Interval snapshots are cleared after they are logged or passed
+to the handler, matching Java SDK interval behavior.
+
+For very large load checks, p95/p99 latency normally requires storing all
+successful latency samples for exact Java-compatible percentile calculation.
+This SDK also provides an optional Node.js-only percentile storage mode:
+
+```json
+{
+  "statsLatencyPercentileMode": "BUCKETED"
+}
+```
+
+`BUCKETED` bounds memory use by storing counts in fixed latency buckets. It is
+intended for large local load tests and keeps the same output fields, but p95
+and p99 are bucket estimates instead of exact Java-style percentiles. The
+default is `EXACT`.
+
+The example configurations `examples/config/cloudsim.json` and
+`examples/config/kvlite.json` enable interval stats logging and pretty printing
+for quick comparison with Java StatsControl output. The load-check helper shows
+available operations and large-run options:
+
+```bash
+node examples/javascript/stats_load_check.js --help
+```
+
+The load-check helper defaults to `examples/config/kvlite.json`, which is for
+KV proxy/KVLite. If you are running CloudSim, pass
+`--config examples/config/cloudsim.json` explicitly:
+
+```bash
+# CloudSim
+node examples/javascript/stats_load_check.js \
+  --config examples/config/cloudsim.json \
+  --operation fullFlow \
+  --table Users \
+  --profile ALL \
+  --total 1 \
+  --concurrency 1
+
+# KV proxy/KVLite
+node examples/javascript/stats_load_check.js \
+  --config examples/config/kvlite.json \
+  --operation fullFlow \
+  --table Users \
+  --profile ALL \
+  --total 1 \
+  --concurrency 1
+```
+
 ## Examples
 
 The examples are located in the *examples* directory.  There are two sets of

@@ -12,6 +12,7 @@ const dur = require('./lib/durability');
 const err = require('./lib/error');
 
 exports.NoSQLClient =require('./lib/nosql_client');
+exports.StatsControl = require('./lib/stats_control');
 exports.PreparedStatement = require('./lib/stmt').PreparedStatement;
 exports.ServiceType = con.ServiceType;
 exports.Region = require('./lib/region');

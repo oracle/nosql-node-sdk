@@ -21,6 +21,36 @@ import type { NoSQLError } from "./error";
 import type { IAMConfig } from "./auth/iam/types";
 
 /**
+ * Statistics collection profile.
+ * <ul>
+ * <li>NONE: do not collect request statistics.</li>
+ * <li>REGULAR: collect request counts, errors, retries, delays, sizes and
+ * average/min/max latency.</li>
+ * <li>MORE: REGULAR plus 95th and 99th percentile latency.</li>
+ * <li>ALL: MORE plus detailed query statistics.</li>
+ * </ul>
+ */
+export type StatsProfile = "NONE" | "REGULAR" | "MORE" | "ALL";
+
+/**
+ * Internal storage mode for latency percentile samples.
+ * <ul>
+ * <li>EXACT: store each latency sample and calculate exact percentiles.</li>
+ * <li>BUCKETED: store counts in fixed latency buckets to bound memory for
+ * large load checks.</li>
+ * </ul>
+ */
+export type StatsLatencyPercentileMode = "EXACT" | "BUCKETED";
+
+/**
+ * Function or object called with a statistics snapshot at the end of a stats
+ * interval.
+ */
+export type StatsHandler = ((stats: object) => void) | {
+    accept(stats: object): void;
+};
+
+/**
  * Configuration object passed to construct {@link NoSQLClient} instance.
  * <p>
  * This configuration can be passed to {@link NoSQLClient}
@@ -209,6 +239,45 @@ export interface Config {
      * @defaultValue 1024 (1 GB)
      */
     maxMemoryMB?: number;
+
+    /**
+     * Statistics collection profile.
+     * @defaultValue NONE
+     */
+    statsProfile?: StatsProfile;
+
+    /**
+     * Internal storage mode for latency percentile samples. EXACT preserves
+     * existing behavior. BUCKETED keeps memory bounded for large load checks
+     * by estimating p95/p99 from fixed latency buckets.
+     * @defaultValue EXACT
+     */
+    statsLatencyPercentileMode?: StatsLatencyPercentileMode;
+
+    /**
+     * Statistics collection interval in seconds. Interval snapshots are
+     * aligned to the top of the hour.
+     * @defaultValue 600
+     */
+    statsInterval?: number;
+
+    /**
+     * Whether interval statistics log output should be pretty-printed.
+     * @defaultValue false
+     */
+    statsPrettyPrint?: boolean;
+
+    /**
+     * Whether interval statistics should be logged.
+     * @defaultValue false
+     */
+    statsEnableLog?: boolean;
+
+    /**
+     * Handler called with a statistics snapshot at the end of each stats
+     * interval.
+     */
+    statsHandler?: StatsHandler|null;
    
     /**
      * Cloud service only.  Compartment to use for operations with this

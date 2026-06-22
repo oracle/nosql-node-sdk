@@ -1,5 +1,5 @@
 {
-  "serviceType": "CLOUDSIM",
+  "serviceType": "KVSTORE",
   "endpoint": "http://localhost:8080",
   "statsInterval": 5,
   "statsPrettyPrint": true,

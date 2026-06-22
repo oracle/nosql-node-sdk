@@ -6,7 +6,7 @@
  */
 
 import type { EventEmitter } from "events";
-import type { Config } from "./config";
+import type { Config, StatsProfile } from "./config";
 import type { TableDDLOpt, ModifyTableOpt, CompletionOpt, GetTableOpt,
     TableUsageOpt, GetIndexOpt, GetIndexesOpt, ListTablesOpt, GetOpt, PutOpt,
     PutIfOpt, DeleteOpt, DeleteIfOpt, MultiDeleteOpt, WriteMultipleOpt,
@@ -28,6 +28,7 @@ import type { KVStoreAuthConfig } from "./auth/kvstore/types";
 import type { NoSQLError } from "./error";
 import type { NoSQLClientEvents } from "./events";
 import type { Region } from "./region";
+import type { StatsControl } from "./stats_control";
 
 /**
  * Defines NoSQLClient, which is the point of access to the
@@ -173,6 +174,31 @@ export class NoSQLClient extends EventEmitter {
      * @returns {ServiceType} Service type
      */
     readonly serviceType: ServiceType;
+
+    /**
+     * Returns client request statistics collected since the client was created
+     * or the statistics were last cleared.
+     * @returns {object} Statistics object
+     */
+    getStats(): object;
+
+    /**
+     * Sets the client request statistics collection profile.
+     * @param profile Statistics profile
+     * @returns This instance
+     */
+    setStatsProfile(profile: StatsProfile): this;
+
+    /**
+     * Returns the client request statistics collection profile.
+     * @returns Statistics profile
+     */
+    getStatsProfile(): StatsProfile;
+
+    /**
+     * Returns the statistics control object for this client.
+     */
+    getStatsControl(): StatsControl;
 
     /**
      * Releases resources associated with NoSQLClient.  This method must be
