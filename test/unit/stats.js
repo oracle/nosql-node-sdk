@@ -237,37 +237,37 @@ describe('Stats unit test', function() {
         const get = getRequest(output, 'Get');
 
         expect(Object.keys(output)).to.deep.equal([
-            'clientId',
             'startTime',
             'endTime',
-            'requests',
+            'clientId',
+            'connections',
             'queries',
-            'connections'
+            'requests'
         ]);
         expect(output.startTime).to.match(
             /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/);
         expect(output.endTime).to.match(
             /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/);
         expect(Object.keys(get)).to.deep.equal([
-            'httpRequestCount',
-            'resultSize',
             'name',
+            'httpRequestCount',
+            'errors',
+            'retry',
+            'rateLimitDelayMs',
             'httpRequestLatencyMs',
             'requestSize',
-            'rateLimitDelayMs',
-            'errors',
-            'retry'
+            'resultSize'
         ]);
         expect(Object.keys(get.retry)).to.deep.equal([
+            'count',
             'delayMs',
             'authCount',
-            'throttleCount',
-            'count'
+            'throttleCount'
         ]);
         expect(Object.keys(output.connections)).to.deep.equal([
             'min',
-            'avg',
-            'max'
+            'max',
+            'avg'
         ]);
     });
 
@@ -279,7 +279,6 @@ describe('Stats unit test', function() {
                 interval: 5,
                 enableLog: true,
                 prettyPrint: true,
-                latencyPercentileMode: 'BUCKETED',
                 rateLimitingEnabled: true,
                 logger: {
                     info: msg => logs.push(msg),
@@ -301,10 +300,8 @@ describe('Stats unit test', function() {
                 });
                 expect(startupStats).to.have.property('sdkVersion');
                 expect(startupStats).to.have.property('clientId');
-                expect(statsControl.getLatencyPercentileMode()).to.equal(
-                    'BUCKETED');
             } finally {
-                statsControl.shutdown();
+                statsControl._shutdown();
             }
         });
 
@@ -314,13 +311,13 @@ describe('Stats unit test', function() {
             interval: 10
         });
 
-        statsControl.observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20, 5);
-        const first = statsControl.logStats();
-        const second = statsControl.generateStats();
+        statsControl._observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20, 5);
+        const first = statsControl._logStats();
+        const second = statsControl._generateStats();
 
         expect(first.requests).to.have.length(1);
         expect(second.requests).to.have.length(0);
-        statsControl.shutdown();
+        statsControl._shutdown();
     });
 
     it('does not collect observations with NONE profile', function() {
@@ -342,11 +339,11 @@ describe('Stats unit test', function() {
         try {
             expect(statsControl.getProfile()).to.equal('NONE');
             expect(statsControl.isStarted()).to.equal(false);
-            statsControl.observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20,
+            statsControl._observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20,
                 5);
-            expect(statsControl.generateStats().requests).to.have.length(0);
+            expect(statsControl._generateStats().requests).to.have.length(0);
         } finally {
-            statsControl.shutdown();
+            statsControl._shutdown();
         }
     });
 
@@ -479,8 +476,8 @@ describe('Stats unit test', function() {
             }
         });
 
-        statsControl.observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20, 5);
-        statsControl.shutdown();
+        statsControl._observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20, 5);
+        statsControl._shutdown();
 
         expect(logs).to.have.length(2);
         const finalStats = JSON.parse(logs[1].substring(
@@ -501,9 +498,9 @@ describe('Stats unit test', function() {
             }
         });
 
-        statsControl.observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20, 5);
-        const output = statsControl.generateStats();
-        statsControl.shutdown();
+        statsControl._observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20, 5);
+        const output = statsControl._generateStats();
+        statsControl._shutdown();
 
         expect(logs).to.have.length(0);
         expect(getRequest(output, 'Get').httpRequestCount).to.equal(1);
@@ -518,11 +515,11 @@ describe('Stats unit test', function() {
                 statsHandler: stats => handled.push(stats)
             });
 
-            statsControl.observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20,
+            statsControl._observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20,
                 5);
-            const logged = statsControl.logStats();
-            const afterLog = statsControl.generateStats();
-            statsControl.shutdown();
+            const logged = statsControl._logStats();
+            const afterLog = statsControl._generateStats();
+            statsControl._shutdown();
 
             expect(handled).to.have.length(2);
             expect(handled[0]).to.equal(logged);
@@ -538,14 +535,14 @@ describe('Stats unit test', function() {
         });
 
         statsControl.stop();
-        statsControl.observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20, 5);
-        expect(statsControl.generateStats().requests).to.have.length(0);
+        statsControl._observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20, 5);
+        expect(statsControl._generateStats().requests).to.have.length(0);
 
         statsControl.start();
-        statsControl.observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20, 5);
-        expect(getRequest(statsControl.generateStats(), 'Get')
+        statsControl._observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20, 5);
+        expect(getRequest(statsControl._generateStats(), 'Get')
             .httpRequestCount).to.equal(1);
-        statsControl.shutdown();
+        statsControl._shutdown();
     });
 
     it('uses prepared statement metadata for query statistics', function() {
@@ -612,31 +609,6 @@ describe('Stats unit test', function() {
             max: 100,
             '95th': 100,
             '99th': 100
-        });
-    });
-
-    it('can calculate percentiles from fixed latency buckets', function() {
-        const stats = new Stats({
-            clientId: 'bucketed-percentile',
-            profile: 'MORE',
-            latencyPercentileMode: 'BUCKETED'
-        });
-
-        for (let i = 0; i < 95; i++) {
-            stats.observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20, 113);
-        }
-        for (let i = 0; i < 5; i++) {
-            stats.observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20, 1000);
-        }
-
-        const get = getRequest(stats.generateStats(), 'Get');
-
-        expect(get.httpRequestLatencyMs).to.deep.include({
-            min: 113,
-            avg: 157.35,
-            max: 1000,
-            '95th': 120,
-            '99th': 1000
         });
     });
 
@@ -759,9 +731,9 @@ describe('Stats unit test', function() {
             }
         });
 
-        statsControl.observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20, 5);
-        statsControl.logStats();
-        statsControl.shutdown();
+        statsControl._observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20, 5);
+        statsControl._logStats();
+        statsControl._shutdown();
 
         expect(handled).to.have.length(2);
         expect(getRequest(handled[0], 'Get').httpRequestCount).to.equal(1);
@@ -773,9 +745,6 @@ describe('Stats unit test', function() {
             'Stats interval can not be less than 1 second.');
         expect(() => new StatsControl({ profile: 'BAD' })).to.throw(
             'Invalid stats profile: BAD');
-        expect(() => new StatsControl({
-            latencyPercentileMode: 'APPROX'
-        })).to.throw('Invalid latency percentile mode: APPROX');
         expect(() => new StatsControl({ statsHandler: {} })).to.throw(
             'Invalid stats handler');
     });
@@ -802,12 +771,12 @@ describe('Stats unit test', function() {
             }
         });
 
-        compact.observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20, 5);
-        pretty.observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20, 5);
-        compact.logStats();
-        pretty.logStats();
-        compact.shutdown();
-        pretty.shutdown();
+        compact._observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20, 5);
+        pretty._observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10, 20, 5);
+        compact._logStats();
+        pretty._logStats();
+        compact._shutdown();
+        pretty._shutdown();
 
         expect(compactLogs[1]).to.not.include('\n');
         expect(prettyLogs[1]).to.include('\n');
@@ -845,7 +814,8 @@ describe('Stats unit test', function() {
                     } else {
                         expect(await client.execute(op, {})).to.equal(result);
                     }
-                    expect(client.getStats().requests).to.have.length(0);
+                    expect(client.getStatsControl()._generateStats().requests)
+                        .to.have.length(0);
                 } finally {
                     client.shutdown();
                 }
@@ -909,14 +879,15 @@ describe('Stats unit test', function() {
                 const externalStart = process.hrtime.bigint();
                 await client.execute(op, {});
                 const externalLatency = elapsedMs(externalStart);
-                const get = getRequest(client.getStats(), 'Get');
-                const statsLatency = get.httpRequestLatencyMs.avg;
+                const get = getRequest(client.getStatsControl()
+                    ._generateStats(), 'Get');
+                const sdkLatency = get.httpRequestLatencyMs.avg;
 
                 expect(get.httpRequestCount).to.equal(1);
-                expect(statsLatency).to.be.at.least(serverDelayMs - 5);
-                expect(statsLatency).to.be.at.most(externalLatency + 20);
-                expectMinAvgMax(get.httpRequestLatencyMs, statsLatency,
-                    statsLatency, statsLatency);
+                expect(sdkLatency).to.be.at.least(serverDelayMs - 5);
+                expect(sdkLatency).to.be.at.most(externalLatency + 20);
+                expectMinAvgMax(get.httpRequestLatencyMs, sdkLatency,
+                    sdkLatency, sdkLatency);
                 expectMinAvgMax(get.requestSize, requestBody.length,
                     requestBody.length, requestBody.length);
                 expectMinAvgMax(get.resultSize, responseBody.length,
@@ -979,7 +950,7 @@ describe('Stats unit test', function() {
 
             try {
                 await client.execute(op, {});
-                const output = client.getStats();
+                const output = client.getStatsControl()._generateStats();
                 const get = getRequest(output, 'Get');
 
                 expect(attempt).to.equal(2);
@@ -1016,17 +987,19 @@ describe('Stats unit test', function() {
                 deserialize: () => ({})
             });
             client.on('error', () => {});
+            let output;
 
             try {
                 await client.execute(op, {});
                 throw new Error('Expected terminal error');
             } catch(err) {
                 expect(err).to.equal(terminalError);
+                output = client.getStatsControl()._generateStats();
             } finally {
                 client.shutdown();
             }
 
-            const put = getRequest(client.getStats(), 'Put');
+            const put = getRequest(output, 'Put');
 
             expect(put.httpRequestCount).to.equal(1);
             expect(put.errors).to.equal(1);

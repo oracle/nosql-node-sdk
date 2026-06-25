@@ -43,10 +43,6 @@ Options:
   --profile <profile>     Stats profile: REGULAR, MORE, or ALL. Default: MORE
   --operation <name>      ${OPERATIONS.join(', ')}. Default: listTables
   --progress-ms <number>  Progress print interval. Default: ${DEFAULT_PROGRESS_MS}
-  --latency-percentile <mode>
-                         Percentile storage: exact or bucketed. Default: exact
-                         Use bucketed for very large runs to bound memory use
-                         while still reporting p95/p99 latency.
   --table <name>          Table name for data/table operations
   --key <field=value>     Primary key component. Repeat for composite keys
   --row <field=value>     Row field for put/writeMultiple. Repeat for rows
@@ -72,7 +68,6 @@ Examples:
   node examples/javascript/stats_load_check.js --operation prepare --query "SELECT * FROM users"
   node examples/javascript/stats_load_check.js --operation getTable --table Users
   node examples/javascript/stats_load_check.js --profile ALL --operation query --query "SELECT * FROM users"
-  node examples/javascript/stats_load_check.js --profile MORE --latency-percentile bucketed --total 1000000
   node examples/javascript/stats_load_check.js --profile ALL --operation basicFlow --table Users
   node examples/javascript/stats_load_check.js --profile ALL --operation fullFlow --table Users
 
@@ -85,9 +80,6 @@ StatsControl comparison:
 
   node examples/javascript/stats_load_check.js --config examples/config/cloudsim.json --operation fullFlow --table Users --profile ALL --total 1 --concurrency 1
   node examples/javascript/stats_load_check.js --config examples/config/kvlite.json --operation fullFlow --table Users --profile ALL --total 1 --concurrency 1
-
-  Use --latency-percentile bucketed for very large runs to bound memory
-  while still reporting p95/p99 latency.
 `);
 }
 
@@ -98,7 +90,6 @@ function parseArgs(argv) {
         concurrency: DEFAULT_CONCURRENCY,
         profile: 'MORE',
         operation: 'listTables',
-        latencyPercentileMode: 'EXACT',
         keys: [],
         rows: [],
         writeAction: 'put',
@@ -130,9 +121,6 @@ function parseArgs(argv) {
             break;
         case '--progress-ms':
             opt.progressMs = Number(argv[++i]);
-            break;
-        case '--latency-percentile':
-            opt.latencyPercentileMode = argv[++i];
             break;
         case '--table':
             opt.table = argv[++i];
@@ -175,11 +163,6 @@ function normalizeOptions(opt) {
     opt.profile = opt.profile.toUpperCase();
     if (!['REGULAR', 'MORE', 'ALL'].includes(opt.profile)) {
         throw new Error('profile must be REGULAR, MORE, or ALL');
-    }
-
-    opt.latencyPercentileMode = opt.latencyPercentileMode.toUpperCase();
-    if (!['EXACT', 'BUCKETED'].includes(opt.latencyPercentileMode)) {
-        throw new Error('--latency-percentile must be exact or bucketed');
     }
 
     if (!OPERATIONS.includes(opt.operation)) {
@@ -236,11 +219,10 @@ function normalizeOptions(opt) {
     return opt;
 }
 
-function loadConfig(configFile, profile, latencyPercentileMode) {
+function loadConfig(configFile, profile) {
     const absPath = path.resolve(configFile);
     const cfg = Object.assign({}, require(absPath));
     cfg.statsProfile = profile;
-    cfg.statsLatencyPercentileMode = latencyPercentileMode;
     return cfg;
 }
 
@@ -492,8 +474,13 @@ async function main() {
         return;
     }
 
-    const cfg = loadConfig(opt.config, opt.profile,
-        opt.latencyPercentileMode);
+    const cfg = loadConfig(opt.config, opt.profile);
+    let lastStats;
+    if (cfg.statsEnableLog === false && cfg.statsHandler == null) {
+        cfg.statsHandler = stats => {
+            lastStats = stats;
+        };
+    }
     let client;
     try {
         client = new NoSQLClient(cfg);
@@ -501,16 +488,15 @@ async function main() {
             total: opt.total,
             concurrency: opt.concurrency,
             profile: opt.profile,
-            latencyPercentileMode: opt.latencyPercentileMode,
             operation: opt.operation
         });
         await runWorkers(client, opt);
-        if (!cfg.statsEnableLog) {
-            console.log(JSON.stringify(client.getStats(), null, 2));
-        }
     } finally {
         if (client != null) {
             await client.close();
+        }
+        if (cfg.statsEnableLog === false && lastStats != null) {
+            console.log(JSON.stringify(lastStats, null, 2));
         }
     }
 }

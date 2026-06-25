@@ -283,10 +283,6 @@ const badConfigs = [
         endpoint: 'http://localhost:8080',
         consistency
     })),
-    {
-        endpoint: 'http://localhost:8080',
-        statsLatencyPercentileMode: 'APPROX'
-    },
     ...badRetryConfigs.map(retry => ({
         endpoint: 'http://localhost:8080',
         retry //invalid retry config
@@ -420,7 +416,7 @@ function verifyKVStoreAuth(cfg, reqCfg) {
 function verifyConfig(cfg, reqCfg) {
     verifyProps(cfg, reqCfg, defCfg, [ 'timeout', 'ddlTimeout',
         'securityInfoTimeout', 'tablePollTimeout', 'tablePollDelay',
-        'consistency', 'statsLatencyPercentileMode' ]);
+        'consistency' ]);
     expect(cfg.retry).to.be.an('object');
     expect(cfg.retry.handler).to.be.an('object');
     expect(cfg.retry.handler.doRetry).to.be.a('function');
@@ -519,11 +515,6 @@ const goodConfigs = [
     ...Region.names.map(region => ({
         region
     })),
-    {
-        endpoint: 'http://localhost:8080',
-        timeout: 20000,
-        statsLatencyPercentileMode: 'BUCKETED'
-    },
     {
         endpoint: 'http://localhost:8080',
         timeout: 20000,

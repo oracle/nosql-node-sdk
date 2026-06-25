@@ -140,11 +140,11 @@ function verifyRequestShape(req) {
 }
 
 async function measureWorkload(client, workload) {
-    client.getStatsControl().setProfile('ALL').clear();
+    client.getStatsControl().setProfile('ALL')._clear();
 
     if (workload.before != null) {
         await workload.before();
-        client.getStatsControl().clear();
+        client.getStatsControl()._clear();
     }
 
     const latencies = [];
@@ -155,7 +155,7 @@ async function measureWorkload(client, workload) {
     }
 
     const metrics = computePerformanceMetrics(latencies);
-    const stats = client.getStats();
+    const stats = client.getStatsControl()._generateStats();
     const req = requestMap(stats).get(workload.requestName);
 
     expect(req, `stats for ${workload.requestName}`).to.exist;
@@ -222,7 +222,7 @@ describe('Stats functional test', function() {
     it('records Java-parity stats for real SDK operations',
         async function() {
             const statsControl = client.getStatsControl();
-            statsControl.setProfile('ALL').clear();
+            statsControl.setProfile('ALL')._clear();
 
             await client.tableDDL(
                 `CREATE TABLE IF NOT EXISTS ${tableName} ` +
@@ -307,7 +307,7 @@ describe('Stats functional test', function() {
 
             await client.getTableUsage(tableName, { timeout: 10000 });
 
-            const stats = client.getStats();
+            const stats = client.getStatsControl()._generateStats();
             const requests = requestMap(stats);
             const expectedRequests = [
                 'Get',

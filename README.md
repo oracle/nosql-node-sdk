@@ -362,21 +362,12 @@ output. This matches the Java SDK behavior, but applications should avoid
 enabling ALL profile logging in environments where query text may contain
 sensitive values.
 
-Stats can be accessed manually:
-
-```js
-const stats = client.getStats();
-console.log(JSON.stringify(stats, null, 2));
-```
-
 The StatsControl object can also be used to change runtime behavior:
 
 ```js
 const statsControl = client.getStatsControl();
 statsControl.setProfile('MORE');
-statsControl.setStatsInterval(5);
 statsControl.setPrettyPrint(true);
-statsControl.setStatsEnableLog(true);
 statsControl.start();
 statsControl.stop();
 ```
@@ -386,20 +377,10 @@ When `statsEnableLog` is true, interval snapshots are logged with the prefix
 snapshot object. Interval snapshots are cleared after they are logged or passed
 to the handler, matching Java SDK interval behavior.
 
-For very large load checks, p95/p99 latency normally requires storing all
-successful latency samples for exact Java-compatible percentile calculation.
-This SDK also provides an optional Node.js-only percentile storage mode:
-
-```json
-{
-  "statsLatencyPercentileMode": "BUCKETED"
-}
-```
-
-`BUCKETED` bounds memory use by storing counts in fixed latency buckets. It is
-intended for large local load tests and keeps the same output fields, but p95
-and p99 are bucket estimates instead of exact Java-style percentiles. The
-default is `EXACT`.
+`statsInterval` and `statsEnableLog` are configuration properties, matching the
+Java SDK configuration shape. The Node SDK uses Java-compatible exact percentile
+calculation for p95 and p99 by storing successful latency samples when the
+profile is MORE or ALL.
 
 The example configurations `examples/config/cloudsim.json` and
 `examples/config/kvlite.json` enable interval stats logging and pretty printing

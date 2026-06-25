@@ -10,26 +10,32 @@
 const path = require('path');
 const NoSQLClient = require('../..').NoSQLClient;
 
-function loadConfig(configFile) {
+function loadConfig(configFile, statsHandler) {
     const cfg = Object.assign({}, require(path.resolve(configFile)));
     cfg.statsProfile = cfg.statsProfile || 'MORE';
+    cfg.statsEnableLog = false;
+    cfg.statsHandler = statsHandler;
     return cfg;
 }
 
 async function run() {
     const configFile = process.argv[2] || 'examples/config/kvlite.json';
+    let stats;
     let client;
 
     try {
-        client = new NoSQLClient(loadConfig(configFile));
+        client = new NoSQLClient(loadConfig(configFile, snapshot => {
+            stats = snapshot;
+        }));
         await client.listTables();
     } catch(err) {
         console.error(err);
     } finally {
         if (client != null) {
-            const stats = client.getStats();
-            console.log(JSON.stringify(stats, null, 2));
             await client.close();
+        }
+        if (stats != null) {
+            console.log(JSON.stringify(stats, null, 2));
         }
     }
 }

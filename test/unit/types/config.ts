@@ -10,8 +10,7 @@ import { expectTypeOf } from "expect-type";
 import { NoSQLClient, Config, ServiceType, Region, Consistency, Durabilities,
     RetryConfig, DBNumberConfig, AuthConfig, RateLimiterConstructor, HttpOpt,
     RetryHandler, Operation, NoSQLError, SimpleRateLimiter, ConsumedCapacity,
-    TableState, StatsProfile, StatsLatencyPercentileMode, StatsHandler,
-    StatsControl }
+    TableState, StatsProfile, StatsHandler, StatsControl }
     from "../../../";
 import { table } from "console";
 
@@ -36,8 +35,6 @@ function testConfig(retryCfg: RetryConfig, numConfig: DBNumberConfig,
     cfg.durability = Durabilities.COMMIT_NO_SYNC;
     cfg.maxMemoryMB = 512;
     cfg.statsProfile = "MORE";
-    cfg.statsLatencyPercentileMode = "BUCKETED";
-    cfg.statsLatencyPercentileMode = "EXACT";
     cfg.statsInterval = 600;
     cfg.statsPrettyPrint = true;
     cfg.statsEnableLog = true;
@@ -95,10 +92,6 @@ function testConfig(retryCfg: RetryConfig, numConfig: DBNumberConfig,
     cfg.statsProfile = "BASIC";
     // @ts-expect-error Invalid statsProfile.
     cfg.statsProfile = 1;
-    // @ts-expect-error Invalid statsLatencyPercentileMode.
-    cfg.statsLatencyPercentileMode = "APPROX";
-    // @ts-expect-error Invalid statsLatencyPercentileMode.
-    cfg.statsLatencyPercentileMode = true;
     // @ts-expect-error Invalid statsInterval.
     cfg.statsInterval = "600";
     // @ts-expect-error Invalid statsPrettyPrint.
@@ -178,14 +171,6 @@ function testStatsProfile(profile: StatsProfile) {
 
     // @ts-expect-error Invalid stats profile.
     profile = "BASIC";
-}
-
-function testStatsLatencyPercentileMode(mode: StatsLatencyPercentileMode) {
-    mode = "EXACT";
-    mode = "BUCKETED";
-
-    // @ts-expect-error Invalid stats latency percentile mode.
-    mode = "APPROX";
 }
 
 function testStatsHandler(handler: StatsHandler) {
@@ -432,21 +417,6 @@ async function testNoSQLClientMisc() {
 
     await client.close();
 
-    expectTypeOf(client.getStats).toBeFunction();
-    expectTypeOf(client.getStats).parameters.toEqualTypeOf<[]>();
-    expectTypeOf(client.getStats).returns.toBeObject();
-
-    expectTypeOf(client.setStatsProfile).toBeFunction();
-    expectTypeOf(client.setStatsProfile).parameters
-        .toEqualTypeOf<[StatsProfile]>();
-    expectTypeOf(client.setStatsProfile).returns.toEqualTypeOf<NoSQLClient>();
-    client = client.setStatsProfile("MORE");
-
-    expectTypeOf(client.getStatsProfile).toBeFunction();
-    expectTypeOf(client.getStatsProfile).parameters.toEqualTypeOf<[]>();
-    expectTypeOf(client.getStatsProfile).returns
-        .toEqualTypeOf<StatsProfile>();
-
     expectTypeOf(client.getStatsControl).toBeFunction();
     expectTypeOf(client.getStatsControl).parameters.toEqualTypeOf<[]>();
     expectTypeOf(client.getStatsControl).returns
@@ -454,14 +424,10 @@ async function testNoSQLClientMisc() {
 
     const statsControl = client.getStatsControl();
     expectTypeOf(statsControl.getInterval).returns.toEqualTypeOf<number>();
-    expectTypeOf(statsControl.setInterval).parameters
-        .toEqualTypeOf<[number]>();
     expectTypeOf(statsControl.setProfile).parameters
         .toEqualTypeOf<[StatsProfile]>();
     expectTypeOf(statsControl.getProfile).returns
         .toEqualTypeOf<StatsProfile>();
-    expectTypeOf(statsControl.getLatencyPercentileMode).returns
-        .toEqualTypeOf<StatsLatencyPercentileMode>();
     expectTypeOf(statsControl.setStatsHandler).parameters
         .toEqualTypeOf<[handler?: StatsHandler|null]>();
     expectTypeOf(statsControl.getStatsHandler).returns
@@ -469,7 +435,6 @@ async function testNoSQLClientMisc() {
     expectTypeOf(statsControl.start).returns.toEqualTypeOf<StatsControl>();
     expectTypeOf(statsControl.stop).returns.toEqualTypeOf<StatsControl>();
     expectTypeOf(statsControl.isStarted).returns.toEqualTypeOf<boolean>();
-    expectTypeOf(statsControl.logStats).returns.toBeObject();
 
     expectTypeOf(client.precacheAuth).toBeFunction();
     expectTypeOf(client.precacheAuth).parameters.toEqualTypeOf<[]>();

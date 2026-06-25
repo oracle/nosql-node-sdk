@@ -33,16 +33,6 @@ import type { IAMConfig } from "./auth/iam/types";
 export type StatsProfile = "NONE" | "REGULAR" | "MORE" | "ALL";
 
 /**
- * Internal storage mode for latency percentile samples.
- * <ul>
- * <li>EXACT: store each latency sample and calculate exact percentiles.</li>
- * <li>BUCKETED: store counts in fixed latency buckets to bound memory for
- * large load checks.</li>
- * </ul>
- */
-export type StatsLatencyPercentileMode = "EXACT" | "BUCKETED";
-
-/**
  * Function or object called with a statistics snapshot at the end of a stats
  * interval.
  */
@@ -247,14 +237,6 @@ export interface Config {
     statsProfile?: StatsProfile;
 
     /**
-     * Internal storage mode for latency percentile samples. EXACT preserves
-     * existing behavior. BUCKETED keeps memory bounded for large load checks
-     * by estimating p95/p99 from fixed latency buckets.
-     * @defaultValue EXACT
-     */
-    statsLatencyPercentileMode?: StatsLatencyPercentileMode;
-
-    /**
      * Statistics collection interval in seconds. Interval snapshots are
      * aligned to the top of the hour.
      * @defaultValue 600
@@ -269,7 +251,7 @@ export interface Config {
 
     /**
      * Whether interval statistics should be logged.
-     * @defaultValue false
+     * @defaultValue true
      */
     statsEnableLog?: boolean;
 
