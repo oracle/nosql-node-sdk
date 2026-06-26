@@ -552,6 +552,31 @@ describe('Stats unit test', function() {
         statsControl._shutdown();
     });
 
+    it('does not start interval output until start is called', function() {
+        const statsControl = new StatsControl({
+            profile: 'NONE',
+            interval: 60,
+            enableLog: false
+        });
+
+        try {
+            expect(statsControl.isStarted()).to.equal(false);
+            expect(statsControl._timer).to.equal(null);
+            expect(statsControl.setProfile('MORE')).to.equal(statsControl);
+            expect(statsControl._timer).to.equal(null);
+            expect(statsControl.setStatsHandler(() => {}))
+                .to.equal(statsControl);
+            expect(statsControl._timer).to.equal(null);
+
+            statsControl.start();
+
+            expect(statsControl.isStarted()).to.equal(true);
+            expect(statsControl._timer).to.exist;
+        } finally {
+            statsControl._shutdown();
+        }
+    });
+
     it('uses prepared statement metadata for query statistics', function() {
         const stats = new Stats({ clientId: 'prepared', profile: 'ALL' });
         const prepStmt = {
@@ -841,6 +866,37 @@ describe('Stats unit test', function() {
             ]) {
                 await runCase(configureStats, false);
                 await runCase(configureStats, true);
+            }
+        });
+
+    it('does not record logical query stats before validation succeeds',
+        async function() {
+            const client = createTestHttpClient();
+            const validationError = new Error('invalid query');
+            const op = Object.assign(createTestOp('QueryOp'), {
+                validate: () => {
+                    throw validationError;
+                }
+            });
+
+            client.getStatsControl().setProfile('ALL');
+
+            try {
+                try {
+                    await client.execute(op, {
+                        stmt: '',
+                        _statsObserveQuery: true
+                    });
+                    throw new Error('Expected validation error');
+                } catch(err) {
+                    expect(err).to.equal(validationError);
+                }
+
+                const stats = client.getStatsControl()._generateStats();
+                expect(stats).to.not.have.property('queries');
+                expect(stats.requests).to.have.length(0);
+            } finally {
+                client.shutdown();
             }
         });
 

@@ -23,15 +23,15 @@ export class StatsControl {
 
     getInterval(): number;
 
-    setProfile(profile: StatsProfile): void;
+    setProfile(profile: StatsProfile): this;
 
     getProfile(): StatsProfile;
 
-    setPrettyPrint(prettyPrint: boolean): void;
+    setPrettyPrint(prettyPrint: boolean): this;
 
     getPrettyPrint(): boolean;
 
-    setStatsHandler(handler?: StatsHandler|null): void;
+    setStatsHandler(handler?: StatsHandler|null): this;
 
     getStatsHandler(): StatsHandler|null;
 
