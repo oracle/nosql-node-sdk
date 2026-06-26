@@ -130,6 +130,8 @@ describe('Stats unit test', function() {
             const q1 = { stmt: 'SELECT * FROM Users WHERE id = 1' };
             const q2 = { stmt: 'SELECT * FROM Users WHERE id = 2' };
 
+            stats.observeQuery(q1);
+            stats.observeQuery(q2);
             stats.observe('QueryOp', false, 1, 0, 0, 0, 0, 0, 150, 500, 5,
                 q1, {});
             stats.observe('QueryOp', false, 1, 0, 0, 0, 0, 0, 170, 700, 15,
@@ -162,6 +164,7 @@ describe('Stats unit test', function() {
             const stats = new Stats({ clientId: 'test', profile: 'ALL' });
             const queryReq = { stmt: 'SELECT * FROM Users' };
 
+            stats.observeQuery(queryReq);
             stats.observe('QueryOp', false, 1, 0, 0, 0, 0, 0, 100, 300, 10,
                 queryReq, {});
             stats.observe('QueryOp', false, 1, 0, 0, 0, 0, 0, 120, 360, 20,
@@ -173,7 +176,7 @@ describe('Stats unit test', function() {
 
             expect(output.queries).to.have.length(1);
             expect(output.queries[0].query).to.equal(queryReq.stmt);
-            expect(output.queries[0].count).to.equal(3);
+            expect(output.queries[0].count).to.equal(1);
             expect(output.queries[0].httpRequestCount).to.equal(3);
             expectMinAvgMax(output.queries[0].requestSize, 100, 120, 140);
             expectMinAvgMax(output.queries[0].resultSize, 300, 360, 420);
@@ -229,9 +232,12 @@ describe('Stats unit test', function() {
 
     it('generates Java-like output order and timestamp format', function() {
         const stats = new Stats({ clientId: 'order', profile: 'ALL' });
+        const queryReq = { stmt: 'SELECT * FROM Users' };
+
         stats.observe('GetOp', false, 1, 0, 0, 0, 0, 0, 52, 120, 1);
+        stats.observeQuery(queryReq);
         stats.observe('QueryOp', false, 1, 0, 0, 0, 0, 0, 100, 300, 2,
-            { stmt: 'SELECT * FROM Users' }, {});
+            queryReq, {});
 
         const output = stats.generateStats();
         const get = getRequest(output, 'Get');
@@ -367,6 +373,7 @@ describe('Stats unit test', function() {
         const stats = new Stats({ clientId: 'query-error', profile: 'ALL' });
         const queryReq = { stmt: 'SELECT * FROM MissingTable' };
 
+        stats.observeQuery(queryReq);
         stats.observeError('QueryOp', 1, 2, 50, 0, 1, 0, queryReq);
 
         const output = stats.generateStats();
@@ -557,6 +564,7 @@ describe('Stats unit test', function() {
             prepStmt
         };
 
+        stats.observeQuery(queryReq);
         stats.observe('QueryOp', false, 1, 0, 0, 0, 0, 0, 100, 200, 10,
             queryReq, {});
 
@@ -581,7 +589,11 @@ describe('Stats unit test', function() {
             _opCode: OPCODE_SELECT,
             _queryPlan: null
         };
+        const queryReq = {
+            prepStmt
+        };
 
+        stats.observeQuery(queryReq);
         stats.observe('QueryOp', false, 1, 0, 0, 0, 0, 0, 100, 200, 10, {
             prepStmt
         }, {});
@@ -687,6 +699,7 @@ describe('Stats unit test', function() {
                 }
             };
 
+            stats.observeQuery(queryReq);
             stats.observe('QueryOp', false, 1, 0, 0, 0, 0, 0, 100, 200, 10,
                 queryReq, {});
 
@@ -708,6 +721,7 @@ describe('Stats unit test', function() {
             _queryPlan: {}
         };
 
+        stats.observeQuery({}, { _prepStmt: prepStmt });
         stats.observe('QueryOp', false, 1, 0, 0, 0, 0, 0, 100, 200, 10,
             {}, { _prepStmt: prepStmt });
 
