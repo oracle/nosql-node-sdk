@@ -426,14 +426,17 @@ async function testNoSQLClientMisc() {
     expectTypeOf(statsControl.getInterval).returns.toEqualTypeOf<number>();
     expectTypeOf(statsControl.setProfile).parameters
         .toEqualTypeOf<[StatsProfile]>();
+    expectTypeOf(statsControl.setProfile).returns.toEqualTypeOf<void>();
     expectTypeOf(statsControl.getProfile).returns
         .toEqualTypeOf<StatsProfile>();
+    expectTypeOf(statsControl.setPrettyPrint).returns.toEqualTypeOf<void>();
     expectTypeOf(statsControl.setStatsHandler).parameters
         .toEqualTypeOf<[handler?: StatsHandler|null]>();
+    expectTypeOf(statsControl.setStatsHandler).returns.toEqualTypeOf<void>();
     expectTypeOf(statsControl.getStatsHandler).returns
         .toEqualTypeOf<StatsHandler|null>();
-    expectTypeOf(statsControl.start).returns.toEqualTypeOf<StatsControl>();
-    expectTypeOf(statsControl.stop).returns.toEqualTypeOf<StatsControl>();
+    expectTypeOf(statsControl.start).returns.toEqualTypeOf<void>();
+    expectTypeOf(statsControl.stop).returns.toEqualTypeOf<void>();
     expectTypeOf(statsControl.isStarted).returns.toEqualTypeOf<boolean>();
 
     expectTypeOf(client.precacheAuth).toBeFunction();

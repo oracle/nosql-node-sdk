@@ -140,11 +140,13 @@ function verifyRequestShape(req) {
 }
 
 async function measureWorkload(client, workload) {
-    client.getStatsControl().setProfile('ALL')._clear();
+    const statsControl = client.getStatsControl();
+    statsControl.setProfile('ALL');
+    statsControl._clear();
 
     if (workload.before != null) {
         await workload.before();
-        client.getStatsControl()._clear();
+        statsControl._clear();
     }
 
     const latencies = [];
@@ -222,7 +224,8 @@ describe('Stats functional test', function() {
     it('records Java-parity stats for real SDK operations',
         async function() {
             const statsControl = client.getStatsControl();
-            statsControl.setProfile('ALL')._clear();
+            statsControl.setProfile('ALL');
+            statsControl._clear();
 
             await client.tableDDL(
                 `CREATE TABLE IF NOT EXISTS ${tableName} ` +
