@@ -8,11 +8,13 @@
 'use strict';
 
 const path = require('path');
-const NoSQLClient = require('../..').NoSQLClient;
+const NoSQLDB = require('../..');
+const NoSQLClient = NoSQLDB.NoSQLClient;
+const StatsControl = NoSQLDB.StatsControl;
 
 function loadConfig(configFile, statsHandler) {
     const cfg = Object.assign({}, require(path.resolve(configFile)));
-    cfg.statsProfile = cfg.statsProfile || 'MORE';
+    cfg.statsProfile = cfg.statsProfile || StatsControl.Profile.MORE;
     cfg.statsEnableLog = false;
     cfg.statsHandler = statsHandler;
     return cfg;

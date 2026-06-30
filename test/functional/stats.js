@@ -7,6 +7,10 @@
 
 'use strict';
 
+/*
+ * Functional tests for stats collection with real CloudSim SDK operations.
+ */
+
 const expect = require('chai').expect;
 
 const { TestConfig } = require('../utils');

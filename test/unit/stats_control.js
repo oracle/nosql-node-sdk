@@ -7,6 +7,10 @@
 
 'use strict';
 
+/*
+ * Tests for StatsControl profile, interval, handler and lifecycle behavior.
+ */
+
 const expect = require('chai').expect;
 
 const { TestConfig } = require('../utils');

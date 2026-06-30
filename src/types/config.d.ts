@@ -33,8 +33,8 @@ import type { IAMConfig } from "./auth/iam/types";
 export type StatsProfile = "NONE" | "REGULAR" | "MORE" | "ALL";
 
 /**
- * Function or object called with a statistics snapshot at the end of a stats
- * interval.
+ * Handler called with a statistics snapshot at the end of each stats interval.
+ * It may be a callback function or an object that implements accept(stats).
  */
 export type StatsHandler = ((stats: object) => void) | {
     accept(stats: object): void;

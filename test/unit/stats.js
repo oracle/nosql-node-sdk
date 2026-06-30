@@ -7,6 +7,10 @@
 
 'use strict';
 
+/*
+ * Tests for stats aggregation, request metrics and HttpClient stats wiring.
+ */
+
 const http = require('http');
 const expect = require('chai').expect;
 

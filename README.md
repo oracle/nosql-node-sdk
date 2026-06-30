@@ -337,10 +337,12 @@ default.
 Enable it in the client configuration:
 
 ```js
+const { NoSQLClient, ServiceType, StatsControl } = require('oracle-nosqldb');
+
 const client = new NoSQLClient({
     serviceType: ServiceType.CLOUDSIM,
     endpoint: 'localhost:8080',
-    statsProfile: 'ALL',
+    statsProfile: StatsControl.Profile.ALL,
     statsInterval: 5,
     statsPrettyPrint: true,
     statsEnableLog: true
@@ -366,7 +368,7 @@ The StatsControl object can also be used to change runtime behavior:
 
 ```js
 const statsControl = client.getStatsControl();
-statsControl.setProfile('MORE');
+statsControl.setProfile(StatsControl.Profile.MORE);
 statsControl.setPrettyPrint(true);
 statsControl.start();
 statsControl.stop();

@@ -8,7 +8,9 @@
 'use strict';
 
 const path = require('path');
-const NoSQLClient = require('../..').NoSQLClient;
+const NoSQLDB = require('../..');
+const NoSQLClient = NoSQLDB.NoSQLClient;
+const StatsControl = NoSQLDB.StatsControl;
 
 const DEFAULT_CONFIG = 'examples/config/kvlite.json';
 const DEFAULT_TOTAL = 1000000;
@@ -88,7 +90,7 @@ function parseArgs(argv) {
         config: DEFAULT_CONFIG,
         total: DEFAULT_TOTAL,
         concurrency: DEFAULT_CONCURRENCY,
-        profile: 'MORE',
+        profile: StatsControl.Profile.MORE,
         operation: 'listTables',
         keys: [],
         rows: [],
