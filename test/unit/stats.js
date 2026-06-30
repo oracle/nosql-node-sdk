@@ -873,6 +873,23 @@ describe('Stats unit test', function() {
             }
         });
 
+    it('counts only active sockets for connection stats', function() {
+        const client = createTestHttpClient();
+        client._agent.sockets = {
+            'localhost:8081:': [ {}, {} ],
+            'otherhost:8081:': [ {} ]
+        };
+        client._agent.freeSockets = {
+            'localhost:8081:': [ {}, {}, {} ]
+        };
+
+        try {
+            expect(client._getConnectionCount()).to.equal(3);
+        } finally {
+            client.shutdown();
+        }
+    });
+
     it('does not record logical query stats before validation succeeds',
         async function() {
             const client = createTestHttpClient();
