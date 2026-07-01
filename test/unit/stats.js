@@ -581,6 +581,33 @@ describe('Stats unit test', function() {
         }
     });
 
+    it('creates stats lazily from start when profile becomes enabled',
+        function() {
+            const statsControl = new StatsControl({
+                profile: 'NONE',
+                interval: 60,
+                enableLog: false
+            });
+
+            try {
+                statsControl.start();
+                expect(statsControl.isStarted()).to.equal(true);
+                statsControl.setProfile('MORE');
+                statsControl._observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10,
+                    20, 5);
+                expect(statsControl._generateStats().requests).to.have.length(
+                    0);
+
+                statsControl.start();
+                statsControl._observe('GetOp', false, 1, 0, 0, 0, 0, 0, 10,
+                    20, 5);
+                expect(getRequest(statsControl._generateStats(), 'Get')
+                    .httpRequestCount).to.equal(1);
+            } finally {
+                statsControl._shutdown();
+            }
+        });
+
     it('uses prepared statement metadata for query statistics', function() {
         const stats = new Stats({ clientId: 'prepared', profile: 'ALL' });
         const prepStmt = {
