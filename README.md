@@ -397,6 +397,27 @@ The load-check helper defaults to `examples/config/kvlite.json`, which is for
 KV proxy/KVLite. If you are running CloudSim, pass
 `--config examples/config/cloudsim.json` explicitly:
 
+For local KVLite testing with `examples/config/kvlite.json`, start KVLite in
+non-secure mode and then start the HTTP proxy against the same helper host:
+
+```bash
+java -jar lib/kvstore.jar kvlite \
+  -store kvstore \
+  -root kvroot-5100-nosec \
+  -host localhost \
+  -port 5100 \
+  -secure-config disable
+
+java -jar lib/httpproxy.jar \
+  -helperHosts localhost:5100 \
+  -storeName kvstore \
+  -httpPort 8080
+```
+
+The non-secure mode is important for this sample config. A secure KVLite store
+requires matching proxy security options; otherwise the proxy cannot connect to
+the store.
+
 ```bash
 # CloudSim
 node examples/javascript/stats_load_check.js \

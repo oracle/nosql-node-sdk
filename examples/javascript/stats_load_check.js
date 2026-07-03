@@ -80,6 +80,11 @@ StatsControl comparison:
   The example configs enable Client stats| logging, pretty print, and
   interval snapshots for quick comparison with Java StatsControl output.
 
+  For local KVLite with examples/config/kvlite.json, start KVLite in
+  non-secure mode and then start the HTTP proxy:
+    java -jar lib/kvstore.jar kvlite -store kvstore -root kvroot-5100-nosec -host localhost -port 5100 -secure-config disable
+    java -jar lib/httpproxy.jar -helperHosts localhost:5100 -storeName kvstore -httpPort 8080
+
   node examples/javascript/stats_load_check.js --config examples/config/cloudsim.json --operation fullFlow --table Users --profile ALL --total 1 --concurrency 1
   node examples/javascript/stats_load_check.js --config examples/config/kvlite.json --operation fullFlow --table Users --profile ALL --total 1 --concurrency 1
 `);
