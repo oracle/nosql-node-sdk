@@ -176,7 +176,44 @@ export class NoSQLClient extends EventEmitter {
     readonly serviceType: ServiceType;
 
     /**
-     * Returns the statistics control object for this client.
+     * Returns the {@link StatsControl} object for this client. It may be used
+     * to inspect or change the collection profile, register an interval
+     * handler, control pretty printing, and start or stop collection.
+     *
+     * Statistics are grouped by operation name, such as Get, Put, Query and
+     * Table. The REGULAR profile reports request and error counts, retries and
+     * retry delays, rate-limit delay, request latency, request size, result
+     * size, and active connections. MORE also reports 95th and 99th percentile
+     * latency. ALL additionally reports per-query statistics, including the
+     * query text, logical and HTTP request counts, preparation information,
+     * whether the query is simple or performs writes, and its query plan when
+     * available.
+     *
+     * Snapshots are generated at the configured statistics interval. They are
+     * logged when `statsEnableLog` is `true` and delivered to `statsHandler`
+     * when a handler is configured. A non-NONE profile configured on the
+     * client starts collection automatically.
+     *
+     * @example
+     * ```ts
+     * const client = new NoSQLClient({
+     *     endpoint: "localhost:8080",
+     *     statsProfile: StatsControl.Profile.ALL,
+     *     statsInterval: 60,
+     *     statsHandler: stats => {
+     *         console.log(stats.requests);
+     *     }
+     * });
+     *
+     * const statsControl = client.getStatsControl();
+     * statsControl.setPrettyPrint(true);
+     * statsControl.stop();
+     * statsControl.start();
+     * ```
+     *
+     * @see {@link StatsControl}
+     * @see {@link StatsProfile}
+     * @see {@link StatsSnapshot}
      */
     getStatsControl(): StatsControl;
 

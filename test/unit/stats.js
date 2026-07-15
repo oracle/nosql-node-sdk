@@ -52,6 +52,7 @@ function createTestHttpClient(endpoint = 'http://localhost:8081') {
             }
         }
     });
+    client._agent.destroy();
     client._agent = {
         sockets: {},
         freeSockets: {},
@@ -899,6 +900,23 @@ describe('Stats unit test', function() {
                 await runCase(configureStats, true);
             }
         });
+
+    it('uses a client-owned agent for connection stats', function() {
+        const client = new HttpClient({
+            url: new URL('http://localhost:8081'),
+            statsProfile: 'NONE',
+            statsInterval: 60,
+            statsPrettyPrint: false,
+            statsEnableLog: false
+        });
+
+        try {
+            expect(client._agent).to.be.instanceOf(http.Agent);
+            expect(client._agent).to.not.equal(http.globalAgent);
+        } finally {
+            client.shutdown();
+        }
+    });
 
     it('counts only active sockets for connection stats', function() {
         const client = createTestHttpClient();

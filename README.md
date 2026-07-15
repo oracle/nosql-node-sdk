@@ -330,9 +330,8 @@ node quickstart.js kvstore
 
 ## StatsControl
 
-The SDK can collect client-side request statistics using a StatsControl API
-modeled after the Java SDK StatsControl output. Stats collection is disabled by
-default.
+The SDK can collect client-side request statistics using the StatsControl API.
+Stats collection is disabled by default.
 
 Enable it in the client configuration:
 
@@ -360,9 +359,8 @@ The supported profiles are:
   query text and query plan information when available.
 
 Important: the **ALL** profile may include SQL text and query plans in stats
-output. This matches the Java SDK behavior, but applications should avoid
-enabling ALL profile logging in environments where query text may contain
-sensitive values.
+output. Applications should avoid enabling ALL profile logging in environments
+where query text may contain sensitive values.
 
 The StatsControl object can also be used to change runtime behavior:
 
@@ -371,72 +369,18 @@ const statsControl = client.getStatsControl();
 statsControl.setProfile(StatsControl.Profile.MORE);
 statsControl.setPrettyPrint(true);
 statsControl.start();
+// Execute the client operations to be measured here.
 statsControl.stop();
 ```
 
 When `statsEnableLog` is true, interval snapshots are logged with the prefix
 `Client stats|`. `statsHandler` may also be configured to receive each generated
 snapshot object. Interval snapshots are cleared after they are logged or passed
-to the handler, matching Java SDK interval behavior.
+to the handler.
 
-`statsInterval` and `statsEnableLog` are configuration properties, matching the
-Java SDK configuration shape. The Node SDK uses Java-compatible exact percentile
-calculation for p95 and p99 by storing successful latency samples when the
-profile is MORE or ALL.
-
-The example configurations `examples/config/cloudsim.json` and
-`examples/config/kvlite.json` enable interval stats logging and pretty printing
-for quick comparison with Java StatsControl output. The load-check helper shows
-available operations and large-run options:
-
-```bash
-node examples/javascript/stats_load_check.js --help
-```
-
-The load-check helper defaults to `examples/config/kvlite.json`, which is for
-KV proxy/KVLite. If you are running CloudSim, pass
-`--config examples/config/cloudsim.json` explicitly:
-
-For local KVLite testing with `examples/config/kvlite.json`, start KVLite in
-non-secure mode and then start the HTTP proxy against the same helper host:
-
-```bash
-java -jar lib/kvstore.jar kvlite \
-  -store kvstore \
-  -root kvroot-5100-nosec \
-  -host localhost \
-  -port 5100 \
-  -secure-config disable
-
-java -jar lib/httpproxy.jar \
-  -helperHosts localhost:5100 \
-  -storeName kvstore \
-  -httpPort 8080
-```
-
-The non-secure mode is important for this sample config. A secure KVLite store
-requires matching proxy security options; otherwise the proxy cannot connect to
-the store.
-
-```bash
-# CloudSim
-node examples/javascript/stats_load_check.js \
-  --config examples/config/cloudsim.json \
-  --operation fullFlow \
-  --table Users \
-  --profile ALL \
-  --total 1 \
-  --concurrency 1
-
-# KV proxy/KVLite
-node examples/javascript/stats_load_check.js \
-  --config examples/config/kvlite.json \
-  --operation fullFlow \
-  --table Users \
-  --profile ALL \
-  --total 1 \
-  --concurrency 1
-```
+`statsInterval` and `statsEnableLog` control interval reporting. Percentile
+calculation for p95 and p99 stores successful latency samples when the profile
+is MORE or ALL.
 
 ## Examples
 
@@ -490,6 +434,62 @@ E.g.
 ```bash
 npm install
 $ node basic_example.js config.json
+```
+
+#### Stats Load Check
+
+The example configurations `examples/config/cloudsim.json` and
+`examples/config/kvlite.json` enable interval stats logging and pretty
+printing. The load-check helper shows available operations and large-run
+options:
+
+```bash
+node examples/javascript/stats_load_check.js --help
+```
+
+The load-check helper defaults to `examples/config/kvlite.json`, which is for
+KV proxy/KVLite. If you are running CloudSim, pass
+`--config examples/config/cloudsim.json` explicitly.
+
+For local KVLite testing with `examples/config/kvlite.json`, start KVLite in
+non-secure mode and then start the HTTP proxy against the same helper host:
+
+```bash
+java -jar lib/kvstore.jar kvlite \
+  -store kvstore \
+  -root kvroot-5100-nosec \
+  -host localhost \
+  -port 5100 \
+  -secure-config disable
+
+java -jar lib/httpproxy.jar \
+  -helperHosts localhost:5100 \
+  -storeName kvstore \
+  -httpPort 8080
+```
+
+The non-secure mode is important for this sample config. A secure KVLite store
+requires matching proxy security options; otherwise the proxy cannot connect
+to the store.
+
+```bash
+# CloudSim
+node examples/javascript/stats_load_check.js \
+  --config examples/config/cloudsim.json \
+  --operation fullFlow \
+  --table Users \
+  --profile ALL \
+  --total 1 \
+  --concurrency 1
+
+# KV proxy/KVLite
+node examples/javascript/stats_load_check.js \
+  --config examples/config/kvlite.json \
+  --operation fullFlow \
+  --table Users \
+  --profile ALL \
+  --total 1 \
+  --concurrency 1
 ```
 
 ### TypeScript Examples

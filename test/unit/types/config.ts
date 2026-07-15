@@ -10,7 +10,7 @@ import { expectTypeOf } from "expect-type";
 import { NoSQLClient, Config, ServiceType, Region, Consistency, Durabilities,
     RetryConfig, DBNumberConfig, AuthConfig, RateLimiterConstructor, HttpOpt,
     RetryHandler, Operation, NoSQLError, SimpleRateLimiter, ConsumedCapacity,
-    TableState, StatsProfile, StatsHandler, StatsControl }
+    TableState, StatsProfile, StatsHandler, StatsControl, StatsSnapshot }
     from "../../../";
 import { table } from "console";
 
@@ -38,9 +38,13 @@ function testConfig(retryCfg: RetryConfig, numConfig: DBNumberConfig,
     cfg.statsInterval = 600;
     cfg.statsPrettyPrint = true;
     cfg.statsEnableLog = true;
-    cfg.statsHandler = (stats: object) => {};
+    cfg.statsHandler = stats => {
+        expectTypeOf(stats).toEqualTypeOf<StatsSnapshot>();
+    };
     cfg.statsHandler = {
-        accept: (stats: object) => {}
+        accept: stats => {
+            expectTypeOf(stats).toEqualTypeOf<StatsSnapshot>();
+        }
     };
     cfg.statsHandler = null;
     cfg.compartment = "compartment";
@@ -174,9 +178,13 @@ function testStatsProfile(profile: StatsProfile) {
 }
 
 function testStatsHandler(handler: StatsHandler) {
-    handler = (stats: object) => {};
+    handler = stats => {
+        expectTypeOf(stats).toEqualTypeOf<StatsSnapshot>();
+    };
     handler = {
-        accept: (stats: object) => {}
+        accept: stats => {
+            expectTypeOf(stats).toEqualTypeOf<StatsSnapshot>();
+        }
     };
 
     // @ts-expect-error Invalid stats handler.
@@ -185,6 +193,24 @@ function testStatsHandler(handler: StatsHandler) {
     handler = (stats: string) => {};
     // @ts-expect-error Invalid stats handler object.
     handler = { accept: 1 };
+}
+
+function testStatsSnapshot(stats: StatsSnapshot) {
+    type RequestEntry = StatsSnapshot["requests"][number];
+
+    expectTypeOf(stats.startTime).toBeString();
+    expectTypeOf(stats.endTime).toBeString();
+    expectTypeOf(stats.clientId).toBeString();
+    expectTypeOf(stats.connections).toEqualTypeOf<
+        StatsSnapshot["connections"]>();
+    expectTypeOf(stats.queries).toEqualTypeOf<
+        StatsSnapshot["queries"]>();
+    expectTypeOf(stats.requests).toEqualTypeOf<
+        StatsSnapshot["requests"]>();
+    expectTypeOf(stats.requests[0].httpRequestCount).toBeNumber();
+    expectTypeOf(stats.requests[0].retry.delayMs).toBeNumber();
+    expectTypeOf(stats.requests[0].httpRequestLatencyMs)
+        .toEqualTypeOf<RequestEntry["httpRequestLatencyMs"]>();
 }
 
 function testRetryHandler(handler: RetryHandler) {
