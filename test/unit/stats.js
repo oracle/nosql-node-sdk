@@ -1145,4 +1145,36 @@ describe('Stats unit test', function() {
             expect(put).to.not.have.property('httpRequestLatencyMs');
         });
 
+    it('records unexpected retry-policy errors exactly once',
+        async function() {
+            const client = createTestHttpClient();
+            const requestError = new Error('retryable request error');
+            requestError.retryable = true;
+            const retryPolicyError = new Error('retry policy failed');
+            const op = createTestOp('GetOp');
+
+            client._executeOnce = async () => {
+                throw requestError;
+            };
+            op.applyDefaults = req => {
+                createTestOp('GetOp').applyDefaults(req);
+                req.opt.retry.handler.doRetry = () => {
+                    throw retryPolicyError;
+                };
+            };
+
+            try {
+                await client.execute(op, {});
+                throw new Error('Expected retry policy error');
+            } catch(err) {
+                expect(err).to.equal(retryPolicyError);
+            } finally {
+                const get = getRequest(client.getStatsControl()
+                    ._generateStats(), 'Get');
+                expect(get.httpRequestCount).to.equal(1);
+                expect(get.errors).to.equal(1);
+                client.shutdown();
+            }
+        });
+
 });

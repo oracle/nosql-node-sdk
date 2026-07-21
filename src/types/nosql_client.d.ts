@@ -189,10 +189,22 @@ export class NoSQLClient extends EventEmitter {
      * whether the query is simple or performs writes, and its query plan when
      * available.
      *
-     * Snapshots are generated at the configured statistics interval. They are
-     * logged when `statsEnableLog` is `true` and delivered to `statsHandler`
-     * when a handler is configured. A non-NONE profile configured on the
-     * client starts collection automatically.
+     * Statistics are collected for the configured interval. At the end of
+     * each interval, the SDK generates a JSON snapshot that applications can
+     * filter and parse. The snapshot is logged when `statsEnableLog` is `true`
+     * and delivered to `statsHandler` when a handler is configured. After the
+     * snapshot is generated, the interval counters are cleared and collection
+     * continues with fresh counters.
+     *
+     * Collection intervals are aligned relative to the top of the hour. The
+     * first snapshot may therefore cover less than the complete configured
+     * interval. For example, if a client using a 10-minute interval starts at
+     * 10:07, its first snapshot is generated at 10:10.
+     *
+     * A non-NONE profile configured on the client starts collection
+     * automatically. To write snapshots to a specific file, configure a
+     * `statsHandler` that writes the serialized snapshot to that file and set
+     * `statsEnableLog` to `false` to avoid duplicate console output.
      *
      * @example
      * ```ts
@@ -201,14 +213,62 @@ export class NoSQLClient extends EventEmitter {
      *     statsProfile: StatsControl.Profile.ALL,
      *     statsInterval: 60,
      *     statsHandler: stats => {
-     *         console.log(stats.requests);
+     *         console.log(stats);
      *     }
      * });
      *
      * const statsControl = client.getStatsControl();
      * statsControl.setPrettyPrint(true);
-     * statsControl.stop();
      * statsControl.start();
+     *
+     * // Run application requests while statistics collection is active.
+     * await client.get("Users", { id: 1 });
+     * await client.put("Users", { id: 1, name: "Mayank" });
+     *
+     * statsControl.stop();
+     *
+     * // Example handler output (metric values vary by workload):
+     * {
+     *     clientId: "a1b2c3d4",
+     *     startTime: "2026-07-21T10:00:00Z",
+     *     endTime: "2026-07-21T10:01:00Z",
+     *     connections: { min: 1, max: 2, avg: 1.5 },
+     *     requests: [{
+     *         name: "Get",
+     *         httpRequestCount: 1,
+     *         errors: 0,
+     *         retry: {
+     *             count: 0,
+     *             delayMs: 0,
+     *             authCount: 0,
+     *             throttleCount: 0
+     *         },
+     *         rateLimitDelayMs: 0,
+     *         httpRequestLatencyMs: {
+     *             min: 2, max: 2, avg: 2, "95th": 2, "99th": 2
+     *         },
+     *         requestSize: { min: 93, max: 93, avg: 93 },
+     *         resultSize: { min: 150, max: 150, avg: 150 }
+     *     }]
+     * }
+     * ```
+     *
+     * @example Writing statistics snapshots to a file
+     * ```ts
+     * import { createWriteStream } from "node:fs";
+     *
+     * const statsFile = createWriteStream("./client-stats.log", {
+     *     flags: "a"
+     * });
+     *
+     * const client = new NoSQLClient({
+     *     endpoint: "localhost:8080",
+     *     statsProfile: StatsControl.Profile.ALL,
+     *     statsEnableLog: false,
+     *     statsHandler: stats => {
+     *         statsFile.write(`Client stats|${JSON.stringify(stats)}\n`);
+     *     }
+     * });
      * ```
      *
      * @see {@link StatsControl}

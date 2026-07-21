@@ -316,29 +316,43 @@ describe('Stats functional test', function() {
 
             const stats = client.getStatsControl()._generateStats();
             const requests = requestMap(stats);
-            const expectedRequests = [
-                'Get',
-                'GetTable',
-                'Table',
-                'Query',
-                'Delete',
-                'Put',
-                'ListTables',
-                'Prepare',
-                'MultiDelete',
-                'WriteMultiple',
-                'TableUsage'
-            ];
+            const expectedRequestCounts = new Map([
+                [ 'Get', 1 ],
+                [ 'Table', 1 ],
+                [ 'Query', 2 ],
+                [ 'Delete', 1 ],
+                [ 'Put', 4 ],
+                [ 'ListTables', 1 ],
+                [ 'Prepare', 1 ],
+                [ 'MultiDelete', 1 ],
+                [ 'WriteMultiple', 1 ],
+                [ 'TableUsage', 1 ]
+            ]);
 
             expect(stats.clientId).to.be.a('string').and.not.empty;
             expect(stats.startTime).to.be.a('string').and.not.empty;
             expect(stats.endTime).to.be.a('string').and.not.empty;
             expect(stats.requests).to.be.an('array').and.not.empty;
-            for (const requestName of expectedRequests) {
+            for (const [ requestName, expectedCount ] of
+                expectedRequestCounts) {
                 const req = requests.get(requestName);
                 expect(req, `stats for ${requestName}`).to.exist;
                 verifyRequestShape(req);
+                expect(req.httpRequestCount,
+                    `${requestName} HTTP request count`)
+                    .to.equal(expectedCount);
             }
+
+            /*
+             * The explicit getTable() contributes one request.  Completion
+             * polling for tableDDL(complete: true) may add more GetTable
+             * requests depending on how quickly CloudSim activates the table.
+             */
+            const getTableStats = requests.get('GetTable');
+            expect(getTableStats, 'stats for GetTable').to.exist;
+            verifyRequestShape(getTableStats);
+            expect(getTableStats.httpRequestCount, 'GetTable request count')
+                .to.be.at.least(1);
 
             expect(stats.requests.some(req =>
                 req.httpRequestLatencyMs != null &&
@@ -407,6 +421,18 @@ describe('Stats functional test', function() {
                             id: index
                         });
                         expect(res.row).to.exist;
+                    }
+                },
+                {
+                    requestName: 'Table',
+                    iterations: PERFORMANCE_ITERATIONS,
+                    run: async index => {
+                        const res = await client.setTableLimits(tableName, {
+                            readUnits: TABLE_LIMITS.readUnits + index,
+                            writeUnits: TABLE_LIMITS.writeUnits + index,
+                            storageGB: TABLE_LIMITS.storageGB
+                        });
+                        expect(res.tableName).to.equal(tableName);
                     }
                 },
                 {

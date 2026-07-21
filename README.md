@@ -333,6 +333,21 @@ node quickstart.js kvstore
 The SDK can collect client-side request statistics using the StatsControl API.
 Stats collection is disabled by default.
 
+StatsControl records completed SDK operations in memory for a configured time
+interval. At the end of each interval, it generates a JSON-compatible snapshot
+that can be logged with the `Client stats|` prefix and delivered to an optional
+`statsHandler`. The interval counters are then cleared and collection continues
+for the next interval. Collection intervals are aligned to wall-clock boundaries
+from the top of the hour, so the first reported interval may be shorter than the
+configured interval.
+
+Each snapshot identifies the client and interval and contains statistics grouped
+by request type, such as Get, Put, Query, and Table. Request statistics include
+HTTP request and error counts, retry counts and delays, authentication and
+throttling retries, rate-limit delay, request latency, request size, and result
+size. Connection statistics contain the minimum, average, and maximum active
+connection counts. The ALL profile also provides per-query execution details.
+
 Enable it in the client configuration:
 
 ```js
@@ -372,11 +387,6 @@ statsControl.start();
 // Execute the client operations to be measured here.
 statsControl.stop();
 ```
-
-When `statsEnableLog` is true, interval snapshots are logged with the prefix
-`Client stats|`. `statsHandler` may also be configured to receive each generated
-snapshot object. Interval snapshots are cleared after they are logged or passed
-to the handler.
 
 `statsInterval` and `statsEnableLog` control interval reporting. Percentile
 calculation for p95 and p99 stores successful latency samples when the profile
