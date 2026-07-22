@@ -9,7 +9,8 @@ import { expectTypeOf } from "expect-type";
 
 import { NoSQLClient, Config, ServiceType, Region, Consistency, Durabilities,
     RetryConfig, DBNumberConfig, AuthConfig, RateLimiterConstructor, HttpOpt,
-    RetryHandler, Operation, NoSQLError, SimpleRateLimiter, ConsumedCapacity, TableState }
+    RetryHandler, Operation, NoSQLError, SimpleRateLimiter, ConsumedCapacity,
+    TableState, StatsProfile, StatsHandler, StatsControl, StatsSnapshot }
     from "../../../";
 import { table } from "console";
 
@@ -33,6 +34,19 @@ function testConfig(retryCfg: RetryConfig, numConfig: DBNumberConfig,
     cfg.consistency = Consistency.ABSOLUTE;
     cfg.durability = Durabilities.COMMIT_NO_SYNC;
     cfg.maxMemoryMB = 512;
+    cfg.statsProfile = "MORE";
+    cfg.statsInterval = 600;
+    cfg.statsPrettyPrint = true;
+    cfg.statsEnableLog = true;
+    cfg.statsHandler = stats => {
+        expectTypeOf(stats).toEqualTypeOf<StatsSnapshot>();
+    };
+    cfg.statsHandler = {
+        accept: stats => {
+            expectTypeOf(stats).toEqualTypeOf<StatsSnapshot>();
+        }
+    };
+    cfg.statsHandler = null;
     cfg.compartment = "compartment";
     cfg.namespace = "namespace";
     cfg.retry = retryCfg;
@@ -78,6 +92,18 @@ function testConfig(retryCfg: RetryConfig, numConfig: DBNumberConfig,
     cfg.durability = "COMMIT_SYNC";
     // @ts-expect-error Invalid maxMemoryMB.
     cfg.maxMemoryMB = "100";
+    // @ts-expect-error Invalid statsProfile.
+    cfg.statsProfile = "BASIC";
+    // @ts-expect-error Invalid statsProfile.
+    cfg.statsProfile = 1;
+    // @ts-expect-error Invalid statsInterval.
+    cfg.statsInterval = "600";
+    // @ts-expect-error Invalid statsPrettyPrint.
+    cfg.statsPrettyPrint = "true";
+    // @ts-expect-error Invalid statsEnableLog.
+    cfg.statsEnableLog = "true";
+    // @ts-expect-error Invalid statsHandler.
+    cfg.statsHandler = 1;
     // @ts-expect-error Invalid compartment.
     cfg.compartment = 1;
     // @ts-expect-error Invalid namespace.
@@ -139,6 +165,52 @@ function testRegion(reg: Region) {
     expectTypeOf(reg.endpoint).toBeString();
     // @ts-expect-error Readonly property.
     reg.endpoint = "region";    
+}
+
+function testStatsProfile(profile: StatsProfile) {
+    profile = "NONE";
+    profile = "REGULAR";
+    profile = "MORE";
+    profile = "ALL";
+
+    // @ts-expect-error Invalid stats profile.
+    profile = "BASIC";
+}
+
+function testStatsHandler(handler: StatsHandler) {
+    handler = stats => {
+        expectTypeOf(stats).toEqualTypeOf<StatsSnapshot>();
+    };
+    handler = {
+        accept: stats => {
+            expectTypeOf(stats).toEqualTypeOf<StatsSnapshot>();
+        }
+    };
+
+    // @ts-expect-error Invalid stats handler.
+    handler = 1;
+    // @ts-expect-error Invalid stats handler callback.
+    handler = (stats: string) => {};
+    // @ts-expect-error Invalid stats handler object.
+    handler = { accept: 1 };
+}
+
+function testStatsSnapshot(stats: StatsSnapshot) {
+    type RequestEntry = StatsSnapshot["requests"][number];
+
+    expectTypeOf(stats.startTime).toBeString();
+    expectTypeOf(stats.endTime).toBeString();
+    expectTypeOf(stats.clientId).toBeString();
+    expectTypeOf(stats.connections).toEqualTypeOf<
+        StatsSnapshot["connections"]>();
+    expectTypeOf(stats.queries).toEqualTypeOf<
+        StatsSnapshot["queries"]>();
+    expectTypeOf(stats.requests).toEqualTypeOf<
+        StatsSnapshot["requests"]>();
+    expectTypeOf(stats.requests[0].httpRequestCount).toBeNumber();
+    expectTypeOf(stats.requests[0].retry.delayMs).toBeNumber();
+    expectTypeOf(stats.requests[0].httpRequestLatencyMs)
+        .toEqualTypeOf<RequestEntry["httpRequestLatencyMs"]>();
 }
 
 function testRetryHandler(handler: RetryHandler) {
@@ -370,6 +442,31 @@ async function testNoSQLClientMisc() {
     expectTypeOf(client.close).returns.resolves.toEqualTypeOf<void>();
 
     await client.close();
+
+    expectTypeOf(client.getStatsControl).toBeFunction();
+    expectTypeOf(client.getStatsControl).parameters.toEqualTypeOf<[]>();
+    expectTypeOf(client.getStatsControl).returns
+        .toEqualTypeOf<StatsControl>();
+
+    const statsControl = client.getStatsControl();
+    expectTypeOf(statsControl.getInterval).returns.toEqualTypeOf<number>();
+    expectTypeOf(statsControl.setProfile).parameters
+        .toEqualTypeOf<[StatsProfile]>();
+    expectTypeOf(statsControl.setProfile).returns
+        .toEqualTypeOf<StatsControl>();
+    expectTypeOf(statsControl.getProfile).returns
+        .toEqualTypeOf<StatsProfile>();
+    expectTypeOf(statsControl.setPrettyPrint).returns
+        .toEqualTypeOf<StatsControl>();
+    expectTypeOf(statsControl.setStatsHandler).parameters
+        .toEqualTypeOf<[handler?: StatsHandler|null]>();
+    expectTypeOf(statsControl.setStatsHandler).returns
+        .toEqualTypeOf<StatsControl>();
+    expectTypeOf(statsControl.getStatsHandler).returns
+        .toEqualTypeOf<StatsHandler|null>();
+    expectTypeOf(statsControl.start).returns.toEqualTypeOf<void>();
+    expectTypeOf(statsControl.stop).returns.toEqualTypeOf<void>();
+    expectTypeOf(statsControl.isStarted).returns.toEqualTypeOf<boolean>();
 
     expectTypeOf(client.precacheAuth).toBeFunction();
     expectTypeOf(client.precacheAuth).parameters.toEqualTypeOf<[]>();

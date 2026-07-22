@@ -327,6 +327,71 @@ using a different host or port edit the settings accordingly.
 ```js
 node quickstart.js kvstore
 ```
+
+## StatsControl
+
+The SDK can collect client-side request statistics using the StatsControl API.
+Stats collection is disabled by default.
+
+StatsControl records completed SDK operations in memory for a configured time
+interval. At the end of each interval, it generates a JSON-compatible snapshot
+that can be logged with the `Client stats|` prefix and delivered to an optional
+`statsHandler`. The interval counters are then cleared and collection continues
+for the next interval. Collection intervals are aligned to wall-clock boundaries
+from the top of the hour, so the first reported interval may be shorter than the
+configured interval.
+
+Each snapshot identifies the client and interval and contains statistics grouped
+by request type, such as Get, Put, Query, and Table. Request statistics include
+HTTP request and error counts, retry counts and delays, authentication and
+throttling retries, rate-limit delay, request latency, request size, and result
+size. Connection statistics contain the minimum, average, and maximum active
+connection counts. The ALL profile also provides per-query execution details.
+
+Enable it in the client configuration:
+
+```js
+const { NoSQLClient, ServiceType, StatsControl } = require('oracle-nosqldb');
+
+const client = new NoSQLClient({
+    serviceType: ServiceType.CLOUDSIM,
+    endpoint: 'localhost:8080',
+    statsProfile: StatsControl.Profile.ALL,
+    statsInterval: 5,
+    statsPrettyPrint: true,
+    statsEnableLog: true
+});
+```
+
+The supported profiles are:
+
+* **NONE**: statistics collection is disabled. This is the default.
+* **REGULAR**: collect request counts, errors, retry totals, rate-limit delay,
+  latency min/avg/max, request size, result size and connection statistics.
+* **MORE**: includes the REGULAR metrics and adds 95th and 99th percentile
+  latency.
+* **ALL**: includes MORE metrics and adds per-query statistics, including
+  query text and query plan information when available.
+
+Important: the **ALL** profile may include SQL text and query plans in stats
+output. Applications should avoid enabling ALL profile logging in environments
+where query text may contain sensitive values.
+
+The StatsControl object can also be used to change runtime behavior:
+
+```js
+const statsControl = client.getStatsControl();
+statsControl.setProfile(StatsControl.Profile.MORE);
+statsControl.setPrettyPrint(true);
+statsControl.start();
+// Execute the client operations to be measured here.
+statsControl.stop();
+```
+
+`statsInterval` and `statsEnableLog` control interval reporting. Percentile
+calculation for p95 and p99 stores successful latency samples when the profile
+is MORE or ALL.
+
 ## Examples
 
 The examples are located in the *examples* directory.  There are two sets of
@@ -379,6 +444,62 @@ E.g.
 ```bash
 npm install
 $ node basic_example.js config.json
+```
+
+#### Stats Load Check
+
+The example configurations `examples/config/cloudsim.json` and
+`examples/config/kvlite.json` enable interval stats logging and pretty
+printing. The load-check helper shows available operations and large-run
+options:
+
+```bash
+node examples/javascript/stats_load_check.js --help
+```
+
+The load-check helper defaults to `examples/config/kvlite.json`, which is for
+KV proxy/KVLite. If you are running CloudSim, pass
+`--config examples/config/cloudsim.json` explicitly.
+
+For local KVLite testing with `examples/config/kvlite.json`, start KVLite in
+non-secure mode and then start the HTTP proxy against the same helper host:
+
+```bash
+java -jar lib/kvstore.jar kvlite \
+  -store kvstore \
+  -root kvroot-5100-nosec \
+  -host localhost \
+  -port 5100 \
+  -secure-config disable
+
+java -jar lib/httpproxy.jar \
+  -helperHosts localhost:5100 \
+  -storeName kvstore \
+  -httpPort 8080
+```
+
+The non-secure mode is important for this sample config. A secure KVLite store
+requires matching proxy security options; otherwise the proxy cannot connect
+to the store.
+
+```bash
+# CloudSim
+node examples/javascript/stats_load_check.js \
+  --config examples/config/cloudsim.json \
+  --operation fullFlow \
+  --table Users \
+  --profile ALL \
+  --total 1 \
+  --concurrency 1
+
+# KV proxy/KVLite
+node examples/javascript/stats_load_check.js \
+  --config examples/config/kvlite.json \
+  --operation fullFlow \
+  --table Users \
+  --profile ALL \
+  --total 1 \
+  --concurrency 1
 ```
 
 ### TypeScript Examples
