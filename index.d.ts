@@ -6,6 +6,7 @@
  */
 
 export * from "./src/types/nosql_client";
+export * from "./src/types/stats_control";
 export * from "./src/types/stmt";
 export * from "./src/types/constants";
 export * from "./src/types/region";

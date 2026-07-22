@@ -10,6 +10,29 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 * Cloud only: Added new OCI region codes
 
+* Added Java-compatible `StatsControl` support for collecting and reporting
+  client-side SDK statistics.
+    - Added the `NONE`, `REGULAR`, `MORE`, and `ALL` profiles. Applications can
+      access the control through `NoSQLClient.getStatsControl()` and use it to
+      configure the profile, pretty printing, interval handler, and collection
+      lifecycle with `start()` and `stop()`.
+    - Added periodic JSON statistics snapshots. Interval output can be logged
+      with the `Client stats|` prefix or delivered to a configured `statsHandler`.
+      Counters are cleared after each snapshot and collection continues in the
+      next interval. Intervals are aligned to wall-clock boundaries, so the first
+      interval can be shorter than the configured duration.
+    - Added per-operation request statistics, including HTTP request and error
+      counts, retry counts and delays, authentication and throttling retries,
+      server and client rate-limit delay, request and result sizes, and latency
+      minimum, average, and maximum values.
+    - Added exact 95th and 99th percentile request latency for the `MORE` and
+      `ALL` profiles. The `ALL` profile also reports logical query statistics,
+      query text and plan details, and the number of HTTP requests used to execute
+      each logical query.
+    - Added per-client connection statistics with minimum, average, and maximum
+      active connection counts. Each SDK HTTP client owns its agent so connection
+      observations do not include sockets opened by unrelated application code.
+
 ** Changed**
 
 * Upgraded engine dependency to Node.js 24.

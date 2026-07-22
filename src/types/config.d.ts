@@ -21,6 +21,85 @@ import type { NoSQLError } from "./error";
 import type { IAMConfig } from "./auth/iam/types";
 
 /**
+ * Statistics collection profile.
+ * <ul>
+ * <li>NONE: do not collect request statistics.</li>
+ * <li>REGULAR: collect request counts, errors, retries, delays, sizes and
+ * average/min/max latency.</li>
+ * <li>MORE: REGULAR plus 95th and 99th percentile latency.</li>
+ * <li>ALL: MORE plus detailed query statistics.</li>
+ * </ul>
+ */
+export type StatsProfile = "NONE" | "REGULAR" | "MORE" | "ALL";
+
+/** Minimum, maximum and average values for a statistics measurement. */
+export interface StatsValue {
+    min: number;
+    max: number;
+    avg: number;
+}
+
+/** Request latency values in milliseconds. */
+export interface StatsLatency extends StatsValue {
+    /** Present for MORE and ALL profiles. */
+    "95th"?: number;
+    /** Present for MORE and ALL profiles. */
+    "99th"?: number;
+}
+
+/** Retry totals collected for a request or query. */
+export interface StatsRetry {
+    count: number;
+    delayMs: number;
+    authCount: number;
+    throttleCount: number;
+}
+
+/** Metrics shared by request and query statistics entries. */
+export interface StatsRequestMetrics {
+    httpRequestCount: number;
+    errors: number;
+    retry: StatsRetry;
+    rateLimitDelayMs: number;
+    httpRequestLatencyMs?: StatsLatency;
+    requestSize?: StatsValue;
+    resultSize?: StatsValue;
+}
+
+/** Statistics for one request operation, such as Get, Put or Query. */
+export interface StatsRequest extends StatsRequestMetrics {
+    name: string;
+}
+
+/** Detailed statistics for one SQL query, present only for profile ALL. */
+export interface StatsQuery extends StatsRequestMetrics {
+    query: string;
+    count: number;
+    unprepared: number;
+    simple: boolean;
+    doesWrites: boolean;
+    plan?: string;
+}
+
+/** Statistics snapshot generated at the end of a collection interval. */
+export interface StatsSnapshot {
+    startTime: string;
+    endTime: string;
+    clientId: string;
+    connections?: StatsValue;
+    queries?: StatsQuery[];
+    requests: StatsRequest[];
+}
+
+/**
+ * Handler called with a statistics snapshot at the end of each stats interval.
+ * It may be a callback function or an object that implements accept(stats).
+ */
+export type StatsHandler = ((stats: StatsSnapshot) => void) | {
+    accept(stats: StatsSnapshot): void;
+};
+
+/**
  * Configuration object passed to construct {@link NoSQLClient} instance.
  * <p>
  * This configuration can be passed to {@link NoSQLClient}
@@ -209,6 +288,37 @@ export interface Config {
      * @defaultValue 1024 (1 GB)
      */
     maxMemoryMB?: number;
+
+    /**
+     * Statistics collection profile.
+     * @defaultValue NONE
+     */
+    statsProfile?: StatsProfile;
+
+    /**
+     * Statistics collection interval in seconds. Interval snapshots are
+     * aligned to the top of the hour.
+     * @defaultValue 600
+     */
+    statsInterval?: number;
+
+    /**
+     * Whether interval statistics log output should be pretty-printed.
+     * @defaultValue false
+     */
+    statsPrettyPrint?: boolean;
+
+    /**
+     * Whether interval statistics should be logged.
+     * @defaultValue true
+     */
+    statsEnableLog?: boolean;
+
+    /**
+     * Handler called with a statistics snapshot at the end of each stats
+     * interval.
+     */
+    statsHandler?: StatsHandler|null;
    
     /**
      * Cloud service only.  Compartment to use for operations with this

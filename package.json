@@ -22,6 +22,8 @@
   ],
   "scripts": {
     "test:mocha": "mocha",
+    "test:stats-functional": "mocha --no-config --reporter spec --timeout 120000 test/functional/stats.js --",
+    "test:stats-functional:cloudsim": "mocha --no-config --reporter spec --timeout 120000 test/functional/stats.js -- --nosql-config cloudsim",
     "test:tsc": "tsc --project test/unit/types",
     "test": "npm-run-all -nsc \"test:mocha -- {@}\" test:tsc --",
     "docs": "typedoc"
