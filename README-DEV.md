@@ -10,7 +10,7 @@ source code and run and modify tests and examples.
 
 1. Make sure you have [Node.js](https://nodejs.org) and
 [NPM](https://www.npmjs.com/get-npm) package manager installed on your
-system.  The driver requires Node.js version 12.0.0 or later. However,
+system.  The driver requires Node.js version 24.0.0 or later. However,
 Node.js version 18.18.0 or later is required to install and use development
 dependencies. It is recommended to install LTS version. NPM package manager
 is installed with Node.js but could be updated if needed.

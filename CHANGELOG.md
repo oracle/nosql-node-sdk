@@ -10,6 +10,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 * Cloud only: Added new OCI region codes
 
+** Changed**
+
+* Upgraded engine dependency to Node.js 24.
+
+**Fixed**
+
+* Wipe out secrets after usage.
+* Use correct definedTags and freeFormTags in the table DDL API. 
+* Use correct options in the table DDL API.
+* Clear _renewTimer after closing.
+
 ## 5.5.3 - 2025-12-23
 
 **Changed**
