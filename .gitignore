@@ -5,3 +5,5 @@ package-lock.json
 .DS_Store
 *.diff
 *.tgz
+/doc/site/
+/.idea/
