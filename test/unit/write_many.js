@@ -165,7 +165,7 @@ function getBadServerKeyLists(tbl, key, key2) {
 function testWriteManyFuncNegative(wmFunc, tbl, sampleOps, badDriverOpLists,
     badServerOpLists, badOpts) {
     for(let badTblName of badTblNames) {
-        it(`${wmFunc.name} with invalid table name: ${badTblName}`,
+        it(`${wmFunc.name} with invalid table name: ${util.inspect(badTblName)}`,
             async function() {
                 return expect(wmFunc(badTblName, sampleOps)).to.eventually
                     .be.rejected.and.satisfy(err =>
