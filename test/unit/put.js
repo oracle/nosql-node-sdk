@@ -41,7 +41,7 @@ function args4putFunc(putFunc, tbl, row, opt) {
 
 function testPutFuncNegative(putFunc, tbl, row, badOpts) {
     for(let badTblName of badTblNames) {
-        it(`${putFunc.name} with invalid table name: ${badTblName}`,
+        it(`${putFunc.name} with invalid table name: ${util.inspect(badTblName)}`,
             async function() {
                 return expect(putFunc(badTblName, row)).to.eventually
                     .be.rejected.and.satisfy(err =>

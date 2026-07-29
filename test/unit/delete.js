@@ -34,7 +34,7 @@ const compartment = Utils.config.compartment;
 
 function testDeleteFuncNegative(deleteFunc, tbl, key, badOpts) {
     for(let badTblName of badTblNames) {
-        it(`${deleteFunc.name} with invalid table name: ${badTblName}`,
+        it(`${deleteFunc.name} with invalid table name: ${util.inspect(badTblName)}`,
             async function() {
                 return expect(deleteFunc(badTblName, key)).to.eventually
                     .be.rejected.and.satisfy(err =>

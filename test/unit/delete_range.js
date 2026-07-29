@@ -44,7 +44,7 @@ const badOpts = [
 
 function testDeleteRangeNegative(client, tbl, key) {
     for(let badTblName of badTblNames) {
-        it(`deleteRange with invalid table name: ${badTblName}`,
+        it(`deleteRange with invalid table name: ${util.inspect(badTblName)}`,
             async function() {
                 return expect(client.deleteRange(badTblName, key)).to.be
                     .rejectedWith(NoSQLArgumentError);

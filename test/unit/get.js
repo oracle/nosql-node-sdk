@@ -35,7 +35,7 @@ const badOpts = [
 
 function testGetNegative(client, tbl, key) {
     for(let badTblName of badTblNames) {
-        it(`get with invalid table name: ${badTblName}`, async function() {
+        it(`get with invalid table name: ${util.inspect(badTblName)}`, async function() {
             return expect(client.get(badTblName, key)).to.eventually
                 .be.rejected.and.satisfy(err =>
                     err instanceof NoSQLArgumentError &&
