@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 * Added latest OCI region codes
 
+**Fixed**
+
+* Enable hostname verification for OKE workloads.
+
 ## 5.5.4 - 2026-07-24
 
 **Added**
